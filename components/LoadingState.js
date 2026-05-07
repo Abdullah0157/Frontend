@@ -1,6 +1,6 @@
 'use client'
 
-export default function LoadingState() {
+export default function LoadingState({ message = "Scanning Network" }) {
   return (
     <div className="flex flex-col items-center justify-center py-32 w-full animate-fade-in">
       <div className="relative w-24 h-24">
@@ -16,10 +16,10 @@ export default function LoadingState() {
       {/* Dynamic Text with Shimmer */}
       <div className="mt-12 text-center">
         <h3 className="text-xl font-black text-white uppercase tracking-[0.3em] animate-pulse">
-          Scanning Network
+          {message}
         </h3>
         <p className="text-indigo-200/50 text-[10px] font-bold uppercase tracking-widest mt-2">
-          Fetching 360+ global opportunities...
+          {message === "Analyzing Resume" ? "Our AI is matching your skills..." : "Fetching 360+ global opportunities..."}
         </p>
       </div>
 
