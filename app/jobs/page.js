@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 import JobCard from '@/components/JobCard'
 import SearchBar from '@/components/SearchBar'
+import LoadingState from '@/components/LoadingState'
 
 const parseSalary = (sal) => {
   if (!sal) return 0
@@ -197,11 +198,7 @@ export default function JobsPage() {
 
         <div className="mt-16 flex flex-col">
             {loading ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-                {[1, 2, 3, 4, 5, 6].map(i => (
-                  <div key={i} className="h-80 bg-white/10 animate-pulse rounded-[3rem] border border-white/20 shadow-sm"></div>
-                ))}
-              </div>
+              <LoadingState />
             ) : jobs.length > 0 ? (
               <>
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
