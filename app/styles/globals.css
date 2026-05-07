@@ -1,0 +1,154 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 15, 23, 42;
+  --background-start-rgb: 255, 255, 255;
+  --background-end-rgb: 255, 255, 255;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: white;
+  min-height: 100vh;
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-xl transition-all duration-300 shadow-lg shadow-indigo-200 active:scale-95 hover:-translate-y-0.5;
+  }
+  
+  .btn-secondary {
+    @apply bg-white border border-gray-200 hover:bg-gray-50 text-gray-700 font-bold py-3 px-6 rounded-xl transition-all duration-300 active:scale-95 hover:-translate-y-0.5;
+  }
+
+  .card {
+    @apply bg-white border border-gray-100 rounded-[2.5rem] shadow-sm hover:shadow-2xl hover:shadow-indigo-500/10 transition-all duration-500 hover:-translate-y-2;
+  }
+
+  .nav-link {
+    @apply relative py-1;
+  }
+  
+  .nav-link::after {
+    @apply content-[''] absolute bottom-0 left-0 w-0 h-[2px] bg-indigo-500 transition-all duration-200 ease-in-out;
+  }
+  
+  .nav-link:hover::after {
+    @apply w-full;
+  }
+  
+  .btn-style-9 {
+    @apply relative overflow-hidden bg-slate-900 text-white font-black px-12 py-5 rounded-full transition-all duration-500 flex items-center gap-3 shadow-[0_20px_50px_-15px_rgba(79,70,229,0.3)] hover:shadow-indigo-500/50 hover:-translate-y-1 active:scale-95;
+  }
+
+  /* The "Fizzy" Noise Texture */
+  .btn-style-9::after {
+    content: '';
+    @apply absolute inset-0 opacity-[0.05] pointer-events-none z-10;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  }
+  
+  /* Sliding Background (Button 9) */
+  .btn-style-9::before {
+    @apply content-[''] absolute top-0 left-0 w-0 h-full bg-indigo-600 transition-all duration-700 ease-in-out z-0;
+  }
+  
+  .btn-style-9:hover::before {
+    @apply w-full;
+  }
+
+  /* Shimmer Sweep */
+  .btn-shimmer {
+    @apply absolute inset-0 z-20 pointer-events-none;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    transform: translateX(-100%);
+    animation: shimmer 4s infinite;
+  }
+  
+  .btn-style-9 span, .btn-style-9 svg {
+    @apply relative z-30;
+  }
+  
+  .btn-style-9 svg {
+    @apply transition-transform duration-300;
+  }
+  
+  .btn-style-9:hover svg {
+    @apply translate-x-2;
+  }
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  20%, 100% { transform: translateX(100%); }
+}
+
+/* Animations */
+@keyframes float {
+  0% { transform: translateY(0px) translateX(0px); }
+  33% { transform: translateY(-20px) translateX(10px); }
+  66% { transform: translateY(10px) translateX(-10px); }
+  100% { transform: translateY(0px) translateX(0px); }
+}
+
+@keyframes float-delayed {
+  0% { transform: translateY(0px) translateX(0px); }
+  33% { transform: translateY(20px) translateX(-15px); }
+  66% { transform: translateY(-10px) translateX(15px); }
+  100% { transform: translateY(0px) translateX(0px); }
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-float {
+  animation: float 15s ease-in-out infinite;
+}
+
+.animate-float-delayed {
+  animation: float-delayed 18s ease-in-out infinite;
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 30s linear infinite;
+}
+
+.animate-fade-in {
+  animation: fadeIn 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-slide-down {
+  animation: slideDown 0.4s ease-out forwards;
+}
+
+/* Custom Utilities */
+.mask-marquee {
+  mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+}
+
+.text-gradient {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-400 to-indigo-400 bg-[length:200%_auto] animate-gradient;
+}
+
+@keyframes gradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animate-gradient {
+  animation: gradient 5s ease infinite;
+}
