@@ -19,7 +19,7 @@ export default function LoadingState({ message = "Scanning Network" }) {
           {message}
         </h3>
         <p className="text-indigo-200/50 text-[10px] font-bold uppercase tracking-widest mt-2">
-          {message === "Analyzing Resume" ? "Our AI is matching your skills..." : "Fetching 360+ global opportunities..."}
+          {message === "Analyzing Resume" ? "Our AI is matching your skills..." : "Fetching 1000+ global opportunities..."}
         </p>
       </div>
 
