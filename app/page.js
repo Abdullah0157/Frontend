@@ -129,8 +129,6 @@ export default function LandingPage() {
                     </span>
                     <span className="text-3xl font-black tracking-tighter text-slate-800">glassdoor</span>
                     <span className="text-3xl font-black tracking-tighter text-slate-800">indeed</span>
-                    <span className="text-3xl font-black tracking-tighter text-slate-800">upwork</span>
-                    <span className="text-3xl font-black tracking-tighter text-slate-800">toptal</span>
                   </div>
                 ))}
               </div>
