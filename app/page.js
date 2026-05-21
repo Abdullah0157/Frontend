@@ -1,12 +1,55 @@
 'use client'
 
+import { useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import axios from 'axios'
 import Globe from '../components/Globe'
+import LoadingState from '../components/LoadingState'
 
 export default function LandingPage() {
+  const [isMatching, setIsMatching] = useState(false)
+  const router = useRouter()
+
+  const handleResumeUpload = async (event) => {
+    const file = event.target.files[0]
+    if (!file) return
+
+    if (file.type !== 'application/pdf') {
+      alert("Please upload a PDF file.")
+      return
+    }
+
+    setIsMatching(true)
+    const formData = new FormData()
+    formData.append('file', file)
+
+    try {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/match-resume`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      })
+      
+      // Store matches in session storage so the jobs page can pick them up
+      sessionStorage.setItem('matchedJobs', JSON.stringify(response.data))
+      
+      // Redirect to jobs page
+      router.push('/jobs')
+    } catch (error) {
+      console.error("Error matching resume:", error)
+      alert("Failed to process resume. Please try again.")
+      setIsMatching(false)
+    }
+  }
+
   return (
     <div className="bg-transparent min-h-screen pb-24">
-      {/* SECTION 1: THE VISION (Refined White Hero with Globe on Right) */}
+      {isMatching && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/80 backdrop-blur-xl">
+          <LoadingState message="Scanning Network for Matches" />
+        </div>
+      )}
+
+      {/* SECTION 1: THE VISION */}
       <section className="relative pt-48 pb-32 z-10 text-slate-900 overflow-hidden min-h-[100vh] flex items-center">
         <div className="container mx-auto px-4 relative z-20">
           <div className="max-w-2xl">
@@ -24,7 +67,7 @@ export default function LandingPage() {
             </p>
 
             <div className="flex animate-fade-in">
-              <Link href="/jobs" className="btn-style-9 group uppercase tracking-widest text-xs shadow-2xl !px-12 !py-6 rounded-full font-black">
+              <Link href="/jobs" prefetch={true} className="btn-style-9 group uppercase tracking-widest text-xs shadow-2xl !px-12 !py-6 rounded-full font-black">
                 <div className="btn-shimmer"></div>
                 <span>Explore Jobs Now</span>
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -35,7 +78,6 @@ export default function LandingPage() {
           </div>
         </div>
 
-        {/* The Globe - Positioned to show more of the bottom */}
         <div className="absolute top-[12%] right-[-15%] translate-y-[-50%] w-[85vh] h-[85vh] max-w-[900px] max-h-[900px] animate-fade-in pointer-events-none z-10">
           <div className="absolute inset-0 bg-indigo-100/20 blur-[120px] rounded-full"></div>
           <Globe />
@@ -47,7 +89,6 @@ export default function LandingPage() {
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
             <div className="bg-gradient-to-br from-white to-indigo-50/30 border border-slate-100 rounded-[4rem] p-12 md:p-20 shadow-2xl shadow-indigo-500/5 relative overflow-hidden group">
-              {/* Background Decoration */}
               <div className="absolute -top-24 -right-24 w-64 h-64 bg-indigo-500/5 blur-[80px] rounded-full group-hover:bg-indigo-500/10 transition-colors"></div>
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center relative z-10">
@@ -82,22 +123,20 @@ export default function LandingPage() {
                   <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-transparent rounded-[3rem]"></div>
                   <div className="relative z-10">
                     <div className="flex justify-between items-center mb-10">
-
                       <span className="text-[10px] font-black text-indigo-600 uppercase tracking-widest">Scanning Active</span>
                     </div>
                     <p className="text-2xl md:text-3xl font-black text-slate-900 uppercase tracking-tighter leading-tight mb-12">
                       Our AI will scan your CV and suggest you jobs <span className="text-indigo-600">according to you.</span>
                     </p>
                     <div className="flex">
-
-                      <Link href="/jobs" className="btn-style-9 group uppercase tracking-widest text-xs shadow-2xl !px-20 !py-6 rounded-full font-black">
+                      <label className="btn-style-9 cursor-pointer group uppercase tracking-widest text-xs shadow-2xl !px-20 !py-6 rounded-full font-black">
                         <div className="btn-shimmer"></div>
-                        <span>Try it</span>
+                        <span>Upload PDF</span>
+                        <input type="file" className="hidden" accept=".pdf" onChange={handleResumeUpload} disabled={isMatching} />
                         <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
                         </svg>
-                      </Link>
-
+                      </label>
                     </div>
                   </div>
                 </div>
@@ -110,10 +149,8 @@ export default function LandingPage() {
       {/* SECTION 3: STATS & PARTNERS */}
       <section className="py-32 z-10 bg-white">
         <div className="container mx-auto px-4">
-          {/* TRUSTED PARTNERS MARQUEE */}
           <div className="relative">
             <p className="text-center text-slate-400 font-black uppercase tracking-[0.4em] text-[10px] mb-12">Integrated with Global Leaders</p>
-
             <div className="relative overflow-hidden w-full max-w-5xl mx-auto flex items-center h-24 mask-marquee">
               <div className="animate-marquee flex items-center gap-24 whitespace-nowrap">
                 {[...Array(4)].map((_, i) => (
@@ -137,16 +174,13 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* SECTION 4: THE VISION AREA - High-Impact Redesign */}
+      {/* SECTION 4: THE VISION AREA */}
       <section className="py-32 z-10 relative overflow-hidden bg-gradient-to-br from-blue-700 via-indigo-950 to-black mx-4 md:mx-10 rounded-[5rem] shadow-2xl border border-white/10">
-        {/* Decorative Background Elements */}
         <div className="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10"></div>
         <div className="absolute -top-24 -right-24 w-96 h-96 bg-blue-500/10 blur-[120px] rounded-full"></div>
         <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-indigo-500/10 blur-[120px] rounded-full"></div>
-
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-5xl mx-auto">
-            {/* Header */}
             <div className="text-center mb-24">
               <span className="inline-block px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-blue-400 font-black text-[10px] uppercase tracking-[0.5em] mb-6">THE VISION</span>
               <h2 className="text-4xl md:text-6xl font-black text-white tracking-tighter uppercase leading-[0.9] mb-8">
@@ -154,8 +188,6 @@ export default function LandingPage() {
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-300">FOR LESS</span>
               </h2>
             </div>
-
-            {/* High-Impact Feature Grid */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-24">
               {[
                 { title: 'Talented', text: "You're not just a skill set." },
@@ -168,31 +200,17 @@ export default function LandingPage() {
                 </div>
               ))}
             </div>
-
-            {/* The Mission Narrative */}
-            <div className="max-w-3xl mx-auto bg-white/[0.02] border border-white/5 p-12 rounded-[4rem] backdrop-blur-sm">
-              <div className="grid grid-cols-1 md:grid-cols-1 gap-10 text-center">
-                <p className="text-xl md:text-2xl text-slate-300 leading-relaxed font-medium">
-                  The job market treats you like a number. We're changing that.
-                  JobStream connects you with opportunities that see <span className="text-white font-black underline decoration-blue-500 decoration-4 underline-offset-8">YOUR</span> real potential.
+            <div className="max-w-3xl mx-auto bg-white/[0.02] border border-white/5 p-12 rounded-[4rem] backdrop-blur-sm text-center">
+              <p className="text-xl md:text-2xl text-slate-300 leading-relaxed font-medium mb-8">
+                The job market treats you like a number. We're changing that.
+                JobStream connects you with opportunities that see <span className="text-white font-black underline decoration-blue-500 decoration-4 underline-offset-8">YOUR</span> real potential.
+              </p>
+              <div className="pt-8 border-t border-white/5">
+                <p className="text-2xl md:text-4xl text-white font-black tracking-tight uppercase leading-tight">
+                  Not just your resume. <br />
+                  <span className="text-blue-400">You. As a whole.</span>
                 </p>
-                <div className="pt-8 border-t border-white/5">
-                  <p className="text-2xl md:text-4xl text-white font-black tracking-tight uppercase leading-tight">
-                    Not just your resume. <br />
-                    <span className="text-blue-400">You. As a whole.</span>
-                  </p>
-                </div>
               </div>
-            </div>
-
-            <div className="mt-20 flex justify-center">
-              <Link href="/jobs" className="btn-style-9 !bg-white !text-black hover:!bg-slate-100 group uppercase tracking-widest text-xs shadow-2xl !px-12 !py-6 rounded-full font-black">
-                <div className="btn-shimmer"></div>
-                <span>Join the Network</span>
-                <svg className="w-4 h-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                </svg>
-              </Link>
             </div>
           </div>
         </div>

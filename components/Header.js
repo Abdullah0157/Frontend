@@ -25,7 +25,7 @@ export default function Header() {
               <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-gradient-to-br from-blue-500 to-indigo-600 shadow-2xl shadow-indigo-500/40 group-hover:scale-110 transition-transform duration-300">
                 <span className="text-white font-black text-xl tracking-tighter">JS</span>
               </div>
-              <span className="nav-link text-2xl font-black tracking-tighter text-white">JOBSTREAM</span>
+              <span className="logo-shimmer text-2xl font-black tracking-tighter">JOBSTREAM</span>
             </Link>
           </div>
 

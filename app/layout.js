@@ -2,6 +2,8 @@ import './styles/globals.css'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import ParticleBackground from '@/components/ParticleBackground'
+import AnalyticsTracker from '@/components/AnalyticsTracker'
+import Script from 'next/script'
 
 export const metadata = {
   title: 'JobStream - Find Your Dream Career',
@@ -20,12 +22,14 @@ export default function RootLayout({ children }) {
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
       </head>
       <body className="flex flex-col min-h-screen font-sans antialiased text-gray-900 relative">
+        <AnalyticsTracker />
         <ParticleBackground />
         <Header />
         <main className="flex-grow relative z-10">
           {children}
         </main>
         <Footer />
+        <Script src="/chatbot.js" strategy="lazyOnload" />
       </body>
     </html>
   )

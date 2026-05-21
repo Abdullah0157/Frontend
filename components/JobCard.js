@@ -1,10 +1,17 @@
 import Link from 'next/link'
+import axios from 'axios'
 
 export default function JobCard({ job }) {
   const { 
     id, title, company, location, type, salary, 
     tags, is_new, is_high_demand, apply_url 
   } = job
+
+  const handleApply = async () => {
+    try {
+      await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/analytics/total_applies`, { increment_by: 1 })
+    } catch (err) { console.error('Apply track failed', err) }
+  }
 
   return (
     <div className="bg-gradient-to-br from-indigo-950/80 via-slate-950/90 to-black border border-white/5 rounded-[2rem] p-6 flex flex-col h-full hover:shadow-[0_40px_80px_-15px_rgba(79,70,229,0.4)] transition-all duration-500 hover:-translate-y-2 group relative z-10 backdrop-blur-xl">
@@ -68,6 +75,7 @@ export default function JobCard({ job }) {
             href={apply_url} 
             target="_blank" 
             rel="noopener noreferrer"
+            onClick={handleApply}
             className="btn-style-9 w-full justify-center !py-4 !px-6 text-xs tracking-[0.4em]"
           >
             <div className="btn-shimmer"></div>
