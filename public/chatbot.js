@@ -3,9 +3,7 @@
     // CONFIGURATION
     // ==========================================
     const CONFIG = {
-        api_key: "AIzaSyBbAHhfzd0Upx2PEg66cSNhiNokYzGaiKU",
         bot_name: "JobStream AI",
-        models: ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-flash-latest", "gemini-pro-latest"],
         primary_color: "#1e1b4b", // Dark Indigo (matches site header)
         bg_color: "#ffffff",
         text_color: "#1e293b",
@@ -331,7 +329,7 @@
             typing.style.display = 'flex';
             
             // Send a hidden prompt to the AI to present these jobs
-            const aiResponse = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-flash-latest:generateContent?key=${CONFIG.api_key}`, {
+            const aiResponse = await fetch(`https://abd217391-jobstream-backend.hf.space/api/chat`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -344,7 +342,7 @@
 
             if (aiResponse.ok) {
                 const aiData = await aiResponse.json();
-                const botText = aiData.candidates[0].content.parts[0].text;
+                const botText = aiData.text;
                 typing.style.display = 'none';
                 appendMessage(botText, 'bot');
                 chatHistory.push({ role: "model", parts: [{ text: botText }] });
@@ -372,55 +370,35 @@
         // Add user message to history
         chatHistory.push({ role: "user", parts: [{ text: text }] });
 
-        let success = false;
-        const api_versions = ["v1", "v1beta"];
-        const models = ["gemini-flash-latest", "gemini-pro-latest"];
+        try {
+            const response = await fetch(`https://abd217391-jobstream-backend.hf.space/api/chat`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    contents: chatHistory
+                })
+            });
 
-        for (const ver of api_versions) {
-            if (success) break;
-            for (const model of models) {
-                if (success) break;
-                try {
-                    console.log(`JobStream AI: Trying ${ver}/${model}...`);
-                    const response = await fetch(`https://generativelanguage.googleapis.com/${ver}/models/${model}:generateContent?key=${CONFIG.api_key}`, {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({
-                            contents: [
-                                { role: "user", parts: [{ text: "You are JobStream AI, a premium career concierge. Be supportive, professional, and elite. NEVER use triple asterisks like ***. Use standard Markdown for bold (**text**) and headers (### Title). ALWAYS encourage the user to upload their resume using the paperclip icon below. When presenting matches, start with: 'Yes! Based on your CV I found [GREEN: X matching roles] — here are your top 3:'. Use the format: [JOB: Title | Company | Salary]. Finally, add [MORE_JOBS]." }] },
-                                { role: "model", parts: [{ text: "Understood. I am JobStream AI, ready to assist." }] },
-                                ...chatHistory
-                            ]
-                        })
-                    });
+            if (response.ok) {
+                const data = await response.json();
+                const botText = data.text;
+                
+                // Add bot response to history
+                chatHistory.push({ role: "model", parts: [{ text: botText }] });
+                
+                // Keep history lean (last 6 messages for reliability)
+                if (chatHistory.length > 6) chatHistory = chatHistory.slice(-6);
 
-                    if (response.ok) {
-                        const data = await response.json();
-                        if (data.candidates && data.candidates[0].content) {
-                            const botText = data.candidates[0].content.parts[0].text;
-                            
-                            // Add bot response to history
-                            chatHistory.push({ role: "model", parts: [{ text: botText }] });
-                            
-                            // Keep history lean (last 6 messages for reliability)
-                            if (chatHistory.length > 6) chatHistory = chatHistory.slice(-6);
-
-                            typing.style.display = 'none';
-                            appendMessage(botText, 'bot');
-                            success = true;
-                            console.log(`JobStream AI: Success with ${ver}/${model}`);
-                        }
-                    } else {
-                        const errText = await response.text();
-                        console.error(`JobStream AI: ${ver}/${model} Error (${response.status}):`, errText);
-                    }
-                } catch (e) {
-                    console.error(`JobStream AI: Network error:`, e);
-                }
+                typing.style.display = 'none';
+                appendMessage(botText, 'bot');
+            } else {
+                const errText = await response.text();
+                console.error(`JobStream AI Error:`, errText);
+                typing.style.display = 'none';
+                appendMessage("I apologize, but I'm having trouble connecting right now. Please try again later.", 'bot');
             }
-        }
-
-        if (!success) {
+        } catch (e) {
+            console.error(`JobStream AI Network error:`, e);
             typing.style.display = 'none';
             appendMessage("I apologize, but I'm having trouble connecting right now. Please try again later.", 'bot');
         }
