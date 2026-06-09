@@ -1,11 +1,11 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { getSupabaseBrowser } from '@/lib/supabase/client'
 
-export default function ProfilePage() {
+function ProfileInner() {
   const router = useRouter()
   const params = useSearchParams()
   const onboarding = params.get('onboarding') === '1'
@@ -236,5 +236,13 @@ export default function ProfilePage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function ProfilePage() {
+  return (
+    <Suspense>
+      <ProfileInner />
+    </Suspense>
   )
 }
