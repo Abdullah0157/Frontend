@@ -42,17 +42,13 @@ export async function GET(req) {
     const filter = url.searchParams.get('filter') || 'all' // all | ai | external
 
     // Fire both data sources in parallel so neither blocks the other.
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || process.env.API_URL || 'https://abd217391-jobstream-backend.hf.space/api'
     const externalPromise = filter === 'ai'
       ? Promise.resolve([])
-      : fetch(`${apiUrl}/jobs?limit=2000`, { cache: 'no-store' })
-          .then(async (res) => {
-            if (!res.ok) return []
-            const raw = await res.json()
-            const arr = Array.isArray(raw) ? raw : (raw?.jobs || raw?.data || [])
-            return arr.map((j) => ({ ...j, type: 'external', link: `/jobs/${j.id}` }))
-          })
-          .catch((e) => { console.warn('aggregated fetch failed', e.message); return [] })
+      : query(`SELECT id, title, company, location, type, salary, posted_at, logo, tags,
+                      description, apply_url, is_new, is_high_demand
+               FROM jobs ORDER BY id DESC LIMIT 2000`)
+          .then(({ rows }) => rows.map((j) => ({ ...j, type: 'external', link: `/jobs/${j.id}` })))
+          .catch((e) => { console.warn('external jobs query failed', e.message); return [] })
 
     const aiPromise = filter === 'external'
       ? Promise.resolve([])
