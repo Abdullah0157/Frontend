@@ -42,7 +42,7 @@ export async function GET(req) {
     const filter = url.searchParams.get('filter') || 'all' // all | ai | external
 
     // Fire both data sources in parallel so neither blocks the other.
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || process.env.API_URL || 'https://abd217391-jobstream-backend.hf.space/api'
     const externalPromise = filter === 'ai'
       ? Promise.resolve([])
       : fetch(`${apiUrl}/jobs?limit=2000`, { cache: 'no-store' })
