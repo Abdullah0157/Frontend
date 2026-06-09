@@ -1,11 +1,11 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, Suspense } from 'react'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { getSupabaseBrowser } from '@/lib/supabase/client'
 
-export default function CompanyLoginPage() {
+function CompanyLoginInner() {
   const router = useRouter()
   const params = useSearchParams()
   const next = params.get('next') || '/company'
@@ -131,5 +131,13 @@ export default function CompanyLoginPage() {
         </form>
       </div>
     </div>
+  )
+}
+
+export default function CompanyLoginPage() {
+  return (
+    <Suspense>
+      <CompanyLoginInner />
+    </Suspense>
   )
 }

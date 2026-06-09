@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 
@@ -75,7 +75,7 @@ function DecisionBadge({ decision }) {
   return <span className="text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full bg-slate-800 text-slate-300 border border-slate-700">Pending</span>
 }
 
-export default function CompanyDashboard() {
+function CompanyDashboardInner() {
   const router = useRouter()
   const params = useSearchParams()
   const onboarding = params.get('onboarding') === '1'
@@ -245,5 +245,13 @@ export default function CompanyDashboard() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function CompanyDashboard() {
+  return (
+    <Suspense>
+      <CompanyDashboardInner />
+    </Suspense>
   )
 }
