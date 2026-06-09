@@ -33,6 +33,7 @@ export default function JobsClient({ initialJobs }) {
   const [jobs, setJobs] = useState(initialJobs || []) // filtered/searched base
   const [displayedJobs, setDisplayedJobs] = useState([]) // sorted final
   const [isMatching, setIsMatching] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [activeFilter, setActiveFilter] = useState('All')
   const [sortOption, setSortOption] = useState('Newest')
   const [rankedByResume, setRankedByResume] = useState(false)
@@ -76,9 +77,11 @@ export default function JobsClient({ initialJobs }) {
         setJobs(data.jobs)
         setRankedByResume(!!data.ranked)
       } catch {}
+      finally { if (!cancelled) setLoading(false) }
     }
     loadUnified()
     return () => { cancelled = true }
+
   }, [])
 
   const filterTypes = ['All', 'AI Interview', 'External Apply']
@@ -232,6 +235,11 @@ export default function JobsClient({ initialJobs }) {
             )}
             {isMatching ? (
               <LoadingState message="Analyzing Resume" />
+            ) : loading ? (
+              <div className="flex flex-col items-center justify-center py-32 gap-6">
+                <div className="w-12 h-12 rounded-full border-4 border-indigo-600 border-t-transparent animate-spin" />
+                <p className="text-slate-400 text-xs font-black uppercase tracking-[0.3em]">Loading Jobs…</p>
+              </div>
             ) : jobs.length > 0 ? (
               <>
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
