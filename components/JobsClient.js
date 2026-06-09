@@ -35,6 +35,7 @@ export default function JobsClient({ initialJobs }) {
   const [isMatching, setIsMatching] = useState(false)
   const [activeFilter, setActiveFilter] = useState('All')
   const [sortOption, setSortOption] = useState('Newest')
+  const [rankedByResume, setRankedByResume] = useState(false)
 
   const [currentPage, setCurrentPage] = useState(1)
   const jobsPerPage = 12
@@ -52,7 +53,6 @@ export default function JobsClient({ initialJobs }) {
       if (Array.isArray(matchedData) && matchedData.length > 0) {
         setJobs(matchedData)
         setActiveFilter('AI Match')
-        // Don't remove immediately to prevent flicker if something re-renders
         setTimeout(() => sessionStorage.removeItem('matchedJobs'), 2000)
       } else {
         setJobs(sortedData)
@@ -62,21 +62,35 @@ export default function JobsClient({ initialJobs }) {
     }
   }, [initialJobs])
 
-  const filterTypes = ['All', 'AI Match', 'Full-time', 'Contract', 'Remote', 'Language']
+  // Fetch the unified listing (aggregated external + company-posted AI interview jobs).
+  // When the user is a logged-in candidate with a resume, the endpoint also ranks by resume overlap.
+  useEffect(() => {
+    let cancelled = false
+    async function loadUnified() {
+      try {
+        const res = await fetch('/api/jobs/public-listing', { cache: 'no-store' })
+        if (!res.ok) return
+        const data = await res.json()
+        if (cancelled || !Array.isArray(data.jobs)) return
+        setAllJobs(data.jobs)
+        setJobs(data.jobs)
+        setRankedByResume(!!data.ranked)
+      } catch {}
+    }
+    loadUnified()
+    return () => { cancelled = true }
+  }, [])
+
+  const filterTypes = ['All', 'AI Interview', 'External Apply']
 
   const handleFilter = (type) => {
     setActiveFilter(type)
     if (type === 'All') {
       setJobs(allJobs)
-    } else if (type === 'Remote') {
-      setJobs(allJobs.filter(job => job.location.toLowerCase().includes('remote')))
-    } else if (type === 'Language') {
-      setJobs(allJobs.filter(job => 
-        job.title.toLowerCase().includes('language') || 
-        job.tags.some(t => t.toLowerCase().includes('language'))
-      ))
-    } else {
-      setJobs(allJobs.filter(job => job.type === type))
+    } else if (type === 'AI Interview') {
+      setJobs(allJobs.filter((j) => j.type === 'ai_interview'))
+    } else if (type === 'External Apply') {
+      setJobs(allJobs.filter((j) => j.type === 'external'))
     }
     setCurrentPage(1)
   }
@@ -170,29 +184,6 @@ export default function JobsClient({ initialJobs }) {
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row items-stretch gap-4 max-w-5xl mx-auto -mt-10 relative z-10 md:h-[88px]">
           
-          {/* AI Resume Match Card (Horizontal version) */}
-          <div className="w-full md:w-auto bg-slate-900 rounded-2xl shadow-xl border border-indigo-500/40 px-6 py-4 transition-all hover:shadow-2xl hover:shadow-indigo-500/20 relative overflow-hidden flex items-center shrink-0">
-            <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/20 to-purple-600/20 z-0"></div>
-            <div className="relative z-10 flex items-center justify-between w-full gap-4">
-              <div className="flex flex-col justify-center">
-                <span className="font-black text-white text-sm uppercase tracking-widest drop-shadow-md flex items-center">
-                  <svg className="w-4 h-4 mr-1 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                  </svg>
-                  AI Match
-                </span>
-                <span className="text-[9px] text-indigo-200/60 uppercase font-bold tracking-widest mt-1">
-                  Find perfect jobs
-                </span>
-              </div>
-              
-              <label className="cursor-pointer flex items-center justify-center py-3 px-5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-[10px] font-black uppercase tracking-widest transition-all shadow-lg shadow-indigo-500/30 whitespace-nowrap">
-                {isMatching ? 'Wait...' : 'Upload PDF'}
-                <input type="file" className="hidden" accept=".pdf" onChange={handleResumeUpload} disabled={isMatching} />
-              </label>
-            </div>
-          </div>
-
           {/* SearchBar */}
           <div className="flex-grow w-full">
             <SearchBar onSearch={handleSearch} />
@@ -200,6 +191,45 @@ export default function JobsClient({ initialJobs }) {
         </div>
 
         <div className="mt-16 flex flex-col">
+            {/* Filter tabs */}
+            <div className="mb-6 flex flex-wrap gap-2 justify-center">
+              {filterTypes.map((label) => {
+                const active = activeFilter === label
+                const count =
+                  label === 'All' ? allJobs.length
+                  : label === 'AI Interview' ? allJobs.filter((j) => j.type === 'ai_interview').length
+                  : allJobs.filter((j) => j.type === 'external').length
+                return (
+                  <button
+                    key={label}
+                    onClick={() => handleFilter(label)}
+                    className={`text-xs font-black uppercase tracking-widest px-5 py-3 rounded-full border transition flex items-center gap-2 ${
+                      active
+                        ? 'bg-indigo-600 text-white border-indigo-600 shadow-lg shadow-indigo-500/30'
+                        : 'bg-slate-900 text-slate-300 border-slate-800 hover:border-indigo-700 hover:text-white'
+                    }`}
+                  >
+                    {label === 'AI Interview' && <span>✦</span>}
+                    {label}
+                    <span className={`text-[10px] px-2 py-0.5 rounded-full ${active ? 'bg-white/20' : 'bg-slate-800'}`}>{count}</span>
+                  </button>
+                )
+              })}
+            </div>
+
+            {rankedByResume && (
+              <div className="mb-8 p-5 rounded-2xl bg-gradient-to-r from-indigo-950/60 to-blue-950/60 border border-indigo-800 flex items-center justify-between gap-4">
+                <div>
+                  <p className="text-[10px] font-black uppercase tracking-[0.4em] text-indigo-300 mb-1">Personalized for you</p>
+                  <p className="text-white text-sm">
+                    These jobs are ranked by how well they match your resume. Top matches first.
+                  </p>
+                </div>
+                <a href="/profile" className="text-xs font-black uppercase tracking-widest px-4 py-2 rounded-full bg-white/10 hover:bg-white/20 text-white border border-white/20 whitespace-nowrap">
+                  Update Resume
+                </a>
+              </div>
+            )}
             {isMatching ? (
               <LoadingState message="Analyzing Resume" />
             ) : jobs.length > 0 ? (
@@ -216,7 +246,7 @@ export default function JobsClient({ initialJobs }) {
                     <button 
                       onClick={() => paginate(Math.max(1, currentPage - 1))}
                       disabled={currentPage === 1}
-                      className="w-14 h-14 rounded-2xl bg-white shadow-lg border border-slate-100 text-indigo-600 font-bold flex items-center justify-center hover:bg-indigo-50 hover:border-indigo-100 disabled:opacity-30 disabled:cursor-not-allowed transition-all transform active:scale-95"
+                      className="w-14 h-14 rounded-2xl bg-slate-900 shadow-lg border border-slate-800 text-indigo-400 font-bold flex items-center justify-center hover:bg-indigo-950/40 hover:border-indigo-900 disabled:opacity-30 disabled:cursor-not-allowed transition-all transform active:scale-95"
                     >
                       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M15 19l-7-7 7-7" />
@@ -243,7 +273,7 @@ export default function JobsClient({ initialJobs }) {
                             className={`w-14 h-14 rounded-2xl font-black text-sm flex items-center justify-center transition-all shadow-md border ${
                               currentPage === page 
                                 ? 'bg-indigo-600 border-indigo-600 text-white shadow-indigo-500/40 ring-4 ring-indigo-500/10' 
-                                : 'bg-white border-slate-100 text-slate-500 hover:bg-white hover:border-indigo-200 hover:text-indigo-600'
+                                : 'bg-slate-900 border-slate-800 text-slate-400 hover:bg-slate-900 hover:border-indigo-200 hover:text-indigo-400'
                             }`}
                           >
                             {page}
@@ -255,7 +285,7 @@ export default function JobsClient({ initialJobs }) {
                     <button 
                       onClick={() => paginate(Math.min(totalPages, currentPage + 1))}
                       disabled={currentPage === totalPages}
-                      className="w-14 h-14 rounded-2xl bg-white shadow-lg border border-slate-100 text-indigo-600 font-bold flex items-center justify-center hover:bg-indigo-50 hover:border-indigo-100 disabled:opacity-30 disabled:cursor-not-allowed transition-all transform active:scale-95"
+                      className="w-14 h-14 rounded-2xl bg-slate-900 shadow-lg border border-slate-800 text-indigo-400 font-bold flex items-center justify-center hover:bg-indigo-950/40 hover:border-indigo-900 disabled:opacity-30 disabled:cursor-not-allowed transition-all transform active:scale-95"
                     >
                       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M9 5l7 7-7 7" />
@@ -265,8 +295,8 @@ export default function JobsClient({ initialJobs }) {
                 )}
               </>
             ) : (
-              <div className="bg-white/20 rounded-[3rem] p-20 text-center border border-dashed border-white/30 shadow-sm">
-                <h3 className="text-2xl font-black text-slate-900 mb-3 uppercase">Nothing Found</h3>
+              <div className="bg-slate-900/20 rounded-[3rem] p-20 text-center border border-dashed border-white/30 shadow-sm">
+                <h3 className="text-2xl font-black text-white mb-3 uppercase">Nothing Found</h3>
               </div>
             )}
           </div>

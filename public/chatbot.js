@@ -46,15 +46,15 @@
             right: 24px;
             width: 380px;
             height: 550px;
-            background: white;
+            background: #0f172a;
             border-radius: 24px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
             display: none;
             flex-direction: column;
             overflow: hidden;
             z-index: 9999;
             font-family: 'Inter', sans-serif;
-            border: 1px solid rgba(0,0,0,0.05);
+            border: 1px solid #1e293b;
             transition: all 0.3s ease;
         }
         #ag-chat-window.open {
@@ -87,7 +87,7 @@
             display: flex;
             flex-direction: column;
             gap: 12px;
-            background: #f8fafc;
+            background: #0f172a;
         }
         .ag-msg {
             max-width: 80%;
@@ -95,17 +95,18 @@
             border-radius: 16px;
             font-size: 14px;
             line-height: 1.5;
-            color: #000000; /* True Black */
+            color: #f1f5f9;
         }
         .ag-msg-bot {
-            background: white;
+            background: #1e293b;
+            border: 1px solid #334155;
             align-self: flex-start;
             border-bottom-left-radius: 4px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
         }
         .ag-msg-user {
-            background: #f1f5f9;
-            color: #000000;
+            background: #4f46e5;
+            color: #ffffff;
             align-self: flex-end;
             border-bottom-right-radius: 4px;
         }
@@ -137,22 +138,24 @@
         }
         #ag-chat-input-area {
             padding: 16px;
-            background: white;
-            border-top: 1px solid #f1f5f9;
+            background: #0f172a;
+            border-top: 1px solid #1e293b;
             display: flex;
             gap: 8px;
         }
         #ag-chat-input {
             flex: 1;
-            border: 1px solid #e2e8f0;
+            background: #1e293b;
+            border: 1px solid transparent;
             padding: 12px 16px;
             border-radius: 12px;
             outline: none;
             font-size: 14px;
-            color: black;
+            color: #cbd5e1;
         }
+        #ag-chat-input::placeholder { color: #475569; }
         #ag-chat-input:focus {
-            border-color: #1e1b4b;
+            border-color: #334155;
         }
         #ag-chat-send {
             background: #1e1b4b;
@@ -170,11 +173,11 @@
             align-items: center;
         }
         .dot {
-            width: 6px;
-            height: 6px;
-            background: #1e1b4b;
+            width: 8px;
+            height: 8px;
+            background: #818cf8;
             border-radius: 50%;
-            opacity: 0.3;
+            opacity: 0.5;
             animation: pulse 1.4s infinite ease-in-out both;
         }
         .dot:nth-child(1) { animation-delay: -0.32s; }

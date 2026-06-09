@@ -3,17 +3,38 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 15, 23, 42;
-  --background-start-rgb: 255, 255, 255;
-  --background-end-rgb: 255, 255, 255;
+  --foreground-rgb: 248, 250, 252;
+  --background-start-rgb: 2, 6, 23;
+  --background-end-rgb: 2, 6, 23;
 }
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: white;
+  background: rgb(2, 6, 23);
   min-height: 100vh;
   scroll-behavior: smooth;
   overflow-x: hidden;
+}
+
+/* Dark-theme inputs by default — overrides browser white-bg + makes typed text visible. */
+input, textarea, select {
+  background-color: rgb(15, 23, 42); /* slate-900 */
+  color: rgb(241, 245, 249);          /* slate-100 */
+}
+
+input::placeholder, textarea::placeholder {
+  color: rgb(100, 116, 139); /* slate-500 */
+  opacity: 1;
+}
+
+input[type="file"] {
+  color: rgb(203, 213, 225); /* slate-300 */
+}
+
+/* Preserve hand-themed inputs that explicitly opt out (use class="bg-white") */
+input.bg-white, textarea.bg-white {
+  background-color: white;
+  color: rgb(15, 23, 42);
 }
 
 @layer components {
@@ -163,3 +184,46 @@ body {
 .animate-gradient {
   animation: gradient 5s ease infinite;
 }
+
+/* ============== Siri Orb animations ============== */
+/* Wave that expands outward + fades — used when AI is speaking */
+@keyframes siri-wave {
+  0%   { transform: scale(0.85); opacity: 0; }
+  20%  { opacity: 0.9; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
+.animate-siri-wave {
+  animation: siri-wave 1.4s ease-out infinite;
+}
+
+/* Subtle breathing pulse — listening state */
+@keyframes siri-listen {
+  0%, 100% { transform: scale(1); opacity: 0.55; }
+  50%      { transform: scale(1.18); opacity: 0.85; }
+}
+.animate-siri-listen {
+  animation: siri-listen 1.4s ease-in-out infinite;
+}
+
+/* Calm pulse — thinking / loading */
+@keyframes siri-think {
+  0%, 100% { transform: scale(0.95); opacity: 0.4; }
+  50%      { transform: scale(1.1); opacity: 0.75; }
+}
+.animate-siri-think {
+  animation: siri-think 2.2s ease-in-out infinite;
+}
+
+/* Two internal fluid blobs rotating in opposite directions — only when speaking */
+@keyframes siri-spin-a {
+  0%   { transform: rotate(0deg) scale(1); }
+  50%  { transform: rotate(180deg) scale(1.15); }
+  100% { transform: rotate(360deg) scale(1); }
+}
+@keyframes siri-spin-b {
+  0%   { transform: rotate(360deg) scale(1.05); }
+  50%  { transform: rotate(180deg) scale(0.9); }
+  100% { transform: rotate(0deg) scale(1.05); }
+}
+.animate-siri-spin-a { animation: siri-spin-a 5s linear infinite; }
+.animate-siri-spin-b { animation: siri-spin-b 7s linear infinite; }
