@@ -1,15 +1,50 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { useParams } from 'next/navigation'
+import { useEffect, useState, useCallback } from 'react'
+import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import InterviewExperience from '@/components/InterviewExperience'
 import PermissionGate from '@/components/PermissionGate'
 import { primeTTS, playTestChime } from '@/lib/tts'
 import { playServerTTS } from '@/lib/tts-client'
 
+function ComingSoonWrapper({ children, comingSoon, onMount, onRedirect }) {
+  useEffect(() => {
+    onMount()
+  }, [])
+
+  useEffect(() => {
+    if (!comingSoon) return
+    const t = setTimeout(onRedirect, 2500)
+    return () => clearTimeout(t)
+  }, [comingSoon])
+
+  return (
+    <div className="relative">
+      <div className={`transition-all duration-700 ${comingSoon ? 'blur-md pointer-events-none select-none' : ''}`}>
+        {children}
+      </div>
+      {comingSoon && (
+        <div className="fixed inset-0 z-50 flex flex-col items-center justify-center gap-6 bg-black/60">
+          <div className="text-center px-6">
+            <p className="text-[10px] font-black uppercase tracking-[0.5em] text-indigo-400 mb-3">Coming Soon</p>
+            <h2 className="text-4xl md:text-5xl font-black text-white uppercase tracking-tight mb-4">
+              AI Interview
+            </h2>
+            <p className="text-slate-300 text-sm max-w-sm mx-auto">
+              We're putting the finishing touches on AI interviews for external jobs. Redirecting you to jobs…
+            </p>
+          </div>
+          <div className="w-8 h-8 rounded-full border-4 border-indigo-500 border-t-transparent animate-spin" />
+        </div>
+      )}
+    </div>
+  )
+}
+
 export default function JobInterviewFromAggregator() {
   const { id } = useParams()
+  const router = useRouter()
   const [externalJob, setExternalJob] = useState(null)
   const [loadingJob, setLoadingJob] = useState(true)
   const [error, setError] = useState('')
@@ -22,6 +57,7 @@ export default function JobInterviewFromAggregator() {
   const [audioTested, setAudioTested] = useState(false)
   const [proctorStreams, setProctorStreams] = useState(null) // { cameraStream, screenStream }
   const [savedResume, setSavedResume] = useState(null) // { resume_text, full_name } from /api/profile
+  const [comingSoon, setComingSoon] = useState(false)
 
   function testAudio() {
     primeTTS()
@@ -154,13 +190,25 @@ export default function JobInterviewFromAggregator() {
 
   if (prepared && proctorStreams) {
     return (
-      <InterviewExperience
-        job={prepared.job}
-        prefilledCandidate={prepared.candidate}
-        resumeText={prepared.resumeText}
-        cameraStream={proctorStreams.cameraStream}
-        screenStream={proctorStreams.screenStream}
-      />
+      <ComingSoonWrapper
+        comingSoon={comingSoon}
+        onMount={() => {
+          setTimeout(() => setComingSoon(true), 3000)
+        }}
+        onRedirect={() => {
+          proctorStreams.cameraStream?.getTracks().forEach(t => t.stop())
+          proctorStreams.screenStream?.getTracks().forEach(t => t.stop())
+          router.push('/jobs')
+        }}
+      >
+        <InterviewExperience
+          job={prepared.job}
+          prefilledCandidate={prepared.candidate}
+          resumeText={prepared.resumeText}
+          cameraStream={proctorStreams.cameraStream}
+          screenStream={proctorStreams.screenStream}
+        />
+      </ComingSoonWrapper>
     )
   }
 
