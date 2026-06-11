@@ -9,6 +9,9 @@ const nextConfig = {
   },
   experimental: {
     serverComponentsExternalPackages: ['pdf-parse', 'pdfjs-dist', 'msedge-tts', 'ws', 'bufferutil', 'utf-8-validate'],
+    outputFileTracingIncludes: {
+      '/api/upload-resume': ['./node_modules/pdfjs-dist/legacy/build/pdf.worker.mjs'],
+    },
   },
 }
 
