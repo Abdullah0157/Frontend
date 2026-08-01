@@ -30,9 +30,19 @@ export async function POST(req) {
     const { totalPages, text: pages } = await extractText(pdf, { mergePages: true })
 
     const text = (typeof pages === 'string' ? pages : (Array.isArray(pages) ? pages.join('\n') : '')).trim()
-    if (!text) {
+    // The interview flow (page gate + detect-domain) requires >= 50 chars of
+    // resume text. Enforce the SAME minimum here so a "successful" upload always
+    // means the interview can actually start — otherwise a mostly-image PDF that
+    // extracts a sliver of text uploads fine, then silently blocks the interview
+    // with a confusing "upload your resume first". Keep thresholds in lockstep.
+    const MIN_RESUME_CHARS = 50
+    if (text.length < MIN_RESUME_CHARS) {
       return NextResponse.json(
-        { error: 'Could not read text from this PDF (it may be a scanned/image-only file).' },
+        {
+          error: text.length === 0
+            ? 'Could not read any text from this PDF — it looks scanned or image-only. Please upload a text-based PDF (exported from Word/Google Docs), not a scan.'
+            : 'We could only read a few characters from this PDF, not enough to build your interview. It may be scanned or image-based. Please upload a text-based PDF exported from Word or Google Docs.',
+        },
         { status: 422 }
       )
     }
