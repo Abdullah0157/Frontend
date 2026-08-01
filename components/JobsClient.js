@@ -15,9 +15,20 @@ const parseSalary = (sal) => {
   return val
 }
 
+// Returns "days ago" for sorting. Handles BOTH a real timestamp (Date object or
+// ISO string, which is what company-created jobs now use) AND the legacy
+// relative strings ("2 days ago"). Never assumes a string — a non-string input
+// used to crash this with `.toLowerCase is not a function`.
 const parseDate = (dateStr) => {
   if (!dateStr) return 999
-  const lower = dateStr.toLowerCase()
+  // Real, parseable date → compute days since now.
+  const d = dateStr instanceof Date ? dateStr : new Date(dateStr)
+  if (!isNaN(d.getTime())) {
+    const days = Math.floor((Date.now() - d.getTime()) / 86400000)
+    return days >= 0 ? days : 0
+  }
+  // Legacy relative string.
+  const lower = String(dateStr).toLowerCase()
   if (lower.includes('yesterday')) return 1
   if (lower.includes('today')) return 0
   const match = lower.match(/(\d+)/)
