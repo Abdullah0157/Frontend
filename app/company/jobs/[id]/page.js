@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
+import EieProfile from '@/components/EieProfile'
 
 function fitColor(score) {
   if (score == null) return 'text-slate-400'
@@ -178,6 +179,15 @@ export default function JobDashboard() {
                           <p className="text-slate-700 text-sm leading-relaxed">{c.fit_reasoning}</p>
                         </div>
                       )}
+                      {c.report?.eie && (
+                        <div>
+                          <h4 className="text-xs font-black uppercase tracking-[0.3em] text-slate-500 mb-3">
+                            Evaluation Intelligence Engine
+                          </h4>
+                          <EieProfile eie={c.report.eie} />
+                        </div>
+                      )}
+
                       {c.report?.summary && (
                         <div>
                           <h4 className="text-xs font-black uppercase tracking-[0.3em] text-slate-500 mb-2">Summary</h4>

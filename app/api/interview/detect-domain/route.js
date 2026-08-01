@@ -43,14 +43,24 @@ function formatSections(s, rawText) {
 // should probe. Used to auto-configure the Domain Expert interview so the user
 // never types their domain manually.
 export async function POST() {
-  const supabase = getSupabaseServer()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
+  let rows
+  try {
+    const supabase = getSupabaseServer()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
 
-  const { rows } = await query(
-    'SELECT full_name, resume_text, resume_sections FROM user_profiles WHERE user_id = $1',
-    [user.id]
-  )
+    ;({ rows } = await query(
+      'SELECT full_name, resume_text, resume_sections FROM user_profiles WHERE user_id = $1',
+      [user.id]
+    ))
+  } catch (e) {
+    // Auth service or database briefly unreachable (transient network).
+    console.error('detect-domain connectivity error:', e.message)
+    return NextResponse.json(
+      { error: 'Connection issue reaching the server. Please try again in a moment.' },
+      { status: 503 }
+    )
+  }
   const rawText = rows[0]?.resume_text
   const fullName = rows[0]?.full_name || ''
   const sections = rows[0]?.resume_sections

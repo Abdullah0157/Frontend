@@ -118,6 +118,7 @@ export default function VoiceChat({ messages, loading, finishing, streamingQuest
   const listeningRef      = useRef(false)
   const silencePromptedRef = useRef(false)
   const silencePromptCountRef = useRef(0)  // tracks per-question "are you there?" prompts
+  const replayingRef      = useRef(false)  // guards repeat-request from firing twice (double audio)
   const acquiringRef      = useRef(false)
   const lastAudioRef      = useRef(0)
 
@@ -256,6 +257,7 @@ export default function VoiceChat({ messages, loading, finishing, streamingQuest
     if (spokenIdsRef.current.has(id)) return
     spokenIdsRef.current.add(id)
     const text = lastAssistant.content
+    stopServerTTS()  // never overlap with any audio still playing (fixes double-voice)
     setSpeaking(true)
     isTTSPlayingRef.current = true  // set immediately so auto-start mic effect won't race
     playServerTTS(text, { voice,
@@ -281,6 +283,7 @@ export default function VoiceChat({ messages, loading, finishing, streamingQuest
       clearCaptionTimers(); setTtsStartedForLength(-1)
       silencePromptedRef.current = false; setSilencePrompted(false)
       silencePromptCountRef.current = 0
+      replayingRef.current = false
     }
   }, [loading]) // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -480,6 +483,7 @@ export default function VoiceChat({ messages, loading, finishing, streamingQuest
     silencePromptCountRef.current += 1
     stopListening()
     const text = "Are you still there? Take your time — say repeat to hear the question again, or just start speaking when you're ready."
+    stopServerTTS()  // no overlap
     setSpeaking(true); isTTSPlayingRef.current = true
     playServerTTS(text, { voice,
       onStart: () => { setSpeaking(true); isTTSPlayingRef.current = true },
@@ -490,8 +494,11 @@ export default function VoiceChat({ messages, loading, finishing, streamingQuest
 
   function replayWithIntro(intro) {
     const la = lastAssistantRef.current; if (!la) return
+    if (replayingRef.current) return  // guard against a double repeat-trigger → double audio
+    replayingRef.current = true
     silencePromptedRef.current = false; setSilencePrompted(false)
     stopListening()
+    stopServerTTS()  // kill any audio still playing before the repeat
     submittedRef.current = false; transcriptRef.current = ''; setTranscript(''); setInterim('')
     setSpeaking(true); isTTSPlayingRef.current = true
     playServerTTS(intro, { voice,
@@ -505,18 +512,20 @@ export default function VoiceChat({ messages, loading, finishing, streamingQuest
     const la = lastAssistantRef.current; if (!la) return
     silencePromptedRef.current = false; setSilencePrompted(false)
     stopListening()
+    stopServerTTS()  // ensure the intro finished cleanly and nothing overlaps
     submittedRef.current = false; transcriptRef.current = ''; setTranscript(''); setInterim('')
     const text = la.content; const replayLen = messages.length
     setSpeaking(true); isTTSPlayingRef.current = true
     playServerTTS(text, { voice,
       onStart: () => { setSpeaking(true); isTTSPlayingRef.current = true; setTtsStartedForLength(replayLen); setCaptionWordIdx(0); startCaptionAnimation(text) },
-      onEnd:   () => { setSpeaking(false); isTTSPlayingRef.current = false; clearCaptionTimers(); setCaptionWordIdx(Infinity); setTimeout(() => startListening(), 800) },
-      onError: () => { setSpeaking(false); isTTSPlayingRef.current = false; clearCaptionTimers(); setCaptionWordIdx(Infinity); setTimeout(() => startListening(), 800) },
+      onEnd:   () => { setSpeaking(false); isTTSPlayingRef.current = false; replayingRef.current = false; clearCaptionTimers(); setCaptionWordIdx(Infinity); setTimeout(() => startListening(), 800) },
+      onError: () => { setSpeaking(false); isTTSPlayingRef.current = false; replayingRef.current = false; clearCaptionTimers(); setCaptionWordIdx(Infinity); setTimeout(() => startListening(), 800) },
     })
   }
 
   function respondTestPhrase() {
     stopListening()
+    stopServerTTS()  // no overlap with in-flight audio
     const reply = "Yes, I can hear you clearly! Go ahead whenever you're ready."
     setSpeaking(true); isTTSPlayingRef.current = true
     playServerTTS(reply, { voice,

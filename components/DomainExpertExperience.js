@@ -124,6 +124,7 @@ export default function DomainExpertExperience({ userProfile = null }) {
       progressRatio: Math.min(1, elapsedSec / DURATION_S),
       sessionId: sessionIdRef.current,
       beliefTarget,
+      clientBelief: true, // client drives the belief loop → server must NOT re-score
     }
   }
 
@@ -132,6 +133,10 @@ export default function DomainExpertExperience({ userProfile = null }) {
   // on rate-limit/error, so the interview falls back to time/question limits).
   async function fetchPlan(msgs) {
     try {
+      // Bound the belief-loop latency: if scoring is slow (rate-limited), give up
+      // and let the question proceed with phase-based guidance rather than hang.
+      const ctrl = new AbortController()
+      const timer = setTimeout(() => ctrl.abort(), 12000)
       const res = await fetch('/api/interview/plan/next', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -142,7 +147,8 @@ export default function DomainExpertExperience({ userProfile = null }) {
           prev: lastPlanRef.current,
           turnsSpent: turnsSpentRef.current,
         }),
-      })
+        signal: ctrl.signal,
+      }).finally(() => clearTimeout(timer))
       if (!res.ok) return null
       const plan = await res.json()
       // Critic: count unresolved evasions for the interview-quality score.

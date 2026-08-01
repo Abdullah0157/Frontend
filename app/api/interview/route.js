@@ -634,6 +634,7 @@ export async function POST(req) {
       progressRatio = null,        // domain_expert: elapsed/30min for time-based phasing
       focusAreas = [],             // domain_expert: resume-derived topics to steer questions
       beliefTarget = null,         // domain_expert: DEIE next-target (from /plan/next) to steer the question
+      clientBelief = false,        // domain_expert: client runs the belief loop → don't re-score server-side
     } = await req.json()
 
     if (!['question', 'report'].includes(action)) {
@@ -757,7 +758,9 @@ export async function POST(req) {
       // interview never stalls. See INTERVIEWER_ENGINE.md §10.
       if (beliefTarget) {
         guidance += targetDirective(beliefTarget)
-      } else if (answeredCount > 0) {
+      } else if (!clientBelief && answeredCount > 0) {
+        // Only score server-side for callers that AREN'T running the belief loop
+        // themselves (avoids a second heavy scoring call per turn for the client).
         try {
           const strategy = buildStrategy(domainExpertise || role, '', {})
           const { profile } = await scoreTranscript({ role: domainExpertise || role, messages })

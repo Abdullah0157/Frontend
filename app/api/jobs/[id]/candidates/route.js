@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { query } from '@/lib/db'
 import { callGemini, textFrom, stripJsonFences } from '@/lib/gemini'
 import { getSupabaseServer } from '@/lib/supabase/server'
+import { scoreTranscriptEnsemble } from '@/lib/eie-rate'
 
 export const dynamic = 'force-dynamic'
 
@@ -76,6 +77,15 @@ export async function POST(req, { params }) {
       console.warn('Fit-score Gemini call failed:', result.data?.error?.message)
     }
 
+    // Enrich the Iris report with the EIE competency profile + decision +
+    // interview-quality (same rigorous rubric as Maya). Non-fatal: a scoring
+    // failure still saves the base report.
+    let enrichedReport = report
+    try {
+      const { profile } = await scoreTranscriptEnsemble({ role: job.role || 'the role', messages: transcript, nRaters: 2, name })
+      if (profile) enrichedReport = { ...(report || {}), eie: profile }
+    } catch {}
+
     const { rows } = await query(
       `INSERT INTO interview_candidates (job_id, name, email, transcript, report, job_fit_score, fit_reasoning, resume_text, user_id)
        VALUES ($1, $2, $3, $4::jsonb, $5::jsonb, $6, $7, $8, $9)
@@ -85,7 +95,7 @@ export async function POST(req, { params }) {
         name.trim(),
         email?.trim() || null,
         JSON.stringify(transcript),
-        report ? JSON.stringify(report) : null,
+        enrichedReport ? JSON.stringify(enrichedReport) : null,
         fit.job_fit_score,
         fit.fit_reasoning,
         resumeText || null,

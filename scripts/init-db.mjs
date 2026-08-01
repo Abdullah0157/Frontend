@@ -365,7 +365,7 @@ CREATE TABLE IF NOT EXISTS expert_assessments (
   domain            text,
   transcript        jsonb NOT NULL DEFAULT '[]',
   report            jsonb,
-  expertise_score   integer,
+  expertise_score   numeric,
   expertise_level   text,
   created_at        timestamptz NOT NULL DEFAULT now()
 );

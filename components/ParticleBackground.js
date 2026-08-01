@@ -1,12 +1,21 @@
 'use client'
 
 import React, { useRef, useEffect } from 'react'
+import { usePathname } from 'next/navigation'
+
+// Routes that are the "app" (not marketing) — the animated particle canvas must
+// NOT run here: a constant-repaint canvas behind the dashboard causes jank.
+const APP_ROUTES = /^\/(dashboard|admin|company|interview|assessment|skill-profile)(\/|$)/
 
 export default function ParticleBackground() {
   const canvasRef = useRef(null)
+  const pathname = usePathname()
+  const isApp = APP_ROUTES.test(pathname || '')
 
   useEffect(() => {
+    if (isApp) return // no animation loop on app routes
     const canvas = canvasRef.current
+    if (!canvas) return
     const ctx = canvas.getContext('2d')
     let particles = []
     let animationFrameId
@@ -115,7 +124,10 @@ export default function ParticleBackground() {
       window.removeEventListener('resize', resize)
       window.removeEventListener('mousemove', handleMouseMove)
     }
-  }, [])
+  }, [isApp])
+
+  // Don't even mount the canvas on app routes.
+  if (isApp) return null
 
   return (
     <canvas

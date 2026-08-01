@@ -3,6 +3,7 @@ import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import ParticleBackground from '@/components/ParticleBackground'
 import AnalyticsTracker from '@/components/AnalyticsTracker'
+import NavProgress from '@/components/NavProgress'
 import Script from 'next/script'
 
 export const metadata = {
@@ -22,6 +23,7 @@ export default function RootLayout({ children }) {
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
       </head>
       <body className="flex flex-col min-h-screen font-sans antialiased text-slate-900 bg-white relative">
+        <NavProgress />
         <AnalyticsTracker />
         <ParticleBackground />
         <Header />
