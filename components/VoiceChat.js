@@ -5,11 +5,11 @@ import { getAudioContext } from '@/lib/tts'
 import { playServerTTS, stopServerTTS } from '@/lib/tts-client'
 import { AI_NAME } from '@/lib/ai-config'
 
-// How long after the last recognised word before auto-submitting.
-// Sprint 3: dropped from 5500 → 2500. The audio-energy guard in autoSubmit()
-// (msSinceAudio < 2500 defers submit) already prevents cutting off a speaker
-// mid-sentence, so 2500 is safe and saves 3 wall-clock seconds per turn.
-const SILENCE_MS = 2500
+// How long after the last recognised word before auto-submitting. Raised to
+// 3800ms so a mid-answer pause (thinking) doesn't cut the recording off before
+// the person finishes — the #1 cause of missing words in the transcript. The
+// audio-energy guard in autoSubmit() defers further while the mic is still hot.
+const SILENCE_MS = 3800
 // How long with zero speech activity before Iris checks in.
 const NO_SPEECH_MS = 15000
 
@@ -77,7 +77,7 @@ function playChime(notes) {
 function startChime() { playChime([[523.25, 0.18, 0], [659.25, 0.18, 0.15], [783.99, 0.32, 0.3]]) }
 function endChime()   { playChime([[783.99, 0.18, 0], [659.25, 0.18, 0.18], [523.25, 0.4, 0.36]]) }
 
-export default function VoiceChat({ messages, loading, finishing, streamingQuestion = '', onSubmit, totalQuestions, headerLabel = null, onEnd = null, aiName = AI_NAME, voice = undefined }) {
+export default function VoiceChat({ messages, loading, finishing, streamingQuestion = '', onSubmit, totalQuestions, headerLabel = null, onEnd = null, aiName = AI_NAME, voice = undefined, sttContext = '' }) {
   const [supported, setSupported]               = useState(true)
   const [speaking, setSpeaking]                 = useState(false)
   const [listening, setListening]               = useState(false)
@@ -319,7 +319,12 @@ export default function VoiceChat({ messages, loading, finishing, streamingQuest
     let stream
     try {
       stream = await navigator.mediaDevices.getUserMedia({
-        audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true },
+        audio: {
+          echoCancellation: true,
+          noiseSuppression: true,
+          autoGainControl: true,
+          channelCount: 1,        // mono — cleaner input for Whisper
+        },
         video: false,
       })
     } catch (err) {
@@ -444,6 +449,7 @@ export default function VoiceChat({ messages, loading, finishing, streamingQuest
         const blob = new Blob(chunks, { type: mimeType })
         const fd = new FormData()
         fd.append('audio', blob, `audio.${ext}`)
+        if (sttContext) fd.append('context', sttContext) // domain vocabulary → better term accuracy
         const res = await fetch('/api/stt', { method: 'POST', body: fd })
         if (res.ok) {
           const { text } = await res.json()

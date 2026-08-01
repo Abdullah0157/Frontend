@@ -441,6 +441,7 @@ export default function InterviewExperience({
               submitAnswer(undefined, text)
             }}
             totalQuestions={totalQuestions}
+            sttContext={candidate.role || job?.role || ''}
           />
         )}
 

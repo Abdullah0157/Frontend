@@ -360,6 +360,7 @@ export default function DomainExpertExperience({ userProfile = null }) {
           onEnd={endEarly}
           aiName="Maya"
           voice="en-GB-SoniaNeural"
+          sttContext={[detected?.domain, ...(detected?.focusAreas || [])].filter(Boolean).join(', ')}
         />
       )}
 
