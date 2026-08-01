@@ -10,7 +10,7 @@ export const metadata = {
   title: 'JobStream - Find Your Dream Career',
   description: 'Connect with top tech companies and find your next opportunity.',
   icons: {
-    icon: '/images/logo.jpeg',
+    icon: '/jobstream-icon.png',
   },
 }
 

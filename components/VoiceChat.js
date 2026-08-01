@@ -567,9 +567,7 @@ export default function VoiceChat({ messages, loading, finishing, streamingQuest
       {/* Top bar */}
       <div className="absolute top-0 inset-x-0 z-10 px-8 pt-6 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-gradient-to-br from-blue-500 to-indigo-600">
-            <span className="text-white font-black text-xs">JS</span>
-          </div>
+          <img src="/jobstream-icon.png" alt="Jobstream" className="w-8 h-8 object-contain" />
           <span className="text-sm font-black text-slate-900 tracking-tight">jobstream.</span>
         </div>
         <div className="flex items-center gap-4">

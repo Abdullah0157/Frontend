@@ -91,9 +91,7 @@ export default function DashboardSidebar({ email }) {
       >
         {/* Logo */}
         <Link href="/dashboard" className="flex items-center justify-center h-[76px] flex-shrink-0">
-          <div className="w-10 h-10 rounded-[13px] bg-slate-900 flex items-center justify-center ring-1 ring-slate-900/5">
-            <span className="text-white font-semibold text-[15px] tracking-tight">JS</span>
-          </div>
+          <img src="/jobstream-icon.png" alt="Jobstream" className="w-11 h-11 object-contain" />
         </Link>
 
         {/* Nav */}

@@ -52,9 +52,7 @@ export default function CompanySidebar() {
     <aside className={`fixed top-0 left-0 z-[60] h-screen w-64 bg-white border-r border-slate-200 flex flex-col transform transition-transform duration-300 md:translate-x-0 ${open ? 'translate-x-0' : '-translate-x-full'}`}>
       {/* Brand */}
       <Link href="/company" className="flex items-center gap-3 px-6 py-7 border-b border-slate-200 hover:bg-slate-50 transition">
-        <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-gradient-to-br from-blue-500 to-indigo-600 shadow-lg shadow-indigo-500/30">
-          <span className="text-white font-black text-base tracking-tighter">JS</span>
-        </div>
+        <img src="/jobstream-icon.png" alt="Jobstream" className="w-10 h-10 object-contain flex-shrink-0" />
         <div className="min-w-0">
           <p className="text-slate-900 font-black text-sm uppercase tracking-tight truncate">{companyName}</p>
           <p className="text-slate-400 text-[10px] uppercase tracking-widest">Company</p>

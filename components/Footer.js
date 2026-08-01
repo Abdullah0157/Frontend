@@ -22,7 +22,10 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row justify-between items-center gap-10">
           {/* Brand / Socials */}
           <div className="flex flex-col items-center md:items-start gap-6">
-            <span className="text-xl font-black tracking-tighter text-slate-900 uppercase">JobStream</span>
+            <span className="flex items-center gap-2.5">
+              <img src="/jobstream-icon.png" alt="Jobstream" className="w-9 h-9 object-contain" />
+              <span className="text-xl font-black tracking-tighter text-slate-900">Jobstream</span>
+            </span>
             <div className="flex space-x-6">
               <a href="https://www.linkedin.com/company/jobstream-opportunity" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-indigo-600 transition-colors">
                 <span className="sr-only">LinkedIn</span>
@@ -48,7 +51,7 @@ export default function Footer() {
 
         <div className="mt-16 pt-8 border-t border-slate-200 text-center">
           <p className="text-slate-400 font-bold text-[9px] uppercase tracking-widest">
-            © 2026 JOBSTREAM. ALL RIGHTS RESERVED.
+            © 2026 Jobstream. All rights reserved.
           </p>
         </div>
       </div>

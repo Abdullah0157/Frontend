@@ -79,11 +79,9 @@ export default function Header() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-24">
           <div className="flex-shrink-0 flex items-center">
-            <Link href="/" className="flex items-center space-x-3 group">
-              <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-gradient-to-br from-blue-500 to-indigo-600 shadow-2xl shadow-indigo-500/40 group-hover:scale-110 transition-transform duration-300">
-                <span className="text-white font-black text-xl tracking-tighter">JS</span>
-              </div>
-              <span className="text-2xl font-black tracking-tighter text-slate-900">JOBSTREAM</span>
+            <Link href="/" className="flex items-center gap-2.5 group">
+              <img src="/jobstream-icon.png" alt="Jobstream" className="w-11 h-11 object-contain group-hover:scale-110 transition-transform duration-300" />
+              <span className="text-2xl font-black tracking-tighter text-slate-900">Jobstream</span>
             </Link>
           </div>
 
