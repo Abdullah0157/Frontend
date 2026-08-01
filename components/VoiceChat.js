@@ -5,6 +5,30 @@ import { getAudioContext } from '@/lib/tts'
 import { playServerTTS, stopServerTTS } from '@/lib/tts-client'
 import { AI_NAME } from '@/lib/ai-config'
 
+// Per-turn latency probe. Prints ONE summary line when the AI starts speaking so
+// we can see exactly where the wait goes: transcribe (STT) · think (question
+// generation) · speak (TTS to first audio). Measured from the moment recording
+// stops (the ~1.5s endpoint wait before that is separate/known). Also exposed on
+// window.__lastMayaTurn for quick inspection.
+const _now = () => (typeof performance !== 'undefined' && performance.now ? performance.now() : Date.now())
+const TT = {
+  t0: null, m: {},
+  start() { this.t0 = _now(); this.m = {} },
+  mark(k) { if (this.t0 == null) return; this.m[k] = Math.round(_now() - this.t0) },
+  done() {
+    if (this.t0 == null) return
+    const m = this.m
+    const think = (m.question != null && m.stt != null) ? m.question - m.stt : null
+    const speak = (m.tts != null && m.question != null) ? m.tts - m.question : null
+    console.log(
+      `%c[⏱ TURN] transcribe ${m.stt ?? '?'}ms · think ${think ?? '?'}ms · speak ${speak ?? '?'}ms · TOTAL ${m.tts ?? '?'}ms`,
+      'color:#f5b544;font-weight:bold;font-size:12px'
+    )
+    if (typeof window !== 'undefined') window.__lastMayaTurn = { ...m, think, speak }
+    this.t0 = null
+  },
+}
+
 // Adaptive endpointing. Instead of one blind fixed wait, we lean on the two
 // signals the browser already gives us:
 //   1. Web Speech `isFinal` — the recognizer itself decided a phrase ended.
@@ -271,12 +295,14 @@ export default function VoiceChat({ messages, loading, finishing, streamingQuest
     const id = messages.length
     if (spokenIdsRef.current.has(id)) return
     spokenIdsRef.current.add(id)
+    TT.mark('question')  // question text is ready → about to synthesize speech
     const text = lastAssistant.content
     stopServerTTS()  // never overlap with any audio still playing (fixes double-voice)
     setSpeaking(true)
     isTTSPlayingRef.current = true  // set immediately so auto-start mic effect won't race
     playServerTTS(text, { voice,
       onStart: () => {
+        TT.mark('tts'); TT.done()  // first audio out → print the turn breakdown
         setSpeaking(true); isTTSPlayingRef.current = true; setTtsStartedForLength(id)
         // Always show the FULL question text immediately when Iris starts speaking.
         // No word-by-word animation — the animation drifted out of sync with the
@@ -445,6 +471,7 @@ export default function VoiceChat({ messages, loading, finishing, streamingQuest
     }
 
     // Stop recognition + recording so we can send the audio to Whisper.
+    TT.start()  // begin per-turn latency probe
     try { recognitionRef.current?.stop() } catch {}
     listeningRef.current = false
 
@@ -469,6 +496,7 @@ export default function VoiceChat({ messages, loading, finishing, streamingQuest
         const res = await fetch('/api/stt', { method: 'POST', body: fd })
         if (res.ok) {
           const { text } = await res.json()
+          TT.mark('stt')  // transcription received
           const whisperText = text?.trim()
           if (whisperText && whisperText.length >= 3) {
             setIsTranscribing(false)
