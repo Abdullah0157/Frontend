@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
-import { getSupabaseServer } from '@/lib/supabase/server'
+import { createServerClient } from '@supabase/ssr'
 import { query } from '@/lib/db'
 
 // Handles both email confirmation links and OAuth callbacks.
@@ -10,15 +10,40 @@ import { query } from '@/lib/db'
 //
 // First-time users (no resume in user_profiles) get sent to /profile?onboarding=1
 // regardless of their requested `next` — they have to finish onboarding first.
+//
+// IMPORTANT: the session cookies that exchangeCodeForSession() writes MUST be
+// attached to the SAME response we return. Cookies set via next/headers cookies()
+// are dropped when you return a manually-built NextResponse — which caused the
+// "first Google login lands on home, second login works" bug. So we create the
+// redirect response up front and bind Supabase's cookie writes to it.
 export async function GET(req) {
   const url = new URL(req.url)
   const code = url.searchParams.get('code')
 
   const cookieStore = cookies()
   const nextFromCookie = cookieStore.get('auth_next')?.value
-  const next = decodeURIComponent(nextFromCookie || url.searchParams.get('next') || '/jobs')
+  // Default a plain login to the candidate dashboard (not /jobs).
+  const next = decodeURIComponent(nextFromCookie || url.searchParams.get('next') || '/dashboard')
 
-  const supabase = getSupabaseServer()
+  // The response we'll return. Its Location is updated after role routing; the
+  // Supabase client below writes the session cookies directly onto it.
+  const res = NextResponse.redirect(new URL(next, url.origin))
+
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
+    {
+      cookies: {
+        getAll() {
+          return cookieStore.getAll()
+        },
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value, options }) => res.cookies.set(name, value, options))
+        },
+      },
+    }
+  )
+
   if (code) {
     const { error } = await supabase.auth.exchangeCodeForSession(code)
     if (error) {
@@ -33,7 +58,6 @@ export async function GET(req) {
     const { data: { user } } = await supabase.auth.getUser()
     if (user) {
       // 1. Pending company signup → write the company_profile.
-      //    (Signed up via /signup/company; pending_company cookie has the form data.)
       const pendingRaw = cookieStore.get('pending_company')?.value
       if (pendingRaw) {
         try {
@@ -67,33 +91,31 @@ export async function GET(req) {
       const { rows: profRows } = await query(
         `SELECT account_type FROM user_profiles WHERE user_id = $1`,
         [user.id]
-      )
+      ).catch(() => ({ rows: [] }))
       const accountType = profRows[0]?.account_type || 'candidate'
 
       if (accountType === 'super_admin') {
-        // Super admins always go to /admin regardless of ?next=. Their
-        // workspace is separate from anything a `next` link could point at.
         finalNext = '/admin'
       } else if (accountType === 'company') {
-        // Companies always land on /company (their dashboard).
-        const { rows: compRows } = await query(`SELECT 1 FROM company_profiles WHERE user_id = $1 LIMIT 1`, [user.id])
+        const { rows: compRows } = await query(`SELECT 1 FROM company_profiles WHERE user_id = $1 LIMIT 1`, [user.id]).catch(() => ({ rows: [] }))
         finalNext = compRows.length === 0 ? '/company?onboarding=1' : '/company'
       } else {
         // Candidates: onboarding gate (resume on file?)
         const { rows: resRows } = await query(
           `SELECT 1 FROM user_profiles WHERE user_id = $1 AND resume_text IS NOT NULL LIMIT 1`,
           [user.id]
-        )
+        ).catch(() => ({ rows: [] }))
         finalNext = resRows.length === 0
-          ? `/profile?onboarding=1&next=${encodeURIComponent(next)}`
-          : next
+          ? `/dashboard/profile?onboarding=1&next=${encodeURIComponent(next)}`
+          : next   // respects an explicit destination (e.g. an interview link), else /dashboard
       }
     }
   } catch (e) {
     console.warn('role routing check failed (allowing through):', e.message)
   }
 
-  const res = NextResponse.redirect(new URL(finalNext, url.origin))
+  // Point the (cookie-carrying) response at the final destination.
+  res.headers.set('location', new URL(finalNext, url.origin).toString())
   res.cookies.delete('auth_next')
   res.cookies.delete('pending_company')
   return res
