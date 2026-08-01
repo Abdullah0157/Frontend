@@ -9,7 +9,7 @@
 // DELETE THIS FILE BEFORE PRODUCTION DEPLOY.
 // Search for "dev/assessment-test" to find any references.
 
-import AssessmentExperience from '@/app/assessment/AssessmentExperience'
+import AssessmentExperience from '@/app/dashboard/assessment/AssessmentExperience'
 
 export const metadata = { title: 'Assessment Test — JobStream (Dev)' }
 
