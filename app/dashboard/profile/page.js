@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { useSearchParams } from 'next/navigation'
+import { useSearchParams, useRouter } from 'next/navigation'
 
 // ── tiny helpers ──────────────────────────────────────────────────────────────
 function uid() { return Math.random().toString(36).slice(2) }
@@ -265,6 +265,7 @@ function ProjCard({ item, onSave, onDelete }) {
 // ── Main ─────────────────────────────────────────────────────────────────────
 export default function DashboardProfilePage() {
   const params = useSearchParams()
+  const router = useRouter()
   const tabParam = params?.get('tab')
 
   const [profile, setProfile] = useState(null)
@@ -323,6 +324,9 @@ export default function DashboardProfilePage() {
       if (!r.ok) { const j = await r.json().catch(()=>{}); throw new Error(j?.error || 'Failed') }
       const { text, pages, chars } = await r.json()
       await save({ resume_text: text, resume_filename: file.name, resume_pages: pages, resume_chars: chars })
+      // Bust the App Router client cache so other server-rendered pages (e.g. the
+      // Expert Interview gate) don't serve a stale "no resume" render after this.
+      router.refresh()
       if (fileRef.current) fileRef.current.value = ''
       parseResumeSections()
     } catch (e) { flash('err', e.message) } finally { setUploading(false) }

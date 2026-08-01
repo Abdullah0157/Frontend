@@ -18,6 +18,7 @@ export default function DomainExpertExperience({ userProfile = null }) {
   const [streamingQuestion, setStreamingQuestion] = useState('')
   const [report, setReport] = useState(null)
   const [error, setError] = useState('')
+  const [noResume, setNoResume] = useState(false)
   const [elapsedSec, setElapsedSec] = useState(0)
   const startTimeRef = useRef(null)
   const sessionIdRef = useRef(null)
@@ -32,10 +33,13 @@ export default function DomainExpertExperience({ userProfile = null }) {
     let cancelled = false
     ;(async () => {
       try {
-        const res = await fetch('/api/interview/detect-domain', { method: 'POST' })
+        const res = await fetch('/api/interview/detect-domain', { method: 'POST', cache: 'no-store' })
         const data = await res.json()
         if (cancelled) return
         if (!res.ok) {
+          // 400 = genuinely no resume on file → show the upload CTA.
+          // Anything else (503/500/etc) = transient → offer a retry instead.
+          setNoResume(res.status === 400)
           setError(data.error || 'Could not read your resume.')
           setPhase('error_no_resume')
           return
@@ -306,10 +310,36 @@ export default function DomainExpertExperience({ userProfile = null }) {
       )}
 
       {phase === 'error_no_resume' && (
-        <div className="rounded-2xl border border-red-200 bg-red-50 p-8 text-center">
-          <p className="text-sm font-semibold text-red-700 mb-1">Couldn't start the interview</p>
-          <p className="text-sm text-red-600">{error || 'No resume found. Please upload your resume first.'}</p>
-        </div>
+        noResume ? (
+          <div className="rounded-2xl border border-slate-200 bg-white p-10 text-center max-w-xl mx-auto shadow-sm">
+            <div className="w-14 h-14 mx-auto mb-5 rounded-2xl bg-amber-50 border border-amber-200 flex items-center justify-center">
+              <svg className="w-7 h-7 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+            </div>
+            <h2 className="text-xl font-bold text-slate-900 mb-1">Upload your resume first</h2>
+            <p className="text-slate-500 mb-6 max-w-sm mx-auto">
+              Maya builds the interview around your actual experience, so we need your resume on file before you start.
+            </p>
+            <a
+              href="/dashboard/profile?tab=resume"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold transition-colors"
+            >
+              Upload Resume →
+            </a>
+          </div>
+        ) : (
+          <div className="rounded-2xl border border-red-200 bg-red-50 p-8 text-center max-w-xl mx-auto">
+            <p className="text-sm font-semibold text-red-700 mb-1">Couldn't start the interview</p>
+            <p className="text-sm text-red-600 mb-5">{error || 'Something went wrong. Please try again.'}</p>
+            <button
+              onClick={() => { setError(''); setNoResume(false); setPhase('detecting'); window.location.reload() }}
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-sm font-semibold transition-colors"
+            >
+              Try again
+            </button>
+          </div>
+        )
       )}
 
       {phase === 'ready' && detected && (
