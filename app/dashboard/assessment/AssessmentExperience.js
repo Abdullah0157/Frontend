@@ -213,7 +213,7 @@ export default function AssessmentExperience({
   const seniorityLabel = SENIORITY_LABELS[seniorityBand] || seniorityBand
 
   return (
-    <div className="min-h-screen pt-32 pb-24 px-4">
+    <div className="pb-10">
       <div className="container mx-auto max-w-3xl">
         <div className="mb-8 text-center">
           <span className="inline-block px-4 py-1.5 rounded-full bg-indigo-50 border border-indigo-200 text-indigo-600 font-black text-[10px] uppercase tracking-[0.4em] mb-4">

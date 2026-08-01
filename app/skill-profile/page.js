@@ -158,7 +158,7 @@ export default function SkillProfilePage({ embedded = false }) {
               Take an assessment to start building your skill profile.
             </p>
             <Link
-              href="/assessment"
+              href="/dashboard/assessment"
               className="inline-block px-6 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black uppercase tracking-widest text-sm transition-colors"
             >
               Take an assessment

@@ -88,7 +88,7 @@ export default async function ApplicationHubPage({ params }) {
       done: !!doneAt,
       statusDone: doneAt ? `Completed ${fmt(doneAt)}` : null,
       statusTodo: 'Adaptive scenario, coding & MCQ questions',
-      href: `/assessment?jobId=${job.id}&role=${code}&slug=${slug}`,
+      href: `/dashboard/assessment?jobId=${job.id}&role=${code}&slug=${slug}`,
     })
   }
 
