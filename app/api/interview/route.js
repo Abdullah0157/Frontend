@@ -802,7 +802,8 @@ export async function POST(req) {
       try {
         streamRes = await callGeminiStream(geminiBody)
       } catch {
-        const result = await callGemini(geminiBody)
+        // Live turn — cap rate-limit backoff so a slow provider can't freeze it.
+        const result = await callGemini(geminiBody, { maxRateLimitWaitMs: 2500 })
         if (!result.ok) return NextResponse.json({ error: result.data?.error?.message || 'AI error' }, { status: result.status })
         return NextResponse.json({ question: textFrom(result.data) })
       }
@@ -894,7 +895,8 @@ export async function POST(req) {
     try {
       streamRes = await callGeminiStream(geminiBody)
     } catch {
-      const result = await callGemini(geminiBody)
+      // Live turn — cap rate-limit backoff so a slow provider can't freeze it.
+      const result = await callGemini(geminiBody, { maxRateLimitWaitMs: 2500 })
       if (!result.ok) {
         return NextResponse.json(
           { error: result.data?.error?.message || 'AI error' },
