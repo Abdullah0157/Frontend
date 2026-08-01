@@ -27,6 +27,12 @@ export default function DomainExpertExperience({ userProfile = null }) {
   const lastPlanRef = useRef(null)      // { belief, target_id } for the Critic
   const turnsSpentRef = useRef({})      // competency_id → # times targeted (anti-repetition)
   const evasionsRef = useRef(0)         // count of unresolved dodges (feeds quality score)
+  // Belief loop runs OFF the critical path: it steers the NEXT question and can
+  // flag early-conclude, so it never blocks the question the candidate is waiting
+  // for. These carry its result forward one turn.
+  const pendingTargetRef = useRef(null) // next_target from last turn's plan → steers this turn
+  const concludeSoonRef = useRef(false) // last plan judged the decision stable → wrap up
+  const planSeqRef = useRef(0)          // monotonic guard so only the latest plan applies
 
   // ── Detect domain from resume on mount ──────────────────────────────────────
   useEffect(() => {
@@ -235,26 +241,32 @@ export default function DomainExpertExperience({ userProfile = null }) {
     setLoading(true)
     setStreamingQuestion('')
 
-    // Time's up (or safety cap) → wrap into a report.
+    // Time's up, safety cap, or the belief loop already judged the decision
+    // stable last turn → wrap into a report.
     const timeUp = startTimeRef.current && (Date.now() - startTimeRef.current) / 1000 >= DURATION_S
-    if (timeUp || answered >= MAX_QUESTIONS) {
+    if (timeUp || answered >= MAX_QUESTIONS || concludeSoonRef.current) {
       await generateReport(nextMessages)
       setLoading(false)
       return
     }
 
     try {
-      // DEIE: update the belief state. If the hiring decision is now stable
-      // (more questions can't change it), conclude early — like an elite
-      // interviewer who stops once they know. Otherwise steer the next question
-      // at the weakest competency the planner identified.
-      const plan = await fetchPlan(nextMessages)
-      if (plan?.ready_to_conclude) {
-        await generateReport(nextMessages)
-        setLoading(false)
-        return
-      }
-      const question = await fetchQuestion(questionBody(nextMessages, plan?.next_target || null))
+      // DEIE belief loop — runs in the BACKGROUND so it never delays the next
+      // question. It scores the transcript-so-far to (a) steer the FOLLOWING
+      // turn at the weakest competency and (b) flag when the decision is stable
+      // enough to conclude. Result is applied one turn later — imperceptible,
+      // since the target barely moves per answer — but it removes a full LLM
+      // round-trip from the critical path the candidate waits on.
+      const seq = ++planSeqRef.current
+      fetchPlan(nextMessages).then((plan) => {
+        if (seq !== planSeqRef.current || !plan) return // superseded by a newer turn
+        pendingTargetRef.current = plan.next_target || null
+        if (plan.ready_to_conclude) concludeSoonRef.current = true
+      }).catch(() => {})
+
+      // Generate the question NOW, steered by the previous turn's target (or
+      // phase-based guidance on the first turn, when it's null).
+      const question = await fetchQuestion(questionBody(nextMessages, pendingTargetRef.current))
       setStreamingQuestion('')
       setMessages([...nextMessages, { role: 'assistant', content: question }])
     } catch (err) {
@@ -288,6 +300,12 @@ export default function DomainExpertExperience({ userProfile = null }) {
     setElapsedSec(0)
     startTimeRef.current = null
     sessionIdRef.current = crypto.randomUUID()
+    lastPlanRef.current = null
+    turnsSpentRef.current = {}
+    evasionsRef.current = 0
+    pendingTargetRef.current = null
+    concludeSoonRef.current = false
+    planSeqRef.current = 0
   }
 
   const levelColors = {
