@@ -16,9 +16,14 @@ export async function POST(req) {
       ? `Interview about ${context}. Transcribe the spoken English answer verbatim, including technical terms.`
       : 'Interview answer in clear spoken English. Transcribe verbatim.'
 
+    // whisper-large-v3-turbo: ~2x faster than large-v3 with equal-or-better
+    // accuracy on clear English (A/B'd on technical vocab — turbo got "Postgres"
+    // where large-v3 said "Posker's"). Env-overridable to flip back instantly.
+    const model = process.env.WHISPER_MODEL || 'whisper-large-v3-turbo'
+
     const groqForm = new FormData()
     groqForm.append('file', audio)
-    groqForm.append('model', 'whisper-large-v3')
+    groqForm.append('model', model)
     groqForm.append('language', 'en')
     groqForm.append('response_format', 'json')
     groqForm.append('prompt', prompt)
