@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { getSupabaseBrowser } from '@/lib/supabase/client'
+import MobileMenuButton, { MobileBackdrop } from '@/components/MobileMenuButton'
 
 const NAV = [
   { href: '/company',            label: 'Dashboard',  icon: 'M3 12l9-9 9 9M5 10v10h14V10' },
@@ -17,6 +18,7 @@ export default function CompanySidebar() {
   const router = useRouter()
   const [companyName, setCompanyName] = useState('')
   const [email, setEmail] = useState('')
+  const [open, setOpen] = useState(false)
 
   useEffect(() => {
     fetch('/api/me', { cache: 'no-store' })
@@ -27,6 +29,9 @@ export default function CompanySidebar() {
       })
       .catch(() => {})
   }, [])
+
+  // Close the mobile drawer on navigation.
+  useEffect(() => { setOpen(false) }, [pathname])
 
   async function logout() {
     const supabase = getSupabaseBrowser()
@@ -41,15 +46,18 @@ export default function CompanySidebar() {
   }
 
   return (
-    <aside className="fixed top-0 left-0 z-40 h-screen w-64 bg-slate-950 border-r border-slate-800 flex flex-col">
+    <>
+    <MobileMenuButton open={open} onToggle={() => setOpen((o) => !o)} />
+    <MobileBackdrop open={open} onClose={() => setOpen(false)} />
+    <aside className={`fixed top-0 left-0 z-[60] h-screen w-64 bg-white border-r border-slate-200 flex flex-col transform transition-transform duration-300 md:translate-x-0 ${open ? 'translate-x-0' : '-translate-x-full'}`}>
       {/* Brand */}
-      <Link href="/company" className="flex items-center gap-3 px-6 py-7 border-b border-slate-800 hover:bg-slate-900 transition">
+      <Link href="/company" className="flex items-center gap-3 px-6 py-7 border-b border-slate-200 hover:bg-slate-50 transition">
         <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-gradient-to-br from-blue-500 to-indigo-600 shadow-lg shadow-indigo-500/30">
           <span className="text-white font-black text-base tracking-tighter">JS</span>
         </div>
         <div className="min-w-0">
-          <p className="text-white font-black text-sm uppercase tracking-tight truncate">{companyName}</p>
-          <p className="text-slate-500 text-[10px] uppercase tracking-widest">Company</p>
+          <p className="text-slate-900 font-black text-sm uppercase tracking-tight truncate">{companyName}</p>
+          <p className="text-slate-400 text-[10px] uppercase tracking-widest">Company</p>
         </div>
       </Link>
 
@@ -64,7 +72,7 @@ export default function CompanySidebar() {
               className={`flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition ${
                 active
                   ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/30'
-                  : 'text-slate-400 hover:text-white hover:bg-slate-900'
+                  : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100'
               }`}
             >
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
@@ -77,23 +85,24 @@ export default function CompanySidebar() {
       </nav>
 
       {/* User footer */}
-      <div className="px-3 py-4 border-t border-slate-800">
+      <div className="px-3 py-4 border-t border-slate-200">
         <div className="flex items-center gap-3 px-2 py-2 mb-2">
           <div className="w-9 h-9 rounded-full bg-gradient-to-br from-emerald-500 to-emerald-700 flex items-center justify-center text-white font-black text-xs">
             {(email[0] || '?').toUpperCase()}
           </div>
           <div className="min-w-0 flex-1">
-            <p className="text-slate-300 text-xs font-black truncate">{email || 'Loading…'}</p>
-            <p className="text-slate-500 text-[10px]">Company admin</p>
+            <p className="text-slate-700 text-xs font-black truncate">{email || 'Loading…'}</p>
+            <p className="text-slate-400 text-[10px]">Company admin</p>
           </div>
         </div>
         <button
           onClick={logout}
-          className="w-full text-xs font-black uppercase tracking-widest px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 transition"
+          className="w-full text-xs font-black uppercase tracking-widest px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 transition"
         >
           Log out
         </button>
       </div>
     </aside>
+    </>
   )
 }

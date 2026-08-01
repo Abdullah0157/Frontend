@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { query } from '@/lib/db'
 import { callGemini, textFrom, stripJsonFences } from '@/lib/gemini'
+import { getSupabaseServer } from '@/lib/supabase/server'
 
 export const dynamic = 'force-dynamic'
 
@@ -36,6 +37,15 @@ export async function POST(req, { params }) {
       return NextResponse.json({ error: 'name and transcript are required' }, { status: 400 })
     }
 
+    // Capture the logged-in candidate so their AI-interview completion can be
+    // detected on the application hub (job_id + user_id).
+    let candidateUserId = null
+    try {
+      const supabase = getSupabaseServer()
+      const { data: { user } } = await supabase.auth.getUser()
+      candidateUserId = user?.id || null
+    } catch {}
+
     const jobRes = await query(`SELECT id, role, description FROM interview_jobs WHERE id = $1`, [jobId])
     if (jobRes.rowCount === 0) {
       return NextResponse.json({ error: 'Job not found' }, { status: 404 })
@@ -67,8 +77,8 @@ export async function POST(req, { params }) {
     }
 
     const { rows } = await query(
-      `INSERT INTO interview_candidates (job_id, name, email, transcript, report, job_fit_score, fit_reasoning, resume_text)
-       VALUES ($1, $2, $3, $4::jsonb, $5::jsonb, $6, $7, $8)
+      `INSERT INTO interview_candidates (job_id, name, email, transcript, report, job_fit_score, fit_reasoning, resume_text, user_id)
+       VALUES ($1, $2, $3, $4::jsonb, $5::jsonb, $6, $7, $8, $9)
        RETURNING id, name, job_fit_score, fit_reasoning, created_at`,
       [
         jobId,
@@ -79,6 +89,7 @@ export async function POST(req, { params }) {
         fit.job_fit_score,
         fit.fit_reasoning,
         resumeText || null,
+        candidateUserId,
       ]
     )
 

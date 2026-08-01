@@ -9,7 +9,7 @@ export default function Globe() {
       <div className="absolute inset-[-15%] bg-blue-500/5 blur-[100px] rounded-full group-hover:bg-indigo-500/10 transition-colors duration-1000"></div>
       
       {/* The Globe Container (Sphere) */}
-      <div className="relative w-full h-full rounded-full overflow-hidden shadow-[0_0_100px_rgba(0,0,0,0.15)] bg-slate-900 scale-100 transition-transform duration-1000 ease-out">
+      <div className="relative w-full h-full rounded-full overflow-hidden shadow-[0_0_100px_rgba(0,0,0,0.15)] bg-slate-100 scale-100 transition-transform duration-1000 ease-out">
         
         {/* Earth Texture Layer (Base) */}
         <div 

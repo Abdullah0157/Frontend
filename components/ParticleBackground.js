@@ -23,8 +23,9 @@ export default function ParticleBackground() {
         this.size = Math.random() * 2.5 + 1 // Increased size
         this.speedX = Math.random() * 0.8 - 0.4
         this.speedY = Math.random() * 0.8 - 0.4
-        // More vibrant colors with higher opacity
-        this.color = `hsla(${Math.random() * 360}, 80%, 60%, ${Math.random() * 0.6 + 0.4})`
+        // Indigo/blue tones, opaque enough to read clearly on a white background.
+        this.hue = 225 + Math.random() * 40
+        this.color = `hsla(${this.hue}, 75%, 55%, ${Math.random() * 0.3 + 0.45})`
       }
 
       update(mouse) {
@@ -56,8 +57,8 @@ export default function ParticleBackground() {
 
     const init = () => {
       particles = []
-      // Increased density
-      const numberOfParticles = (canvas.width * canvas.height) / 5000
+      // Density tuned so the O(n²) connect() pass stays smooth at 60fps.
+      const numberOfParticles = Math.min(180, (canvas.width * canvas.height) / 11000)
       for (let i = 0; i < numberOfParticles; i++) {
         particles.push(new Particle())
       }
@@ -69,12 +70,33 @@ export default function ParticleBackground() {
       mouse.y = e.y
     }
 
+    // Draw faint connecting lines between nearby particles — the "network" look.
+    const connect = () => {
+      for (let a = 0; a < particles.length; a++) {
+        for (let b = a + 1; b < particles.length; b++) {
+          const dx = particles[a].x - particles[b].x
+          const dy = particles[a].y - particles[b].y
+          const dist = Math.sqrt(dx * dx + dy * dy)
+          if (dist < 120) {
+            const alpha = (1 - dist / 120) * 0.25
+            ctx.strokeStyle = `hsla(235, 75%, 55%, ${alpha})`
+            ctx.lineWidth = 1
+            ctx.beginPath()
+            ctx.moveTo(particles[a].x, particles[a].y)
+            ctx.lineTo(particles[b].x, particles[b].y)
+            ctx.stroke()
+          }
+        }
+      }
+    }
+
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height)
       particles.forEach((p) => {
         p.update(mouse)
         p.draw()
       })
+      connect()
       animationFrameId = requestAnimationFrame(animate)
     }
 
@@ -98,7 +120,7 @@ export default function ParticleBackground() {
   return (
     <canvas
       ref={canvasRef}
-      className="fixed inset-0 pointer-events-none z-0 opacity-100" 
+      className="fixed inset-0 pointer-events-none z-0 opacity-90"
     />
   )
 }

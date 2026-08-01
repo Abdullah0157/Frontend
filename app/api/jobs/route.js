@@ -44,16 +44,22 @@ export async function POST(req) {
     const auth = await requireCompany()
     if (auth.error) return NextResponse.json({ error: auth.error }, { status: auth.status })
 
-    const { title, role, description } = await req.json()
+    const { title, role, description, requiredAssessments, requiresAiInterview } = await req.json()
     if (!title?.trim() || !role?.trim() || !description?.trim()) {
       return NextResponse.json({ error: 'title, role, description are required' }, { status: 400 })
     }
+    // Sanitize requirements. requiredAssessments = array of role_family codes.
+    const assessments = Array.isArray(requiredAssessments)
+      ? requiredAssessments.filter((a) => typeof a === 'string' && a.trim()).slice(0, 10)
+      : []
+    const aiInterview = requiresAiInterview !== false // default true
+
     const slug = makeSlug()
     const { rows } = await query(
-      `INSERT INTO interview_jobs (slug, title, role, description, owner_id)
-       VALUES ($1, $2, $3, $4, $5)
-       RETURNING id, slug, title, role, description, created_at`,
-      [slug, title.trim(), role.trim(), description.trim(), auth.user.id]
+      `INSERT INTO interview_jobs (slug, title, role, description, owner_id, required_assessments, requires_ai_interview)
+       VALUES ($1, $2, $3, $4, $5, $6, $7)
+       RETURNING id, slug, title, role, description, required_assessments, requires_ai_interview, created_at`,
+      [slug, title.trim(), role.trim(), description.trim(), auth.user.id, assessments, aiInterview]
     )
     return NextResponse.json({ job: rows[0] }, { status: 201 })
   } catch (e) {

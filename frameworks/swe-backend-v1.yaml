@@ -1,0 +1,342 @@
+# ============================================================================
+# Competency Framework: SWE-Backend
+# Version: 1.0.0-draft
+# Status: DRAFT — needs validation by 3+ senior backend hiring managers
+# Owner: (assign)
+# ============================================================================
+#
+# HOW TO READ THIS FILE
+# - Each competency has 5 scoring anchors (1, 3, 5, 7, 9) with concrete
+#   behavioral descriptions. Score 2/4/6/8 = "between anchors."
+# - Anchors describe OBSERVED behavior in the interview, not adjectives.
+# - Every score must cite evidence: transcript quote or paraphrase.
+# - Score 7 = "would hire at this level." Score 9 reserved for rare candidates.
+# - Never score above 5 without at least one concrete example.
+#
+# HOW TO USE THIS FILE
+# - Iris (planner) picks competencies to probe based on gaps in evidence
+# - Iris (scorer) evaluates each response against these anchors
+# - Report generation aggregates per-competency scores into the recommendation
+# - When we ship v1.1, all v1.0 scores stay tagged with framework_version=1.0
+#
+# HOW TO ITERATE
+# - Do NOT add competencies casually. 6 is the target; adding is expensive.
+# - Refine anchor descriptions when we see calibration drift (Iris vs human
+#   score disagreements > 1.5 points) — that's the signal an anchor is fuzzy.
+# - Question bank grows as we discover questions that produce good evidence.
+
+framework:
+  id: swe-backend
+  version: 1.0.0-draft
+  name: Software Engineer, Backend
+  description: >
+    Backend engineers who own services in production. Not frontend, not
+    full-stack, not ML. Focused on server-side systems, data layers, APIs,
+    distributed systems, and operational ownership.
+
+seniority_bands:
+
+  # ==========================================================================
+  # L4 — SENIOR ENGINEER (5-9 years experience typical)
+  # The atomic unit. Build this well, then replicate for L3 and L5.
+  # ==========================================================================
+  - code: L4
+    name: Senior Engineer
+    description: >
+      Owns significant systems end-to-end. Can be handed a fuzzy problem and
+      return with a working solution and the trade-offs articulated. Mentors
+      junior engineers. Escalates only when genuinely blocked.
+
+    competencies:
+
+      # ----------------------------------------------------------------------
+      - code: system_design
+        name: System Design
+        description: >
+          Ability to design services that meet functional and non-functional
+          requirements under real-world constraints (scale, cost, reliability,
+          team capacity).
+        evidence_types:
+          - trade_off_reasoning
+          - project_walkthrough
+          - failure_analysis
+          - quantitative_reasoning
+        scoring_anchors:
+          "1": >
+            Cannot articulate any trade-offs. Names one technology per problem
+            ("just use Postgres"). No sense of scale implications. Answers stop
+            at the API layer.
+          "3": >
+            Understands monolithic web apps well but struggles with distributed
+            concepts. Aware terms like "sharding" and "caching" exist but
+            cannot explain when to apply them or what breaks.
+          "5": >
+            Understands basic scale trade-offs (SQL vs NoSQL, cache invalidation
+            strategies, sync vs async). Can design a working system for
+            "familiar" scale. Struggles when pushed on failure modes or when
+            constraints shift mid-design.
+          "7": >
+            Designs for scale under constraints; can defend choices with
+            reference to specific systems they've built. Anticipates common
+            failure modes (network partitions, hot keys, cascading failures).
+            Can size components approximately (RPS, storage growth, cost).
+          "9": >
+            Architects novel distributed systems that others copy. Anticipates
+            second-order effects (how the design changes team workflow, on-call
+            burden, cost curve at 10x scale). Cites specific papers or
+            production incidents that inform their choices. Rare.
+        question_bank:
+          - id: sd-001
+            text: >
+              Walk me through the largest system you've personally designed
+              from scratch. What was the hardest trade-off you had to make?
+            evidence_types: [project_walkthrough, trade_off_reasoning]
+          - id: sd-002
+            text: >
+              Tell me about a time your design choice turned out to be wrong
+              in production. What happened and what did you change?
+            evidence_types: [failure_analysis, project_walkthrough]
+          - id: sd-003
+            text: >
+              A service you own is doing 1000 RPS. Product wants to 10x traffic
+              in a quarter. Walk me through what you'd investigate first and why.
+            evidence_types: [quantitative_reasoning, trade_off_reasoning]
+
+      # ----------------------------------------------------------------------
+      - code: coding_craft
+        name: Coding & Craft
+        description: >
+          Writes code that is correct, readable, maintainable, and appropriately
+          tested. Understands their language and tools deeply. Knows when to
+          be pragmatic vs when to invest in polish.
+        evidence_types:
+          - code_walkthrough
+          - refactor_decision
+          - test_strategy
+        scoring_anchors:
+          "1": >
+            Writes code that works but is fragile and hard to reason about.
+            No coherent testing strategy. Blames the language/framework when
+            things go wrong.
+          "3": >
+            Writes correct code for straightforward problems. Some tests, but
+            mostly happy path. Struggles to articulate why one approach is
+            better than another beyond "cleaner."
+          "5": >
+            Solid working knowledge of their primary language. Writes tested
+            code, understands their frameworks. Can explain refactoring
+            decisions in terms of coupling, cohesion, or testability.
+          "7": >
+            Deep knowledge of language internals and idioms. Testing strategy
+            varies appropriately by risk (unit vs integration vs contract).
+            Can articulate specific patterns they avoid and why. References
+            past code review lessons.
+          "9": >
+            Sets craft standards for a team. Introduces tools/patterns that
+            measurably improve velocity or quality. Contributes to open source
+            or writes internally-cited tech guides. Rare.
+        question_bank:
+          - id: cc-001
+            text: >
+              Tell me about the last piece of code you were genuinely proud of.
+              What made it good?
+            evidence_types: [code_walkthrough]
+          - id: cc-002
+            text: >
+              Walk me through how you decide what to test and what to leave
+              untested. Give me a specific example from recent work.
+            evidence_types: [test_strategy]
+
+      # ----------------------------------------------------------------------
+      - code: debugging_diagnosis
+        name: Debugging & Diagnosis
+        description: >
+          Ability to isolate root causes of unfamiliar problems using
+          evidence rather than guessing. Reads logs, forms hypotheses,
+          validates methodically.
+        evidence_types:
+          - incident_walkthrough
+          - hypothesis_reasoning
+          - tool_familiarity
+        scoring_anchors:
+          "1": >
+            Debugging strategy is print statements + restart. Gives up quickly
+            or asks for help before forming any hypothesis.
+          "3": >
+            Uses debuggers and logs but often chases symptoms rather than
+            causes. Struggles with problems that span multiple services.
+          "5": >
+            Forms hypotheses and tests them. Uses profilers, tracing, log
+            aggregation. Can debug within their own service reliably.
+          "7": >
+            Systematic diagnosis across service boundaries. Reads packet
+            captures, kernel-level tools, or database explain plans when
+            needed. Can articulate the exact sequence of steps that led to
+            a specific root cause from a past incident.
+          "9": >
+            Debugs production incidents no one else on the team can crack.
+            Writes postmortems that become referenced across the org. Has
+            found bugs in third-party dependencies. Rare.
+        question_bank:
+          - id: db-001
+            text: >
+              Tell me about the hardest bug you've ever tracked down. Walk me
+              through your investigation, not just the answer.
+            evidence_types: [incident_walkthrough, hypothesis_reasoning]
+          - id: db-002
+            text: >
+              A service is intermittently returning 500s at 2am, no obvious
+              pattern. Where do you start?
+            evidence_types: [hypothesis_reasoning, tool_familiarity]
+
+      # ----------------------------------------------------------------------
+      - code: operational_excellence
+        name: Operational Excellence
+        description: >
+          Owns their code in production. Instruments, monitors, responds to
+          incidents, and improves reliability over time. Not a "throw it over
+          the wall" engineer.
+        evidence_types:
+          - incident_walkthrough
+          - monitoring_design
+          - on_call_experience
+        scoring_anchors:
+          "1": >
+            Sees production as ops team's problem. No experience with on-call,
+            monitoring, or incident response. Cannot describe what SLOs mean
+            in practice.
+          "3": >
+            Has been on-call but describes it as reactive suffering. Adds logs
+            but no coherent metrics. Doesn't know their service's error rate
+            or latency percentiles.
+          "5": >
+            Has instrumented their own services with meaningful metrics. Knows
+            their service's baseline performance. Has participated in
+            postmortems.
+          "7": >
+            Designs services for observability from the start. Has led an
+            incident response. Has driven a specific reliability improvement
+            with measurable impact (e.g. "cut p99 from 800ms to 120ms",
+            "reduced pages from 3/week to 1/month").
+          "9": >
+            Sets reliability strategy for a team. Introduces new observability
+            or reliability practices that spread. Can quantify the business
+            impact of their reliability work. Rare.
+        question_bank:
+          - id: oe-001
+            text: >
+              Tell me about a production incident where you were the primary
+              responder. Walk me through the timeline.
+            evidence_types: [incident_walkthrough, on_call_experience]
+          - id: oe-002
+            text: >
+              What metrics does your current main service emit? If you had to
+              pick 3 to alert on, which 3 and why?
+            evidence_types: [monitoring_design]
+
+      # ----------------------------------------------------------------------
+      - code: technical_communication
+        name: Technical Communication
+        description: >
+          Explains technical concepts clearly to varied audiences. Writes
+          documents that get decisions made. Listens accurately and updates
+          based on new information.
+        evidence_types:
+          - explanation_clarity
+          - writing_samples
+          - listening_signals
+        scoring_anchors:
+          "1": >
+            Explanations are jargon-dense, disorganized, or missing context.
+            Cannot adapt when the listener signals confusion. Talks past
+            questions rather than answering them.
+          "3": >
+            Explains familiar topics adequately to peers. Struggles with
+            non-technical audiences or when asked to summarize.
+          "5": >
+            Clear explanations for peers and cross-functional partners.
+            Structures technical documents logically. Answers what was asked.
+          "7": >
+            Adapts explanation depth to audience without prompting. Written
+            work (design docs, RFCs, postmortems) drives decisions and gets
+            cited. Asks clarifying questions before answering complex ones.
+          "9": >
+            Sets the writing bar for a team. Others quote their docs. Can
+            reduce a complex system to a diagram that non-engineers grasp
+            in 60 seconds. Rare.
+        question_bank:
+          - id: tc-001
+            text: >
+              Explain to me — as if I were a product manager who's smart but
+              non-technical — what a database index is and when you'd add one.
+            evidence_types: [explanation_clarity]
+          - id: tc-002
+            text: >
+              Tell me about a design document you wrote that changed a
+              decision. What made it persuasive?
+            evidence_types: [writing_samples]
+
+      # ----------------------------------------------------------------------
+      - code: ownership_collaboration
+        name: Ownership & Collaboration
+        description: >
+          Takes responsibility for outcomes beyond their assigned tasks.
+          Works effectively with others. Owns failures, credits successes,
+          escalates appropriately.
+        evidence_types:
+          - failure_ownership
+          - team_dynamics
+          - initiative_examples
+        scoring_anchors:
+          "1": >
+            Deflects blame ("PM changed requirements", "the other team's API
+            was broken"). No examples of proactive work beyond assigned tasks.
+            Talks about the team in first person plural but not first person
+            singular.
+          "3": >
+            Owns their assigned scope reliably. Rarely proactive beyond it.
+            Some examples of collaboration but they're transactional.
+          "5": >
+            Owns their scope and pulls in adjacent work when it blocks the
+            team. Concrete examples of unblocking a teammate or catching a
+            problem before it shipped.
+          "7": >
+            Consistently owns outcomes, not just tasks. Can point to specific
+            times they made a call that was uncomfortable but right. Talks
+            about failures with specificity and what they learned. Named
+            examples of mentoring or lifting others.
+          "9": >
+            The person other engineers copy behavior from. Has changed team
+            norms for the better in ways they can describe concretely.
+            Reference-checks describe them as "sets the tone." Rare.
+        question_bank:
+          - id: oc-001
+            text: >
+              Tell me about the biggest mistake you made in your last 12 months.
+              What did you do about it?
+            evidence_types: [failure_ownership]
+          - id: oc-002
+            text: >
+              Tell me about a time you took on work that wasn't yours because
+              you thought it needed doing.
+            evidence_types: [initiative_examples]
+          - id: oc-003
+            text: >
+              Describe a disagreement with a teammate about a technical
+              decision. How did you handle it? What was the outcome?
+            evidence_types: [team_dynamics]
+
+# ============================================================================
+# NEXT STEPS (post-validation)
+# ============================================================================
+# 1. Get 3+ senior backend hiring managers to review these anchors:
+#    - Are the anchor descriptions concrete enough to score consistently?
+#    - Are we missing any competency that matters at L4?
+#    - Which question in the bank has produced the best signal historically?
+# 2. Score 20 existing interview transcripts against this framework — both
+#    by a human expert and by Iris. Measure inter-rater reliability per
+#    competency. Fix any competency where κ < 0.6.
+# 3. Add L3 (Mid-level) and L5 (Staff) bands. Same competencies, different
+#    anchors. L3 anchors are shifted down; L5 anchors add strategic elements.
+# 4. Migrate the DB schema (Level 1). Seed with this framework.
+# 5. Rewrite report generation to score against these competencies.

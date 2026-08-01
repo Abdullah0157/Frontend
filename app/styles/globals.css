@@ -3,32 +3,32 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 248, 250, 252;
-  --background-start-rgb: 2, 6, 23;
-  --background-end-rgb: 2, 6, 23;
+  --foreground-rgb: 15, 23, 42;
+  --background-start-rgb: 255, 255, 255;
+  --background-end-rgb: 255, 255, 255;
 }
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: rgb(2, 6, 23);
+  background: rgb(255, 255, 255);
   min-height: 100vh;
   scroll-behavior: smooth;
   overflow-x: hidden;
 }
 
-/* Dark-theme inputs by default — overrides browser white-bg + makes typed text visible. */
+/* Light-theme inputs by default — overrides browser default + makes typed text visible. */
 input, textarea, select {
-  background-color: rgb(15, 23, 42); /* slate-900 */
-  color: rgb(241, 245, 249);          /* slate-100 */
+  background-color: rgb(255, 255, 255); /* white */
+  color: rgb(15, 23, 42);               /* slate-900 */
 }
 
 input::placeholder, textarea::placeholder {
-  color: rgb(100, 116, 139); /* slate-500 */
+  color: rgb(148, 163, 184); /* slate-400 */
   opacity: 1;
 }
 
 input[type="file"] {
-  color: rgb(203, 213, 225); /* slate-300 */
+  color: rgb(71, 85, 105); /* slate-600 */
 }
 
 /* Preserve hand-themed inputs that explicitly opt out (use class="bg-white") */

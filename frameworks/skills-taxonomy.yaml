@@ -1,0 +1,258 @@
+# ============================================================================
+# Skill Taxonomy — the hierarchical vocabulary for the Skill Graph.
+# Version: 1.0.0-draft
+#
+# Every candidate has a persistent skill graph. Each node is a skill from this
+# taxonomy. Each competency in a framework file (e.g., swe-backend-v1.yaml)
+# maps to one or more skills here. When a candidate answers an item, we update
+# the θ (theta) for the linked skills — see Part 11.2 of CLAUDE.md.
+#
+# STRUCTURE
+#   domain (top-level bucket)
+#     └── subdomain (broad area)
+#         └── skill (leaf — what we actually measure)
+#
+# Skill codes use dotted paths: "programming.python.async", "leadership.ownership".
+# The dotted path IS the id. Do NOT rename — external systems will link to it.
+#
+# HOW TO ADD SKILLS
+# - Only add a leaf when there's a real item measuring it. No orphan skills.
+# - Prefer more skills over deeper hierarchy (shallow trees are easier to reason
+#   about than deep ones).
+# - When in doubt, create a broader skill first; specialize later.
+# ============================================================================
+
+version: 1.0.0-draft
+
+domains:
+
+  # ==========================================================================
+  engineering:
+    label: Engineering
+    description: All software engineering, infrastructure, and technical craft.
+
+    subdomains:
+
+      # ── Programming languages & runtime knowledge ────────────────────────
+      programming:
+        label: Programming
+        skills:
+          - code: engineering.programming.python
+            label: Python
+            description: General Python proficiency — syntax, stdlib, idioms.
+          - code: engineering.programming.python_async
+            label: Python (async/concurrency)
+            description: asyncio, threading, gil, event loop semantics.
+          - code: engineering.programming.typescript
+            label: TypeScript
+          - code: engineering.programming.javascript
+            label: JavaScript (runtime + language)
+          - code: engineering.programming.go
+            label: Go
+          - code: engineering.programming.rust
+            label: Rust
+          - code: engineering.programming.java
+            label: Java
+          - code: engineering.programming.sql
+            label: SQL
+
+      # ── System design & architecture ─────────────────────────────────────
+      system_design:
+        label: System Design
+        skills:
+          - code: engineering.system_design.trade_offs
+            label: Trade-off reasoning
+            description: Choosing among alternatives under constraints (scale, cost, reliability, team capacity).
+          - code: engineering.system_design.consistency
+            label: Consistency models
+            description: CAP, eventual vs strong, isolation levels, when to use which.
+          - code: engineering.system_design.scaling
+            label: Scaling strategy
+            description: Horizontal vs vertical, sharding, partitioning, quotas.
+          - code: engineering.system_design.caching
+            label: Caching design
+            description: Cache invalidation, layering, hot key mitigation.
+          - code: engineering.system_design.queueing
+            label: Queueing & async flows
+            description: Message brokers, back-pressure, delivery guarantees.
+          - code: engineering.system_design.data_modeling
+            label: Data modeling
+            description: Schema design, normalization vs denormalization, indexing strategy.
+
+      # ── Debugging & diagnosis ────────────────────────────────────────────
+      debugging:
+        label: Debugging & Diagnosis
+        skills:
+          - code: engineering.debugging.hypothesis
+            label: Hypothesis-driven debugging
+            description: Forming and testing theories rather than guessing.
+          - code: engineering.debugging.tools
+            label: Debugging tool fluency
+            description: Debuggers, tracers, profilers, packet captures, EXPLAIN plans.
+          - code: engineering.debugging.distributed
+            label: Distributed debugging
+            description: Correlating logs/traces across services, race conditions, network partitions.
+
+      # ── Operational excellence & production ownership ────────────────────
+      operations:
+        label: Operational Excellence
+        skills:
+          - code: engineering.operations.monitoring
+            label: Monitoring design
+            description: Metrics, SLIs/SLOs, alerting strategy.
+          - code: engineering.operations.incident_response
+            label: Incident response
+            description: On-call handling, escalation, postmortem quality.
+          - code: engineering.operations.reliability
+            label: Reliability engineering
+            description: Driving measurable reliability improvements over time.
+
+      # ── Coding craft ─────────────────────────────────────────────────────
+      craft:
+        label: Coding Craft
+        skills:
+          - code: engineering.craft.correctness
+            label: Correctness
+            description: Writing code that handles the edge cases the problem actually has.
+          - code: engineering.craft.readability
+            label: Readability & maintainability
+          - code: engineering.craft.testing
+            label: Testing strategy
+            description: Choosing what to test, at what layer, with what tolerance.
+          - code: engineering.craft.refactoring
+            label: Refactoring judgment
+            description: Knowing when and how to refactor without breaking things.
+
+  # ==========================================================================
+  product:
+    label: Product
+    description: Product management, strategy, prioritization, and user judgment.
+
+    subdomains:
+
+      strategy:
+        label: Product Strategy
+        skills:
+          - code: product.strategy.market_sense
+            label: Market sensing
+          - code: product.strategy.roadmap
+            label: Roadmap prioritization
+          - code: product.strategy.metrics
+            label: Metric definition & analysis
+
+      execution:
+        label: Product Execution
+        skills:
+          - code: product.execution.spec_writing
+            label: Spec / PRD writing
+          - code: product.execution.discovery
+            label: User discovery & research judgment
+          - code: product.execution.prioritization
+            label: Trade-off prioritization under constraints
+
+  # ==========================================================================
+  sales:
+    label: Sales
+    description: B2B sales — enterprise, mid-market, and SMB.
+
+    subdomains:
+
+      discovery:
+        label: Discovery
+        skills:
+          - code: sales.discovery.qualifying
+            label: Lead qualifying (MEDDIC, BANT, etc.)
+          - code: sales.discovery.pain_finding
+            label: Pain identification & articulation
+
+      closing:
+        label: Closing & Negotiation
+        skills:
+          - code: sales.closing.objection_handling
+            label: Objection handling
+          - code: sales.closing.negotiation
+            label: Negotiation & concession strategy
+
+      pipeline:
+        label: Pipeline Management
+        skills:
+          - code: sales.pipeline.forecasting
+            label: Forecast accuracy
+          - code: sales.pipeline.velocity
+            label: Deal velocity management
+
+  # ==========================================================================
+  # Cross-functional behavioral skills — used by every role family.
+  behavioral:
+    label: Behavioral & Interpersonal
+    description: Skills that show up across all role families.
+
+    subdomains:
+
+      communication:
+        label: Communication
+        skills:
+          - code: behavioral.communication.clarity
+            label: Explanation clarity
+          - code: behavioral.communication.written
+            label: Written communication
+          - code: behavioral.communication.listening
+            label: Active listening & question responsiveness
+
+      ownership:
+        label: Ownership
+        skills:
+          - code: behavioral.ownership.accountability
+            label: Accountability for outcomes
+          - code: behavioral.ownership.initiative
+            label: Initiative beyond assigned scope
+          - code: behavioral.ownership.failure_reflection
+            label: Failure ownership & reflection
+
+      collaboration:
+        label: Collaboration
+        skills:
+          - code: behavioral.collaboration.conflict
+            label: Conflict handling
+          - code: behavioral.collaboration.cross_functional
+            label: Cross-functional partnership
+
+      leadership:
+        label: Leadership
+        skills:
+          - code: behavioral.leadership.mentorship
+            label: Mentorship & lifting others
+          - code: behavioral.leadership.decision_making
+            label: Decision-making under uncertainty
+          - code: behavioral.leadership.setting_norms
+            label: Setting team norms & bar
+
+      problem_solving:
+        label: Problem Solving
+        skills:
+          - code: behavioral.problem_solving.decomposition
+            label: Problem decomposition
+          - code: behavioral.problem_solving.first_principles
+            label: First-principles reasoning
+          - code: behavioral.problem_solving.pragmatism
+            label: Pragmatic simplification
+
+# ============================================================================
+# HOW COMPETENCIES MAP TO SKILLS
+# ============================================================================
+# Each competency in a role framework (e.g., swe-backend-v1.yaml) is a
+# scoring lens for a specific band. The competency "System Design" for L4 SWE
+# aggregates evidence from multiple skills in this taxonomy:
+#
+#   swe-backend / L4 / system_design → aggregates:
+#     engineering.system_design.trade_offs           (weight 0.35)
+#     engineering.system_design.scaling              (weight 0.25)
+#     engineering.system_design.consistency          (weight 0.20)
+#     engineering.system_design.data_modeling        (weight 0.10)
+#     engineering.system_design.caching              (weight 0.10)
+#
+# When we score an item, we update the leaf skills in this taxonomy.
+# Reports aggregate leaf skills → competency scores using these weights.
+#
+# The weights are defined in each framework file, NOT here — because
+# different roles weight the same underlying skills differently.

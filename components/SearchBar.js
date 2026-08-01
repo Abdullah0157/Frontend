@@ -25,10 +25,10 @@ export default function SearchBar({ onSearch }) {
   return (
     <form 
       onSubmit={handleSubmit} 
-      className={`bg-slate-900 p-2 rounded-2xl border flex flex-col md:flex-row items-center gap-2 w-full h-full relative z-10 transition-all duration-300 ease-in-out ${
-        isFocused 
-          ? 'shadow-[0_0_40px_-10px_rgba(79,70,229,0.5)] border-indigo-400 scale-[1.01] -translate-y-1' 
-          : 'shadow-2xl border-slate-800 hover:shadow-indigo-100 hover:-translate-y-0.5'
+      className={`bg-white p-2 rounded-2xl border flex flex-col md:flex-row items-center gap-2 w-full h-full relative z-10 transition-all duration-300 ease-in-out ${
+        isFocused
+          ? 'shadow-[0_0_40px_-10px_rgba(79,70,229,0.5)] border-indigo-400 scale-[1.01] -translate-y-1'
+          : 'shadow-2xl border-slate-200 hover:shadow-indigo-100 hover:-translate-y-0.5'
       }`}
     >
       <div className="flex-grow flex items-center px-6 w-full py-4 group">
@@ -49,7 +49,7 @@ export default function SearchBar({ onSearch }) {
           onChange={handleChange}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
-          className="w-full focus:outline-none text-lg text-slate-100 font-medium bg-transparent placeholder-gray-400 transition-colors"
+          className="w-full focus:outline-none text-lg text-slate-900 font-medium bg-transparent placeholder-gray-400 transition-colors"
         />
       </div>
       <button 
@@ -60,7 +60,7 @@ export default function SearchBar({ onSearch }) {
       >
         <span className="relative z-10">Find Jobs</span>
         {/* Subtle button shimmer on focus */}
-        <div className={`absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-slate-900/20 to-transparent transition-all duration-1000 ease-in-out ${isFocused ? 'translate-x-full' : ''}`} />
+        <div className={`absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent transition-all duration-1000 ease-in-out ${isFocused ? 'translate-x-full' : ''}`} />
       </button>
     </form>
   )

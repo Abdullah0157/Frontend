@@ -5,6 +5,12 @@ import { query } from '@/lib/db'
 export const dynamic = 'force-dynamic'
 export const runtime = 'nodejs'
 
+// In-memory cache for the unranked job list — avoids a full DB round-trip on
+// every page visit. Invalidated after 30 s so fresh jobs still appear quickly.
+let jobCache = null
+let jobCacheAt = 0
+const CACHE_TTL_MS = 30_000
+
 // Public job listing — combines:
 //  - 'external' jobs aggregated from the HF backend (micro1 etc.) — apply via referral link
 //  - 'ai_interview' jobs posted by companies through /company/jobs — apply by taking an AI interview
@@ -41,44 +47,58 @@ export async function GET(req) {
     const url = new URL(req.url)
     const filter = url.searchParams.get('filter') || 'all' // all | ai | external
 
-    // Fire both data sources in parallel so neither blocks the other.
-    const externalPromise = filter === 'ai'
-      ? Promise.resolve([])
-      : query(`SELECT id, title, company, location, type, salary, posted_at, logo, tags,
-                      description, apply_url, is_new, is_high_demand
-               FROM jobs ORDER BY id DESC LIMIT 2000`)
-          .then(({ rows }) => rows.map((j) => ({ ...j, type: 'external', link: `/jobs/${j.id}` })))
-          .catch((e) => { console.warn('external jobs query failed', e.message); return [] })
+    const now = Date.now()
+    const cacheValid = jobCache && (now - jobCacheAt) < CACHE_TTL_MS
 
-    const aiPromise = filter === 'external'
-      ? Promise.resolve([])
-      : query(
-          `SELECT j.id, j.slug, j.title, j.role, j.description,
-                  COALESCE(cp.company_name, j.company) AS company,
-                  cp.logo_url AS logo,
-                  j.created_at
-           FROM interview_jobs j
-           LEFT JOIN company_profiles cp ON cp.user_id = j.owner_id
-           ORDER BY j.created_at DESC`
-        ).then(({ rows }) => rows.map((r) => ({
-          id: r.id,
-          slug: r.slug,
-          title: r.title,
-          company: r.company || 'Direct Hire',
-          location: 'Remote',
-          type: 'ai_interview',
-          salary: 'Apply via AI Interview',
-          posted_at: r.created_at,
-          logo: r.logo || '',
-          tags: [],
-          description: (r.description || '').slice(0, 300),
-          apply_url: '',
-          link: `/interview/${r.slug}`,
-          is_new: true,
-          is_high_demand: false,
-        }))).catch((e) => { console.warn('ai jobs query failed', e.message); return [] })
+    let external, aiJobs
 
-    const [external, aiJobs] = await Promise.all([externalPromise, aiPromise])
+    if (cacheValid && filter === 'all') {
+      // Serve from cache — skip the DB round-trip entirely.
+      ;({ external, aiJobs } = jobCache)
+    } else {
+      // External scraped jobs have been retired — the board now shows ONLY
+      // jobs that companies/admin create (with the assessment + AI interview
+      // application flow). Kept as an empty source so the rest of the shape
+      // (totals, filters) still works.
+      const externalPromise = Promise.resolve([])
+
+      const aiPromise = filter === 'external'
+        ? Promise.resolve([])
+        : query(
+            `SELECT j.id, j.slug, j.title, j.role, j.description,
+                    COALESCE(cp.company_name, j.company) AS company,
+                    cp.logo_url AS logo,
+                    j.created_at
+             FROM interview_jobs j
+             LEFT JOIN company_profiles cp ON cp.user_id = j.owner_id
+             ORDER BY j.created_at DESC`
+          ).then(({ rows }) => rows.map((r) => ({
+            id: r.id,
+            slug: r.slug,
+            title: r.title,
+            role: r.role,
+            company: r.company || 'Direct Hire',
+            location: 'Remote',
+            type: 'ai_interview',
+            salary: 'Apply via AI Interview',
+            posted_at: r.created_at,
+            logo: r.logo || '',
+            tags: [],
+            description: (r.description || '').slice(0, 300),
+            apply_url: '',
+            link: `/interview/${r.slug}`,
+            is_new: true,
+            is_high_demand: false,
+          }))).catch((e) => { console.warn('ai jobs query failed', e.message); return [] })
+
+      ;[external, aiJobs] = await Promise.all([externalPromise, aiPromise])
+
+      // Only cache unfiltered results — filtered variants are rare.
+      if (filter === 'all') {
+        jobCache = { external, aiJobs }
+        jobCacheAt = now
+      }
+    }
 
     let jobs = [...aiJobs, ...external]
 
@@ -113,7 +133,14 @@ export async function GET(req) {
       console.warn('ranking pass failed', e.message)
     }
 
-    return NextResponse.json({ jobs, ranked, totals: { ai: aiJobs.length, external: external.length } })
+    const headers = ranked
+      ? { 'Cache-Control': 'private, no-store' }
+      : { 'Cache-Control': 'public, s-maxage=30, stale-while-revalidate=60' }
+
+    return NextResponse.json(
+      { jobs, ranked, totals: { ai: aiJobs.length, external: external.length } },
+      { headers }
+    )
   } catch (e) {
     console.error('public-listing error', e)
     return NextResponse.json({ error: e.message }, { status: 500 })

@@ -11,6 +11,7 @@
     "db:init": "node scripts/init-db.mjs"
   },
   "dependencies": {
+    "@ricky0123/vad-web": "^0.0.30",
     "@supabase/ssr": "^0.10.3",
     "@supabase/supabase-js": "^2.107.0",
     "axios": "^1.6.0",
@@ -21,7 +22,8 @@
     "pdf-parse": "^2.4.5",
     "pg": "^8.21.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "recharts": "^3.10.1"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.16",

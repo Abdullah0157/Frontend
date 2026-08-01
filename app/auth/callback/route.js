@@ -70,7 +70,11 @@ export async function GET(req) {
       )
       const accountType = profRows[0]?.account_type || 'candidate'
 
-      if (accountType === 'company') {
+      if (accountType === 'super_admin') {
+        // Super admins always go to /admin regardless of ?next=. Their
+        // workspace is separate from anything a `next` link could point at.
+        finalNext = '/admin'
+      } else if (accountType === 'company') {
         // Companies always land on /company (their dashboard).
         const { rows: compRows } = await query(`SELECT 1 FROM company_profiles WHERE user_id = $1 LIMIT 1`, [user.id])
         finalNext = compRows.length === 0 ? '/company?onboarding=1' : '/company'

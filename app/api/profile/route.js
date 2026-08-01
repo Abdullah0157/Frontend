@@ -17,7 +17,8 @@ export async function GET() {
 
   const { rows } = await query(
     `SELECT user_id, full_name, resume_filename, resume_pages, resume_chars,
-            resume_uploaded_at,
+            resume_uploaded_at, linkedin_url, github_url, certificates,
+            resume_sections,
             (resume_text IS NOT NULL) AS has_resume
      FROM user_profiles WHERE user_id = $1`,
     [user.id]
@@ -33,11 +34,11 @@ export async function PUT(req) {
   if (!user) return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
 
   const body = await req.json().catch(() => ({}))
-  const { full_name, resume_text, resume_filename, resume_pages, resume_chars } = body
+  const { full_name, resume_text, resume_filename, resume_pages, resume_chars, linkedin_url, github_url, certificates, resume_sections } = body
 
   await query(
-    `INSERT INTO user_profiles (user_id, full_name, resume_text, resume_filename, resume_pages, resume_chars, resume_uploaded_at, updated_at)
-     VALUES ($1, $2, $3, $4, $5, $6, $7, now())
+    `INSERT INTO user_profiles (user_id, full_name, resume_text, resume_filename, resume_pages, resume_chars, resume_uploaded_at, linkedin_url, github_url, certificates, resume_sections, updated_at)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, now())
      ON CONFLICT (user_id) DO UPDATE SET
        full_name = COALESCE(EXCLUDED.full_name, user_profiles.full_name),
        resume_text = COALESCE(EXCLUDED.resume_text, user_profiles.resume_text),
@@ -45,6 +46,10 @@ export async function PUT(req) {
        resume_pages = COALESCE(EXCLUDED.resume_pages, user_profiles.resume_pages),
        resume_chars = COALESCE(EXCLUDED.resume_chars, user_profiles.resume_chars),
        resume_uploaded_at = CASE WHEN EXCLUDED.resume_text IS NOT NULL THEN now() ELSE user_profiles.resume_uploaded_at END,
+       linkedin_url = COALESCE(EXCLUDED.linkedin_url, user_profiles.linkedin_url),
+       github_url = COALESCE(EXCLUDED.github_url, user_profiles.github_url),
+       certificates = COALESCE(EXCLUDED.certificates, user_profiles.certificates),
+       resume_sections = COALESCE(EXCLUDED.resume_sections, user_profiles.resume_sections),
        updated_at = now()`,
     [
       user.id,
@@ -54,6 +59,10 @@ export async function PUT(req) {
       resume_pages || null,
       resume_chars || null,
       resume_text ? new Date().toISOString() : null,
+      linkedin_url || null,
+      github_url || null,
+      certificates ? JSON.stringify(certificates) : null,
+      resume_sections ? JSON.stringify(resume_sections) : null,
     ]
   )
   return NextResponse.json({ ok: true })

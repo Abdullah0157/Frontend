@@ -164,18 +164,18 @@ export default function JobInterviewFromAggregator() {
   }
 
   if (loadingJob) {
-    return <div className="min-h-screen pt-32 text-center text-slate-400">Loading job…</div>
+    return <div className="min-h-screen pt-32 text-center text-slate-500">Loading job…</div>
   }
   if (error && !externalJob) {
     return (
       <div className="min-h-screen pt-32 px-4 text-center">
-        <p className="text-red-400 mb-4">{error}</p>
-        <Link href={`/jobs/${id}`} className="text-indigo-400 underline">← Back to job</Link>
+        <p className="text-red-600 mb-4">{error}</p>
+        <Link href={`/jobs/${id}`} className="text-indigo-600 underline">← Back to job</Link>
       </div>
     )
   }
   if (!externalJob) {
-    return <div className="min-h-screen pt-32 text-center text-slate-400">Job not found</div>
+    return <div className="min-h-screen pt-32 text-center text-slate-500">Job not found</div>
   }
 
   if (prepared && !proctorStreams) {
@@ -215,65 +215,65 @@ export default function JobInterviewFromAggregator() {
   return (
     <div className="min-h-screen pt-32 pb-24 px-4">
       <div className="container mx-auto max-w-3xl">
-        <Link href={`/jobs/${id}`} className="text-xs font-black uppercase tracking-widest text-indigo-400 hover:text-indigo-800">
+        <Link href={`/jobs/${id}`} className="text-xs font-black uppercase tracking-widest text-indigo-600 hover:text-indigo-800">
           ← Back to job
         </Link>
 
         <div className="mt-6 mb-8">
-          <span className="inline-block px-4 py-1.5 rounded-full bg-indigo-950/40 border border-indigo-900 text-indigo-400 font-black text-[10px] uppercase tracking-[0.4em] mb-4">
+          <span className="inline-block px-4 py-1.5 rounded-full bg-indigo-50 border border-indigo-200 text-indigo-600 font-black text-[10px] uppercase tracking-[0.4em] mb-4">
             AI Screening Interview
           </span>
-          <h1 className="text-3xl md:text-4xl font-black tracking-tight text-white">
+          <h1 className="text-3xl md:text-4xl font-black tracking-tight text-slate-900">
             {externalJob.title}
           </h1>
-          <p className="text-indigo-400 font-black uppercase tracking-widest text-xs mt-2">
+          <p className="text-indigo-600 font-black uppercase tracking-widest text-xs mt-2">
             {externalJob.company}
           </p>
-          <p className="text-slate-400 mt-3">
+          <p className="text-slate-500 mt-3">
             Upload your resume and chat with our AI recruiter. Your screening report is sent to the
             hiring team automatically.
           </p>
         </div>
 
         {error && (
-          <div className="mb-6 p-4 rounded-2xl border border-red-800 bg-red-950/40 text-red-400 text-sm">
+          <div className="mb-6 p-4 rounded-2xl border border-red-200 bg-red-50 text-red-600 text-sm">
             {error}
           </div>
         )}
 
-        <form onSubmit={handleStart} className="bg-slate-900 border border-slate-800 rounded-[2.5rem] p-8 md:p-12 shadow-xl shadow-indigo-500/5">
+        <form onSubmit={handleStart} className="bg-white border border-slate-200 rounded-[2.5rem] p-8 md:p-12 shadow-xl shadow-indigo-500/5">
           <div className="grid gap-5">
             <label className="block">
-              <span className="text-xs font-black uppercase tracking-[0.3em] text-slate-300">Your Name</span>
+              <span className="text-xs font-black uppercase tracking-[0.3em] text-slate-700">Your Name</span>
               <input
                 type="text"
                 required
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
                 placeholder="Jane Doe"
-                className="mt-2 w-full px-5 py-4 rounded-2xl border border-slate-700 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none transition"
+                className="mt-2 w-full px-5 py-4 rounded-2xl border border-slate-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none transition"
               />
             </label>
             <label className="block">
-              <span className="text-xs font-black uppercase tracking-[0.3em] text-slate-300">Email (optional)</span>
+              <span className="text-xs font-black uppercase tracking-[0.3em] text-slate-700">Email (optional)</span>
               <input
                 type="email"
                 value={form.email}
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
                 placeholder="jane@example.com"
-                className="mt-2 w-full px-5 py-4 rounded-2xl border border-slate-700 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none transition"
+                className="mt-2 w-full px-5 py-4 rounded-2xl border border-slate-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none transition"
               />
             </label>
             <label className="block">
-              <span className="text-xs font-black uppercase tracking-[0.3em] text-slate-300">Resume (PDF)</span>
+              <span className="text-xs font-black uppercase tracking-[0.3em] text-slate-700">Resume (PDF)</span>
               {savedResume?.resume_text ? (
-                <div className="mt-2 p-4 rounded-2xl bg-emerald-950/40 border border-emerald-800 flex items-center gap-3">
-                  <svg className="w-6 h-6 text-emerald-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div className="mt-2 p-4 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center gap-3">
+                  <svg className="w-6 h-6 text-emerald-600 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                   <div className="flex-1">
-                    <p className="text-sm font-black text-emerald-200">Using resume on file</p>
-                    <p className="text-xs text-emerald-400">
+                    <p className="text-sm font-black text-emerald-800">Using resume on file</p>
+                    <p className="text-xs text-emerald-600">
                       Manage in your <a href="/profile" className="underline">profile</a>.
                     </p>
                   </div>
@@ -285,7 +285,7 @@ export default function JobInterviewFromAggregator() {
                     accept="application/pdf,.pdf"
                     onChange={(e) => setFile(e.target.files?.[0] || null)}
                     required
-                    className="block w-full text-sm text-slate-300
+                    className="block w-full text-sm text-slate-700
                       file:mr-4 file:py-3 file:px-6
                       file:rounded-full file:border-0
                       file:text-xs file:font-black file:uppercase file:tracking-widest
@@ -293,7 +293,7 @@ export default function JobInterviewFromAggregator() {
                       hover:file:bg-indigo-700 cursor-pointer"
                   />
                   {file && (
-                    <p className="text-xs text-slate-400 mt-2">
+                    <p className="text-xs text-slate-500 mt-2">
                       Selected: {file.name} ({(file.size / 1024).toFixed(0)} KB)
                     </p>
                   )}
@@ -301,11 +301,11 @@ export default function JobInterviewFromAggregator() {
               )}
             </label>
 
-            <div className="p-5 rounded-2xl bg-amber-950/40 border border-amber-800">
-              <p className="text-xs font-black uppercase tracking-[0.3em] text-amber-400 mb-2">
+            <div className="p-5 rounded-2xl bg-amber-50 border border-amber-200">
+              <p className="text-xs font-black uppercase tracking-[0.3em] text-amber-600 mb-2">
                 Step 1 — Test your audio
               </p>
-              <p className="text-sm text-amber-300 mb-3">
+              <p className="text-sm text-amber-700 mb-3">
                 This interview is voice-based. Click the button below to confirm you can hear the AI.
                 Make sure your tab isn't muted (look for a mute icon in the browser tab) and your system volume is up.
               </p>

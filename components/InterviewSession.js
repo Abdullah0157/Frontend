@@ -16,7 +16,11 @@ export default function InterviewSession({ job, prefilledCandidate, resumeText }
     return (
       <PermissionGate
         candidateName={prefilledCandidate?.name}
-        onReady={setStreams}
+        onReady={(s) => {
+          // VoiceChat uses Web Speech API for mic independently — release the test stream
+          s.micStream?.getTracks().forEach((t) => t.stop())
+          setStreams(s)
+        }}
         onCancel={() => window.history.back()}
       />
     )
