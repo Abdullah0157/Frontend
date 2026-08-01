@@ -5,11 +5,20 @@ import { getAudioContext } from '@/lib/tts'
 import { playServerTTS, stopServerTTS } from '@/lib/tts-client'
 import { AI_NAME } from '@/lib/ai-config'
 
-// How long after the last recognised word before auto-submitting. Raised to
-// 3800ms so a mid-answer pause (thinking) doesn't cut the recording off before
-// the person finishes — the #1 cause of missing words in the transcript. The
-// audio-energy guard in autoSubmit() defers further while the mic is still hot.
-const SILENCE_MS = 3800
+// Adaptive endpointing. Instead of one blind fixed wait, we lean on the two
+// signals the browser already gives us:
+//   1. Web Speech `isFinal` — the recognizer itself decided a phrase ended.
+//      That's a real endpoint, so we can respond fast (FINAL_SILENCE_MS).
+//   2. Interim-only results — still mid-word, so stay patient (INTERIM_SILENCE_MS).
+// The audio-energy guard in autoSubmit() is the safety net: even after a short
+// timer fires, if the mic is still hot we defer, so we never cut off someone
+// who's actually still making sound. Net effect: snappy (~1.5s) turn-taking
+// without clipping words.
+const FINAL_SILENCE_MS   = 1500  // recognizer closed a phrase → they're likely done
+const INTERIM_SILENCE_MS = 2600  // still forming words → give them room
+const SHORT_ANSWER_GRACE = 900   // extra room for very short utterances (< 4 words)
+// How long the mic must be quiet (no audio energy) before a fired timer submits.
+const AUDIO_GUARD_MS = 1200
 // How long with zero speech activity before Iris checks in.
 const NO_SPEECH_MS = 15000
 
@@ -175,10 +184,16 @@ export default function VoiceChat({ messages, loading, finishing, streamingQuest
         setSilencePrompted(false)
       }
 
-      // Reset silence timer on every word
+      // Reset silence timer on every word, then re-arm with an adaptive wait.
       if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current)
       if (transcriptRef.current.length + interimText.length > 0) {
-        silenceTimerRef.current = setTimeout(() => autoSubmit(), SILENCE_MS)
+        // A final chunk means the recognizer detected a real endpoint → respond
+        // fast. Interim-only means they're still mid-word → be patient.
+        let wait = finalAddition ? FINAL_SILENCE_MS : INTERIM_SILENCE_MS
+        // Very short utterances get extra grace — they're probably just starting.
+        const wordCount = transcriptRef.current.split(/\s+/).filter(Boolean).length
+        if (wordCount < 4) wait += SHORT_ANSWER_GRACE
+        silenceTimerRef.current = setTimeout(() => autoSubmit(), wait)
       }
     }
 
@@ -406,11 +421,12 @@ export default function VoiceChat({ messages, loading, finishing, streamingQuest
   // accuracy doesn't matter for those).
   async function autoSubmit() {
     if (submittedRef.current) return
-    // Audio-energy guard: if the mic was hot in the last 2.5s, the person is
-    // probably mid-thought — defer instead of cutting them off.
+    // Audio-energy guard: if the mic was hot in the last AUDIO_GUARD_MS, the
+    // person is probably still mid-thought — defer instead of cutting them off.
+    // This is the safety net that makes the short timers above safe.
     const msSinceAudio = Date.now() - lastAudioRef.current
-    if (!silencePromptedRef.current && lastAudioRef.current > 0 && msSinceAudio < 2500) {
-      silenceTimerRef.current = setTimeout(() => autoSubmit(), 2500 - msSinceAudio + 200)
+    if (!silencePromptedRef.current && lastAudioRef.current > 0 && msSinceAudio < AUDIO_GUARD_MS) {
+      silenceTimerRef.current = setTimeout(() => autoSubmit(), AUDIO_GUARD_MS - msSinceAudio + 150)
       return
     }
     const wsText = transcriptRef.current.trim()
