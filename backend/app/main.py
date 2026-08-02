@@ -9,8 +9,9 @@ from contextlib import asynccontextmanager
 import structlog
 from fastapi import FastAPI
 
+from adapters.gemini_live import GeminiLiveProvider
 from adapters.litellm_gateway import LiteLLMGateway
-from app.routers import assessment, demo, evaluate, health, interview
+from app.routers import assessment, demo, evaluate, health, interview, voice
 from infra.db import init_models, make_engine, make_sessionmaker
 from infra.settings import get_settings
 from orchestration.interview_graph import build_interview_graph
@@ -26,6 +27,7 @@ async def lifespan(app: FastAPI):
     # would change to swap the whole LLM layer.
     app.state.llm = LiteLLMGateway(settings.models_config_path)
     app.state.interview_graph = build_interview_graph(app.state.llm)
+    app.state.voice = GeminiLiveProvider()  # realtime voice (Gemini Live pilot)
 
     # Database — best-effort at startup. If it's unavailable the AI endpoints
     # still work; persistence just no-ops (app.state.db stays None).
@@ -59,3 +61,4 @@ app.include_router(demo.router)
 app.include_router(evaluate.router)
 app.include_router(interview.router)
 app.include_router(assessment.router)
+app.include_router(voice.router)
