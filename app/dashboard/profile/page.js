@@ -264,7 +264,7 @@ export default function DashboardProfilePage() {
   const [profile, setProfile] = useState(null)
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
-  const [activeTab, setActiveTab] = useState(tabParam || 'personal')
+  const [activeTab, setActiveTab] = useState(tabParam || 'resume')
   const [saving, setSaving] = useState(false)
   const [uploading, setUploading] = useState(false)
   const [parsing, setParsing] = useState(false)
@@ -369,10 +369,16 @@ export default function DashboardProfilePage() {
   }
 
   const tabs = [
-    { id: 'personal', label: 'Personal Info' },
     { id: 'resume', label: 'Resume' },
+    { id: 'personal', label: 'Personal info' },
+    { id: 'location', label: 'Location & work authorization', soon: true },
+    { id: 'availability', label: 'Availability', soon: true },
+    { id: 'preferences', label: 'Work preferences', soon: true },
+    { id: 'communications', label: 'Communications', soon: true },
     { id: 'certs', label: 'Certificates' },
+    { id: 'account', label: 'Account', soon: true },
   ]
+  const SOON = new Set(['location', 'availability', 'preferences', 'communications', 'account'])
 
   if (loading) return <div className="max-w-5xl mx-auto pt-10 text-sm text-slate-400">Loading…</div>
 
@@ -394,16 +400,20 @@ export default function DashboardProfilePage() {
         </div>
       )}
 
-      {/* Tabs */}
-      <div className="inline-flex flex-wrap items-center gap-1 p-1 rounded-full bg-slate-100 mb-8">
-        {tabs.map(t => (
-          <button key={t.id} onClick={() => setActiveTab(t.id)}
-            className={`px-5 py-2 rounded-full text-sm font-semibold transition ${activeTab === t.id ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}>
-            {t.label}
-          </button>
-        ))}
-      </div>
+      {/* Two-column: left sub-nav + content (Mercor-style) */}
+      <div className="grid md:grid-cols-[248px_1fr] gap-8 items-start">
+        <nav className="md:sticky md:top-6 flex md:flex-col gap-0.5 overflow-x-auto pb-2 md:pb-0">
+          {tabs.map(t => (
+            <button key={t.id} onClick={() => setActiveTab(t.id)}
+              className={`text-left whitespace-nowrap px-4 py-2.5 rounded-xl text-sm font-semibold transition ${
+                activeTab === t.id ? 'bg-indigo-50 text-indigo-700' : 'text-slate-500 hover:text-slate-800 hover:bg-slate-50'
+              }`}>
+              {t.label}
+            </button>
+          ))}
+        </nav>
 
+        <div className="min-w-0">
       {/* ── Personal Info ─────────────────────────────────────────────── */}
       {activeTab === 'personal' && (
         <div className="max-w-2xl bg-white border border-slate-200 rounded-2xl p-6 space-y-6">
@@ -788,6 +798,16 @@ export default function DashboardProfilePage() {
           </div>
         </div>
       )}
+
+      {/* Placeholder sections (Mercor parity) */}
+      {SOON.has(activeTab) && (
+        <div className="bg-white border border-slate-200 rounded-2xl p-10 text-center max-w-xl">
+          <p className="text-lg font-bold text-slate-900 mb-1">{tabs.find(t => t.id === activeTab)?.label}</p>
+          <p className="text-sm text-slate-500">Coming soon.</p>
+        </div>
+      )}
+        </div>
+      </div>
     </div>
   )
 }
