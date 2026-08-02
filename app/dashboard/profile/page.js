@@ -189,8 +189,8 @@ function EduCard({ item, onSave, onDelete }) {
   if (!editing) return (
     <div className="border border-slate-200 rounded-xl p-4 flex justify-between gap-3 hover:border-slate-300 transition">
       <div>
-        <p className="text-sm font-bold text-slate-900">{item.degree || '(no degree)'}</p>
-        <p className="text-xs text-slate-500 mt-0.5">{item.school}{displayYear ? ` · ${displayYear}` : ''}</p>
+        <p className="text-sm font-bold text-slate-900">{item.degree || '(no degree)'}{item.major ? ` · ${item.major}` : ''}</p>
+        <p className="text-xs text-slate-500 mt-0.5">{item.school}{displayYear ? ` · ${displayYear}` : ''}{item.gpa ? ` · GPA ${item.gpa}` : ''}</p>
       </div>
       <div className="flex gap-1.5 flex-shrink-0">
         <button onClick={()=>setEditing(true)} className="text-xs font-semibold px-2.5 py-1 border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 transition">Edit</button>
@@ -201,7 +201,7 @@ function EduCard({ item, onSave, onDelete }) {
   return (
     <div className="border border-indigo-200 rounded-xl p-4 space-y-3 bg-indigo-50/30">
       <div className="grid grid-cols-2 gap-2">
-        {[['degree','Degree'],['school','School']].map(([k,ph])=>(
+        {[['school','School'],['degree','Degree'],['major','Major'],['gpa','GPA']].map(([k,ph])=>(
           <input key={k} value={d[k]||''} onChange={e=>setD(x=>({...x,[k]:e.target.value}))} placeholder={ph}
             className="rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 bg-white transition" />
         ))}
@@ -613,6 +613,95 @@ export default function DashboardProfilePage() {
                       className="mt-3 text-sm font-semibold px-5 py-2 bg-slate-900 text-white rounded-xl hover:bg-slate-800 disabled:opacity-50 transition">
                       {saving ? 'Saving…' : 'Save Links'}
                     </button>
+                  </div>
+
+                  {/* Publications */}
+                  <div className="bg-white border border-slate-200 rounded-2xl p-6">
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="text-lg font-bold text-slate-900">Publications</h3>
+                      <button onClick={() => setSections(s => ({ ...s, publications: [...(s?.publications||[]), { id: uid(), title:'', description:'' }] }))}
+                        className="text-xs font-semibold px-3 py-1.5 border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 transition">+ Add</button>
+                    </div>
+                    <div className="space-y-2.5">
+                      {(sections?.publications || []).map(pb => (
+                        <div key={pb.id} className="space-y-2 border border-slate-100 rounded-xl p-3">
+                          <div className="flex items-center gap-2">
+                            <input value={pb.title||''} placeholder="Title"
+                              onChange={e => setSections(s => ({ ...s, publications: s.publications.map(x => x.id===pb.id ? {...x, title:e.target.value} : x) }))}
+                              className="flex-1 rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:border-indigo-500 transition" />
+                            <button onClick={() => setSections(s => ({ ...s, publications: s.publications.filter(x => x.id!==pb.id) }))} className="text-slate-300 hover:text-red-500 px-1" aria-label="Remove">✕</button>
+                          </div>
+                          <input value={pb.description||''} placeholder="Venue / brief note"
+                            onChange={e => setSections(s => ({ ...s, publications: s.publications.map(x => x.id===pb.id ? {...x, description:e.target.value} : x) }))}
+                            className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:border-indigo-500 transition" />
+                        </div>
+                      ))}
+                      {!(sections?.publications?.length) && <p className="text-sm text-slate-400">No publications found.</p>}
+                    </div>
+                    <button onClick={() => save({ resume_sections: sections })} disabled={saving} className="mt-3 text-sm font-semibold px-5 py-2 bg-slate-900 text-white rounded-xl hover:bg-slate-800 disabled:opacity-50 transition">{saving ? 'Saving…' : 'Save Publications'}</button>
+                  </div>
+
+                  {/* Certifications */}
+                  <div className="bg-white border border-slate-200 rounded-2xl p-6">
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="text-lg font-bold text-slate-900">Certifications</h3>
+                      <button onClick={() => setSections(s => ({ ...s, certifications: [...(s?.certifications||[]), { id: uid(), name:'', issuer:'', year:'' }] }))}
+                        className="text-xs font-semibold px-3 py-1.5 border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 transition">+ Add</button>
+                    </div>
+                    <div className="space-y-2.5">
+                      {(sections?.certifications || []).map(ct => (
+                        <div key={ct.id} className="flex flex-wrap items-center gap-2">
+                          <input value={ct.name||''} placeholder="Certification"
+                            onChange={e => setSections(s => ({ ...s, certifications: s.certifications.map(x => x.id===ct.id ? {...x, name:e.target.value} : x) }))}
+                            className="flex-1 min-w-[160px] rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:border-indigo-500 transition" />
+                          <input value={ct.issuer||''} placeholder="Issuer"
+                            onChange={e => setSections(s => ({ ...s, certifications: s.certifications.map(x => x.id===ct.id ? {...x, issuer:e.target.value} : x) }))}
+                            className="w-36 rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:border-indigo-500 transition" />
+                          <input value={ct.year||''} placeholder="Year"
+                            onChange={e => setSections(s => ({ ...s, certifications: s.certifications.map(x => x.id===ct.id ? {...x, year:e.target.value} : x) }))}
+                            className="w-20 rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:border-indigo-500 transition" />
+                          <button onClick={() => setSections(s => ({ ...s, certifications: s.certifications.filter(x => x.id!==ct.id) }))} className="text-slate-300 hover:text-red-500 px-1" aria-label="Remove">✕</button>
+                        </div>
+                      ))}
+                      {!(sections?.certifications?.length) && <p className="text-sm text-slate-400">No certifications found.</p>}
+                    </div>
+                    <button onClick={() => save({ resume_sections: sections })} disabled={saving} className="mt-3 text-sm font-semibold px-5 py-2 bg-slate-900 text-white rounded-xl hover:bg-slate-800 disabled:opacity-50 transition">{saving ? 'Saving…' : 'Save Certifications'}</button>
+                  </div>
+
+                  {/* Awards */}
+                  <div className="bg-white border border-slate-200 rounded-2xl p-6">
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="text-lg font-bold text-slate-900">Awards</h3>
+                      <button onClick={() => setSections(s => ({ ...s, awards: [...(s?.awards||[]), { id: uid(), title:'', year:'' }] }))}
+                        className="text-xs font-semibold px-3 py-1.5 border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 transition">+ Add</button>
+                    </div>
+                    <div className="space-y-2.5">
+                      {(sections?.awards || []).map(aw => (
+                        <div key={aw.id} className="flex flex-wrap items-center gap-2">
+                          <input value={aw.title||''} placeholder="Award"
+                            onChange={e => setSections(s => ({ ...s, awards: s.awards.map(x => x.id===aw.id ? {...x, title:e.target.value} : x) }))}
+                            className="flex-1 min-w-[180px] rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:border-indigo-500 transition" />
+                          <input value={aw.year||''} placeholder="Year"
+                            onChange={e => setSections(s => ({ ...s, awards: s.awards.map(x => x.id===aw.id ? {...x, year:e.target.value} : x) }))}
+                            className="w-20 rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:border-indigo-500 transition" />
+                          <button onClick={() => setSections(s => ({ ...s, awards: s.awards.filter(x => x.id!==aw.id) }))} className="text-slate-300 hover:text-red-500 px-1" aria-label="Remove">✕</button>
+                        </div>
+                      ))}
+                      {!(sections?.awards?.length) && <p className="text-sm text-slate-400">No awards found.</p>}
+                    </div>
+                    <button onClick={() => save({ resume_sections: sections })} disabled={saving} className="mt-3 text-sm font-semibold px-5 py-2 bg-slate-900 text-white rounded-xl hover:bg-slate-800 disabled:opacity-50 transition">{saving ? 'Saving…' : 'Save Awards'}</button>
+                  </div>
+
+                  {/* Languages */}
+                  <div className="bg-white border border-slate-200 rounded-2xl p-6">
+                    <h3 className="text-lg font-bold text-slate-900 mb-4">Languages</h3>
+                    <SkillsEditor skills={sections?.languages || []} onChange={(v) => saveSections({ ...sections, languages: v })} />
+                  </div>
+
+                  {/* Hobbies */}
+                  <div className="bg-white border border-slate-200 rounded-2xl p-6">
+                    <h3 className="text-lg font-bold text-slate-900 mb-4">Hobbies</h3>
+                    <SkillsEditor skills={sections?.hobbies || []} onChange={(v) => saveSections({ ...sections, hobbies: v })} />
                   </div>
                 </>
               )}

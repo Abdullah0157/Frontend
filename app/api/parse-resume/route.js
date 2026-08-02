@@ -24,15 +24,25 @@ EXACT structure to return:
 {
   "summary": "one-paragraph professional summary (use the resume's own summary/objective if present, otherwise synthesize 1-2 sentences from the content)",
   "experience": [
-    { "id": "exp_1", "title": "Job Title", "company": "Company Name", "location": "City, Country", "dates": "Jan 2020 – Present", "bullets": ["achievement/responsibility 1", "achievement 2"] }
+    { "id": "exp_1", "title": "Job Title", "company": "Company Name", "city": "City", "country": "Country", "startYear": "2020", "endYear": "Present", "dates": "Jan 2020 – Present", "bullets": ["achievement/responsibility 1", "achievement 2"] }
   ],
   "education": [
-    { "id": "edu_1", "degree": "Degree Name", "school": "School Name", "year": "2020" }
+    { "id": "edu_1", "degree": "Degree Name", "school": "School Name", "major": "Field of study", "gpa": "3.8", "startYear": "2021", "endYear": "2025" }
   ],
   "projects": [
-    { "id": "proj_1", "name": "Project Name", "tech": "React, Node.js", "description": "what it does and your role" }
+    { "id": "proj_1", "name": "Project Name", "tech": "React, Node.js", "startYear": "", "endYear": "", "description": "what it does and your role" }
   ],
   "skills": ["Skill1", "Skill2", "Skill3"],
+  "publications": [
+    { "id": "pub_1", "title": "Publication title", "description": "venue / brief note" }
+  ],
+  "certifications": [
+    { "id": "cert_1", "name": "Certification name", "issuer": "Issuer", "year": "2024" }
+  ],
+  "awards": [
+    { "id": "awd_1", "title": "Award name", "year": "2024" }
+  ],
+  "languages": ["English", "Urdu"],
   "coding_profiles": [
     { "id": "cp_1", "platform": "LeetCode", "username": "handle", "url": "https://leetcode.com/handle" }
   ],
@@ -101,6 +111,10 @@ ${resumeText.slice(0, 14000)}`
     education: Array.isArray(sections.education) ? sections.education : [],
     projects: Array.isArray(sections.projects) ? sections.projects : [],
     skills: Array.isArray(sections.skills) ? sections.skills : [],
+    publications: Array.isArray(sections.publications) ? sections.publications : [],
+    certifications: Array.isArray(sections.certifications) ? sections.certifications : [],
+    awards: Array.isArray(sections.awards) ? sections.awards : [],
+    languages: Array.isArray(sections.languages) ? sections.languages : [],
     coding_profiles: Array.isArray(sections.coding_profiles) ? sections.coding_profiles : [],
     links: Array.isArray(sections.links) ? sections.links : [],
   }
