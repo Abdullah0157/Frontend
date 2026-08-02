@@ -11,6 +11,7 @@ from fastapi import FastAPI
 
 from adapters.litellm_gateway import LiteLLMGateway
 from app.routers import assessment, demo, evaluate, health, interview
+from infra.db import init_models, make_engine, make_sessionmaker
 from infra.settings import get_settings
 from orchestration.interview_graph import build_interview_graph
 
@@ -25,8 +26,24 @@ async def lifespan(app: FastAPI):
     # would change to swap the whole LLM layer.
     app.state.llm = LiteLLMGateway(settings.models_config_path)
     app.state.interview_graph = build_interview_graph(app.state.llm)
-    log.info("startup", env=settings.env, gateway="litellm", graph="interview")
+
+    # Database — best-effort at startup. If it's unavailable the AI endpoints
+    # still work; persistence just no-ops (app.state.db stays None).
+    app.state.db = None
+    app.state.db_engine = None
+    try:
+        engine = make_engine(settings.database_url)
+        await init_models(engine)  # create tables if missing (idempotent; prod also runs Alembic)
+        app.state.db = make_sessionmaker(engine)
+        app.state.db_engine = engine
+        log.info("db.ready", url=settings.database_url.split("://")[0])
+    except Exception as e:  # noqa: BLE001
+        log.warning("db.unavailable", error=str(e)[:200])
+
+    log.info("startup", env=settings.env, gateway="litellm", graph="interview", db=bool(app.state.db))
     yield
+    if app.state.db_engine is not None:
+        await app.state.db_engine.dispose()
     log.info("shutdown")
 
 

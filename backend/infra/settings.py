@@ -16,8 +16,9 @@ class Settings(BaseSettings):
     env: str = "local"
     models_config_path: str = str(_BACKEND_ROOT / "config" / "models.yaml")
 
-    # Datastores (P0 only needs these declared; wired in later phases).
-    database_url: str = "postgresql+asyncpg://postgres:postgres@localhost:5432/jobstream"
+    # Datastores. Defaults to a local SQLite file so `uvicorn app.main:app` works
+    # with zero setup; prod sets JS_DATABASE_URL to postgresql+asyncpg://…
+    database_url: str = "sqlite+aiosqlite:///./jobstream.db"
     redis_url: str = "redis://localhost:6379/0"
 
     # Provider keys are read by LiteLLM straight from the environment
