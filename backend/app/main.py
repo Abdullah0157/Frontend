@@ -10,8 +10,9 @@ import structlog
 from fastapi import FastAPI
 
 from adapters.litellm_gateway import LiteLLMGateway
-from app.routers import demo, evaluate, health
+from app.routers import demo, evaluate, health, interview
 from infra.settings import get_settings
+from orchestration.interview_graph import build_interview_graph
 
 log = structlog.get_logger(__name__)
 
@@ -23,7 +24,8 @@ async def lifespan(app: FastAPI):
     # (LLMGateway), not this concrete adapter — so this is the only line that
     # would change to swap the whole LLM layer.
     app.state.llm = LiteLLMGateway(settings.models_config_path)
-    log.info("startup", env=settings.env, gateway="litellm")
+    app.state.interview_graph = build_interview_graph(app.state.llm)
+    log.info("startup", env=settings.env, gateway="litellm", graph="interview")
     yield
     log.info("shutdown")
 
@@ -38,3 +40,4 @@ app = FastAPI(
 app.include_router(health.router)
 app.include_router(demo.router)
 app.include_router(evaluate.router)
+app.include_router(interview.router)
