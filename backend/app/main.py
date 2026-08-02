@@ -10,7 +10,7 @@ import structlog
 from fastapi import FastAPI
 
 from adapters.litellm_gateway import LiteLLMGateway
-from app.routers import demo, health
+from app.routers import demo, evaluate, health
 from infra.settings import get_settings
 
 log = structlog.get_logger(__name__)
@@ -37,3 +37,4 @@ app = FastAPI(
 
 app.include_router(health.router)
 app.include_router(demo.router)
+app.include_router(evaluate.router)

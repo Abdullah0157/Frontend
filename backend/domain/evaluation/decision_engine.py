@@ -67,6 +67,7 @@ class Decision:
     percentile: int | None = None
     meets_bar: bool | None = None
     coverage: float | None = None
+    reservations: list[str] | None = None  # set by the profile assembler for borderline bands
 
 
 def decide_hire(
