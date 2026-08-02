@@ -12,5 +12,7 @@ COPY . .
 RUN useradd -m appuser && chown -R appuser /app
 USER appuser
 
+# Bind to the platform's $PORT (Render/Railway set it); default 8000 locally.
+# uvicorn[standard] includes the websockets impl the voice relay needs.
 EXPOSE 8000
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]

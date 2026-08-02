@@ -12,8 +12,18 @@ from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker
 from adapters.persistence.models import Base
 
 
+def _normalize_url(url: str) -> str:
+    """Coerce a plain Postgres URL to the async driver (Render/Railway/Heroku give
+    postgres:// or postgresql://; asyncpg needs postgresql+asyncpg://)."""
+    if url.startswith("postgres://"):
+        url = "postgresql+asyncpg://" + url[len("postgres://"):]
+    elif url.startswith("postgresql://"):
+        url = "postgresql+asyncpg://" + url[len("postgresql://"):]
+    return url
+
+
 def make_engine(url: str, echo: bool = False) -> AsyncEngine:
-    return create_async_engine(url, echo=echo, future=True)
+    return create_async_engine(_normalize_url(url), echo=echo, future=True)
 
 
 def make_sessionmaker(engine: AsyncEngine) -> async_sessionmaker[AsyncSession]:
