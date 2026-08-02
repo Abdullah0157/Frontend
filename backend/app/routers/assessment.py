@@ -11,9 +11,11 @@ from __future__ import annotations
 
 from typing import Any
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Request
 from pydantic import BaseModel, Field
 
+from adapters.persistence import repositories as repo
+from app.deps import best_effort_db
 from domain.assessment.adaptive import AdaptiveSession, StoppingConfig
 from domain.assessment.irt import Item
 
@@ -40,10 +42,12 @@ class NextRequest(BaseModel):
     min_items: int = 4
     max_items: int = 30
     min_skills: int = 0
+    candidate_id: str | None = None    # if set, persist the cumulative skill graph
+    skill_id: str | None = None        # which skill this ability estimate updates
 
 
 @router.post("/next")
-async def next_item(req: NextRequest) -> dict[str, Any]:
+async def next_item(req: NextRequest, request: Request) -> dict[str, Any]:
     items = {i.id: Item(id=i.id, a=i.a, b=i.b, c=i.c, skill=i.skill) for i in req.pool}
     session = AdaptiveSession(
         pool=list(items.values()),
@@ -57,6 +61,19 @@ async def next_item(req: NextRequest) -> dict[str, Any]:
             raise HTTPException(status_code=422, detail=f"response references unknown item '{r.item_id}'")
         session.record(item, r.correct)
 
+    # Persist best-effort: the item bank (idempotent upsert) and the candidate's
+    # cumulative skill state (θ ± SE) — the durable skill graph. Per-response rows
+    # are left to a session-backed flow (this endpoint is stateless).
+    async with best_effort_db(request) as db:
+        if db is not None:
+            await repo.upsert_items(db, [i.model_dump() for i in req.pool])
+            if req.candidate_id and req.skill_id:
+                await repo.upsert_skill_state(
+                    db, req.candidate_id, req.skill_id,
+                    theta=session.ability.theta, theta_se=session.ability.se,
+                    n_responses=session.n_administered,
+                )
+
     nxt = session.next_item()
     return {
         "ability": {
@@ -69,3 +86,11 @@ async def next_item(req: NextRequest) -> dict[str, Any]:
         "next_item": None if nxt is None else {"id": nxt.id, "a": nxt.a, "b": nxt.b, "c": nxt.c, "skill": nxt.skill},
         "report": session.report(),
     }
+
+
+@router.get("/skill/{candidate_id}/{skill_id}")
+async def skill_state(candidate_id: str, skill_id: str, request: Request) -> dict[str, Any]:
+    """The candidate's persisted ability on a skill (cumulative skill graph)."""
+    async with best_effort_db(request) as db:
+        state = await repo.get_skill_state(db, candidate_id, skill_id) if db is not None else None
+    return {"found": state is not None, "state": state}
