@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
+import ResumeAnalyzer from '@/components/ResumeAnalyzer'
 
 // ── tiny helpers ──────────────────────────────────────────────────────────────
 function uid() { return Math.random().toString(36).slice(2) }
@@ -275,6 +276,8 @@ export default function DashboardProfilePage() {
   const [saving, setSaving] = useState(false)
   const [uploading, setUploading] = useState(false)
   const [parsing, setParsing] = useState(false)
+  const [analyzePhase, setAnalyzePhase] = useState('idle') // idle|analyzing|done|error
+  const [analyzeError, setAnalyzeError] = useState('')
   const [msg, setMsg] = useState({ type: '', text: '' })
 
   const [name, setName] = useState('')
@@ -318,29 +321,53 @@ export default function DashboardProfilePage() {
   async function onUpload(e) {
     const file = e.target.files?.[0]; if (!file) return
     setUploading(true)
+    setAnalyzeError('')
+    setAnalyzePhase('analyzing')   // show the animated analysis overlay
     try {
       const fd = new FormData(); fd.append('file', file)
       const r = await fetch('/api/upload-resume', { method: 'POST', body: fd })
-      if (!r.ok) { const j = await r.json().catch(()=>{}); throw new Error(j?.error || 'Failed') }
+      if (!r.ok) { const j = await r.json().catch(() => ({})); throw new Error(j?.error || 'Failed') }
       const { text, pages, chars } = await r.json()
       await save({ resume_text: text, resume_filename: file.name, resume_pages: pages, resume_chars: chars })
       // Bust the App Router client cache so other server-rendered pages (e.g. the
       // Expert Interview gate) don't serve a stale "no resume" render after this.
       router.refresh()
       if (fileRef.current) fileRef.current.value = ''
-      parseResumeSections()
-    } catch (e) { flash('err', e.message) } finally { setUploading(false) }
+
+      // Parse sections (AI) — the bulk of the analysis. The overlay completes to
+      // 100% exactly when this resolves.
+      const pr = await fetch('/api/parse-resume', { method: 'POST' })
+      if (!pr.ok) throw new Error('Could not read enough detail from this resume.')
+      const data = await pr.json()
+      setSections(data.sections)
+
+      setAnalyzePhase('done')
+      flash('ok', 'Resume analyzed — review and edit the details below.')
+    } catch (e) {
+      setAnalyzeError(e.message)
+      setAnalyzePhase('error')
+      flash('err', e.message)
+    } finally {
+      setUploading(false)
+    }
   }
 
+  // Re-analyze the already-uploaded resume (used by the "re-parse" buttons).
   async function parseResumeSections() {
-    setParsing(true)
+    setAnalyzeError('')
+    setAnalyzePhase('analyzing')
     try {
       const r = await fetch('/api/parse-resume', { method: 'POST' })
-      if (!r.ok) throw new Error('Parse failed')
+      if (!r.ok) throw new Error('Could not read enough detail from this resume.')
       const data = await r.json()
       setSections(data.sections)
-      flash('ok', 'Resume parsed — review and edit the details below.')
-    } catch (e) { flash('err', e.message) } finally { setParsing(false) }
+      setAnalyzePhase('done')
+      flash('ok', 'Resume analyzed — review and edit the details below.')
+    } catch (e) {
+      setAnalyzeError(e.message)
+      setAnalyzePhase('error')
+      flash('err', e.message)
+    }
   }
 
   async function saveSections(updated) {
@@ -358,6 +385,9 @@ export default function DashboardProfilePage() {
 
   return (
     <div className="max-w-5xl mx-auto">
+      {/* Resume analysis overlay — animated checklist while parsing */}
+      <ResumeAnalyzer phase={analyzePhase} error={analyzeError} onClose={() => setAnalyzePhase('idle')} />
+
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-3xl md:text-4xl font-black tracking-tight text-slate-900">Profile</h1>
@@ -527,6 +557,62 @@ export default function DashboardProfilePage() {
                       ))}
                       {!(sections?.projects?.length) && <p className="text-sm text-slate-400">No projects found.</p>}
                     </div>
+                  </div>
+
+                  {/* Coding Profiles */}
+                  <div className="bg-white border border-slate-200 rounded-2xl p-6">
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="text-lg font-bold text-slate-900">Coding Profiles</h3>
+                      <button onClick={() => setSections(s => ({ ...s, coding_profiles: [...(s?.coding_profiles||[]), { id: uid(), platform:'', username:'', url:'' }] }))}
+                        className="text-xs font-semibold px-3 py-1.5 border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 transition">+ Add</button>
+                    </div>
+                    <div className="space-y-2.5">
+                      {(sections?.coding_profiles || []).map(cp => (
+                        <div key={cp.id} className="flex flex-wrap items-center gap-2">
+                          <input value={cp.platform||''} placeholder="Platform (e.g. LeetCode)"
+                            onChange={e => setSections(s => ({ ...s, coding_profiles: s.coding_profiles.map(x => x.id===cp.id ? {...x, platform:e.target.value} : x) }))}
+                            className="w-40 rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:border-indigo-500 transition" />
+                          <input value={cp.url||''} placeholder="Profile URL"
+                            onChange={e => setSections(s => ({ ...s, coding_profiles: s.coding_profiles.map(x => x.id===cp.id ? {...x, url:e.target.value} : x) }))}
+                            className="flex-1 min-w-[180px] rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:border-indigo-500 transition" />
+                          <button onClick={() => setSections(s => ({ ...s, coding_profiles: s.coding_profiles.filter(x => x.id!==cp.id) }))}
+                            className="text-slate-300 hover:text-red-500 px-1 transition" aria-label="Remove">✕</button>
+                        </div>
+                      ))}
+                      {!(sections?.coding_profiles?.length) && <p className="text-sm text-slate-400">No coding profiles found.</p>}
+                    </div>
+                    <button onClick={() => save({ resume_sections: sections })} disabled={saving}
+                      className="mt-3 text-sm font-semibold px-5 py-2 bg-slate-900 text-white rounded-xl hover:bg-slate-800 disabled:opacity-50 transition">
+                      {saving ? 'Saving…' : 'Save Coding Profiles'}
+                    </button>
+                  </div>
+
+                  {/* Links */}
+                  <div className="bg-white border border-slate-200 rounded-2xl p-6">
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="text-lg font-bold text-slate-900">Links</h3>
+                      <button onClick={() => setSections(s => ({ ...s, links: [...(s?.links||[]), { id: uid(), label:'', url:'' }] }))}
+                        className="text-xs font-semibold px-3 py-1.5 border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 transition">+ Add</button>
+                    </div>
+                    <div className="space-y-2.5">
+                      {(sections?.links || []).map(ln => (
+                        <div key={ln.id} className="flex flex-wrap items-center gap-2">
+                          <input value={ln.label||''} placeholder="Label (e.g. Portfolio)"
+                            onChange={e => setSections(s => ({ ...s, links: s.links.map(x => x.id===ln.id ? {...x, label:e.target.value} : x) }))}
+                            className="w-40 rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:border-indigo-500 transition" />
+                          <input value={ln.url||''} placeholder="https://…"
+                            onChange={e => setSections(s => ({ ...s, links: s.links.map(x => x.id===ln.id ? {...x, url:e.target.value} : x) }))}
+                            className="flex-1 min-w-[180px] rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:border-indigo-500 transition" />
+                          <button onClick={() => setSections(s => ({ ...s, links: s.links.filter(x => x.id!==ln.id) }))}
+                            className="text-slate-300 hover:text-red-500 px-1 transition" aria-label="Remove">✕</button>
+                        </div>
+                      ))}
+                      {!(sections?.links?.length) && <p className="text-sm text-slate-400">No links found.</p>}
+                    </div>
+                    <button onClick={() => save({ resume_sections: sections })} disabled={saving}
+                      className="mt-3 text-sm font-semibold px-5 py-2 bg-slate-900 text-white rounded-xl hover:bg-slate-800 disabled:opacity-50 transition">
+                      {saving ? 'Saving…' : 'Save Links'}
+                    </button>
                   </div>
                 </>
               )}

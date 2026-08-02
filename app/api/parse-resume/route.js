@@ -32,14 +32,22 @@ EXACT structure to return:
   "projects": [
     { "id": "proj_1", "name": "Project Name", "tech": "React, Node.js", "description": "what it does and your role" }
   ],
-  "skills": ["Skill1", "Skill2", "Skill3"]
+  "skills": ["Skill1", "Skill2", "Skill3"],
+  "coding_profiles": [
+    { "id": "cp_1", "platform": "LeetCode", "username": "handle", "url": "https://leetcode.com/handle" }
+  ],
+  "links": [
+    { "id": "ln_1", "label": "Portfolio", "url": "https://example.com" }
+  ]
 }
 
 STRICT RULES:
 - Extract ONLY facts that actually appear in the resume — never invent companies, dates, degrees, or skills.
 - Include EVERY job in "experience", EVERY school in "education", and EVERY project in "projects" — do not skip or merge entries.
 - Preserve each job's real bullet points (lightly condensed if very long, max ~20 words each). Keep all of them, don't drop bullets.
-- Give each item a unique sequential id (exp_1, exp_2, edu_1, proj_1, ...).
+- Give each item a unique sequential id (exp_1, exp_2, edu_1, proj_1, cp_1, ln_1, ...).
+- "coding_profiles": competitive/coding platforms with a profile URL or handle — LeetCode, HackerRank, Codeforces, CodeChef, GitHub, Kaggle, etc. Include the URL if present.
+- "links": any other personal URLs — portfolio, personal website, blog, LinkedIn, Behance, Dribbble. Give each a short human label.
 - If a section genuinely has no data, use an empty array []. summary "" only if truly nothing to summarize.
 - "skills": individual technologies/tools/competencies actually mentioned, de-duplicated, max 30.
 - Dates exactly as written in the resume.
@@ -93,6 +101,8 @@ ${resumeText.slice(0, 14000)}`
     education: Array.isArray(sections.education) ? sections.education : [],
     projects: Array.isArray(sections.projects) ? sections.projects : [],
     skills: Array.isArray(sections.skills) ? sections.skills : [],
+    coding_profiles: Array.isArray(sections.coding_profiles) ? sections.coding_profiles : [],
+    links: Array.isArray(sections.links) ? sections.links : [],
   }
 
   try {
