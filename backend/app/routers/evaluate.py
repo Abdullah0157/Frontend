@@ -13,11 +13,13 @@ from __future__ import annotations
 
 from typing import Any
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Request
 from pydantic import BaseModel, Field
 
 from domain.evaluation.competency_framework import build_model
+from domain.evaluation.eie_rate import score_transcript
 from domain.evaluation.eie_scoring import finalize_profile
+from ports.llm import LLMGateway
 
 router = APIRouter(prefix="/v1", tags=["evaluation"])
 
@@ -40,6 +42,36 @@ class EvaluateRequest(BaseModel):
 
 @router.post("/evaluate")
 async def evaluate(req: EvaluateRequest) -> dict[str, Any]:
+    """Deterministic: pre-computed ratings → scored profile (no LLM)."""
     model = build_model(req.role, req.seniority or req.role)
     ratings = [r.model_dump(exclude_none=True) for r in req.ratings]
     return finalize_profile(model, ratings)
+
+
+class Turn(BaseModel):
+    role: str  # "assistant" (interviewer) | "user" (candidate)
+    content: str
+
+
+class ScoreRequest(BaseModel):
+    role: str = Field(examples=["Senior Backend Engineer"])
+    seniority: str | None = None
+    name: str = ""                           # blinded out before rating
+    messages: list[Turn]
+
+
+@router.post("/score")
+async def score(req: ScoreRequest, request: Request) -> dict[str, Any]:
+    """The real product flow: transcript → LLM rater → scored profile + decision.
+
+    Uses the injected provider-independent gateway. Never raises — returns
+    {"error": ...} if the provider is unavailable, so callers degrade gracefully.
+    """
+    gateway: LLMGateway = request.app.state.llm
+    return await score_transcript(
+        gateway,
+        role=req.role,
+        seniority=req.seniority or req.role,
+        messages=[m.model_dump() for m in req.messages],
+        name=req.name,
+    )
