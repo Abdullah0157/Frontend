@@ -89,32 +89,61 @@ function MonthYearPicker({ value, onChange, disabled }) {
   )
 }
 
+// Year-only dropdowns (Start year / End year) — matches the Mercor layout.
+const YEARS = (() => { const top = new Date().getFullYear() + 1; const a = []; for (let y = top; y >= 1975; y--) a.push(String(y)); return a })()
+function YearSelect({ value, onChange, disabled, placeholder = 'Select year' }) {
+  const cls = 'w-full rounded-lg border border-slate-300 px-2.5 py-2 text-sm text-slate-900 bg-white focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 disabled:bg-slate-100 disabled:text-slate-400 transition cursor-pointer'
+  return (
+    <select disabled={disabled} value={value || ''} onChange={e => onChange(e.target.value)} className={cls}>
+      <option value="">{placeholder}</option>
+      {YEARS.map(y => <option key={y} value={y}>{y}</option>)}
+    </select>
+  )
+}
+// Start year / End year pair with a "Present" toggle for the end.
+function YearRange({ startYear, endYear, onChange, presentLabel = 'Present (current)' }) {
+  const present = (endYear || '').toLowerCase() === 'present'
+  return (
+    <div>
+      <div className="grid grid-cols-2 gap-3">
+        <div>
+          <p className="text-[11px] font-semibold text-slate-500 mb-1">Start year</p>
+          <YearSelect value={startYear} onChange={v => onChange({ startYear: v, endYear })} />
+        </div>
+        <div>
+          <p className="text-[11px] font-semibold text-slate-500 mb-1">End year</p>
+          <YearSelect value={present ? '' : endYear} disabled={present} onChange={v => onChange({ startYear, endYear: v })} />
+        </div>
+      </div>
+      <label className="inline-flex items-center gap-2 mt-2 text-xs text-slate-600 cursor-pointer select-none">
+        <input type="checkbox" checked={present} onChange={e => onChange({ startYear, endYear: e.target.checked ? 'Present' : '' })} className="w-3.5 h-3.5 accent-indigo-600" />
+        {presentLabel}
+      </label>
+    </div>
+  )
+}
+
 function ExpCard({ item, onSave, onDelete }) {
   const [editing, setEditing] = useState(!item.title)
-  // Initialize start/end from explicit fields, else by splitting the parsed `dates`.
-  const [d, setD] = useState(() => {
-    if (item.startDate != null || item.endDate != null) return item
-    const { start, end } = splitDates(item.dates)
-    return { ...item, startDate: start, endDate: end }
-  })
+  const [d, setD] = useState(item)
   const [bullet, setBullet] = useState('')
-  const present = (d.endDate || '').trim().toLowerCase() === 'present'
   function addBullet() {
     const v = bullet.trim(); if (!v) return
     setD(x => ({ ...x, bullets: [...(x.bullets || []), v] })); setBullet('')
   }
   function handleSave() {
     // Keep `dates` in sync for display + downstream (interview priming reads it).
-    const merged = { ...d, dates: joinDates(d.startDate, d.endDate) }
+    const merged = { ...d, dates: joinDates(d.startYear, d.endYear) }
     onSave(merged); setEditing(false)
   }
-  const displayDates = item.dates || joinDates(item.startDate, item.endDate)
+  const displayLoc = [item.city, item.country].filter(Boolean).join(', ')
+  const displayDates = joinDates(item.startYear, item.endYear) || item.dates || ''
   if (!editing) return (
     <div className="border border-slate-200 rounded-xl p-4 hover:border-slate-300 transition">
       <div className="flex justify-between gap-3 mb-1">
         <div>
           <p className="text-sm font-bold text-slate-900">{item.title || '(no title)'}</p>
-          <p className="text-xs text-slate-500 mt-0.5">{item.company}{item.location ? ` · ${item.location}` : ''}{displayDates ? ` · ${displayDates}` : ''}</p>
+          <p className="text-xs text-slate-500 mt-0.5">{item.company}{displayLoc ? ` · ${displayLoc}` : ''}{displayDates ? ` · ${displayDates}` : ''}</p>
         </div>
         <div className="flex gap-1.5 flex-shrink-0">
           <button onClick={() => setEditing(true)} className="text-xs font-semibold px-2.5 py-1 border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 transition">Edit</button>
@@ -127,30 +156,13 @@ function ExpCard({ item, onSave, onDelete }) {
   return (
     <div className="border border-indigo-200 rounded-xl p-4 space-y-3 bg-indigo-50/30">
       <div className="grid grid-cols-2 gap-2">
-        {[['title','Title'],['company','Company'],['location','Location']].map(([k,ph]) => (
+        {[['title','Role'],['company','Company'],['city','City'],['country','Country']].map(([k,ph]) => (
           <input key={k} value={d[k]||''} onChange={e=>setD(x=>({...x,[k]:e.target.value}))} placeholder={ph}
             className="rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 bg-white transition" />
         ))}
       </div>
 
-      {/* Timing: Start · End (+ Present toggle) — month/year pickers */}
-      <div>
-        <p className="text-[10px] font-black uppercase tracking-[0.15em] text-slate-400 mb-1.5">Timing</p>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div>
-            <p className="text-[11px] font-semibold text-slate-500 mb-1">Start</p>
-            <MonthYearPicker value={d.startDate} onChange={v => setD(x => ({ ...x, startDate: v }))} />
-          </div>
-          <div>
-            <p className="text-[11px] font-semibold text-slate-500 mb-1">End</p>
-            <MonthYearPicker value={present ? '' : d.endDate} disabled={present} onChange={v => setD(x => ({ ...x, endDate: v }))} />
-          </div>
-        </div>
-        <label className="inline-flex items-center gap-2 mt-2 text-xs text-slate-600 cursor-pointer select-none">
-          <input type="checkbox" checked={present} onChange={e => setD(x => ({ ...x, endDate: e.target.checked ? 'Present' : '' }))} className="w-3.5 h-3.5 accent-indigo-600" />
-          I currently work here (Present)
-        </label>
-      </div>
+      <YearRange startYear={d.startYear} endYear={d.endYear} onChange={v => setD(x => ({ ...x, ...v }))} presentLabel="I currently work here" />
 
       <div className="space-y-1.5">
         {(d.bullets||[]).map((b,i)=>(
@@ -175,17 +187,12 @@ function ExpCard({ item, onSave, onDelete }) {
 
 function EduCard({ item, onSave, onDelete }) {
   const [editing, setEditing] = useState(!item.degree)
-  const [d, setD] = useState(() => {
-    if (item.startDate != null || item.endDate != null) return item
-    const { start, end } = splitDates(item.year)
-    return { ...item, startDate: start, endDate: end }
-  })
-  const present = (d.endDate || '').trim().toLowerCase() === 'present'
+  const [d, setD] = useState(item)
   function handleSave() {
-    const merged = { ...d, year: joinDates(d.startDate, d.endDate) }
+    const merged = { ...d, year: joinDates(d.startYear, d.endYear) }
     onSave(merged); setEditing(false)
   }
-  const displayYear = item.year || joinDates(item.startDate, item.endDate)
+  const displayYear = joinDates(item.startYear, item.endYear) || item.year || ''
   if (!editing) return (
     <div className="border border-slate-200 rounded-xl p-4 flex justify-between gap-3 hover:border-slate-300 transition">
       <div>
@@ -206,23 +213,7 @@ function EduCard({ item, onSave, onDelete }) {
             className="rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 bg-white transition" />
         ))}
       </div>
-      <div>
-        <p className="text-[10px] font-black uppercase tracking-[0.15em] text-slate-400 mb-1.5">Timing</p>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div>
-            <p className="text-[11px] font-semibold text-slate-500 mb-1">Start</p>
-            <MonthYearPicker value={d.startDate} onChange={v => setD(x => ({ ...x, startDate: v }))} />
-          </div>
-          <div>
-            <p className="text-[11px] font-semibold text-slate-500 mb-1">End</p>
-            <MonthYearPicker value={present ? '' : d.endDate} disabled={present} onChange={v => setD(x => ({ ...x, endDate: v }))} />
-          </div>
-        </div>
-        <label className="inline-flex items-center gap-2 mt-2 text-xs text-slate-600 cursor-pointer select-none">
-          <input type="checkbox" checked={present} onChange={e => setD(x => ({ ...x, endDate: e.target.checked ? 'Present' : '' }))} className="w-3.5 h-3.5 accent-indigo-600" />
-          Currently studying (Present)
-        </label>
-      </div>
+      <YearRange startYear={d.startYear} endYear={d.endYear} onChange={v => setD(x => ({ ...x, ...v }))} presentLabel="Currently studying" />
       <div className="flex gap-2">
         <button onClick={handleSave} className="text-xs font-semibold px-3.5 py-1.5 bg-slate-900 text-white rounded-lg hover:bg-slate-800 transition">Save</button>
         <button onClick={()=>{setD(item);setEditing(false)}} className="text-xs font-semibold px-3.5 py-1.5 border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 transition">Cancel</button>
@@ -253,6 +244,7 @@ function ProjCard({ item, onSave, onDelete }) {
         className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 bg-white transition" />
       <input value={d.tech||''} onChange={e=>setD(x=>({...x,tech:e.target.value}))} placeholder="Tech stack (React, Node.js…)"
         className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 bg-white transition" />
+      <YearRange startYear={d.startYear} endYear={d.endYear} onChange={v => setD(x => ({ ...x, ...v }))} presentLabel="Ongoing" />
       <textarea value={d.description||''} onChange={e=>setD(x=>({...x,description:e.target.value}))} placeholder="Description" rows={3}
         className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 bg-white resize-none transition" />
       <div className="flex gap-2">
@@ -282,6 +274,7 @@ export default function DashboardProfilePage() {
 
   const [name, setName] = useState('')
   const [linkedin, setLinkedin] = useState('')
+  const [noLinkedin, setNoLinkedin] = useState(false)
   const [github, setGithub] = useState('')
   const [certs, setCerts] = useState([])
   const [newCert, setNewCert] = useState({ name: '', issuer: '', year: '', url: '' })
@@ -711,14 +704,33 @@ export default function DashboardProfilePage() {
           {/* Links */}
           <div className="bg-white border border-slate-200 rounded-2xl p-6 space-y-6">
             <div>
-              <label className="block text-xs font-black uppercase tracking-[0.2em] text-slate-500 mb-2">LinkedIn URL</label>
+              <label className="block text-xs font-black uppercase tracking-[0.2em] text-slate-500 mb-2">LinkedIn URL <span className="text-red-500">*</span></label>
               <div className="flex gap-3">
-                <input type="url" value={linkedin} onChange={e => setLinkedin(e.target.value)} placeholder="https://linkedin.com/in/yourname"
-                  className="flex-1 rounded-xl border border-slate-300 px-4 py-2.5 text-sm text-slate-900 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition" />
-                <button onClick={() => save({ linkedin_url: linkedin })} disabled={saving}
+                <input type="url" value={linkedin} disabled={noLinkedin} onChange={e => setLinkedin(e.target.value)} placeholder="https://linkedin.com/in/yourname"
+                  className="flex-1 rounded-xl border border-slate-300 px-4 py-2.5 text-sm text-slate-900 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 disabled:bg-slate-100 disabled:text-slate-400 transition" />
+                <button onClick={() => save({ linkedin_url: linkedin })} disabled={saving || noLinkedin}
                   className="px-5 py-2.5 text-sm font-semibold bg-slate-900 text-white rounded-xl hover:bg-slate-800 disabled:opacity-50 transition whitespace-nowrap">
                   {saving ? 'Saving…' : 'Save'}
                 </button>
+              </div>
+              <p className="text-xs text-slate-400 mt-2">We use this public profile URL for your application.</p>
+              <label className="inline-flex items-center gap-2 mt-3 text-sm text-slate-600 cursor-pointer select-none">
+                <input type="checkbox" checked={noLinkedin} onChange={e => setNoLinkedin(e.target.checked)} className="w-4 h-4 accent-indigo-600" />
+                I don&apos;t have a LinkedIn
+              </label>
+
+              {/* Verify LinkedIn */}
+              <div className="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-4">
+                <div className="flex items-center justify-between gap-3 flex-wrap">
+                  <div>
+                    <p className="text-sm font-semibold text-slate-800">Verify your LinkedIn account <span className="text-slate-400 font-normal">· Optional</span></p>
+                    <p className="text-xs text-slate-500 mt-0.5">Verified LinkedIn profiles have 6x higher chances of getting an offer.</p>
+                  </div>
+                  <a href={linkedin || 'https://linkedin.com'} target="_blank" rel="noopener noreferrer"
+                    className={`px-4 py-2 text-sm font-semibold rounded-xl transition whitespace-nowrap ${linkedin && !noLinkedin ? 'bg-[#0a66c2] text-white hover:bg-[#0954a0]' : 'bg-slate-200 text-slate-400 pointer-events-none'}`}>
+                    Verify
+                  </a>
+                </div>
               </div>
             </div>
             <Divider />
