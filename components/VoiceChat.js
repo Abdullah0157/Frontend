@@ -551,6 +551,10 @@ export default function VoiceChat({ messages, loading, finishing, streamingQuest
     stopServerTTS()  // kill any audio still playing before the repeat
     submittedRef.current = false; transcriptRef.current = ''; setTranscript(''); setInterim('')
     setSpeaking(true); isTTSPlayingRef.current = true
+    // Show the question text INSTANTLY when the repeat starts (during the intro),
+    // matching the normal flow — don't leave it on "preparing…" until the voice
+    // finishes. The caption stays visible through the intro and the replay.
+    setTtsStartedForLength(messages.length); setCaptionWordIdx(Infinity)
     playServerTTS(intro, { voice,
       onStart: () => { setSpeaking(true); isTTSPlayingRef.current = true },
       onEnd:   () => replayQuestion(),
@@ -566,8 +570,11 @@ export default function VoiceChat({ messages, loading, finishing, streamingQuest
     submittedRef.current = false; transcriptRef.current = ''; setTranscript(''); setInterim('')
     const text = la.content; const replayLen = messages.length
     setSpeaking(true); isTTSPlayingRef.current = true
+    // Keep the full question text on screen (no word-by-word animation, which
+    // drifts out of sync with the audio) — same as the normal question flow.
+    setTtsStartedForLength(replayLen); setCaptionWordIdx(Infinity)
     playServerTTS(text, { voice,
-      onStart: () => { setSpeaking(true); isTTSPlayingRef.current = true; setTtsStartedForLength(replayLen); setCaptionWordIdx(0); startCaptionAnimation(text) },
+      onStart: () => { setSpeaking(true); isTTSPlayingRef.current = true; setTtsStartedForLength(replayLen); setCaptionWordIdx(Infinity) },
       onEnd:   () => { setSpeaking(false); isTTSPlayingRef.current = false; replayingRef.current = false; clearCaptionTimers(); setCaptionWordIdx(Infinity); setTimeout(() => startListening(), 800) },
       onError: () => { setSpeaking(false); isTTSPlayingRef.current = false; replayingRef.current = false; clearCaptionTimers(); setCaptionWordIdx(Infinity); setTimeout(() => startListening(), 800) },
     })
