@@ -142,3 +142,54 @@ async def query_evaluations(db: AsyncSession, band: str | None = None, min_score
     rows = (await db.scalars(stmt.order_by(EvaluationResult.composite_score.desc()))).all()
     return [{"id": r.id, "role": r.role, "band": r.band, "composite_score": r.composite_score,
              "coverage": r.coverage, "candidate_id": r.candidate_id} for r in rows]
+
+
+# ── Analytics + CRM projections (read-only rollups over stored data) ──────────
+async def analytics_summary(db: AsyncSession) -> dict[str, Any]:
+    """Hiring analytics over stored evaluations — the queryable moat data."""
+    total = await db.scalar(select(func.count()).select_from(EvaluationResult)) or 0
+    avg_score = await db.scalar(select(func.avg(EvaluationResult.composite_score)))
+    avg_cov = await db.scalar(select(func.avg(EvaluationResult.coverage)))
+    band_rows = (await db.execute(
+        select(EvaluationResult.band, func.count()).group_by(EvaluationResult.band)
+    )).all()
+    sessions = await db.scalar(select(func.count()).select_from(InterviewSession)) or 0
+    candidates = await db.scalar(
+        select(func.count(func.distinct(EvaluationResult.candidate_id)))
+        .where(EvaluationResult.candidate_id.is_not(None))
+    ) or 0
+    return {
+        "total_evaluations": total,
+        "interview_sessions": sessions,
+        "candidates_evaluated": candidates,
+        "avg_composite": round(avg_score, 1) if avg_score is not None else None,
+        "avg_coverage": round(avg_cov, 2) if avg_cov is not None else None,
+        "by_band": {(b or "unknown"): n for b, n in band_rows},
+    }
+
+
+async def candidate_pipeline(db: AsyncSession, band: str | None = None) -> list[dict[str, Any]]:
+    """CRM projection: each candidate with their LATEST evaluation (recruiter view)."""
+    stmt = select(EvaluationResult).order_by(EvaluationResult.created_at.desc())
+    if band:
+        stmt = stmt.where(EvaluationResult.band == band)
+    rows = (await db.scalars(stmt)).all()
+    seen: dict[str, dict[str, Any]] = {}
+    for r in rows:
+        key = r.candidate_id or r.id
+        if key not in seen:
+            seen[key] = {
+                "candidate_id": r.candidate_id, "role": r.role, "band": r.band,
+                "composite_score": r.composite_score, "coverage": r.coverage,
+                "latest_result_id": r.id, "evaluated_at": r.created_at.isoformat(),
+            }
+    return list(seen.values())
+
+
+async def candidate_skill_graph(db: AsyncSession, candidate_id: str) -> list[dict[str, Any]]:
+    """All persisted skill abilities for a candidate — their cumulative skill graph."""
+    rows = (await db.scalars(
+        select(CandidateSkillState).where(CandidateSkillState.candidate_id == candidate_id)
+    )).all()
+    return [{"skill_id": s.skill_id, "theta": s.theta, "theta_se": s.theta_se,
+             "n_responses": s.n_responses} for s in rows]
