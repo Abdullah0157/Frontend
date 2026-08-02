@@ -10,7 +10,7 @@ import structlog
 from fastapi import FastAPI
 
 from adapters.litellm_gateway import LiteLLMGateway
-from app.routers import demo, evaluate, health, interview
+from app.routers import assessment, demo, evaluate, health, interview
 from infra.settings import get_settings
 from orchestration.interview_graph import build_interview_graph
 
@@ -41,3 +41,4 @@ app.include_router(health.router)
 app.include_router(demo.router)
 app.include_router(evaluate.router)
 app.include_router(interview.router)
+app.include_router(assessment.router)
