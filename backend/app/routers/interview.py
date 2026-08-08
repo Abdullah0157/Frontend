@@ -16,6 +16,8 @@ from pydantic import BaseModel, Field
 
 from adapters.persistence import repositories as repo
 from app.deps import best_effort_db
+from domain.interview.risk import analyze_risk
+from ports.llm import LLMGateway
 
 router = APIRouter(prefix="/v1/interview", tags=["interview"])
 
@@ -90,3 +92,16 @@ async def events(session_id: str, request: Request) -> dict[str, Any]:
     async with best_effort_db(request) as db:
         rows = await repo.load_events(db, session_id) if db is not None else []
     return {"session_id": session_id, "count": len(rows), "events": rows}
+
+
+class RiskRequest(BaseModel):
+    role: str = Field(examples=["Senior Backend Engineer"])
+    messages: list[Turn] = []
+
+
+@router.post("/risk")
+async def risk(req: RiskRequest, request: Request) -> dict[str, Any]:
+    """Risk Analysis agent: scan the transcript for integrity signals
+    (evasion / memorized / coached / contradiction / fabrication). Never raises."""
+    gateway: LLMGateway = request.app.state.llm
+    return await analyze_risk(gateway, req.role, [m.model_dump() for m in req.messages])
