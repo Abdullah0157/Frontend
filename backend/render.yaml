@@ -17,7 +17,9 @@ services:
     dockerfilePath: ./deploy/Dockerfile
     dockerContext: .
     healthCheckPath: /health
-    plan: starter            # starter keeps the service warm (voice needs no cold starts)
+    # free = $0/month for the pilot (sleeps after ~15 min idle, ~30s cold start).
+    # Upgrade to `starter` (~$7/mo) later to keep the voice service always warm.
+    plan: free
     autoDeploy: true
     envVars:
       - key: JS_ENV
