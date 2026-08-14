@@ -34,6 +34,8 @@ export async function POST(req) {
     }
     const { description: jobDescription } = rows[0]
 
+    // Pre-analysis stays on FAST cloud even in local mode (one-time intake call
+    // that blocks Q1; too slow on the local model). Interview brain runs local.
     const geminiRes = await callGemini({
       contents: [
         {

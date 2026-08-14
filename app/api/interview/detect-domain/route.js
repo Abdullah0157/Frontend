@@ -94,10 +94,15 @@ RESUME:
 ${resumeText.slice(0, 12000)}`
 
   try {
-    const result = await callGemini({
+    // Intake parsing stays on FAST cloud even in local mode: it's a tiny one-time
+    // call, and running it on the slow local model would leave the candidate
+    // staring at "Reading your resume…" for ~40s before Maya even greets them.
+    // The interview brain (questions/scoring/report) is what runs local.
+    const detectBody = {
       contents: [{ role: 'user', parts: [{ text: prompt }] }],
       generationConfig: { temperature: 0.2, maxOutputTokens: 800, thinkingConfig: { thinkingBudget: 0 } },
-    })
+    }
+    const result = await callGemini(detectBody)
     if (!result.ok) {
       return NextResponse.json({ error: result.data?.error?.message || 'AI error' }, { status: result.status })
     }

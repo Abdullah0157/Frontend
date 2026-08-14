@@ -251,18 +251,22 @@ export default function DomainExpertExperience({ userProfile = null }) {
     }
 
     try {
-      // DEIE belief loop — runs in the BACKGROUND so it never delays the next
-      // question. It scores the transcript-so-far to (a) steer the FOLLOWING
-      // turn at the weakest competency and (b) flag when the decision is stable
-      // enough to conclude. Result is applied one turn later — imperceptible,
-      // since the target barely moves per answer — but it removes a full LLM
-      // round-trip from the critical path the candidate waits on.
-      const seq = ++planSeqRef.current
-      fetchPlan(nextMessages).then((plan) => {
-        if (seq !== planSeqRef.current || !plan) return // superseded by a newer turn
-        pendingTargetRef.current = plan.next_target || null
-        if (plan.ready_to_conclude) concludeSoonRef.current = true
-      }).catch(() => {})
+      // DEIE belief loop — scores the transcript-so-far to steer the FOLLOWING
+      // question at the weakest competency. It's "background", but on the LOCAL
+      // model each scoring pass is a 60-90s inference that pegs the machine and
+      // the passes pile up (Ollama runs one at a time), choking the whole UI
+      // mid-interview. So skip per-turn scoring when NEXT_PUBLIC_SKIP_BELIEF_LOOP
+      // is set (local mode): questions fall back to phase-based guidance (still
+      // good), and the full EIE scoring runs ONCE at report time. Cloud mode
+      // keeps the live belief loop (scoring there is ~2s).
+      if (process.env.NEXT_PUBLIC_SKIP_BELIEF_LOOP !== '1') {
+        const seq = ++planSeqRef.current
+        fetchPlan(nextMessages).then((plan) => {
+          if (seq !== planSeqRef.current || !plan) return // superseded by a newer turn
+          pendingTargetRef.current = plan.next_target || null
+          if (plan.ready_to_conclude) concludeSoonRef.current = true
+        }).catch(() => {})
+      }
 
       // Generate the question NOW, steered by the previous turn's target (or
       // phase-based guidance on the first turn, when it's null).

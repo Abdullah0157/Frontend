@@ -69,6 +69,9 @@ ${resumeText.slice(0, 14000)}`
   // Try up to 2 times — a truncated/garbled first response is retried once.
   // maxOutputTokens is generous so rich resumes don't get cut mid-JSON.
   async function attemptParse() {
+    // Resume parsing stays on FAST cloud even in local mode: it's a big (4096-tok)
+    // one-time call that would take ~90s on the local model. The interview brain
+    // (questions/scoring/report) is what runs local.
     const result = await callGemini({
       contents: [{ role: 'user', parts: [{ text: prompt }] }],
       generationConfig: { temperature: 0.1, maxOutputTokens: 4096, thinkingConfig: { thinkingBudget: 0 } },

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { callGemini, callGeminiStream, textFrom, stripJsonFences } from '@/lib/gemini'
+import { callOllama, localLLMEnabled } from '@/lib/ollama'
 import { query } from '@/lib/db'
 import { finalizeReport, anchorGuideText } from '@/lib/expert-rubric'
 import { scoreTranscript } from '@/lib/eie-rate'
@@ -682,7 +683,7 @@ export async function POST(req) {
         .map((m) => `${m.role === 'assistant' ? 'MAYA' : 'EXPERT'}: ${m.content}`)
         .join('\n\n')
 
-      const result = await callGemini({
+      const reportBody = {
         systemInstruction: { parts: [{ text: domainExpertPersona(domainExpertise || role, resumeText) }] },
         contents: [{
           role: 'user',
@@ -693,7 +694,11 @@ export async function POST(req) {
           maxOutputTokens: 3000,
           thinkingConfig: { thinkingBudget: 0 },
         },
-      })
+      }
+      // Local free model (opt-in) vs Groq/Gemini. Local forces valid-JSON output.
+      const result = localLLMEnabled()
+        ? await callOllama(reportBody, { json: true })
+        : await callGemini(reportBody)
 
       if (!result.ok) {
         return NextResponse.json({ error: result.data?.error?.message || 'AI error' }, { status: result.status })
@@ -719,7 +724,7 @@ export async function POST(req) {
         .map((m, i) => `[Turn ${i + 1}] ${m.role === 'assistant' ? 'IRIS' : 'CANDIDATE'}: ${m.content}`)
         .join('\n\n')
 
-      const result = await callGemini({
+      const irisReportBody = {
         systemInstruction: { parts: [{ text: irisPersona(role, jobDescription, resumeText) }] },
         contents: [{
           role: 'user',
@@ -730,7 +735,10 @@ export async function POST(req) {
           maxOutputTokens: 4000,
           thinkingConfig: { thinkingBudget: 0 },
         },
-      })
+      }
+      const result = localLLMEnabled()
+        ? await callOllama(irisReportBody, { json: true })
+        : await callGemini(irisReportBody)
 
       if (!result.ok) {
         return NextResponse.json(
@@ -808,6 +816,10 @@ export async function POST(req) {
         generationConfig: { temperature: 1.0, maxOutputTokens: 300, thinkingConfig: { thinkingBudget: 0 } },
       }
 
+      // Real-time question ALWAYS uses the fast streaming cloud path (Groq/Gemini),
+      // even in local mode: on a live voice turn the candidate waits for THIS, and
+      // the local model's ~15-20s generation reads as "broken". The heavy parts not
+      // in the live path (belief scoring, final report) stay local/free.
       let streamRes
       try {
         streamRes = await callGeminiStream(geminiBody)
@@ -901,6 +913,9 @@ export async function POST(req) {
       },
     }
 
+    // Real-time question ALWAYS uses the fast streaming cloud path (see the
+    // domain-expert block above) — the live voice turn can't wait on the local
+    // model. Belief scoring + the final report stay local/free.
     let streamRes
     try {
       streamRes = await callGeminiStream(geminiBody)

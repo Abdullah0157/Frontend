@@ -43,8 +43,11 @@ const INTERIM_SILENCE_MS = 2600  // still forming words → give them room
 const SHORT_ANSWER_GRACE = 900   // extra room for very short utterances (< 4 words)
 // How long the mic must be quiet (no audio energy) before a fired timer submits.
 const AUDIO_GUARD_MS = 1200
-// How long with zero speech activity before Iris checks in.
-const NO_SPEECH_MS = 15000
+// How long with zero speech activity before auto-advancing to the next question.
+// 5s keeps a silent candidate from stalling the interview. The audio-energy guard
+// still defers if they're making any sound (mid-thought "umm"), so this only fires
+// on genuine silence.
+const NO_SPEECH_MS = 5000
 
 // Optimistic acknowledgment was removed after Sprint 3 hotfix — it created a
 // race between the ack's TTS fetch and the next question's TTS fetch. When
