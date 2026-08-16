@@ -22,7 +22,7 @@ export default function EieProfile({ eie }) {
       {/* Header: decision + metrics */}
       <div className="flex flex-wrap items-center justify-between gap-3 mb-5">
         <div className="flex items-center gap-3">
-          <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-400">Evaluation · EIE</span>
+          <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-400">AI Evaluation</span>
           {d.band && (
             <span className={`inline-flex items-center text-xs font-semibold px-2.5 py-1 rounded-full border ${BAND_COLORS[d.band] || 'bg-slate-100 text-slate-600 border-slate-200'}`}>
               {d.band}
@@ -38,7 +38,7 @@ export default function EieProfile({ eie }) {
           {eie.composite_score != null && (
             <span className="text-slate-500">Composite <span className="font-semibold text-slate-900 tabular-nums">{eie.composite_score}</span><span className="text-slate-400">/100</span></span>
           )}
-          <span className="text-slate-500">Coverage <span className="font-semibold text-slate-900 tabular-nums">{Math.round((eie.coverage || 0) * 100)}%</span></span>
+          <span className="text-slate-500">Skills covered <span className="font-semibold text-slate-900 tabular-nums">{Math.round((eie.coverage || 0) * 100)}%</span></span>
           {eie.overall_reliability != null && (
             <span className="text-slate-500">Reliability <span className="font-semibold text-slate-900 tabular-nums">{Math.round(eie.overall_reliability * 100)}%</span></span>
           )}
@@ -63,8 +63,8 @@ export default function EieProfile({ eie }) {
             <span className="font-semibold text-slate-900 tabular-nums">{eie.interview_quality.score}<span className="text-slate-400 font-normal">/100</span></span>
           </span>
           <span className="text-slate-400 text-xs">
-            {eie.interview_quality.questions_asked} questions · efficiency {Math.round(eie.interview_quality.efficiency * 100)}%
-            {eie.interview_quality.evasions > 0 ? ` · ${eie.interview_quality.evasions} evasion(s)` : ''}
+            {eie.interview_quality.questions_asked} questions asked · {Math.round(eie.interview_quality.efficiency * 100)}% productive
+            {eie.interview_quality.evasions > 0 ? ` · ${eie.interview_quality.evasions} dodged answer(s)` : ''}
           </span>
           {eie.interview_quality.flags?.length > 0 && (
             <span className="text-[11px] text-amber-700">{eie.interview_quality.verdict}</span>
@@ -74,7 +74,7 @@ export default function EieProfile({ eie }) {
 
       {d.reason && <p className="text-sm text-slate-600 -mt-1 mb-1.5">{d.reason}</p>}
       {d.calibration === 'uncalibrated_prior' && (
-        <p className="text-[11px] text-slate-400 mb-5">⚠︎ Decision bar is a theory-based prior, not yet calibrated against hire outcomes.</p>
+        <p className="text-[11px] text-slate-400 mb-5">⚠︎ Heads up: the pass mark is a starting estimate. It hasn't been tuned against real hiring results yet.</p>
       )}
       {Array.isArray(d.reservations) && d.reservations.length > 0 && (
         <p className="text-sm text-amber-700 mb-5">Reservations: {d.reservations.join(', ')}</p>
@@ -118,14 +118,14 @@ export default function EieProfile({ eie }) {
       {eie.audit?.blinded && (
         <p className="text-[11px] text-slate-400 mt-4 flex items-center gap-1.5">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          Identity-blinded transcript{eie.audit.redactions ? ` · ${eie.audit.redactions} redactions` : ''}{eie.rater_count > 1 ? ' · ensemble + adversarial verify' : ''}
+          Transcript (names hidden to keep scoring fair){eie.audit.redactions ? ` · ${eie.audit.redactions} redactions` : ''}{eie.rater_count > 1 ? ' · ensemble + adversarial verify' : ''}
         </p>
       )}
 
       {/* Unknowns + follow-ups */}
       {unknown.length > 0 && (
         <div className="mt-5">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.1em] text-slate-400 mb-2">Unknown — needs more evidence</p>
+          <p className="text-[10px] font-semibold uppercase tracking-[0.1em] text-slate-400 mb-2">Not enough evidence to score these skills</p>
           <ul className="space-y-1.5">
             {unknown.map((c) => (
               <li key={c.id} className="text-sm text-slate-600 flex gap-2.5">

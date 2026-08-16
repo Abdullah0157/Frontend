@@ -104,7 +104,7 @@ export default function ExpertAssessmentList({ assessments }) {
                   )}
                   {report.overall_confidence != null && (
                     <span className="inline-flex items-center gap-2 text-slate-600">
-                      <span className="text-slate-400">Evidence confidence</span>
+                      <span className="text-slate-400">How well answers backed up their claims</span>
                       <span className="inline-flex items-center gap-1.5">
                         <span className="w-16 h-1.5 rounded-full bg-slate-100 overflow-hidden inline-block align-middle">
                           <span className="block h-full rounded-full bg-slate-900/80" style={{ width: `${Math.round(report.overall_confidence * 100)}%` }} />
@@ -137,7 +137,7 @@ export default function ExpertAssessmentList({ assessments }) {
                             <div className="h-full rounded-full bg-slate-900/80" style={{ width: `${(Number(v) / 10) * 100}%` }} />
                           </div>
                           {conf != null && (
-                            <p className="mt-2 text-[10px] text-slate-400">conf {Math.round(Number(conf) * 100)}%</p>
+                            <p className="mt-2 text-[10px] text-slate-400">confidence {Math.round(Number(conf) * 100)}%</p>
                           )}
                         </div>
                       )
@@ -160,7 +160,7 @@ export default function ExpertAssessmentList({ assessments }) {
                     )}
 
                     {Array.isArray(report.knowledge_gaps) && report.knowledge_gaps.length > 0 && (
-                      <Block label="Knowledge gaps">
+                      <Block label="Areas they didn't show">
                         <ul className="space-y-1.5">
                           {report.knowledge_gaps.map((x, i) => (
                             <li key={i} className="text-sm text-slate-600 flex gap-2.5">
@@ -173,7 +173,7 @@ export default function ExpertAssessmentList({ assessments }) {
                     )}
 
                     {report.standout_moment && (
-                      <Block label="Standout moment">
+                      <Block label="Best moment">
                         <blockquote className="border-l-2 border-slate-300 pl-3.5 text-sm text-slate-600 italic leading-relaxed">
                           “{report.standout_moment}”
                         </blockquote>
@@ -185,7 +185,7 @@ export default function ExpertAssessmentList({ assessments }) {
                   <div className="rounded-xl border border-slate-200/80 bg-white p-4">
                     <div className="flex items-center justify-between mb-3">
                       <p className="text-[10px] font-semibold uppercase tracking-[0.1em] text-slate-400">Transcript</p>
-                      <span className="text-[11px] text-slate-400">{transcript.filter((m) => m.role !== 'assistant').length} answers</span>
+                      <span className="text-[11px] text-slate-400">{transcript.filter((m) => m.role !== 'assistant' && m.content !== '(no response)').length} answers given</span>
                     </div>
                     <div className="space-y-3.5 max-h-[440px] overflow-y-auto pr-1">
                       {transcript.map((m, i) => (

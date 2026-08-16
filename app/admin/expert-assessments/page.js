@@ -51,7 +51,7 @@ export default async function AdminExpertAssessmentsPage() {
       <div>
         <h1 className="text-[28px] font-semibold text-slate-900 tracking-tight">Expert Interviews</h1>
         <p className="text-slate-500 mt-1.5">
-          Every Domain Expert (Maya) interview with its full transcript and AI rubric. {assessments.length} total.
+          Every interview Maya ran, with the full transcript and score breakdown. {assessments.length} total.
         </p>
       </div>
       <ExpertAssessmentList assessments={assessments} />

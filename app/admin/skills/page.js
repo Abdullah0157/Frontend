@@ -49,7 +49,7 @@ export default async function AdminSkillsPage() {
       <div>
         <h1 className="text-3xl font-bold text-slate-900">Skill Taxonomy</h1>
         <p className="text-slate-500 mt-1">
-          {totalSkills} leaf skills across {Object.keys(grouped).length} domains. Each candidate has a persistent θ (ability estimate) for every skill they've been assessed on.
+          {totalSkills} specific skills across {Object.keys(grouped).length} areas. Every candidate gets a running ability score for each skill, which carries over across all their interviews.
         </p>
       </div>
 
@@ -80,7 +80,7 @@ export default async function AdminSkillsPage() {
                         <span className={`text-xs font-bold px-2 py-0.5 rounded shrink-0 ${
                           s.item_count > 0 ? 'bg-emerald-50 text-emerald-700' : 'bg-slate-100 text-slate-400'
                         }`}>
-                          {s.item_count} {s.item_count === 1 ? 'item' : 'items'}
+                          {s.item_count} {s.item_count === 1 ? 'question' : 'questions'}
                         </span>
                       </div>
                     ))}
