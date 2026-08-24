@@ -2,11 +2,66 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
+import { getSupabaseBrowser } from '@/lib/supabase/client'
 import ResumeAnalyzer from '@/components/ResumeAnalyzer'
 
 // ── tiny helpers ──────────────────────────────────────────────────────────────
 function uid() { return Math.random().toString(36).slice(2) }
 function Divider() { return <div className="border-t border-slate-100" /> }
+
+// ── Shared form controls for the preference tabs ──────────────────────────────
+const FIELD_CLS = 'w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm text-slate-900 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition'
+function Label({ children }) {
+  return <label className="block text-xs font-black uppercase tracking-[0.2em] text-slate-500 mb-2">{children}</label>
+}
+function Field({ label, hint, children }) {
+  return (
+    <div>
+      <Label>{label}</Label>
+      {children}
+      {hint && <p className="text-xs text-slate-400 mt-1.5">{hint}</p>}
+    </div>
+  )
+}
+function TextField({ label, hint, value, onChange, placeholder, type = 'text' }) {
+  return (
+    <Field label={label} hint={hint}>
+      <input type={type} value={value} onChange={e => onChange(e.target.value)} placeholder={placeholder} className={FIELD_CLS} />
+    </Field>
+  )
+}
+function SelectField({ label, hint, value, onChange, options }) {
+  return (
+    <Field label={label} hint={hint}>
+      <select value={value} onChange={e => onChange(e.target.value)} className={FIELD_CLS}>
+        <option value="">Select…</option>
+        {options.map(o => <option key={o} value={o}>{o}</option>)}
+      </select>
+    </Field>
+  )
+}
+function Toggle({ label, hint, checked, onChange }) {
+  return (
+    <label className="flex items-start gap-3 cursor-pointer group">
+      <input type="checkbox" checked={!!checked} onChange={e => onChange(e.target.checked)}
+        className="mt-0.5 h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer" />
+      <span className="min-w-0">
+        <span className="block text-sm font-medium text-slate-800 group-hover:text-slate-900">{label}</span>
+        {hint && <span className="block text-xs text-slate-400 mt-0.5">{hint}</span>}
+      </span>
+    </label>
+  )
+}
+function SaveBar({ saving, onSave }) {
+  return (
+    <div className="pt-2">
+      <button onClick={onSave} disabled={saving}
+        className="px-5 py-2.5 text-sm font-semibold bg-slate-900 text-white rounded-xl hover:bg-slate-800 disabled:opacity-50 transition">
+        {saving ? 'Saving…' : 'Save'}
+      </button>
+    </div>
+  )
+}
 
 // ── Resume section sub-components ────────────────────────────────────────────
 function SkillsEditor({ skills = [], onChange }) {
@@ -279,6 +334,10 @@ export default function DashboardProfilePage() {
   const [certs, setCerts] = useState([])
   const [newCert, setNewCert] = useState({ name: '', issuer: '', year: '', url: '' })
   const [sections, setSections] = useState(null)
+  // Location / Availability / Work preferences / Communications all live under
+  // one JSONB column, keyed by tab. The API merges per-key, so saving one tab
+  // never clobbers another.
+  const [prefs, setPrefs] = useState({})
 
   const fileRef = useRef(null)
 
@@ -295,6 +354,7 @@ export default function DashboardProfilePage() {
       setGithub(data.profile?.github_url || '')
       setCerts(data.profile?.certificates || [])
       setSections(data.profile?.resume_sections || null)
+      setPrefs(data.profile?.profile_prefs || {})
     } finally { setLoading(false) }
   }
 
@@ -310,6 +370,12 @@ export default function DashboardProfilePage() {
       await load()
     } catch (e) { flash('err', e.message) } finally { setSaving(false) }
   }
+
+  // Read/update a single field inside one prefs group, then persist that group.
+  const pref = (group, field, fallback = '') => prefs?.[group]?.[field] ?? fallback
+  const setPref = (group, field, value) =>
+    setPrefs(p => ({ ...p, [group]: { ...(p?.[group] || {}), [field]: value } }))
+  const savePrefs = (group) => save({ profile_prefs: { [group]: prefs?.[group] || {} } })
 
   async function onUpload(e) {
     const file = e.target.files?.[0]; if (!file) return
@@ -371,14 +437,13 @@ export default function DashboardProfilePage() {
   const tabs = [
     { id: 'resume', label: 'Resume' },
     { id: 'personal', label: 'Personal info' },
-    { id: 'location', label: 'Location & work authorization', soon: true },
-    { id: 'availability', label: 'Availability', soon: true },
-    { id: 'preferences', label: 'Work preferences', soon: true },
-    { id: 'communications', label: 'Communications', soon: true },
+    { id: 'location', label: 'Location & work authorization' },
+    { id: 'availability', label: 'Availability' },
+    { id: 'preferences', label: 'Work preferences' },
+    { id: 'communications', label: 'Communications' },
     { id: 'certs', label: 'Certificates' },
-    { id: 'account', label: 'Account', soon: true },
+    { id: 'account', label: 'Account' },
   ]
-  const SOON = new Set(['location', 'availability', 'preferences', 'communications', 'account'])
 
   if (loading) return <div className="max-w-5xl mx-auto pt-10 text-sm text-slate-400">Loading…</div>
 
@@ -799,11 +864,136 @@ export default function DashboardProfilePage() {
         </div>
       )}
 
-      {/* Placeholder sections (Mercor parity) */}
-      {SOON.has(activeTab) && (
-        <div className="bg-white border border-slate-200 rounded-2xl p-10 text-center max-w-xl">
-          <p className="text-lg font-bold text-slate-900 mb-1">{tabs.find(t => t.id === activeTab)?.label}</p>
-          <p className="text-sm text-slate-500">Coming soon.</p>
+      {/* ── Location & work authorization ─────────────────────────────── */}
+      {activeTab === 'location' && (
+        <div className="max-w-2xl bg-white border border-slate-200 rounded-2xl p-6 space-y-6">
+          <p className="text-sm text-slate-500">Where you are and what you&apos;re allowed to work. Companies filter on this, so keep it accurate.</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <TextField label="Country" value={pref('location', 'country')} onChange={v => setPref('location', 'country', v)} placeholder="e.g. Pakistan" />
+            <TextField label="City" value={pref('location', 'city')} onChange={v => setPref('location', 'city', v)} placeholder="e.g. Lahore" />
+          </div>
+          <TextField label="Time zone" value={pref('location', 'timezone')} onChange={v => setPref('location', 'timezone', v)} placeholder="e.g. PKT (UTC+5)"
+            hint="Used to suggest interview times that actually work for you." />
+          <SelectField label="Work authorization" value={pref('location', 'work_auth')} onChange={v => setPref('location', 'work_auth', v)}
+            options={['Citizen', 'Permanent resident', 'Work visa', 'Student visa', 'Need sponsorship', 'Other']} />
+          <Divider />
+          <div className="space-y-4">
+            <Toggle label="I need visa sponsorship" hint="Tells companies upfront so nobody wastes a round."
+              checked={pref('location', 'needs_sponsorship', false)} onChange={v => setPref('location', 'needs_sponsorship', v)} />
+            <Toggle label="I'm open to relocating" hint="Including to another country for the right role."
+              checked={pref('location', 'open_to_relocate', false)} onChange={v => setPref('location', 'open_to_relocate', v)} />
+          </div>
+          <SaveBar saving={saving} onSave={() => savePrefs('location')} />
+        </div>
+      )}
+
+      {/* ── Availability ──────────────────────────────────────────────── */}
+      {activeTab === 'availability' && (
+        <div className="max-w-2xl bg-white border border-slate-200 rounded-2xl p-6 space-y-6">
+          <p className="text-sm text-slate-500">When you can start and how much you can take on.</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <TextField label="Available from" type="date" value={pref('availability', 'available_from')} onChange={v => setPref('availability', 'available_from', v)} />
+            <SelectField label="Notice period" value={pref('availability', 'notice')} onChange={v => setPref('availability', 'notice', v)}
+              options={['Immediately', '1 week', '2 weeks', '1 month', '2 months', '3+ months']} />
+          </div>
+          <SelectField label="Hours per week" value={pref('availability', 'hours')} onChange={v => setPref('availability', 'hours', v)}
+            options={['Full-time (40+)', 'Full-time (30-40)', 'Part-time (20-30)', 'Part-time (under 20)', 'Flexible']} />
+          <Divider />
+          <div className="space-y-4">
+            <Toggle label="Open to contract or freelance work" checked={pref('availability', 'open_contract', false)} onChange={v => setPref('availability', 'open_contract', v)} />
+            <Toggle label="Open to short-term projects" checked={pref('availability', 'open_short_term', false)} onChange={v => setPref('availability', 'open_short_term', v)} />
+            <Toggle label="Currently actively looking" hint="Turn this off to pause new job matches."
+              checked={pref('availability', 'actively_looking', false)} onChange={v => setPref('availability', 'actively_looking', v)} />
+          </div>
+          <SaveBar saving={saving} onSave={() => savePrefs('availability')} />
+        </div>
+      )}
+
+      {/* ── Work preferences ──────────────────────────────────────────── */}
+      {activeTab === 'preferences' && (
+        <div className="max-w-2xl bg-white border border-slate-200 rounded-2xl p-6 space-y-6">
+          <p className="text-sm text-slate-500">What kind of work you actually want. We use this to rank the roles you see.</p>
+          <SelectField label="Work setup" value={pref('preferences', 'setup')} onChange={v => setPref('preferences', 'setup', v)}
+            options={['Remote', 'Hybrid', 'On-site', 'No preference']} />
+          <TextField label="Roles you want" value={pref('preferences', 'roles')} onChange={v => setPref('preferences', 'roles', v)}
+            placeholder="e.g. Backend Engineer, Full Stack Engineer" hint="Comma separated." />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <TextField label="Minimum salary" value={pref('preferences', 'salary_min')} onChange={v => setPref('preferences', 'salary_min', v)} placeholder="e.g. 150000" />
+            <SelectField label="Currency" value={pref('preferences', 'currency')} onChange={v => setPref('preferences', 'currency', v)}
+              options={['USD', 'EUR', 'GBP', 'PKR', 'AED', 'INR', 'Other']} />
+          </div>
+          <SelectField label="Company size" value={pref('preferences', 'company_size')} onChange={v => setPref('preferences', 'company_size', v)}
+            options={['Startup (1-50)', 'Scale-up (50-500)', 'Mid-size (500-5000)', 'Enterprise (5000+)', 'No preference']} />
+          <TextField label="Industries you prefer" value={pref('preferences', 'industries')} onChange={v => setPref('preferences', 'industries', v)}
+            placeholder="e.g. Fintech, Healthcare, AI" hint="Optional. Comma separated." />
+          <SaveBar saving={saving} onSave={() => savePrefs('preferences')} />
+        </div>
+      )}
+
+      {/* ── Communications ────────────────────────────────────────────── */}
+      {activeTab === 'communications' && (
+        <div className="max-w-2xl bg-white border border-slate-200 rounded-2xl p-6 space-y-6">
+          <p className="text-sm text-slate-500">Choose what we email you about. You&apos;ll always get essential messages about interviews you&apos;ve started.</p>
+          <div className="space-y-4">
+            <Toggle label="New job matches" hint="Roles that fit your skills and preferences."
+              checked={pref('communications', 'job_matches', true)} onChange={v => setPref('communications', 'job_matches', v)} />
+            <Toggle label="Interview invitations" hint="When a company invites you to interview."
+              checked={pref('communications', 'invitations', true)} onChange={v => setPref('communications', 'invitations', v)} />
+            <Toggle label="Assessment reminders" hint="Nudges for assessments you haven't finished."
+              checked={pref('communications', 'reminders', true)} onChange={v => setPref('communications', 'reminders', v)} />
+            <Toggle label="Application status updates" hint="Movement on roles you've applied to."
+              checked={pref('communications', 'status_updates', true)} onChange={v => setPref('communications', 'status_updates', v)} />
+            <Divider />
+            <Toggle label="Product updates and tips" hint="Occasional. No spam."
+              checked={pref('communications', 'product_updates', false)} onChange={v => setPref('communications', 'product_updates', v)} />
+          </div>
+          <SaveBar saving={saving} onSave={() => savePrefs('communications')} />
+        </div>
+      )}
+
+      {/* ── Account ───────────────────────────────────────────────────── */}
+      {activeTab === 'account' && (
+        <div className="max-w-2xl space-y-6">
+          <div className="bg-white border border-slate-200 rounded-2xl p-6 space-y-5">
+            <div>
+              <Label>Email</Label>
+              <p className="text-sm text-slate-700 border border-slate-200 rounded-xl px-4 py-2.5 bg-slate-50">{user?.email}</p>
+            </div>
+            <div>
+              <Label>Account type</Label>
+              <p className="text-sm text-slate-700 border border-slate-200 rounded-xl px-4 py-2.5 bg-slate-50 capitalize">
+                {(profile?.account_type || 'candidate').replace(/_/g, ' ')}
+              </p>
+            </div>
+            <div>
+              <Label>Resume on file</Label>
+              <p className="text-sm text-slate-700 border border-slate-200 rounded-xl px-4 py-2.5 bg-slate-50">
+                {profile?.has_resume ? (profile?.resume_filename || 'Yes') : 'None uploaded yet'}
+              </p>
+            </div>
+          </div>
+
+          <div className="bg-white border border-slate-200 rounded-2xl p-6">
+            <p className="text-sm font-semibold text-slate-900 mb-1">Sign out</p>
+            <p className="text-xs text-slate-500 mb-4">You&apos;ll be returned to the home page.</p>
+            <button
+              onClick={async () => {
+                const supabase = getSupabaseBrowser()
+                await supabase.auth.signOut()
+                router.push('/'); router.refresh()
+              }}
+              className="px-5 py-2.5 text-sm font-semibold border border-slate-300 text-slate-700 rounded-xl hover:bg-slate-50 transition">
+              Sign out
+            </button>
+          </div>
+
+          <div className="bg-white border border-red-200 rounded-2xl p-6">
+            <p className="text-sm font-semibold text-red-700 mb-1">Delete account</p>
+            <p className="text-xs text-slate-500">
+              Permanently removes your profile, resume and interview history. This can&apos;t be undone, so we handle it manually:
+              email <span className="font-medium text-slate-700">support@jobstream.ai</span> from this address and we&apos;ll confirm before deleting anything.
+            </p>
+          </div>
         </div>
       )}
         </div>

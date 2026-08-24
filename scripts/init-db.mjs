@@ -67,6 +67,8 @@ CREATE TABLE IF NOT EXISTS user_profiles (
 );
 
 ALTER TABLE user_profiles ADD COLUMN IF NOT EXISTS account_type text NOT NULL DEFAULT 'candidate';
+-- Backs the Location / Availability / Work preferences / Communications tabs.
+ALTER TABLE user_profiles ADD COLUMN IF NOT EXISTS profile_prefs jsonb;
 
 -- Company-side profile (one row per company user).
 CREATE TABLE IF NOT EXISTS company_profiles (
