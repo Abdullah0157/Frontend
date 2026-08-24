@@ -4,6 +4,20 @@ import { query } from '@/lib/db'
 
 export const dynamic = 'force-dynamic'
 
+// The prefs column is added lazily on first use so a deploy never depends on a
+// manual migration step. ADD COLUMN IF NOT EXISTS is idempotent and cheap, and
+// we only attempt it once per server process.
+let prefsColumnReady = false
+async function ensurePrefsColumn() {
+  if (prefsColumnReady) return
+  try {
+    await query(`ALTER TABLE user_profiles ADD COLUMN IF NOT EXISTS profile_prefs jsonb`)
+    prefsColumnReady = true
+  } catch (e) {
+    console.warn('profile: could not ensure profile_prefs column:', e.message)
+  }
+}
+
 async function getUserOrFail() {
   const supabase = getSupabaseServer()
   const { data: { user } } = await supabase.auth.getUser()
@@ -12,6 +26,7 @@ async function getUserOrFail() {
 }
 
 export async function GET() {
+  await ensurePrefsColumn()
   const user = await getUserOrFail()
   if (!user) return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
 
@@ -30,6 +45,7 @@ export async function GET() {
 }
 
 export async function PUT(req) {
+  await ensurePrefsColumn()
   const user = await getUserOrFail()
   if (!user) return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
 

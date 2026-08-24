@@ -22,6 +22,7 @@ export async function POST(req) {
 
 EXACT structure to return:
 {
+  "personal": { "full_name": "Full Name", "email": "name@example.com", "phone": "+1 555 0100", "city": "City", "country": "Country", "linkedin": "https://linkedin.com/in/handle", "github": "https://github.com/handle" },
   "summary": "one-paragraph professional summary (use the resume's own summary/objective if present, otherwise synthesize 1-2 sentences from the content)",
   "experience": [
     { "id": "exp_1", "title": "Job Title", "company": "Company Name", "city": "City", "country": "Country", "startYear": "2020", "endYear": "Present", "dates": "Jan 2020 – Present", "bullets": ["achievement/responsibility 1", "achievement 2"] }
@@ -55,6 +56,8 @@ STRICT RULES:
 - Extract ONLY facts that actually appear in the resume — never invent companies, dates, degrees, or skills.
 - Include EVERY job in "experience", EVERY school in "education", and EVERY project in "projects" — do not skip or merge entries.
 - Preserve each job's real bullet points (lightly condensed if very long, max ~20 words each). Keep all of them, don't drop bullets.
+- CRITICAL: every bullet must stay attached to the job it appears under in the resume. Never move, merge, or shift bullets between jobs. If a job genuinely lists no bullets, return an empty "bullets" array for it — do NOT borrow bullets from another entry. The most recent job usually has the most bullets, so if one job ends up empty while an older one has many, you have mis-assigned them: re-read and fix.
+- "personal": pull the candidate's own name, email, phone, city, country and any LinkedIn/GitHub URLs from the resume header/contact block. Use "" for anything not present.
 - Give each item a unique sequential id (exp_1, exp_2, edu_1, proj_1, cp_1, ln_1, ...).
 - "coding_profiles": competitive/coding platforms with a profile URL or handle — LeetCode, HackerRank, Codeforces, CodeChef, GitHub, Kaggle, etc. Include the URL if present.
 - "links": any other personal URLs — portfolio, personal website, blog, LinkedIn, Behance, Dribbble. Give each a short human label.
@@ -108,7 +111,14 @@ ${resumeText.slice(0, 14000)}`
   }
 
   // Normalize shape so the UI never crashes on missing keys.
+  const p = sections.personal && typeof sections.personal === 'object' ? sections.personal : {}
+  const str = (v) => (typeof v === 'string' ? v.trim() : '')
   const normalized = {
+    personal: {
+      full_name: str(p.full_name), email: str(p.email), phone: str(p.phone),
+      city: str(p.city), country: str(p.country),
+      linkedin: str(p.linkedin), github: str(p.github),
+    },
     summary: typeof sections.summary === 'string' ? sections.summary : '',
     experience: Array.isArray(sections.experience) ? sections.experience : [],
     education: Array.isArray(sections.education) ? sections.education : [],
@@ -123,9 +133,18 @@ ${resumeText.slice(0, 14000)}`
   }
 
   try {
+    // Also seed the dedicated identity columns from the resume, but only where
+    // the user hasn't already set them — a parse must never overwrite an edit.
     await query(
-      `UPDATE user_profiles SET resume_sections = $1, updated_at = now() WHERE user_id = $2`,
-      [JSON.stringify(normalized), user.id]
+      `UPDATE user_profiles
+          SET resume_sections = $1,
+              full_name    = COALESCE(NULLIF(full_name, ''),    NULLIF($3, '')),
+              linkedin_url = COALESCE(NULLIF(linkedin_url, ''), NULLIF($4, '')),
+              github_url   = COALESCE(NULLIF(github_url, ''),   NULLIF($5, '')),
+              updated_at = now()
+        WHERE user_id = $2`,
+      [JSON.stringify(normalized), user.id,
+       normalized.personal.full_name, normalized.personal.linkedin, normalized.personal.github]
     )
   } catch (e) {
     console.warn('parse-resume: DB save failed:', e.message)

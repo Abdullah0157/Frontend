@@ -353,8 +353,21 @@ export default function DashboardProfilePage() {
       setLinkedin(data.profile?.linkedin_url || '')
       setGithub(data.profile?.github_url || '')
       setCerts(data.profile?.certificates || [])
-      setSections(data.profile?.resume_sections || null)
-      setPrefs(data.profile?.profile_prefs || {})
+      const secs = data.profile?.resume_sections || null
+      const p = { ...(data.profile?.profile_prefs || {}) }
+      // Seed Location from what we read off the resume, so uploading a CV fills
+      // these in instead of showing blanks. Only fills gaps — anything the user
+      // has already saved wins, and they can edit and re-save freely.
+      const rp = secs?.personal || {}
+      if (rp.city || rp.country) {
+        p.location = {
+          ...(p.location || {}),
+          city: p.location?.city || rp.city || '',
+          country: p.location?.country || rp.country || '',
+        }
+      }
+      setSections(secs)
+      setPrefs(p)
     } finally { setLoading(false) }
   }
 
@@ -867,7 +880,10 @@ export default function DashboardProfilePage() {
       {/* ── Location & work authorization ─────────────────────────────── */}
       {activeTab === 'location' && (
         <div className="max-w-2xl bg-white border border-slate-200 rounded-2xl p-6 space-y-6">
-          <p className="text-sm text-slate-500">Where you are and what you&apos;re allowed to work. Companies filter on this, so keep it accurate.</p>
+          <p className="text-sm text-slate-500">
+            Where you are and what you&apos;re allowed to work. Companies filter on this, so keep it accurate.
+            {(sections?.personal?.city || sections?.personal?.country) && ' We pre-filled what we read from your resume — edit anything that’s off, then save.'}
+          </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             <TextField label="Country" value={pref('location', 'country')} onChange={v => setPref('location', 'country', v)} placeholder="e.g. Pakistan" />
             <TextField label="City" value={pref('location', 'city')} onChange={v => setPref('location', 'city', v)} placeholder="e.g. Lahore" />
