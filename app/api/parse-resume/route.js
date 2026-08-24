@@ -67,7 +67,7 @@ STRICT RULES:
 - Output must be a single valid JSON object and NOTHING else.
 
 RESUME:
-${resumeText.slice(0, 14000)}`
+${resumeText.slice(0, 30000)}`
 
   // Try up to 2 times — a truncated/garbled first response is retried once.
   // maxOutputTokens is generous so rich resumes don't get cut mid-JSON.
@@ -77,7 +77,9 @@ ${resumeText.slice(0, 14000)}`
     // (questions/scoring/report) is what runs local.
     const result = await callGemini({
       contents: [{ role: 'user', parts: [{ text: prompt }] }],
-      generationConfig: { temperature: 0.1, maxOutputTokens: 4096, thinkingConfig: { thinkingBudget: 0 } },
+      // 8192 out: a rich CV (9 projects + 50 skills) can exceed 4096 and get cut
+      // mid-JSON, which surfaced as a parse failure in batch testing.
+      generationConfig: { temperature: 0.1, maxOutputTokens: 8192, thinkingConfig: { thinkingBudget: 0 } },
     })
     if (!result.ok) {
       const msg = result.data?.error?.message || 'AI unavailable'

@@ -366,6 +366,9 @@ export default function DashboardProfilePage() {
           country: p.location?.country || rp.country || '',
         }
       }
+      if (rp.phone) {
+        p.personal = { ...(p.personal || {}), phone: p.personal?.phone || rp.phone }
+      }
       setSections(secs)
       setPrefs(p)
     } finally { setLoading(false) }
@@ -509,6 +512,21 @@ export default function DashboardProfilePage() {
           <div>
             <label className="block text-xs font-black uppercase tracking-[0.2em] text-slate-500 mb-2">Email</label>
             <p className="text-sm text-slate-700 border border-slate-200 rounded-xl px-4 py-2.5 bg-slate-50">{user?.email}</p>
+          </div>
+          <div>
+            <label className="block text-xs font-black uppercase tracking-[0.2em] text-slate-500 mb-2">Phone</label>
+            <div className="flex gap-3">
+              <input value={pref('personal', 'phone')} onChange={e => setPref('personal', 'phone', e.target.value)}
+                placeholder="+92 300 0000000"
+                className="flex-1 rounded-xl border border-slate-300 px-4 py-2.5 text-sm text-slate-900 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition" />
+              <button onClick={() => savePrefs('personal')} disabled={saving}
+                className="px-5 py-2.5 text-sm font-semibold bg-slate-900 text-white rounded-xl hover:bg-slate-800 disabled:opacity-50 transition whitespace-nowrap">
+                {saving ? 'Saving…' : 'Save'}
+              </button>
+            </div>
+            {sections?.personal?.phone && (
+              <p className="text-xs text-slate-400 mt-1.5">Read from your resume. Edit it if it&apos;s wrong, then save.</p>
+            )}
           </div>
         </div>
       )}
