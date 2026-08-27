@@ -95,15 +95,15 @@ export default function CompanySignupPage() {
     return (
       <div className="min-h-screen pt-32 pb-24 px-4">
         <div className="container mx-auto max-w-md">
-          <div className="bg-white border border-emerald-200 rounded-[2.5rem] p-10 shadow-xl text-center">
-            <span className="inline-block px-4 py-1.5 rounded-full bg-emerald-50 text-emerald-600 font-black text-[10px] uppercase tracking-[0.4em] mb-4">
+          <div className="bg-white border border-emerald-200 rounded-2xl p-10 shadow-xl text-center">
+            <span className="inline-block px-4 py-1.5 rounded-full bg-emerald-50 text-emerald-600 font-semibold text-xs mb-4">
               Check your email
             </span>
             <h1 className="text-2xl font-black text-slate-900 mb-3">Almost there</h1>
             <p className="text-slate-600 text-sm leading-relaxed">
               We sent a confirmation link to <strong className="text-slate-900">{form.email}</strong>. Click it to verify, then log in to start posting jobs.
             </p>
-            <Link href="/login/company" className="inline-block mt-6 text-xs font-black uppercase tracking-widest text-indigo-600 hover:text-indigo-500">
+            <Link href="/login/company" className="inline-block mt-6 text-sm font-semibold text-indigo-600 hover:text-indigo-500">
               → Go to company login
             </Link>
           </div>
@@ -116,10 +116,10 @@ export default function CompanySignupPage() {
     <div className="min-h-screen pt-32 pb-24 px-4">
       <div className="container mx-auto max-w-2xl">
         <div className="text-center mb-8">
-          <span className="inline-block px-4 py-1.5 rounded-full bg-indigo-50 border border-indigo-200 text-indigo-600 font-black text-[10px] uppercase tracking-[0.4em] mb-4">
+          <span className="inline-block px-4 py-1.5 rounded-full bg-indigo-50 border border-indigo-200 text-indigo-600 font-semibold text-xs mb-4">
             For Companies
           </span>
-          <h1 className="text-3xl md:text-4xl font-black uppercase tracking-tight text-slate-900">
+          <h1 className="text-[26px] font-bold tracking-tight text-slate-900">
             Hire smarter <span className="text-indigo-600">with AI</span>
           </h1>
           <p className="text-slate-500 mt-3 text-sm">
@@ -131,25 +131,25 @@ export default function CompanySignupPage() {
           <div className="mb-6 p-4 rounded-2xl border border-red-200 bg-red-50 text-red-600 text-sm">{error}</div>
         )}
 
-        <form onSubmit={onSubmit} className="bg-white border border-slate-200 rounded-[2.5rem] p-8 shadow-xl shadow-indigo-500/5 space-y-5">
+        <form onSubmit={onSubmit} className="bg-white border border-slate-200 rounded-2xl p-8 shadow-xl shadow-indigo-500/5 space-y-5">
           <div className="grid md:grid-cols-2 gap-5">
             <label className="block">
-              <span className="text-xs font-black uppercase tracking-[0.3em] text-slate-700">Company Name *</span>
+              <span className="text-sm font-medium text-slate-700">Company Name *</span>
               <input
                 type="text"
                 required
                 value={form.company_name}
                 onChange={(e) => setForm({ ...form, company_name: e.target.value })}
                 placeholder="Acme Corp"
-                className="mt-2 w-full px-5 py-4 rounded-2xl border border-slate-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none transition"
+                className="mt-1.5 w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-900 placeholder:text-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none transition"
               />
             </label>
             <label className="block">
-              <span className="text-xs font-black uppercase tracking-[0.3em] text-slate-700">Industry</span>
+              <span className="text-sm font-medium text-slate-700">Industry</span>
               <select
                 value={form.industry}
                 onChange={(e) => setForm({ ...form, industry: e.target.value })}
-                className="mt-2 w-full px-5 py-4 rounded-2xl border border-slate-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none transition"
+                className="mt-1.5 w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-900 placeholder:text-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none transition"
               >
                 <option value="">Select…</option>
                 {INDUSTRIES.map((i) => <option key={i} value={i}>{i}</option>)}
@@ -158,29 +158,29 @@ export default function CompanySignupPage() {
           </div>
 
           <label className="block">
-            <span className="text-xs font-black uppercase tracking-[0.3em] text-slate-700">Website</span>
+            <span className="text-sm font-medium text-slate-700">Website</span>
             <input
               type="url"
               value={form.website}
               onChange={(e) => setForm({ ...form, website: e.target.value })}
               placeholder="https://acme.com"
-              className="mt-2 w-full px-5 py-4 rounded-2xl border border-slate-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none transition"
+              className="mt-1.5 w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-900 placeholder:text-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none transition"
             />
           </label>
 
           <label className="block">
-            <span className="text-xs font-black uppercase tracking-[0.3em] text-slate-700">Logo URL</span>
+            <span className="text-sm font-medium text-slate-700">Logo URL</span>
             <input
               type="url"
               value={form.logo_url}
               onChange={(e) => setForm({ ...form, logo_url: e.target.value })}
               placeholder="https://acme.com/logo.png"
-              className="mt-2 w-full px-5 py-4 rounded-2xl border border-slate-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none transition"
+              className="mt-1.5 w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-900 placeholder:text-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none transition"
             />
           </label>
 
           <label className="block">
-            <span className="text-xs font-black uppercase tracking-[0.3em] text-slate-700">Short Description</span>
+            <span className="text-sm font-medium text-slate-700">Short Description</span>
             <textarea
               rows={3}
               value={form.description}
@@ -192,7 +192,7 @@ export default function CompanySignupPage() {
 
           <div className="border-t border-slate-200 pt-5 space-y-5">
             <label className="block">
-              <span className="text-xs font-black uppercase tracking-[0.3em] text-slate-700">Work Email *</span>
+              <span className="text-sm font-medium text-slate-700">Work Email *</span>
               <input
                 type="email"
                 required
@@ -200,11 +200,11 @@ export default function CompanySignupPage() {
                 value={form.email}
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
                 placeholder="hiring@acme.com"
-                className="mt-2 w-full px-5 py-4 rounded-2xl border border-slate-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none transition"
+                className="mt-1.5 w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-900 placeholder:text-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none transition"
               />
             </label>
             <label className="block">
-              <span className="text-xs font-black uppercase tracking-[0.3em] text-slate-700">Password *</span>
+              <span className="text-sm font-medium text-slate-700">Password *</span>
               <input
                 type="password"
                 required
@@ -213,7 +213,7 @@ export default function CompanySignupPage() {
                 value={form.password}
                 onChange={(e) => setForm({ ...form, password: e.target.value })}
                 placeholder="At least 8 characters"
-                className="mt-2 w-full px-5 py-4 rounded-2xl border border-slate-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none transition"
+                className="mt-1.5 w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-900 placeholder:text-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none transition"
               />
             </label>
           </div>
@@ -221,22 +221,21 @@ export default function CompanySignupPage() {
           <button
             type="submit"
             disabled={loading}
-            className="btn-style-9 w-full justify-center group uppercase tracking-widest text-xs !px-12 !py-5 rounded-full font-black disabled:opacity-60"
+            className="w-full px-5 py-3 rounded-xl bg-slate-900 text-white text-sm font-semibold hover:bg-slate-800 active:bg-slate-950 transition disabled:opacity-60 disabled:cursor-not-allowed"
           >
-            <div className="btn-shimmer"></div>
             <span>{loading ? 'Creating company…' : 'Create Company Account'}</span>
           </button>
 
           <div className="relative my-2">
             <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-slate-200" /></div>
-            <div className="relative flex justify-center text-[10px] font-black uppercase tracking-widest"><span className="bg-white px-3 text-slate-400">or</span></div>
+            <div className="relative flex justify-center text-xs"><span className="bg-white px-3 text-slate-400">or</span></div>
           </div>
 
           <button
             type="button"
             onClick={signUpWithGoogle}
             disabled={googleLoading}
-            className="w-full flex items-center justify-center gap-3 px-5 py-4 rounded-2xl border border-slate-300 hover:bg-slate-100 transition text-sm font-bold text-slate-700 disabled:opacity-60 disabled:cursor-not-allowed"
+            className="w-full flex items-center justify-center gap-2.5 px-5 py-3 rounded-xl border border-slate-300 hover:bg-slate-50 active:bg-slate-100 transition text-sm font-semibold text-slate-700 disabled:opacity-60 disabled:cursor-not-allowed"
           >
             {googleLoading ? (
               <svg className="w-5 h-5 animate-spin text-slate-400" fill="none" viewBox="0 0 24 24">
@@ -256,12 +255,12 @@ export default function CompanySignupPage() {
 
           <p className="text-center text-xs text-slate-400 pt-2">
             Already have a company account?{' '}
-            <Link href="/login/company" className="font-black text-indigo-600 hover:text-indigo-500">
+            <Link href="/login/company" className="font-semibold text-indigo-600 hover:text-indigo-500">
               Log in
             </Link>
             <span className="text-slate-300"> · </span>
             Looking for jobs?{' '}
-            <Link href="/signup" className="font-black text-indigo-600 hover:text-indigo-500">
+            <Link href="/signup" className="font-semibold text-indigo-600 hover:text-indigo-500">
               Candidate signup
             </Link>
           </p>
