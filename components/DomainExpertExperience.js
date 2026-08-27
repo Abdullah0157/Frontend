@@ -441,19 +441,52 @@ export default function DomainExpertExperience({ userProfile = null }) {
             <p className="text-base text-gray-500 mt-1">{form.domain}</p>
           </div>
 
-          {/* Score + Level */}
-          <div className="grid grid-cols-2 gap-4">
-            <div className="border border-gray-200 rounded-lg p-5 text-center">
-              <p className="text-xs text-gray-400 mb-2">Expertise Score</p>
-              <p className="text-4xl font-bold text-gray-900">{report.expertise_score}<span className="text-lg text-gray-400">/10</span></p>
-            </div>
-            <div className="border border-gray-200 rounded-lg p-5 text-center">
-              <p className="text-xs text-gray-400 mb-2">Level</p>
-              <p className={`text-xl font-bold capitalize ${levelColors[report.expertise_level] || 'text-gray-900'}`}>
-                {report.expertise_level}
-              </p>
-            </div>
-          </div>
+          {/* Verdict — the one thing a reader should take away, stated plainly
+              and colour-banded. A bare number forces people to guess what "6.2"
+              means; the band and sentence remove that guesswork. */}
+          {(() => {
+            const s = Number(report.expertise_score) || 0
+            const band = s >= 8 ? {
+              tone: 'emerald', label: 'Strong expertise verified',
+              note: 'Answers were specific, evidenced, and held up under follow-up questions.',
+            } : s >= 6.5 ? {
+              tone: 'blue', label: 'Solid expertise',
+              note: 'Good working knowledge, with some areas that were not fully evidenced.',
+            } : s >= 4 ? {
+              tone: 'amber', label: 'Partly evidenced',
+              note: 'Some real knowledge came through, but key areas need more depth.',
+            } : {
+              tone: 'slate', label: 'Not enough evidence',
+              note: 'The interview did not surface enough detail to verify expertise.',
+            }
+            const ring = { emerald: 'border-emerald-300 bg-emerald-50', blue: 'border-blue-300 bg-blue-50', amber: 'border-amber-300 bg-amber-50', slate: 'border-slate-300 bg-slate-50' }[band.tone]
+            const text = { emerald: 'text-emerald-700', blue: 'text-blue-700', amber: 'text-amber-700', slate: 'text-slate-600' }[band.tone]
+            const conf = Math.round((Number(report.overall_confidence) || 0) * 100)
+            return (
+              <div className={`rounded-2xl border ${ring} p-6`}>
+                <div className="flex items-center gap-5">
+                  <div className="shrink-0 text-center">
+                    <p className="text-5xl font-black text-gray-900 leading-none tabular-nums">{report.expertise_score}</p>
+                    <p className="text-xs text-gray-400 mt-1">out of 10</p>
+                  </div>
+                  <div className="min-w-0">
+                    <p className={`text-lg font-bold ${text}`}>{band.label}</p>
+                    <p className="text-sm text-gray-600 mt-1">{band.note}</p>
+                    <div className="flex flex-wrap items-center gap-2 mt-3">
+                      <span className={`px-2.5 py-1 rounded-full bg-white border text-xs font-semibold capitalize ${levelColors[report.expertise_level] || 'text-gray-700'}`}>
+                        {report.expertise_level}
+                      </span>
+                      {conf > 0 && (
+                        <span className="px-2.5 py-1 rounded-full bg-white border border-gray-200 text-xs text-gray-500">
+                          {conf}% confidence in this result
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )
+          })()}
 
           {/* Summary */}
           {report.domain_summary && (
@@ -497,20 +530,38 @@ export default function DomainExpertExperience({ userProfile = null }) {
             </div>
           )}
 
-          {/* Internal scores */}
+          {/* Competency breakdown — each score shown WITH the quote that earned
+              it. The model already returns dimension_evidence and per-dimension
+              confidence; showing them is what turns a number into something a
+              candidate (or a hiring manager) can actually trust and argue with. */}
           {report.internal_scores && (
             <div>
-              <p className="text-xs font-semibold tracking-widest text-gray-400 uppercase mb-3">Score Breakdown</p>
-              <div className="space-y-2.5">
-                {Object.entries(report.internal_scores).map(([key, val]) => (
-                  <div key={key} className="flex items-center gap-3">
-                    <span className="w-36 text-xs text-gray-500 capitalize">{key.replace(/_/g, ' ')}</span>
-                    <div className="flex-1 h-1.5 rounded-full bg-gray-100">
-                      <div className="h-1.5 rounded-full bg-indigo-500" style={{ width: `${(val / 10) * 100}%` }} />
+              <p className="text-xs font-semibold tracking-widest text-gray-400 uppercase mb-3">What each score is based on</p>
+              <div className="space-y-3">
+                {Object.entries(report.internal_scores).map(([key, val]) => {
+                  const quote = report.dimension_evidence?.[key]
+                  const conf = report.score_confidence?.[key]
+                  const tone = val >= 8 ? 'bg-emerald-500' : val >= 6 ? 'bg-blue-500' : val >= 4 ? 'bg-amber-500' : 'bg-slate-400'
+                  return (
+                    <div key={key} className="rounded-xl border border-gray-200 p-4">
+                      <div className="flex items-center gap-3">
+                        <span className="flex-1 text-sm font-semibold text-gray-800 capitalize">{key.replace(/_/g, ' ')}</span>
+                        {conf != null && (
+                          <span className="text-[11px] text-gray-400">{Math.round(Number(conf) * 100)}% confidence</span>
+                        )}
+                        <span className="text-sm font-bold text-gray-900 tabular-nums w-10 text-right">{val}/10</span>
+                      </div>
+                      <div className="mt-2 h-1.5 rounded-full bg-gray-100">
+                        <div className={`h-1.5 rounded-full ${tone}`} style={{ width: `${(val / 10) * 100}%` }} />
+                      </div>
+                      {quote && (
+                        <p className="mt-3 text-xs text-gray-600 italic border-l-2 border-gray-200 pl-3 leading-relaxed">
+                          &ldquo;{quote}&rdquo;
+                        </p>
+                      )}
                     </div>
-                    <span className="text-xs font-medium text-gray-700 w-6 text-right">{val}</span>
-                  </div>
-                ))}
+                  )
+                })}
               </div>
             </div>
           )}
