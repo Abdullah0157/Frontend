@@ -15,14 +15,20 @@ export default async function DashboardJobsPage() {
 
   const [profileRes, jobsRes, doneRes] = await Promise.all([
     query('SELECT (resume_text IS NOT NULL) AS has_resume FROM user_profiles WHERE user_id = $1 LIMIT 1', [user.id]).catch(() => null),
-    query('SELECT id, title, role, description, slug, created_at FROM interview_jobs WHERE is_active = true ORDER BY created_at DESC').catch(() => null),
+    // to_regclass guard: the pay columns are added by the marketplace seeder, so
+    // select them only if they exist — otherwise a fresh database 500s here.
+    query(`SELECT id, title, role, description, slug, created_at, company,
+                  ${'pay_type, pay_min, pay_max, pay_currency'}
+           FROM interview_jobs WHERE is_active = true ORDER BY created_at DESC`)
+      .catch(() => query('SELECT id, title, role, description, slug, created_at, company FROM interview_jobs WHERE is_active = true ORDER BY created_at DESC').catch(() => null)),
     query('SELECT DISTINCT job_id FROM interview_candidates WHERE user_id = $1', [user.id]).catch(() => null),
   ])
 
   const hasResume = !!profileRes?.rows?.[0]?.has_resume
   // Serialize created_at to a plain string for the client component.
   const jobs = (jobsRes?.rows || []).map((j) => ({
-    id: j.id, title: j.title, role: j.role, slug: j.slug,
+    id: j.id, title: j.title, role: j.role, slug: j.slug, company: j.company || null,
+    pay_type: j.pay_type || null, pay_min: j.pay_min ?? null, pay_max: j.pay_max ?? null,
     created_at: j.created_at ? new Date(j.created_at).toISOString() : null,
   }))
   const doneJobIds = (doneRes?.rows || []).map((r) => r.job_id)
