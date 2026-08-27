@@ -4,9 +4,13 @@ import { useEffect, useRef, useState } from 'react'
 import VoiceChat from './VoiceChat'
 import { primeTTS } from '@/lib/tts'
 
-// Time-based interview: 30 minutes. progressRatio = elapsed / DURATION drives
-// Maya's phasing (intro → warmup → breadth → depth → edge cases → close).
-const DURATION_S = 30 * 60
+// Time-based interview. progressRatio = elapsed / DURATION drives Maya's phasing
+// (intro → warmup → breadth → depth → edge cases → close), so shortening the
+// duration compresses the whole arc rather than truncating it — a 5-minute run
+// still moves through every phase, just faster. Set NEXT_PUBLIC_INTERVIEW_MINUTES=5
+// for quick end-to-end testing; unset defaults to the real 30-minute interview.
+const INTERVIEW_MINUTES = Number(process.env.NEXT_PUBLIC_INTERVIEW_MINUTES) || 30
+const DURATION_S = INTERVIEW_MINUTES * 60
 const MAX_QUESTIONS = 40 // safety cap so it can't loop forever if the timer breaks
 
 export default function DomainExpertExperience({ userProfile = null }) {
@@ -17,6 +21,7 @@ export default function DomainExpertExperience({ userProfile = null }) {
   const [loading, setLoading] = useState(false)
   const [streamingQuestion, setStreamingQuestion] = useState('')
   const [report, setReport] = useState(null)
+  const [saveState, setSaveState] = useState('idle') // idle | saved | failed
   const [error, setError] = useState('')
   const [noResume, setNoResume] = useState(false)
   const [elapsedSec, setElapsedSec] = useState(0)
@@ -217,14 +222,25 @@ export default function DomainExpertExperience({ userProfile = null }) {
       setPhase('report')
 
       // Persist the assessment so it shows in the dashboard / My Interviews and
-      // admins can audit it. Fire-and-forget — a save failure shouldn't block
-      // the candidate from seeing their report.
+      // admins can audit it. This must not block the candidate from seeing their
+      // report, but it also must not fail SILENTLY — a lost save means a finished
+      // interview vanishes. So: retry, then tell the user if it still failed.
       if (r) {
-        fetch('/api/interview/save-expert-report', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ domain: detected.domain, transcript: finalMessages, report: r, evasions: evasionsRef.current }),
-        }).catch(() => {})
+        const payload = JSON.stringify({
+          domain: detected.domain, transcript: finalMessages, report: r, evasions: evasionsRef.current,
+        })
+        ;(async () => {
+          for (let attempt = 1; attempt <= 3; attempt++) {
+            try {
+              const saveRes = await fetch('/api/interview/save-expert-report', {
+                method: 'POST', headers: { 'Content-Type': 'application/json' }, body: payload,
+              })
+              if (saveRes.ok) { setSaveState('saved'); return }
+            } catch { /* network blip — retry below */ }
+            if (attempt < 3) await new Promise(res => setTimeout(res, attempt * 1500))
+          }
+          setSaveState('failed')
+        })()
       }
     } catch (err) {
       setError(friendlyError(err))

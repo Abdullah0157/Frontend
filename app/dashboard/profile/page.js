@@ -343,8 +343,12 @@ export default function DashboardProfilePage() {
 
   function flash(type, text) { setMsg({ type, text }); setTimeout(() => setMsg({ type: '', text: '' }), 3500) }
 
-  async function load() {
-    setLoading(true)
+  // `silent` refetches WITHOUT flipping `loading`. That matters because the page
+  // early-returns a "Loading…" screen while loading is true — which unmounts the
+  // resume-analysis overlay mid-parse and restarts its progress bar from zero.
+  // Only the very first load should blank the page.
+  async function load({ silent = false } = {}) {
+    if (!silent) setLoading(true)
     try {
       const res = await fetch('/api/profile', { cache: 'no-store' })
       const data = await res.json()
@@ -371,7 +375,7 @@ export default function DashboardProfilePage() {
       }
       setSections(secs)
       setPrefs(p)
-    } finally { setLoading(false) }
+    } finally { if (!silent) setLoading(false) }
   }
 
   useEffect(() => { load() }, [])
@@ -383,7 +387,7 @@ export default function DashboardProfilePage() {
       const res = await fetch('/api/profile', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
       if (!res.ok) throw new Error('Save failed')
       flash('ok', 'Saved.')
-      await load()
+      await load({ silent: true })   // never blank the page mid-flow
     } catch (e) { flash('err', e.message) } finally { setSaving(false) }
   }
 
@@ -404,9 +408,6 @@ export default function DashboardProfilePage() {
       if (!r.ok) { const j = await r.json().catch(() => ({})); throw new Error(j?.error || 'Failed') }
       const { text, pages, chars } = await r.json()
       await save({ resume_text: text, resume_filename: file.name, resume_pages: pages, resume_chars: chars })
-      // Bust the App Router client cache so other server-rendered pages (e.g. the
-      // Expert Interview gate) don't serve a stale "no resume" render after this.
-      router.refresh()
       if (fileRef.current) fileRef.current.value = ''
 
       // Parse sections (AI) — the bulk of the analysis. The overlay completes to
@@ -418,6 +419,10 @@ export default function DashboardProfilePage() {
 
       setAnalyzePhase('done')
       flash('ok', 'Resume analyzed — review and edit the details below.')
+      // Bust the App Router client cache so other server-rendered pages (e.g. the
+      // Expert Interview gate) don't serve a stale "no resume" render. Deferred
+      // until AFTER analysis so a re-render can't disturb the overlay mid-parse.
+      router.refresh()
     } catch (e) {
       setAnalyzeError(e.message)
       setAnalyzePhase('error')

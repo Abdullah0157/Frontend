@@ -4,6 +4,12 @@ import { useEffect, useRef, useState } from 'react'
 import VoiceChat from './VoiceChat'
 import { primeTTS } from '@/lib/tts'
 
+// Iris asks 5-7 questions depending on seniority. Set NEXT_PUBLIC_MAX_QUESTIONS=2
+// to cap that for a quick end-to-end test run (question -> answer -> report ->
+// save). Unset leaves the real, seniority-driven length untouched.
+const QUESTION_CAP = Number(process.env.NEXT_PUBLIC_MAX_QUESTIONS) || 0
+const capQuestions = (n) => (QUESTION_CAP > 0 ? Math.min(n, QUESTION_CAP) : n)
+
 /**
  * Props:
  *  - job:      { id, slug, title, role, description } | null   (null => generic demo)
@@ -144,7 +150,7 @@ export default function InterviewExperience({
       const { primedContext: ctx } = await res.json()
       if (ctx) {
         setPrimedContext(ctx)
-        setTotalQuestions(ctx.totalQuestions || 5)
+        setTotalQuestions(capQuestions(ctx.totalQuestions || 5))
       }
       return ctx || null
     } catch {
@@ -207,7 +213,7 @@ export default function InterviewExperience({
           }
         : apiCtx
       if (ctx) setPrimedContext(ctx)
-      const dynamicTotal = ctx?.totalQuestions || totalQuestions
+      const dynamicTotal = capQuestions(ctx?.totalQuestions || totalQuestions)
       const question = await fetchQuestion({
         candidate,
         messages: [],
