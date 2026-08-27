@@ -82,24 +82,7 @@ export default function CompanySidebar() {
         })}
       </nav>
 
-      {/* User footer */}
-      <div className="px-3 py-4 border-t border-slate-200">
-        <div className="flex items-center gap-3 px-2 py-2 mb-2">
-          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-emerald-500 to-emerald-700 flex items-center justify-center text-white font-black text-xs">
-            {(email[0] || '?').toUpperCase()}
-          </div>
-          <div className="min-w-0 flex-1">
-            <p className="text-slate-700 text-xs font-black truncate">{email || 'Loading…'}</p>
-            <p className="text-slate-400 text-[10px]">Company admin</p>
-          </div>
-        </div>
-        <button
-          onClick={logout}
-          className="w-full text-xs font-black uppercase tracking-widest px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 transition"
-        >
-          Log out
-        </button>
-      </div>
+      {/* Identity and sign-out live in the topbar, so they aren't repeated here. */}
     </aside>
     </>
   )

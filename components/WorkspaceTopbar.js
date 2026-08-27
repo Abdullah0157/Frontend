@@ -12,7 +12,7 @@ import { getSupabaseBrowser } from '@/lib/supabase/client'
 // no visible branding and no obvious way to reach their account or sign out —
 // the public site had a header but every signed-in page hid it. This restores a
 // header where it was missing, without duplicating the sidebar's navigation.
-export default function WorkspaceTopbar({ email, roleLabel = 'Candidate', homeHref = '/dashboard' }) {
+export default function WorkspaceTopbar({ email, roleLabel = 'Candidate', homeHref = '/dashboard', profileHref = '/dashboard/profile' }) {
   const router = useRouter()
   const [open, setOpen] = useState(false)
   const menuRef = useRef(null)
@@ -67,11 +67,11 @@ export default function WorkspaceTopbar({ email, roleLabel = 'Candidate', homeHr
         {open && (
           <div role="menu" className="absolute right-0 mt-2 w-56 rounded-xl border border-slate-200 bg-white shadow-lg py-1.5 z-40">
             <p className="px-4 py-2 text-[11px] text-slate-400 border-b border-slate-100 truncate sm:hidden">{email}</p>
-            <Link href="/dashboard/profile" onClick={() => setOpen(false)}
+            <Link href={profileHref} onClick={() => setOpen(false)}
               className="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">
               Profile
             </Link>
-            <Link href="/dashboard/profile?tab=account" onClick={() => setOpen(false)}
+            <Link href={`${profileHref}?tab=account`} onClick={() => setOpen(false)}
               className="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">
               Account settings
             </Link>
