@@ -305,33 +305,97 @@
 
     bubble.onclick = () => chatWindow.classList.toggle('open');
 
+    // Is there a signed-in session? /api/profile is same-origin and cookie-based,
+    // so it answers this without exposing anything: 200 = signed in, 401 = not.
+    async function isSignedIn() {
+        try {
+            const r = await fetch('/api/profile', { cache: 'no-store' });
+            return r.ok;
+        } catch { return false; }
+    }
+
     resumeUpload.onchange = async (e) => {
         const file = e.target.files[0];
         if (!file) return;
+        e.target.value = '';                       // allow re-picking the same file
+
+        if (!/\.pdf$/i.test(file.name)) {
+            appendMessage("I can only read PDF resumes at the moment. Please upload a PDF and I'll take a look.", 'bot');
+            return;
+        }
+        if (file.size > 5 * 1024 * 1024) {
+            appendMessage("That file is over 5MB. Please upload a smaller PDF.", 'bot');
+            return;
+        }
+
+        // Gate on sign-in FIRST. Uploading anonymously used to silently go
+        // nowhere: the resume couldn't be attached to a profile, so nothing the
+        // candidate did next remembered it.
+        if (!(await isSignedIn())) {
+            appendMessage("Uploading resume…", 'user');
+            appendMessage(
+                "Before I can read your resume, you'll need to sign in — that's how I attach it to your profile so your matches and interviews stay with you.\n\n" +
+                "[LOGIN_LINK]\n\nOnce you're signed in, come back and upload it here and I'll get straight to work.",
+                'bot'
+            );
+            return;
+        }
 
         appendMessage("Uploading resume for AI matching...", 'user');
         typing.style.display = 'flex';
-        
-        const formData = new FormData();
-        formData.append('file', file);
 
         try {
-            const response = await fetch(`https://abd217391-jobstream-backend.hf.space/api/match-resume`, {
-                method: 'POST',
-                body: formData
+            // 1. Save it to the candidate's own profile (our app, not the match
+            //    service) so the resume actually persists for interviews.
+            const fd = new FormData();
+            fd.append('file', file);
+            const up = await fetch('/api/upload-resume', { method: 'POST', body: fd });
+            if (!up.ok) throw new Error('upload failed');
+            const { text, pages, chars } = await up.json();
+            await fetch('/api/profile', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ resume_text: text, resume_filename: file.name, resume_pages: pages, resume_chars: chars }),
             });
-            const data = await response.json();
-            
-            // Store matches in session storage for the "More" button/page
-            sessionStorage.setItem('matchedJobs', JSON.stringify(data));
-            
-            // Format the top 3 jobs for the AI to "see" and present
-            const top3 = data.slice(0, 3);
-            const jobSummary = top3.map(j => `[JOB: ${j.title} | ${j.company} | ${j.salary}]`).join('\n');
-            
+            fetch('/api/parse-resume', { method: 'POST' }).catch(() => {}); // background
+
+            // 2. Ask the match service for roles.
+            const formData = new FormData();
+            formData.append('file', file);
+            let matches = [];
+            try {
+                const response = await fetch(`https://abd217391-jobstream-backend.hf.space/api/match-resume`, {
+                    method: 'POST', body: formData,
+                });
+                const data = await response.json();
+                // Tolerate either a bare array or a wrapped object.
+                matches = Array.isArray(data) ? data : (data?.jobs || data?.matches || []);
+            } catch { matches = []; }
+
+            sessionStorage.setItem('matchedJobs', JSON.stringify(matches));
+            typing.style.display = 'none';
+
+            // 3. No openings is a normal state, not an error — say so plainly.
+            //    Previously an empty list was still handed to the model as "here
+            //    are your matches:" followed by nothing, and it replied that the
+            //    matches never arrived, which read as broken.
+            if (!matches.length) {
+                appendMessage(
+                    "Your resume is saved to your profile — that part's done.\n\n" +
+                    "I don't have any open roles to match you against right now, so there's nothing to show yet. " +
+                    "As soon as roles are posted I'll be able to match you instantly.\n\n" +
+                    "In the meantime you can take an AI interview to get your skills assessed, which makes your matches much stronger later.",
+                    'bot'
+                );
+                return;
+            }
+
+            const top3 = matches.slice(0, 3);
+            const jobSummary = top3
+                .map(j => `[JOB: ${j.title || 'Role'} | ${j.company || 'Company'} | ${j.salary || 'Salary undisclosed'}]`)
+                .join('\n');
+
             typing.style.display = 'flex';
-            
-            // Send a hidden prompt to the AI to present these jobs
             const aiResponse = await fetch(`https://abd217391-jobstream-backend.hf.space/api/chat`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -342,21 +406,20 @@
                     ]
                 })
             });
+            typing.style.display = 'none';
 
             if (aiResponse.ok) {
                 const aiData = await aiResponse.json();
                 const botText = aiData.text;
-                typing.style.display = 'none';
                 appendMessage(botText, 'bot');
                 chatHistory.push({ role: "model", parts: [{ text: botText }] });
             } else {
-                typing.style.display = 'none';
                 appendMessage(`I've found your matches! Here are your top picks:\n\n${jobSummary}\n\n[MORE_JOBS]`, 'bot');
             }
         } catch (err) {
             console.error(err);
-            appendMessage("Failed to scan resume. Please try again.", 'bot');
             typing.style.display = 'none';
+            appendMessage("I couldn't read that resume. Please make sure it's a text-based PDF (not a scan) and try again.", 'bot');
         }
     };
 
@@ -421,9 +484,14 @@
             return '%%JOBCARD%%';
         });
 
-        // 2. EXTRACT [MORE_JOBS] 
+        // 2. EXTRACT [MORE_JOBS]
         const hasMore = text.includes('[MORE_JOBS]');
         text = text.replace(/\[MORE_JOBS\]/g, '');
+
+        // 2b. EXTRACT [LOGIN_LINK] — shown when an upload is attempted while
+        // signed out, so the candidate has a one-tap way to fix it.
+        const hasLogin = text.includes('[LOGIN_LINK]');
+        text = text.replace(/\[LOGIN_LINK\]/g, '');
 
         // 3. Build the complete job list HTML as ONE clean block
         let jobListHTML = '';
@@ -450,6 +518,11 @@
 
         // 6. Swap in the clean job list block
         html = html.replace(/(<br>)*%%JOBBLOCK%%(<br>)*/g, jobListHTML);
+
+        // 7. Append a real sign-in button when the message asked for one.
+        if (hasLogin) {
+            html += `<a href="/login?next=/dashboard/profile" style="display:inline-block;margin-top:10px;padding:9px 18px;border-radius:10px;background:#1e1b4b;color:#fff;font-size:13px;font-weight:700;text-decoration:none;">Sign in to continue</a>`;
+        }
 
         return html;
     }
