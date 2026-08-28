@@ -2,20 +2,10 @@
 
 import { useMemo, useState } from 'react'
 import Link from 'next/link'
+import { formatPay } from '@/lib/pay'
 
 const PER_PAGE = 12
 
-// Compensation shown on the card. Roles are a mix of hourly contracts,
-// fixed-price engagements and annual salaries, so the unit has to be explicit —
-// "$60" means very different things across those three.
-const compact = (n) => (n >= 1000 ? `$${Math.round(n / 1000)}k` : `$${n}`)
-function formatPay(job) {
-  const { pay_type: type, pay_min: min, pay_max: max } = job || {}
-  if (!type || min == null) return null
-  if (type === 'hourly') return max && max !== min ? `$${min}–$${max}/hr` : `$${min}/hr`
-  if (type === 'fixed') return `${compact(min)} fixed price`
-  return max && max !== min ? `${compact(min)}–${compact(max)}/yr` : `${compact(min)}/yr`
-}
 
 export default function DashboardJobsBoard({ jobs = [], hasResume = false, doneJobIds = [] }) {
   const [tab, setTab] = useState('jobs')          // 'jobs' | 'assessments'
