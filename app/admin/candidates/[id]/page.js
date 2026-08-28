@@ -49,6 +49,46 @@ function Stat({ label, value }) {
   )
 }
 
+// The full exchange, collapsed by default so a long interview doesn't bury the
+// scores. Unanswered turns are shown explicitly rather than hidden — an empty
+// interview should look obviously empty, not just produce low numbers.
+function Transcript({ turns }) {
+  const list = Array.isArray(turns) ? turns : []
+  const answers = list.filter((m) => m.role !== 'assistant' && m.content !== '(no response)')
+  const missed = list.filter((m) => m.role !== 'assistant' && m.content === '(no response)')
+
+  if (list.length === 0) {
+    return <p className="text-xs text-slate-400 mt-4">No transcript recorded.</p>
+  }
+
+  return (
+    <details className="mt-4 group">
+      <summary className="cursor-pointer text-xs font-medium text-slate-500 hover:text-slate-800 select-none">
+        Transcript · {answers.length} answered
+        {missed.length > 0 && <span className="text-amber-600"> · {missed.length} unanswered</span>}
+        <span className="text-slate-300 group-open:hidden"> — show</span>
+        <span className="text-slate-300 hidden group-open:inline"> — hide</span>
+      </summary>
+      <div className="mt-3 space-y-3 border-l-2 border-slate-100 pl-4">
+        {list.map((m, i) => {
+          const isAsk = m.role === 'assistant'
+          const noAnswer = !isAsk && m.content === '(no response)'
+          return (
+            <div key={i}>
+              <p className={`text-[10px] font-semibold uppercase tracking-wide ${isAsk ? 'text-indigo-500' : noAnswer ? 'text-amber-600' : 'text-slate-500'}`}>
+                {isAsk ? 'Maya' : 'Candidate'}
+              </p>
+              <p className={`text-sm mt-0.5 leading-relaxed ${noAnswer ? 'text-amber-700 italic' : 'text-slate-700'}`}>
+                {noAnswer ? 'No answer was captured for this question.' : m.content}
+              </p>
+            </div>
+          )
+        })}
+      </div>
+    </details>
+  )
+}
+
 function Empty({ children }) {
   return (
     <div className="rounded-xl border border-dashed border-slate-300 bg-slate-50/60 px-5 py-10 text-center">
@@ -152,9 +192,10 @@ export default async function AdminCandidateDetail({ params }) {
 
                 {a.report?.eie && <div className="mt-4"><EieProfile eie={a.report.eie} /></div>}
 
-                <p className="text-xs text-slate-400 mt-4">
-                  {(a.transcript?.filter?.((m) => m.role !== 'assistant' && m.content !== '(no response)').length) ?? 0} answers given
-                </p>
+                {/* The actual conversation. Scores without the exchange behind
+                    them can't be sanity-checked — an admin needs to see what was
+                    asked and what came back, including where nothing came back. */}
+                <Transcript turns={a.transcript} />
               </div>
             ))}
           </div>
