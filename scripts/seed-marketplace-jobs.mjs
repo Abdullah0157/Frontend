@@ -153,7 +153,9 @@ for (const r of rows) {
     `INSERT INTO interview_jobs
        (slug, title, role, description, company, external_job_id, is_active, pay_type, pay_min, pay_max, pay_currency)
      VALUES ($1,$2,$3,$4,$5,$6,true,$7,$8,$9,'USD')
-     ON CONFLICT (external_job_id) DO UPDATE SET
+     -- The unique index on external_job_id is PARTIAL (WHERE ... IS NOT NULL),
+     -- so the predicate has to be repeated here or Postgres can't infer it (42P10).
+     ON CONFLICT (external_job_id) WHERE external_job_id IS NOT NULL DO UPDATE SET
        pay_type = EXCLUDED.pay_type, pay_min = EXCLUDED.pay_min,
        pay_max  = EXCLUDED.pay_max,  description = EXCLUDED.description`,
     [r.slug, r.title, r.role, r.description, r.company, r.external_job_id, r.pay_type, r.pay_min, r.pay_max]
