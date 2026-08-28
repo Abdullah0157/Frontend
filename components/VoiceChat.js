@@ -43,11 +43,14 @@ const INTERIM_SILENCE_MS = 2600  // still forming words → give them room
 const SHORT_ANSWER_GRACE = 900   // extra room for very short utterances (< 4 words)
 // How long the mic must be quiet (no audio energy) before a fired timer submits.
 const AUDIO_GUARD_MS = 1200
-// How long with zero speech activity before auto-advancing to the next question.
-// 5s keeps a silent candidate from stalling the interview. The audio-energy guard
-// still defers if they're making any sound (mid-thought "umm"), so this only fires
-// on genuine silence.
-const NO_SPEECH_MS = 5000
+// How long the mic must hear NOTHING before auto-advancing. This is checked
+// against mic energy, not the recognizer's transcript — see the arming logic in
+// startListening. 6s of true silence moves the interview on; someone who is
+// speaking (even if recognition hasn't caught up) is never cut off.
+const NO_SPEECH_MS = 6000
+// Absolute ceiling on one turn, so continuous background noise with no words
+// can't hold the interview open indefinitely.
+const MAX_SILENCE_WAIT_MS = 60000
 
 // Optimistic acknowledgment was removed after Sprint 3 hotfix — it created a
 // race between the ack's TTS fetch and the next question's TTS fetch. When
@@ -419,14 +422,34 @@ export default function VoiceChat({ messages, loading, finishing, streamingQuest
     //   interrupted candidates who were just thinking and felt intrusive.
     // - Manual replay is still available: if the CANDIDATE says "repeat" or
     //   "can you repeat", isRepeatRequest() catches it and replays the last Q.
+    // CRITICAL: "no response" must mean the mic heard NOTHING, not merely that
+    // the recognizer hasn't produced text yet. Web Speech lags by a second or
+    // more and drops out entirely on some accents and technical vocabulary, so
+    // checking the transcript alone discards answers people actually gave —
+    // they'd speak, and the turn would still be recorded as "(no response)".
+    // The mic-energy signal is the ground truth for "is someone talking".
     if (noSpeechTimerRef.current) clearTimeout(noSpeechTimerRef.current)
-    noSpeechTimerRef.current = setTimeout(() => {
-      if (transcriptRef.current.trim()) return  // they spoke, timer canceled elsewhere
-      console.log('[VoiceChat] no answer after 15s — auto-advancing to next question')
+    const armedAt = Date.now()
+    const checkSilence = () => {
+      if (submittedRef.current || !listeningRef.current) return
+      if (transcriptRef.current.trim()) return          // they spoke; other timers own it now
+
+      const msSinceAudio = Date.now() - lastAudioRef.current
+      const heardSomethingRecently = lastAudioRef.current > 0 && msSinceAudio < NO_SPEECH_MS
+      // Hard ceiling so a broken recognizer (mic noise but never any words)
+      // can't hold the interview open forever.
+      const waitedTooLong = Date.now() - armedAt > MAX_SILENCE_WAIT_MS
+
+      if (heardSomethingRecently && !waitedTooLong) {
+        noSpeechTimerRef.current = setTimeout(checkSilence, NO_SPEECH_MS)
+        return
+      }
+      console.log(`[VoiceChat] genuine silence for ${NO_SPEECH_MS}ms — auto-advancing`)
       submittedRef.current = true
       stopListening()
       onSubmit('(no response)')
-    }, NO_SPEECH_MS)
+    }
+    noSpeechTimerRef.current = setTimeout(checkSilence, NO_SPEECH_MS)
 
     listeningRef.current = true
     setListening(true)

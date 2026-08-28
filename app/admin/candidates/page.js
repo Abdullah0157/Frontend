@@ -1,4 +1,5 @@
 import { query } from '@/lib/db'
+import Link from 'next/link'
 
 export const dynamic = 'force-dynamic'
 
@@ -11,7 +12,8 @@ async function fetchCandidates() {
       up.resume_pages,
       up.created_at,
       up.updated_at,
-      (SELECT COUNT(*)::int FROM interview_candidates ic WHERE ic.user_id = up.user_id) AS interview_count
+      (SELECT COUNT(*)::int FROM interview_candidates ic WHERE ic.user_id = up.user_id) AS interview_count,
+      (SELECT COUNT(*)::int FROM expert_assessments ea WHERE ea.candidate_user_id = up.user_id) AS expert_count
     FROM user_profiles up
     WHERE COALESCE(up.account_type, 'candidate') = 'candidate'
     ORDER BY up.updated_at DESC
@@ -49,7 +51,11 @@ export default async function AdminCandidatesPage() {
             <tbody className="divide-y divide-slate-100">
               {candidates.map((c) => (
                 <tr key={c.user_id} className="hover:bg-slate-50 transition-colors">
-                  <td className="px-6 py-4 font-medium text-slate-900">{c.full_name || '(no name)'}</td>
+                  <td className="px-6 py-4 font-medium">
+                    <Link href={`/admin/candidates/${c.user_id}`} className="text-slate-900 hover:text-indigo-600 hover:underline">
+                      {c.full_name || '(no name)'}
+                    </Link>
+                  </td>
                   <td className="px-6 py-4 text-slate-600 text-xs">
                     {c.resume_filename ? (
                       <>
@@ -60,7 +66,7 @@ export default async function AdminCandidatesPage() {
                       <span className="text-slate-400">no resume</span>
                     )}
                   </td>
-                  <td className="px-6 py-4 text-right font-mono text-slate-700">{c.interview_count}</td>
+                  <td className="px-6 py-4 text-right font-mono text-slate-700">{(c.interview_count || 0) + (c.expert_count || 0)}</td>
                   <td className="px-6 py-4 text-right text-xs text-slate-500">{new Date(c.created_at).toLocaleDateString()}</td>
                   <td className="px-6 py-4 text-right text-xs text-slate-500">{new Date(c.updated_at).toLocaleDateString()}</td>
                 </tr>
