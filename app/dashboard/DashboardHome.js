@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { interviewLengthLabel } from '@/lib/interview-config'
 import Link from 'next/link'
 
 const REC_LABEL = { strong_yes: 'Strong Yes', yes: 'Yes', maybe: 'Maybe', no: 'No' }
@@ -31,7 +32,7 @@ export default function DashboardHome({ firstName, fullName, email, hasResume, i
     tasks.push({
       key: 'expert',
       title: 'Take your Expert Interview',
-      desc: 'A 30-minute voice interview with Maya to verify your expertise.',
+      desc: `A ${interviewLengthLabel} voice interview with Maya to verify your expertise.`,
       href: '/dashboard/domain-expert',
       icon: (
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

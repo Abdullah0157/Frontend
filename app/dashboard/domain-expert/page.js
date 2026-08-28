@@ -1,6 +1,7 @@
 export const dynamic = 'force-dynamic'
 
 import { redirect } from 'next/navigation'
+import { interviewLengthLabel } from '@/lib/interview-config'
 import { getSupabaseServer } from '@/lib/supabase/server'
 import { query } from '@/lib/db'
 import DomainExpertExperience from '@/components/DomainExpertExperience'
@@ -27,7 +28,7 @@ export default async function DomainExpertPage() {
       <div className="mb-8">
         <h1 className="text-3xl md:text-4xl font-black tracking-tight text-slate-900">Expert Interview</h1>
         <p className="text-slate-500 mt-2 max-w-2xl">
-          A ~30-minute voice interview with Maya. She reads your resume, then explores your real depth in your field —
+          A ~{interviewLengthLabel} voice interview with Maya. She reads your resume, then explores your real depth in your field —
           starting with an introduction and moving into the specifics of your work.
         </p>
       </div>

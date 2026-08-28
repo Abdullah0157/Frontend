@@ -1,4 +1,5 @@
 import { redirect } from 'next/navigation'
+import { interviewLengthLabel } from '@/lib/interview-config'
 import { getSupabaseServer } from '@/lib/supabase/server'
 import { query } from '@/lib/db'
 import ApplicationHub from '@/components/ApplicationHub'
@@ -76,7 +77,7 @@ export default async function ApplicationHubPage({ params }) {
     key: 'expert', label: 'Domain Expert Interview', kind: 'expert', core: true, reused: true,
     done: !!expert,
     statusDone: expert ? `Completed ${fmt(expert.created_at)}` : null,
-    statusTodo: 'A 30-minute voice interview with Maya',
+    statusTodo: `A ${interviewLengthLabel} voice interview with Maya`,
     href: '/dashboard/domain-expert',
   })
 

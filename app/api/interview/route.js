@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { INTERVIEW_MINUTES } from '@/lib/interview-config'
 import { callGemini, callGeminiStream, textFrom, stripJsonFences } from '@/lib/gemini'
 import { callOllama, localLLMEnabled } from '@/lib/ollama'
 import { query } from '@/lib/db'
@@ -450,7 +451,7 @@ Avoid theory. Push for projects and measurable outcomes. Anchor questions in the
 - A constraint that forced a completely different approach
 You want how they handle being wrong, not just when they're right.`
   } else {
-    phase = `CLOSE: The 30 minutes are nearly up. One final question. Choose the most natural given the conversation:
+    phase = `CLOSE: The ${INTERVIEW_MINUTES} minutes are nearly up. One final question. Choose the most natural given the conversation:
 - "What do you know about this domain that most people who claim expertise in it miss?"
 - "What would a client need to know to get the most out of working with you — honest version?"
 - "What are you genuinely not the best at in your domain?"
@@ -471,7 +472,7 @@ ${lastAnswer.split(' ').length < 25
     : ''
 
   return `ASSESSMENT PHASE: ${phase}
-${progressRatio != null ? `\n(Interview is ${Math.round(progress * 100)}% through its 30-minute window.)` : ''}
+${progressRatio != null ? `\n(Interview is ${Math.round(progress * 100)}% through its ${INTERVIEW_MINUTES}-minute window.)` : ''}
 Questions already asked (DO NOT repeat these topics):
 ${askedQuestions || 'None yet.'}
 ${focusGuidance}

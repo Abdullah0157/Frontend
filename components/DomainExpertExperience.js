@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import { INTERVIEW_DURATION_S, INTERVIEW_MINUTES, interviewLengthWords } from '@/lib/interview-config'
 import VoiceChat from './VoiceChat'
 import { primeTTS } from '@/lib/tts'
 
@@ -9,8 +10,7 @@ import { primeTTS } from '@/lib/tts'
 // duration compresses the whole arc rather than truncating it — a 5-minute run
 // still moves through every phase, just faster. Set NEXT_PUBLIC_INTERVIEW_MINUTES=5
 // for quick end-to-end testing; unset defaults to the real 30-minute interview.
-const INTERVIEW_MINUTES = Number(process.env.NEXT_PUBLIC_INTERVIEW_MINUTES) || 30
-const DURATION_S = INTERVIEW_MINUTES * 60
+const DURATION_S = INTERVIEW_DURATION_S
 const MAX_QUESTIONS = 40 // safety cap so it can't loop forever if the timer breaks
 
 export default function DomainExpertExperience({ userProfile = null }) {
@@ -384,7 +384,7 @@ export default function DomainExpertExperience({ userProfile = null }) {
         <div className="rounded-2xl border border-gray-200 bg-white p-8">
           <p className="text-xs font-semibold tracking-widest text-indigo-500 uppercase mb-2">Ready to begin</p>
           <h2 className="text-xl font-semibold text-gray-900">
-            A 30-minute conversation about <span className="text-indigo-600">{detected.domain}</span>
+            A {INTERVIEW_MINUTES}-minute conversation about <span className="text-indigo-600">{detected.domain}</span>
           </h2>
           {detected.headline && <p className="text-sm text-gray-500 mt-1">{detected.headline}</p>}
 
@@ -402,7 +402,7 @@ export default function DomainExpertExperience({ userProfile = null }) {
           <ul className="mt-6 space-y-2 text-sm text-gray-600">
             <li className="flex gap-2"><span className="text-indigo-500">1.</span> She'll start by asking you to introduce yourself.</li>
             <li className="flex gap-2"><span className="text-indigo-500">2.</span> Then she'll dig into the specifics of your real work.</li>
-            <li className="flex gap-2"><span className="text-indigo-500">3.</span> It runs for about 30 minutes — speak naturally, out loud.</li>
+            <li className="flex gap-2"><span className="text-indigo-500">3.</span> It runs for about {interviewLengthWords} — speak naturally, out loud.</li>
           </ul>
 
           <button
