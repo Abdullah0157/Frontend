@@ -81,7 +81,7 @@ async function answerFor(strong, sessionId, item, language) {
   return { text: strong ? 'A careful, structured answer.' : '' }
 }
 
-async function playThrough({ strong, language }) {
+async function playThrough({ strong, language, integrityEvents = null }) {
   const start = await call('/api/assessment/start', { method: 'POST', body: { mode: 'written', track: 'backend', level: 'L3', language } })
   assert.equal(start.status, 200, JSON.stringify(start.data))
   const { sessionId, token } = start.data
@@ -89,6 +89,13 @@ async function playThrough({ strong, language }) {
   assertNoSecrets(start.data, 'start')
 
   let state = (await call(`/api/assessment/${sessionId}/begin`, { method: 'POST', token })).data
+  if (integrityEvents) {
+    const ev = await call(`/api/assessment/${sessionId}/events`, { method: 'POST', body: { token, events: integrityEvents.map((e) => ({ ...e, itemId: state.item.id })) } })
+    assert.equal(ev.status, 200, JSON.stringify(ev.data))
+    assert.equal(ev.data.stored, integrityEvents.length)
+    const noToken = await call(`/api/assessment/${sessionId}/events`, { method: 'POST', body: { events: integrityEvents } })
+    assert.equal(noToken.status, 403, 'events need the token')
+  }
   let answered = 0
   let ranExamples = false
   while (state.status !== 'completed') {
@@ -114,7 +121,7 @@ async function playThrough({ strong, language }) {
   }
   const final = await call(`/api/assessment/${sessionId}`, { token })
   assertNoSecrets(final.data, 'final view')
-  const { rows: [report] } = await db.query(`SELECT overall_score, band, sections, skill_map, validation, summary FROM assessment_reports WHERE session_id = $1`, [sessionId])
+  const { rows: [report] } = await db.query(`SELECT overall_score, band, sections, skill_map, validation, summary, integrity, followups FROM assessment_reports WHERE session_id = $1`, [sessionId])
   assert.ok(report, 'report written')
   return { sessionId, token, answered, report, final: final.data }
 }
@@ -155,13 +162,81 @@ async function securityChecks() {
   console.log('✓ security: token required, order enforced, double submit blocked, timer enforced')
 }
 
+// A job's test, driven through the library (a real login cannot be scripted):
+// the job's settings win, login is required, an unfinished attempt resumes, a
+// finished one cannot be retaken, and the company report checks the resume.
+async function jobFlow() {
+  const lib = await import('../lib/written-assessment.js')
+  const company = '00000000-0000-4000-8000-00000000c0de'
+  const candidate = '00000000-0000-4000-8000-0000000ca11d'
+  await db.query(`DELETE FROM assessment_sessions WHERE candidate_user_id = $1`, [candidate])
+  await db.query(
+    `INSERT INTO user_profiles (user_id, full_name, account_type, resume_text) VALUES ($1, 'Test Candidate', 'candidate', $2)
+     ON CONFLICT (user_id) DO UPDATE SET resume_text = EXCLUDED.resume_text`,
+    [candidate, `Backend engineer, 6 years.
+Designed and built REST APIs with versioning and pagination for a payments platform.
+Expert in PostgreSQL query tuning, indexes and transactions.
+Secured services against SQL injection and handled authentication with JWT.
+Wrote unit and integration tests for every service.`]
+  )
+  const { rows: [job] } = await db.query(
+    `INSERT INTO interview_jobs (slug, title, role, description, owner_id, required_assessments, requires_ai_interview, assessment_config)
+     VALUES ($1, 'Backend Engineer (Python)', 'Backend Engineer', 'Python APIs', $2, '{swe-backend}', false, $3::jsonb) RETURNING id`,
+    [`e2e-${Date.now()}`, company, JSON.stringify({ track: 'backend', level: 'L3', languages: ['python'], disabledSections: [] })]
+  )
+  await assert.rejects(lib.createSession({ candidateUserId: null, jobId: job.id, language: 'python' }), /log in/, 'login required')
+  await assert.rejects(lib.createSession({ candidateUserId: candidate, jobId: job.id, language: 'javascript', track: 'backend', level: 'L4' }), /Python/, 'job languages enforced')
+  const first = await lib.createSession({ candidateUserId: candidate, jobId: job.id, language: 'python', track: 'backend', level: 'L4' })
+  const again = await lib.createSession({ candidateUserId: candidate, jobId: job.id, language: 'python' })
+  assert.equal(again.sessionId, first.sessionId, 'unfinished attempt is resumed')
+  assert.equal(again.resumed, true)
+  let session = await lib.loadSession(first.sessionId)
+  assert.equal(session.seniority_band, 'L3', 'the job decides the level, not the request')
+  assert.ok(lib.canAccess(session, { userId: candidate }), 'owner login gives access')
+  assert.ok(!lib.canAccess(session, { userId: company }), 'another login does not')
+
+  let state = await lib.beginSection(session)
+  while (state.status !== 'completed') {
+    session = await lib.loadSession(first.sessionId)
+    if (state.status === 'section_intro') { state = await lib.beginSection(session); continue }
+    const response = await answerFor(false, first.sessionId, state.item, 'python')
+    state = await lib.submitAnswer(session, { itemId: state.item.id, response, timeSpentMs: 20000 })
+  }
+  await assert.rejects(lib.createSession({ candidateUserId: candidate, jobId: job.id, language: 'python' }), /already completed/, 'no retakes')
+
+  const { rows: done } = await db.query(
+    `SELECT role_family FROM assessment_sessions WHERE job_id = $1 AND candidate_user_id = $2 AND state IN ('submitted','completed')`,
+    [job.id, candidate])
+  assert.deepEqual(done.map((r) => r.role_family), ['swe-backend'], 'counts as done on the application page')
+
+  const rep = await lib.companyReport(first.sessionId)
+  assert.equal(rep.job.ownerId, company)
+  assert.equal(rep.candidate.name, 'Test Candidate')
+  assert.ok(rep.report.resumeCheck?.claims?.length > 0, `resume claims found: ${JSON.stringify(rep.report.resumeCheck)}`)
+  for (const c of rep.report.resumeCheck.claims) {
+    const { rows: [p] } = await db.query(`SELECT resume_text FROM user_profiles WHERE user_id = $1`, [candidate])
+    assert.ok(p.resume_text.toLowerCase().replace(/\s+/g, ' ').includes(c.quote.toLowerCase().replace(/\s+/g, ' ')), `quote is real: ${c.quote}`)
+  }
+  assert.ok(rep.report.resumeCheck.claims.some((c) => c.verdict === 'not_confirmed'), 'a weak result does not back up an "expert" CV')
+  assert.ok(rep.report.followups.some((q) => /Your CV says/.test(q.question)), 'interview follow-up asks about the CV claim')
+  assert.ok(rep.coding.length === 1 && rep.coding[0].tests?.total > 0)
+  console.log(`✓ job flow: settings enforced, login required, resume, no retake; resume check ${JSON.stringify(rep.report.resumeCheck.summary)}; ${rep.report.followups.length} follow-ups`)
+  for (const c of rep.report.resumeCheck.claims) console.log(`    ${c.verdict.padEnd(13)} "${c.quote}"`)
+  return first.sessionId
+}
+
 try {
+  const jobSession = await jobFlow()
+  console.log(`  company report preview: ${BASE}/dev/written-report/${jobSession}`)
   const opts = (await call('/api/assessment/start')).data
   const languages = opts.languages.map((l) => l.key)
   console.log('Languages offered:', languages.join(', '))
   await securityChecks()
   for (const language of languages.filter((l) => l !== 'typescript')) {
-    const strong = await playThrough({ strong: true, language })
+    const events = language === 'javascript'
+      ? [{ kind: 'tab_hidden', ms: 75000 }, { kind: 'paste', chars: 640 }, { kind: 'bogus', ms: 1 }]
+      : null
+    const strong = await playThrough({ strong: true, language, integrityEvents: events && events.filter((e) => e.kind !== 'bogus') })
     const weak = await playThrough({ strong: false, language })
     const line = (r) => `${r.report.overall_score * 10} (${r.report.band}) ${r.report.sections.map((s) => `${s.key}:${s.score}`).join(' ')}`
     console.log(`${language} strong: ${line(strong)}  answered ${strong.answered}`)
@@ -171,7 +246,10 @@ try {
     assert.equal(weak.report.sections.find((s) => s.key === 'judgement').score <= 34, true, 'worst judgement options score low')
     assert.ok(strong.final.result?.sections?.length, 'candidate sees section feedback')
     assert.ok(!('score' in (strong.final.result.sections[0] || {})), 'candidate does not see numbers')
-    console.log(`  report flags: ${JSON.stringify(strong.report.validation.flags)}; summary: ${strong.report.summary ? 'yes' : 'no'}`)
+    assert.equal(strong.report.integrity.level, events ? 'review' : 'clear', 'integrity notes follow the signals')
+    assert.equal(weak.report.integrity.level, 'clear')
+    assert.ok(strong.report.followups.length >= 1, 'follow-up questions written')
+    console.log(`  report flags: ${JSON.stringify(strong.report.validation.flags)}; summary: ${strong.report.summary ? 'yes' : 'no'}; integrity: ${strong.report.integrity.level} ${JSON.stringify(strong.report.integrity.notes)}`)
   }
   console.log('\nE2E PASSED')
 } catch (e) {
@@ -179,4 +257,5 @@ try {
   process.exitCode = 1
 } finally {
   await db.end()
+  await globalThis._pgPool?.end?.()
 }

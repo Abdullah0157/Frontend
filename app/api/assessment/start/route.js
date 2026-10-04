@@ -21,7 +21,7 @@ async function startWritten(req, body) {
   try {
     const { user } = await currentUser()
     const track = body.track || trackFromRoleFamily(body.roleFamily)
-    const { sessionId, token } = await createSession({
+    const { sessionId, token, resumed } = await createSession({
       candidateUserId: user?.id || null,
       track,
       level: body.level || body.seniorityBand,
@@ -31,7 +31,7 @@ async function startWritten(req, body) {
       userAgent: req.headers.get('user-agent'),
     })
     const state = await getState(await loadSession(sessionId))
-    return NextResponse.json({ sessionId, token, ...state })
+    return NextResponse.json({ sessionId, token, resumed: Boolean(resumed), ...state })
   } catch (e) {
     return errorResponse(e, 'assessment/start')
   }

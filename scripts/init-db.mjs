@@ -406,6 +406,14 @@ ALTER TABLE item_responses ADD COLUMN IF NOT EXISTS section text;
 ALTER TABLE assessment_reports ADD COLUMN IF NOT EXISTS sections  jsonb;
 ALTER TABLE assessment_reports ADD COLUMN IF NOT EXISTS band      text;
 ALTER TABLE assessment_reports ADD COLUMN IF NOT EXISTS skill_map jsonb;
+
+-- Job link + company report v2: which written test a job uses (track, level,
+-- allowed languages), and the report's integrity notes, resume-vs-results
+-- check and follow-up questions for the voice interview.
+ALTER TABLE interview_jobs ADD COLUMN IF NOT EXISTS assessment_config jsonb;
+ALTER TABLE assessment_reports ADD COLUMN IF NOT EXISTS integrity    jsonb;
+ALTER TABLE assessment_reports ADD COLUMN IF NOT EXISTS resume_check jsonb;
+ALTER TABLE assessment_reports ADD COLUMN IF NOT EXISTS followups    jsonb;
 `
 
 const pool = new Pool({

@@ -27,7 +27,19 @@ export async function GET(_req, { params }) {
        ORDER BY job_fit_score DESC NULLS LAST, created_at DESC`,
       [id]
     )
-    return NextResponse.json({ job, candidates: candidatesRes.rows })
+    // Written assessment results for this job (one row per finished attempt).
+    const writtenRes = await query(
+      `SELECT s.id AS session_id, s.candidate_user_id, s.language, s.seniority_band, s.track,
+              s.state, s.completed_at, p.full_name,
+              r.overall_score, r.band, r.integrity->>'level' AS integrity_level
+       FROM assessment_sessions s
+       LEFT JOIN user_profiles p ON p.user_id = s.candidate_user_id
+       LEFT JOIN assessment_reports r ON r.session_id = s.id
+       WHERE s.job_id = $1 AND s.form IS NOT NULL AND s.state IN ('submitted','completed')
+       ORDER BY r.overall_score DESC NULLS LAST, s.completed_at DESC`,
+      [id]
+    ).catch(() => ({ rows: [] }))
+    return NextResponse.json({ job, candidates: candidatesRes.rows, writtenAssessments: writtenRes.rows })
   } catch (e) {
     console.error(e)
     return NextResponse.json({ error: e.message }, { status: 500 })

@@ -113,6 +113,33 @@ export default function JobDashboard() {
           <p className="text-slate-700 whitespace-pre-wrap leading-relaxed text-sm">{job.description}</p>
         </div>
 
+        {(data.writtenAssessments || []).length > 0 && (
+          <div className="mb-6 bg-white border border-slate-200 rounded-[2rem] p-6 shadow-sm">
+            <h3 className="text-xs font-black uppercase tracking-[0.3em] text-slate-500 mb-4">Written test results</h3>
+            <div className="grid gap-2">
+              {data.writtenAssessments.map((w) => (
+                <Link
+                  key={w.session_id}
+                  href={`/company/assessments/${w.session_id}`}
+                  className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-slate-200 px-4 py-3 hover:border-indigo-400 transition"
+                >
+                  <span className="font-bold text-slate-900 text-sm">{w.full_name || 'Candidate'}</span>
+                  <span className="flex items-center gap-3 text-xs">
+                    {w.integrity_level === 'review' && (
+                      <span className="px-2 py-1 rounded-full bg-amber-50 border border-amber-200 text-amber-700 font-bold">Integrity notes</span>
+                    )}
+                    <span className="px-2 py-1 rounded-full bg-slate-100 text-slate-700 font-bold uppercase tracking-widest">
+                      {w.band ? w.band.replace('_', ' ') : 'marking'}
+                    </span>
+                    <span className="font-black text-slate-900 text-base">{w.overall_score != null ? Math.round(w.overall_score * 10) : '—'}</span>
+                    <span className="text-indigo-600 font-bold">View report →</span>
+                  </span>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
+
         <h2 className="text-xs font-black uppercase tracking-[0.4em] text-slate-500 mb-4">
           Candidates ({candidates.length}) — ranked by job fit
         </h2>

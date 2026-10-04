@@ -267,3 +267,90 @@ test('near-duplicate items (same group) never appear in the same form', () => {
     assert.equal(new Set(groups).size, groups.length, `seed ${seed}: a group appeared twice`)
   }
 })
+
+// ── Job link ──────────────────────────────────────────────────────────────
+import { suggestAssessment, normaliseAssessmentConfig } from '../lib/assessment-blueprint.js'
+import { summariseIntegrity, checkResumeClaims, buildFollowups } from '../lib/written-report.js'
+
+test('suggestion: track, level and languages come from the title and description', () => {
+  const a = suggestAssessment({ title: 'Senior Backend Engineer', description: 'Python, Django and PostgreSQL. 6+ years.' })
+  assert.deepEqual([a.track, a.level, a.languages], ['backend', 'L4', ['python']])
+  assert.ok(a.reasons.length >= 2)
+  assert.equal(suggestAssessment({ title: 'Junior Node.js developer' }).level, 'L2')
+  assert.equal(suggestAssessment({ title: 'Tech Lead' }).level, 'L5')
+  assert.equal(suggestAssessment({ title: 'Software Engineer', description: 'We want 3 years of API work in TypeScript' }).level, 'L3')
+  const ts = suggestAssessment({ title: 'API Engineer', description: 'TypeScript services' })
+  assert.deepEqual(ts.languages.sort(), ['javascript', 'typescript'])
+  const fe = suggestAssessment({ title: 'React Frontend Developer' })
+  assert.equal(fe.track, 'backend', 'unbuilt tracks fall back to Backend')
+  assert.ok(fe.reasons.some((r) => /not ready yet/.test(r)))
+  assert.deepEqual(suggestAssessment({ title: 'Engineer' }).languages.sort(), ['javascript', 'python', 'typescript'])
+})
+
+test('job test settings are validated before saving', () => {
+  assert.equal(normaliseAssessmentConfig({ enabled: false }), null)
+  assert.equal(normaliseAssessmentConfig(null), null)
+  assert.throws(() => normaliseAssessmentConfig({ track: 'frontend', level: 'L3', languages: ['python'] }))
+  assert.throws(() => normaliseAssessmentConfig({ track: 'backend', level: 'L9', languages: ['python'] }))
+  assert.throws(() => normaliseAssessmentConfig({ track: 'backend', level: 'L3', languages: ['cobol'] }))
+  const ok = normaliseAssessmentConfig({ track: 'backend', level: 'L2', languages: ['python', 'python', 'rust'], disabledSections: ['reasoning', 'coding'] })
+  assert.deepEqual([ok.languages, ok.disabledSections], [['python'], ['reasoning']])
+})
+
+// ── Integrity ─────────────────────────────────────────────────────────────
+
+test('integrity: quiet tests are clear; each signal type raises a note', () => {
+  assert.equal(summariseIntegrity([], []).level, 'clear')
+  assert.equal(summariseIntegrity([{ kind: 'window_blur', ms: 1500 }, { kind: 'paste', chars: 40 }], []).level, 'clear', 'short blur and small paste are normal')
+  const away = summariseIntegrity([{ kind: 'tab_hidden', ms: 50000 }, { kind: 'window_blur', ms: 20000 }], [])
+  assert.equal(away.level, 'review')
+  assert.match(away.notes[0], /70 seconds/)
+  assert.equal(summariseIntegrity([{ kind: 'paste', chars: 900 }], []).level, 'review')
+  assert.equal(summariseIntegrity([1, 2, 3].map(() => ({ kind: 'copy', chars: 30 })), []).level, 'review')
+  const fast = Array.from({ length: 5 }, () => ({ type: 'mcq', score: 1, time_spent_ms: 3000, expected_time_s: 60 }))
+  assert.equal(summariseIntegrity([], fast).counts.fast_correct, 5)
+  assert.equal(summariseIntegrity([], fast).level, 'review')
+  const slow = fast.map((r) => ({ ...r, time_spent_ms: 30000 }))
+  assert.equal(summariseIntegrity([], slow).level, 'clear')
+  assert.match(summariseIntegrity([], []).disclaimer, /not proof/)
+})
+
+// ── Resume versus results ─────────────────────────────────────────────────
+
+test('resume check: invented quotes are dropped; verdicts come from scores only', () => {
+  const resume = 'Built REST APIs   serving 2M requests a day.\nExpert in PostgreSQL indexing and query tuning.\nLed a team of 4.'
+  const skills = [
+    { skill: 'engineering.backend.api_design', score: 0.9 },
+    { skill: 'engineering.data.indexing', score: 0.3 },
+  ]
+  const out = checkResumeClaims([
+    { claim: 'APIs at scale', quote: 'Built REST APIs serving 2M requests a day', skills: ['engineering.backend.api_design'] },
+    { claim: 'DB tuning', quote: 'expert in postgresql indexing', skills: ['engineering.data.indexing', 'made.up.code'] },
+    { claim: 'Leadership', quote: 'Led a team of 4.', skills: [] },
+    { claim: 'Invented', quote: 'Ten years of Kubernetes at Google', skills: ['engineering.backend.api_design'] },
+  ], resume, skills)
+  assert.deepEqual(out.claims.map((c) => c.verdict), ['confirmed', 'not_confirmed', 'not_tested'])
+  assert.deepEqual(out.claims[1].skills, ['engineering.data.indexing'], 'unknown skill codes are dropped')
+  assert.deepEqual(out.summary, { confirmed: 1, partly: 0, not_confirmed: 1, not_tested: 1 })
+})
+
+test('follow-up questions come from the results, at most five', () => {
+  const qs = buildFollowups({
+    skillMap: [
+      { skill: 'engineering.data.indexing', score: 0.2, items: 3, level: 'weak' },
+      { skill: 'engineering.security.auth', score: 0.4, items: 2, level: 'weak' },
+      { skill: 'engineering.security.injection', score: 0.45, items: 2, level: 'weak' },
+      { skill: 'engineering.backend.api_design', score: 0.9, items: 4, level: 'strong' },
+    ],
+    skillLabels: { 'engineering.data.indexing': 'Indexes and query performance' },
+    coding: { passed: 11, total: 14 },
+    resumeCheck: { claims: [{ quote: 'Expert in PostgreSQL', verdict: 'not_confirmed', score: 0.2, skills: ['engineering.data.indexing'] }] },
+    integrity: { level: 'review', notes: ['Left the test 6 time(s), 90 seconds in total.'] },
+  })
+  assert.equal(qs.length, 5)
+  assert.match(qs[0].question, /coding task/)
+  assert.ok(qs.some((q) => q.question.includes('Expert in PostgreSQL')))
+  assert.ok(qs.some((q) => /Indexes and query performance/.test(q.question)), 'weakest skill uses its label')
+  assert.ok(qs.every((q) => q.why && q.skill))
+  assert.equal(buildFollowups({ skillMap: [], coding: null, resumeCheck: null, integrity: { level: 'clear', notes: [] } }).length, 0)
+})

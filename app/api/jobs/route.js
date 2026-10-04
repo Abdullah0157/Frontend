@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { query } from '@/lib/db'
 import { makeSlug } from '@/lib/slug'
 import { getSupabaseServer } from '@/lib/supabase/server'
+import { normaliseAssessmentConfig, roleFamilyFor } from '@/lib/assessment-blueprint'
 
 export const dynamic = 'force-dynamic'
 
@@ -44,22 +45,33 @@ export async function POST(req) {
     const auth = await requireCompany()
     if (auth.error) return NextResponse.json({ error: auth.error }, { status: auth.status })
 
-    const { title, role, description, requiredAssessments, requiresAiInterview } = await req.json()
+    const { title, role, description, requiredAssessments, requiresAiInterview, assessmentConfig } = await req.json()
     if (!title?.trim() || !role?.trim() || !description?.trim()) {
       return NextResponse.json({ error: 'title, role, description are required' }, { status: 400 })
     }
     // Sanitize requirements. requiredAssessments = array of role_family codes.
-    const assessments = Array.isArray(requiredAssessments)
+    let assessments = Array.isArray(requiredAssessments)
       ? requiredAssessments.filter((a) => typeof a === 'string' && a.trim()).slice(0, 10)
       : []
+    // Written test for this job (track, level, allowed languages). When set,
+    // it is the job's software assessment and replaces any generic swe-* code.
+    let config = null
+    try {
+      config = normaliseAssessmentConfig(assessmentConfig)
+    } catch (e) {
+      return NextResponse.json({ error: e.message }, { status: 400 })
+    }
+    if (config) {
+      assessments = [...assessments.filter((a) => !a.startsWith('swe-')), roleFamilyFor(config.track)]
+    }
     const aiInterview = requiresAiInterview !== false // default true
 
     const slug = makeSlug()
     const { rows } = await query(
-      `INSERT INTO interview_jobs (slug, title, role, description, owner_id, required_assessments, requires_ai_interview)
-       VALUES ($1, $2, $3, $4, $5, $6, $7)
-       RETURNING id, slug, title, role, description, required_assessments, requires_ai_interview, created_at`,
-      [slug, title.trim(), role.trim(), description.trim(), auth.user.id, assessments, aiInterview]
+      `INSERT INTO interview_jobs (slug, title, role, description, owner_id, required_assessments, requires_ai_interview, assessment_config)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8::jsonb)
+       RETURNING id, slug, title, role, description, required_assessments, requires_ai_interview, assessment_config, created_at`,
+      [slug, title.trim(), role.trim(), description.trim(), auth.user.id, assessments, aiInterview, config ? JSON.stringify(config) : null]
     )
     return NextResponse.json({ job: rows[0] }, { status: 201 })
   } catch (e) {

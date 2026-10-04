@@ -8,6 +8,11 @@ export const dynamic = 'force-dynamic'
 
 const ROLE_LABELS = {
   'swe-backend': 'Backend Engineering',
+  'swe-frontend': 'Frontend Engineering',
+  'swe-fullstack': 'Full Stack Engineering',
+  'swe-mobile': 'Mobile Engineering',
+  'swe-qa': 'QA / Test Automation',
+  'swe-devops': 'DevOps / Cloud',
   'pm-consumer': 'Product Management',
   'sales-ae': 'Sales (AE)',
 }
@@ -88,7 +93,9 @@ export default async function ApplicationHubPage({ params }) {
       key: `assess-${code}`, label: `Skills Assessment · ${ROLE_LABELS[code] || code}`, kind: 'assessment',
       done: !!doneAt,
       statusDone: doneAt ? `Completed ${fmt(doneAt)}` : null,
-      statusTodo: 'Adaptive scenario, coding & MCQ questions',
+      statusTodo: code.startsWith('swe-')
+        ? 'Timed written test: knowledge, a coding task, a code review and work situations (about 1 hour)'
+        : 'Adaptive scenario, coding & MCQ questions',
       href: `/dashboard/assessment?jobId=${job.id}&role=${code}&slug=${slug}`,
     })
   }

@@ -95,7 +95,63 @@ function useCountdown(endsAt) {
 
 const fmt = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`
 
-export default function WrittenAssessment({ track = 'backend', level = null, jobId = null, returnTo = null }) {
+// Integrity signals while a question is on screen: leaving the tab or the
+// window, pasting and copying. Sent in small batches; the candidate is told
+// about this before starting. They are notes for a person to review, never an
+// automatic fail.
+function useIntegrity(session, itemId) {
+  const buf = useRef([])
+  const itemRef = useRef(itemId)
+  itemRef.current = itemId
+
+  const flush = useCallback((beacon = false) => {
+    if (!session || buf.current.length === 0) return
+    const events = buf.current.splice(0, 50)
+    const url = `/api/assessment/${session.id}/events`
+    const body = JSON.stringify({ events, token: session.token || undefined })
+    if (beacon && navigator.sendBeacon) {
+      navigator.sendBeacon(url, new Blob([body], { type: 'application/json' }))
+    } else {
+      fetch(url, { method: 'POST', headers: { 'content-type': 'application/json' }, body, keepalive: true }).catch(() => {})
+    }
+  }, [session])
+
+  useEffect(() => {
+    if (!session || !itemId) return
+    const push = (e) => buf.current.push({ ...e, itemId: itemRef.current })
+    let hiddenAt = null
+    let blurAt = null
+    const onVis = () => {
+      if (document.hidden) hiddenAt = Date.now()
+      else if (hiddenAt) { push({ kind: 'tab_hidden', ms: Date.now() - hiddenAt }); hiddenAt = null }
+    }
+    const onBlur = () => { if (!document.hidden) blurAt = Date.now() }
+    const onFocus = () => { if (blurAt) { push({ kind: 'window_blur', ms: Date.now() - blurAt }); blurAt = null } }
+    const onPaste = (e) => push({ kind: 'paste', chars: (e.clipboardData?.getData('text') || '').length })
+    const onCopy = () => push({ kind: 'copy', chars: String(window.getSelection?.() || '').length })
+    const onHide = () => flush(true)
+    document.addEventListener('visibilitychange', onVis)
+    window.addEventListener('blur', onBlur)
+    window.addEventListener('focus', onFocus)
+    document.addEventListener('paste', onPaste)
+    document.addEventListener('copy', onCopy)
+    window.addEventListener('pagehide', onHide)
+    const timer = setInterval(() => flush(), 15000)
+    return () => {
+      document.removeEventListener('visibilitychange', onVis)
+      window.removeEventListener('blur', onBlur)
+      window.removeEventListener('focus', onFocus)
+      document.removeEventListener('paste', onPaste)
+      document.removeEventListener('copy', onCopy)
+      window.removeEventListener('pagehide', onHide)
+      clearInterval(timer)
+    }
+  }, [session, itemId, flush])
+
+  return flush
+}
+
+export default function WrittenAssessment({ track = 'backend', level = null, jobId = null, allowedLanguages = null, returnTo = null }) {
   const [options, setOptions] = useState(null)
   const [chosenLevel, setChosenLevel] = useState(level || 'L3')
   const [language, setLanguage] = useState('')
@@ -131,12 +187,16 @@ export default function WrittenAssessment({ track = 'backend', level = null, job
   // Options + resume after a page reload.
   useEffect(() => {
     fetch('/api/assessment/start').then((r) => r.json()).then((o) => {
-      setOptions(o)
-      if (o.languages?.length) setLanguage((l) => l || o.languages[0].key)
+      // A job may allow only some languages.
+      const languages = allowedLanguages ? o.languages.filter((l) => allowedLanguages.includes(l.key)) : o.languages
+      setOptions({ ...o, languages })
+      if (languages?.length) setLanguage((l) => l || languages[0].key)
     }).catch(() => setError('Could not load the assessment. Please refresh.'))
+    // Resume after a reload: a practice test needs its token; a job test is
+    // reached through the candidate's own login.
     const saved = readStore()
-    if (saved?.id && saved?.token) setSession(saved)
-  }, [])
+    if (saved?.id && (saved.token || (jobId && saved.jobId === jobId))) setSession(saved)
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (!session || state) return
@@ -164,7 +224,7 @@ export default function WrittenAssessment({ track = 'backend', level = null, job
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({ mode: 'written', track, level: chosenLevel, language, jobId }),
       }).then(async (r) => { const d = await r.json(); if (!r.ok) throw new Error(d.error || 'Could not start'); return d })
-      const s = { id: data.sessionId, token: data.token }
+      const s = { id: data.sessionId, token: data.token || null, jobId }
       setSession(s); writeStore(s)
       applyState(data)
     } catch (e) {
@@ -181,6 +241,9 @@ export default function WrittenAssessment({ track = 'backend', level = null, job
     finally { setBusy(false) }
   }
 
+  const left = useCountdown(state?.status === 'in_progress' ? state.sectionEndsAt : null)
+  const flushIntegrity = useIntegrity(session, state?.status === 'in_progress' ? state.item?.id : null)
+
   const submit = useCallback(async ({ skip = false } = {}) => {
     const item = state?.item
     if (!item || busy) return
@@ -191,6 +254,7 @@ export default function WrittenAssessment({ track = 'backend', level = null, job
     else if (item.type === 'coding') response = { code }
     else response = { text }
     setError(''); setBusy(true)
+    flushIntegrity()
     try {
       const data = await api('/api/assessment/respond', {
         method: 'POST',
@@ -207,9 +271,8 @@ export default function WrittenAssessment({ track = 'backend', level = null, job
     } finally {
       setBusy(false)
     }
-  }, [state, busy, choice, choices, code, text, session, api])
+  }, [state, busy, choice, choices, code, text, session, api, flushIntegrity])
 
-  const left = useCountdown(state?.status === 'in_progress' ? state.sectionEndsAt : null)
 
   // When the section clock hits zero, hand in whatever is on screen.
   useEffect(() => {
@@ -259,6 +322,11 @@ export default function WrittenAssessment({ track = 'backend', level = null, job
                 real work situations. Each section has its own timer, which starts when you press Begin on
                 that section. You cannot go back to a previous question. Use a computer for the coding part.
                 If you need extra time for a disability or health reason, ask the company before you start.
+              </p>
+              <p className="text-slate-500 text-xs leading-relaxed">
+                Please work on your own. During the test we note when you leave this page and when text is pasted
+                or copied, and share these notes with the hiring team. They are not an automatic fail; the team may
+                simply ask you about them.
               </p>
               <div className="grid sm:grid-cols-2 gap-4">
                 {!level && (

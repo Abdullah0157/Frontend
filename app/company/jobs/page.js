@@ -10,20 +10,62 @@ export default function CompanyJobsPage() {
   const [loading, setLoading] = useState(true)
   const [creating, setCreating] = useState(false)
   const [showForm, setShowForm] = useState(false)
-  const [form, setForm] = useState({
+  const EMPTY_FORM = {
     title: '', role: '', description: '',
-    requiredAssessments: ['swe-backend'],   // default: backend skills assessment
+    requiredAssessments: [],
     requiresAiInterview: true,
-  })
+    // The written software test for this job (frameworks/swe-assessment-design.md).
+    writtenTest: { enabled: true, track: 'backend', level: 'L3', languages: ['javascript', 'typescript', 'python'], reasoning: true },
+  }
+  const [form, setForm] = useState(EMPTY_FORM)
   const [error, setError] = useState('')
+  const [suggestion, setSuggestion] = useState(null)
+  const [suggesting, setSuggesting] = useState(false)
 
-  // Assessment role families the item bank can serve. `available` gates which
-  // can actually run today (only swe-backend has live items).
+  // Other assessment families, not built yet.
   const ASSESSMENT_OPTIONS = [
-    { code: 'swe-backend', label: 'Backend Engineering', available: true },
     { code: 'pm-consumer', label: 'Product Management', available: false },
     { code: 'sales-ae', label: 'Sales (AE)', available: false },
   ]
+  const TRACK_OPTIONS = [
+    { key: 'backend', label: 'Backend', available: true },
+    { key: 'frontend', label: 'Frontend', available: false },
+    { key: 'fullstack', label: 'Full stack', available: false },
+    { key: 'mobile', label: 'Mobile', available: false },
+    { key: 'qa', label: 'QA / Test automation', available: false },
+    { key: 'devops', label: 'DevOps / Cloud', available: false },
+  ]
+  const LEVEL_OPTIONS = [
+    { key: 'L2', label: 'Junior (0-2 years)' },
+    { key: 'L3', label: 'Mid (2-5 years)' },
+    { key: 'L4', label: 'Senior (5+ years)' },
+    { key: 'L5', label: 'Lead' },
+  ]
+  const LANGUAGE_OPTIONS = [
+    { key: 'javascript', label: 'JavaScript' },
+    { key: 'typescript', label: 'TypeScript' },
+    { key: 'python', label: 'Python' },
+  ]
+  const setTest = (patch) => setForm((f) => ({ ...f, writtenTest: { ...f.writtenTest, ...patch } }))
+
+  async function suggestTest() {
+    setSuggesting(true)
+    try {
+      const res = await fetch('/api/jobs/suggest-assessment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title: form.title, role: form.role, description: form.description }),
+      })
+      const s = await res.json()
+      if (!res.ok) throw new Error(s.error || 'Could not suggest')
+      setTest({ enabled: true, track: s.track, level: s.level, languages: s.languages })
+      setSuggestion(s)
+    } catch (e) {
+      setError(e.message)
+    } finally {
+      setSuggesting(false)
+    }
+  }
 
   function toggleAssessment(code) {
     setForm((f) => ({
@@ -60,13 +102,24 @@ export default function CompanyJobsPage() {
       const res = await fetch('/api/jobs', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
+        body: JSON.stringify({
+          title: form.title, role: form.role, description: form.description,
+          requiredAssessments: form.requiredAssessments,
+          requiresAiInterview: form.requiresAiInterview,
+          assessmentConfig: form.writtenTest.enabled ? {
+            track: form.writtenTest.track,
+            level: form.writtenTest.level,
+            languages: form.writtenTest.languages,
+            disabledSections: form.writtenTest.level === 'L2' && !form.writtenTest.reasoning ? ['reasoning'] : [],
+          } : { enabled: false },
+        }),
       })
       if (!res.ok) {
         const d = await res.json().catch(() => ({}))
         throw new Error(d.error || `Failed (${res.status})`)
       }
-      setForm({ title: '', role: '', description: '', requiredAssessments: ['swe-backend'], requiresAiInterview: true })
+      setForm(EMPTY_FORM)
+      setSuggestion(null)
       setShowForm(false)
       await loadJobs()
     } catch (e) {
@@ -145,7 +198,71 @@ export default function CompanyJobsPage() {
               <p className="text-xs font-black uppercase tracking-[0.3em] text-slate-500 mb-1">Application Requirements</p>
               <p className="text-xs text-slate-400 mb-4">What candidates must complete before they can apply.</p>
 
-              <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Skills Assessments</p>
+              <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Written skills test</p>
+              <div className={`rounded-xl border p-4 mb-5 ${form.writtenTest.enabled ? 'border-indigo-500 bg-indigo-50/40' : 'border-slate-300'}`}>
+                <label className="flex items-center gap-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={form.writtenTest.enabled}
+                    onChange={(e) => setTest({ enabled: e.target.checked })}
+                    className="w-4 h-4 accent-indigo-500"
+                  />
+                  <span className="text-sm text-slate-700 font-medium flex-1">Software engineering test (knowledge, coding, code review, judgement)</span>
+                  <button
+                    type="button"
+                    onClick={suggestTest}
+                    disabled={suggesting || !form.description.trim()}
+                    className="text-[10px] font-black uppercase tracking-widest px-3 py-2 rounded-lg border border-indigo-300 text-indigo-700 hover:bg-indigo-100 disabled:opacity-50"
+                  >
+                    {suggesting ? 'Reading…' : 'Suggest from description'}
+                  </button>
+                </label>
+                {form.writtenTest.enabled && (
+                  <div className="grid md:grid-cols-2 gap-3 mt-4">
+                    <label className="grid gap-1 text-xs">
+                      <span className="font-black uppercase tracking-widest text-slate-500">Track</span>
+                      <select value={form.writtenTest.track} onChange={(e) => setTest({ track: e.target.value })} className="px-3 py-2 rounded-lg border border-slate-300 bg-white text-sm">
+                        {TRACK_OPTIONS.map((t) => <option key={t.key} value={t.key} disabled={!t.available}>{t.label}{t.available ? '' : ' (coming soon)'}</option>)}
+                      </select>
+                    </label>
+                    <label className="grid gap-1 text-xs">
+                      <span className="font-black uppercase tracking-widest text-slate-500">Level</span>
+                      <select value={form.writtenTest.level} onChange={(e) => setTest({ level: e.target.value })} className="px-3 py-2 rounded-lg border border-slate-300 bg-white text-sm">
+                        {LEVEL_OPTIONS.map((l) => <option key={l.key} value={l.key}>{l.label}</option>)}
+                      </select>
+                    </label>
+                    <div className="md:col-span-2 grid gap-1 text-xs">
+                      <span className="font-black uppercase tracking-widest text-slate-500">Candidates may code in</span>
+                      <div className="flex flex-wrap gap-2">
+                        {LANGUAGE_OPTIONS.map((l) => {
+                          const on = form.writtenTest.languages.includes(l.key)
+                          return (
+                            <button
+                              key={l.key}
+                              type="button"
+                              onClick={() => setTest({ languages: on ? form.writtenTest.languages.filter((x) => x !== l.key) : [...form.writtenTest.languages, l.key] })}
+                              className={`px-3 py-1.5 rounded-full border text-xs font-bold ${on ? 'border-indigo-500 bg-indigo-600 text-white' : 'border-slate-300 text-slate-600'}`}
+                            >
+                              {l.label}
+                            </button>
+                          )
+                        })}
+                      </div>
+                    </div>
+                    {form.writtenTest.level === 'L2' && (
+                      <label className="md:col-span-2 flex items-center gap-2 text-xs text-slate-600">
+                        <input type="checkbox" checked={form.writtenTest.reasoning} onChange={(e) => setTest({ reasoning: e.target.checked })} className="accent-indigo-500" />
+                        Include the short reasoning section (Junior only)
+                      </label>
+                    )}
+                    {suggestion && (
+                      <p className="md:col-span-2 text-xs text-slate-500">Suggested because {suggestion.reasons.join('; ')}. Change anything that is not right.</p>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Other assessments</p>
               <div className="grid gap-2 mb-5">
                 {ASSESSMENT_OPTIONS.map((opt) => (
                   <label
