@@ -187,8 +187,12 @@ export default function WrittenAssessment({ track = 'backend', level = null, job
   // Options + resume after a page reload.
   useEffect(() => {
     fetch('/api/assessment/start').then((r) => r.json()).then((o) => {
-      // A job may allow only some languages.
-      const languages = allowedLanguages ? o.languages.filter((l) => allowedLanguages.includes(l.key)) : o.languages
+      // The track decides which languages make sense (no Python for Frontend),
+      // and a job may narrow that further.
+      const trackLangs = o.tracks?.find((t) => t.key === track)?.languages
+      const languages = o.languages
+        .filter((l) => !trackLangs || trackLangs.includes(l.key))
+        .filter((l) => !allowedLanguages || allowedLanguages.includes(l.key))
       setOptions({ ...o, languages })
       if (languages?.length) setLanguage((l) => l || languages[0].key)
     }).catch(() => setError('Could not load the assessment. Please refresh.'))

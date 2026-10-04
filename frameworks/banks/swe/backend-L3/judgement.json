@@ -5,6 +5,7 @@
     "section": "judgement",
     "tracks": [
       "backend",
+      "frontend",
       "fullstack"
     ],
     "levels": [
@@ -19,9 +20,9 @@
     ],
     "prompt": "Twenty minutes after you deployed a change to the checkout service, the checkout error rate jumps from 0.1% to 6%. The graphs show the errors started exactly when your deploy finished. Nobody else has noticed yet. What do you do first?",
     "choices": [
-      "Roll back your deploy with the normal process and tell the team channel what you saw and that you are rolling back.",
+      "Roll back your deploy the normal way and tell the team channel what you saw and that you are rolling back.",
       "Send the graphs to your lead and the on-call engineer, and ask them whether you should roll back your change or keep it.",
-      "Find the most likely bug in your change, write a quick fix and deploy it straight away, since you know this code best.",
+      "Find the most likely bug in your change, write a quick fix for it, and deploy that fix to production straight away.",
       "Study the logs and traces until you understand the root cause, then ship a proper fix instead of undoing the whole release."
     ],
     "answer": {
@@ -41,6 +42,7 @@
     "section": "judgement",
     "tracks": [
       "backend",
+      "frontend",
       "fullstack"
     ],
     "levels": [
@@ -57,9 +59,9 @@
     "prompt": "During an outage of the payments API, fifteen people join the incident channel. Several suggest different fixes at the same time, and you notice that two engineers are both changing production settings without telling each other. Nobody is clearly in charge. What is the best response?",
     "choices": [
       "Start a written timeline in the channel of who changed what and when, so the team can see every change and undo any of them later.",
-      "Apply the fix you believe is most likely to work, quickly, since ending the outage fast is what matters most right now.",
-      "Since changes are clashing, ask for one incident lead (offer to do it yourself) and for every change to be announced first.",
-      "Leave the channel to reduce the noise and wait for a summary, since enough experienced people are already working on it."
+      "Apply the fix you believe is most likely to work directly to production yourself, as quickly as you can.",
+      "Ask for one incident lead (offer to do it yourself) and for every change to be announced first, since changes are clashing.",
+      "Leave the incident channel to reduce the noise, and wait for a summary from the people already working on it."
     ],
     "answer": {
       "points": [
@@ -78,6 +80,7 @@
     "section": "judgement",
     "tracks": [
       "backend",
+      "frontend",
       "fullstack"
     ],
     "levels": [
@@ -114,6 +117,7 @@
     "section": "judgement",
     "tracks": [
       "backend",
+      "frontend",
       "fullstack"
     ],
     "levels": [
@@ -128,8 +132,8 @@
     ],
     "prompt": "On release day you notice that the order confirmation email shows dates in US format (month/day) for every user, including users in Europe. The rest of the release is tested and includes an important fix for a payment bug. The product manager wants to ship today. What is the best response?",
     "choices": [
-      "Ask to hold the whole release until the date format is fixed, because customers in Europe may misread their order dates.",
-      "Make the one-line date fix directly on the release branch and ship it without review, since the change is so small and safe.",
+      "Ask the product manager to hold the whole release until the date format in the email is fixed for customers in Europe.",
+      "Make the one-line date format fix directly on the release branch, and ship it with the release today without any review.",
       "Ship today and fix the date format the next time you are working on the email code, since it is only a display problem.",
       "Ship today, since the payment fix matters more, log a ticket for the date bug, and tell support customers may ask about it."
     ],
@@ -150,6 +154,7 @@
     "section": "judgement",
     "tracks": [
       "backend",
+      "frontend",
       "fullstack"
     ],
     "levels": [
@@ -186,6 +191,7 @@
     "section": "judgement",
     "tracks": [
       "backend",
+      "frontend",
       "fullstack"
     ],
     "levels": [
@@ -223,6 +229,7 @@
     "section": "judgement",
     "tracks": [
       "backend",
+      "frontend",
       "fullstack"
     ],
     "levels": [
@@ -238,7 +245,7 @@
     "prompt": "A ticket says only: \"Add CSV export to the orders page.\" It does not say whether to export the current page, the filtered results or all orders, and the orders table has 3 million rows. The product manager is busy today but answers messages. What do you do first?",
     "choices": [
       "Build an export of all orders, since that covers every possible need and avoids having to come back to the ticket later.",
-      "Build an export of the current page only, since it is the fastest option to ship, and change it later if anyone asks for more.",
+      "Build a quick export of only the orders on the current page, ship it, and change it later if anyone asks for more.",
       "Wait until you can get a meeting with the product manager, and agree the full requirement there before you write any of the code.",
       "Message the product manager the options, your suggestion and the cost of each, and start on the parts that do not depend on it."
     ],
@@ -259,6 +266,7 @@
     "section": "judgement",
     "tracks": [
       "backend",
+      "frontend",
       "fullstack"
     ],
     "levels": [
@@ -273,7 +281,7 @@
     ],
     "prompt": "Halfway through a two-week task, the product manager changes the requirement: the sales report must now update in real time instead of once a day. You think this roughly doubles the work, but the deadline has not changed. What is the best response?",
     "choices": [
-      "Accept the change and work evenings and weekends so the deadline can still be met, since the product manager clearly needs this.",
+      "Accept the change, and plan to work evenings and weekends to deliver the real-time version by the original deadline.",
       "Give a new estimate and offer choices: same date with less scope, a later date, or daily now and real time later. Let them choose.",
       "Tell the product manager the change must wait for the next sprint, and keep building the daily version that was agreed in planning.",
       "Keep building the daily version for now, and bring up the change at the next sprint review when the whole team is together."
@@ -295,6 +303,7 @@
     "section": "judgement",
     "tracks": [
       "backend",
+      "frontend",
       "fullstack"
     ],
     "levels": [
@@ -331,6 +340,7 @@
     "section": "judgement",
     "tracks": [
       "backend",
+      "frontend",
       "fullstack"
     ],
     "levels": [
@@ -347,8 +357,8 @@
     "choices": [
       "Mention it to the other team's lead the next time you see them, since it is their code and they understand the risks best.",
       "Fix it yourself in their repository and merge it quickly, so that customers are protected as soon as possible, then tell them.",
-      "Since data is exposed now, report it urgently through the security process, or privately to the owning team and your lead.",
-      "Post the steps to reproduce in the company-wide engineering channel, so everyone sees how serious it is and it gets fixed fast."
+      "Report it urgently through the security process, or privately to the owning team and your lead, since data is exposed now.",
+      "Post the full steps to reproduce in the company-wide engineering channel and ask everyone there for an urgent fix."
     ],
     "answer": {
       "points": [
@@ -367,6 +377,7 @@
     "section": "judgement",
     "tracks": [
       "backend",
+      "frontend",
       "fullstack"
     ],
     "levels": [
@@ -474,6 +485,7 @@
     "section": "judgement",
     "tracks": [
       "backend",
+      "frontend",
       "fullstack"
     ],
     "levels": [
@@ -491,7 +503,7 @@
       "Rewrite the whole function in a cleaner, modern style while you are there, and make the tax change inside the new version.",
       "Make the 20-line change carefully, test it by hand with a few typical invoices, get it reviewed, and release it.",
       "Ask the team whether anyone has worked on this function before, and make the change once you understand the code better.",
-      "Write tests that capture today's results for real invoices, including the tax cases, then make the change and compare."
+      "Write tests that capture today's results for real invoices, including tax cases, so you can make the change and compare."
     ],
     "answer": {
       "points": [
@@ -510,6 +522,7 @@
     "section": "judgement",
     "tracks": [
       "backend",
+      "frontend",
       "fullstack"
     ],
     "levels": [
@@ -525,7 +538,7 @@
     ],
     "prompt": "While working on a small feature, you find a `sleep(2)` call in old order-processing code, with no comment. It makes every order two seconds slower. It has been there for four years, and removing it looks safe. What is the best response?",
     "choices": [
-      "Remove it in your current pull request, since it is an obvious improvement, the tests still pass, and it saves time on every order.",
+      "Remove the sleep call in your current feature pull request, after checking that the tests still pass without it.",
       "Leave it alone and say nothing about it, since old code that has worked for four years should not be touched without a reason.",
       "Check the git history and tickets to learn why it is there, then remove it in its own small change and watch for errors.",
       "Open a ticket describing the two-second slowdown and suggest that someone on the team investigates it in a future sprint."
@@ -560,7 +573,7 @@
     ],
     "prompt": "You are on call. At 2 a.m. an alert says the main database disk is 85% full and growing about 2% per hour. There is a runbook for this alert, and nobody else is online. What do you do first?",
     "choices": [
-      "Snooze the alert until the morning, since at this rate the disk will not be full for several hours and the team will be online.",
+      "Snooze the alert until the morning, when the rest of the team will be online, and look at the disk together then.",
       "Follow the runbook to find what is growing and free space or add capacity, post updates in the channel, and escalate if it fails.",
       "Page the database owner right away, since a problem with the main database is too risky to handle alone in the middle of the night.",
       "Delete the oldest log and backup files on the database server to free up space quickly, then check again in the morning."
@@ -617,6 +630,7 @@
     "section": "judgement",
     "tracks": [
       "backend",
+      "frontend",
       "fullstack"
     ],
     "levels": [
@@ -652,6 +666,7 @@
     "section": "judgement",
     "tracks": [
       "backend",
+      "frontend",
       "fullstack"
     ],
     "levels": [
@@ -666,8 +681,8 @@
     ],
     "prompt": "You are reviewing the first pull request from a new junior developer. It works, but it has about 25 problems: a few real bugs, missing tests and many small style issues. They seem nervous about the review. What is the best response?",
     "choices": [
-      "Approve it and fix the problems yourself in a follow-up pull request, so the new developer is not discouraged so early on.",
-      "Focus your comments on the bugs and missing tests, group the small style points, and offer a short call to go through it.",
+      "Approve the pull request unchanged, and then fix the bugs, tests and style problems yourself in a follow-up pull request.",
+      "Focus comments on the bugs and missing tests, group the small style points, and offer a short call to go through it.",
       "Leave a precise comment on every one of the 25 problems, so they learn all of the team's standards at once and in writing.",
       "Request changes with one comment asking them to study the team's coding guide carefully and then submit the work again."
     ],
@@ -688,6 +703,7 @@
     "section": "judgement",
     "tracks": [
       "backend",
+      "frontend",
       "fullstack"
     ],
     "levels": [
@@ -704,7 +720,7 @@
     "choices": [
       "Work extra hours to try to make the original date, and raise the problem with your lead only if you are still behind on day four.",
       "Keep working quietly and explain the reason at the end if the feature is late, since the partner API is not your fault.",
-      "Tell your lead and the product manager today, with the new estimate and options such as reducing scope or moving the date.",
+      "Tell your lead and the product manager today, with the new estimate and options such as less scope or a later date.",
       "Tell your lead today that the feature will probably be late, and give a new date once you have finished the hardest part."
     ],
     "answer": {
@@ -724,6 +740,7 @@
     "section": "judgement",
     "tracks": [
       "backend",
+      "frontend",
       "fullstack"
     ],
     "levels": [
@@ -760,6 +777,7 @@
     "section": "judgement",
     "tracks": [
       "backend",
+      "frontend",
       "fullstack"
     ],
     "levels": [
@@ -776,7 +794,7 @@
     "choices": [
       "Open a ticket with the failure logs for the test's owner, and propose a tracked quarantine so it stops blocking everyone.",
       "Re-run CI again for now, and bring up the flaky test at the next retrospective so the whole team can agree what to do about it.",
-      "Delete the test in your pull request, since it is unrelated to your change, it fails randomly, and it keeps blocking your work.",
+      "Delete the randomly failing test as part of your own pull request, and merge once the rest of the suite passes.",
       "Merge with your admin rights this time, since you have checked that the failure is not caused by your change."
     ],
     "answer": {
@@ -796,6 +814,7 @@
     "section": "judgement",
     "tracks": [
       "backend",
+      "frontend",
       "fullstack"
     ],
     "levels": [
@@ -811,7 +830,7 @@
     "choices": [
       "Use the colleague's login for just one hour, look only at that one customer's records, and log out as soon as you are done.",
       "Ask the colleague to export that customer's full records to a file and send it to you, so you can study it without any login.",
-      "Decline, request access through the normal process, and meanwhile pair with the colleague while they run read-only queries.",
+      "Decline, request access the normal way, and meanwhile pair with the colleague while they run read-only queries, so work keeps moving.",
       "Decline the login, request production access through the normal process, and wait until it is approved before going further."
     ],
     "answer": {
@@ -847,7 +866,7 @@
     "choices": [
       "Ask your manager whether it is all right to copy the table for a few days, and copy it only if they agree in writing.",
       "Do not copy personal data to a laptop; use anonymised or generated data of the same size, or run EXPLAIN on a replica.",
-      "Copy the table, since you already have read access to this data for debugging and your laptop disk is fully encrypted.",
+      "Copy the full customers table to your encrypted laptop, using the read access you already have for debugging.",
       "Try the index changes directly on the production database during a quiet hour at night, since that is where the real data is."
     ],
     "answer": {
@@ -867,6 +886,7 @@
     "section": "judgement",
     "tracks": [
       "backend",
+      "frontend",
       "fullstack"
     ],
     "levels": [
@@ -881,9 +901,9 @@
     "prompt": "Support escalates an angry enterprise customer whose monthly usage report has shown wrong numbers for two weeks. Support asks you to join a call with the customer today and promise a fix by Friday. You do not know the cause yet. What is the best response?",
     "choices": [
       "Join the call and promise a fix by Friday, because the customer needs reassurance today and you are confident you will find a way.",
-      "Decline the call, since you do not know the cause yet, and ask support to tell the customer that the team is looking into it.",
+      "Decline the call for now, and ask support to tell the customer that the engineering team is looking into the problem.",
       "Join the call, apologise, and explain honestly that you cannot promise any date until the cause of the bug has been found.",
-      "First confirm the problem and its size, then join the call to share what you know, your next steps and when you will update them."
+      "First confirm the problem and its size so you have facts to share, then join the call with your next steps and when you will update them."
     ],
     "answer": {
       "points": [
@@ -902,6 +922,7 @@
     "section": "judgement",
     "tracks": [
       "backend",
+      "frontend",
       "fullstack"
     ],
     "levels": [
@@ -937,6 +958,7 @@
     "section": "judgement",
     "tracks": [
       "backend",
+      "frontend",
       "fullstack"
     ],
     "levels": [
@@ -953,7 +975,7 @@
     "prompt": "The order service has a slow, fragile deploy process. Every change takes your team about a day longer than it should, and the process caused two incidents last quarter. The product manager wants only new features this quarter. What is the best response?",
     "choices": [
       "Quietly add the deploy rebuild to your feature estimates for the quarter, without telling the product manager what the time is for.",
-      "Accept the plan, since the product manager decides priorities, and keep working around the deploy problems as carefully as you can.",
+      "Accept the features-only plan for the quarter, and keep working around the deploy problems as carefully as you can.",
       "Measure the cost (days lost, incidents) and propose a small, specific fix that the product manager can plan next to features.",
       "Ask your manager to push the product manager to give the team a full quarter for tech-debt work, starting with the deploys."
     ],
@@ -990,7 +1012,7 @@
     "choices": [
       "Write a second script that sets the 2,000 orders back to their old status, run it quickly, and then tell your lead what happened.",
       "Tell your lead and team now with the facts, stop anything that could send more emails, and plan the correction together.",
-      "Correct the 2,000 orders quietly and say nothing, since the data will be right again after the fix and nobody has noticed.",
+      "Correct the 2,000 orders quietly yourself, and say nothing about the mistake to your lead, the team or support.",
       "Tell your lead exactly what happened, and wait for their instructions before you do anything else to the orders."
     ],
     "answer": {
@@ -1010,6 +1032,7 @@
     "section": "judgement",
     "tracks": [
       "backend",
+      "frontend",
       "fullstack"
     ],
     "levels": [
@@ -1026,7 +1049,7 @@
     "choices": [
       "Fix the bug quietly in your next pull request, since only a small number of users were affected and nobody has complained.",
       "Fix the bug and tell your lead, and leave the affected users to request a new reset email themselves when they need one.",
-      "Wait to see whether any of the affected users complain before spending more time on it, since there are only about 40.",
+      "Wait to see whether any of the roughly 40 affected users complain before spending any more time on the bug.",
       "Tell your lead, ship a fix with a test for this case, and suggest contacting the 40 users and checking why tests missed it."
     ],
     "answer": {
@@ -1046,6 +1069,7 @@
     "section": "judgement",
     "tracks": [
       "backend",
+      "frontend",
       "fullstack"
     ],
     "levels": [
@@ -1060,7 +1084,7 @@
     "prompt": "Your manager wants you to finish the billing feature this week. A manager from another team messages you directly, saying their integration is blocked and asking you to spend the next three days helping them. Both say their work is the top priority. What do you do first?",
     "choices": [
       "Tell the other manager you will check, since your manager set your week, then ask your manager (or both together) to decide.",
-      "Start helping the other team today, since a blocked team costs the company more than a feature that is a few days late.",
+      "Start helping the other team today for the next three days, and let the billing feature be a few days late.",
       "Split your time and do a little of both every day, so that neither manager is disappointed and both pieces of work move.",
       "Ignore the other manager's message and keep working on billing, since they are not your manager and cannot set your priorities."
     ],
@@ -1081,6 +1105,7 @@
     "section": "judgement",
     "tracks": [
       "backend",
+      "frontend",
       "fullstack"
     ],
     "levels": [
@@ -1116,6 +1141,7 @@
     "section": "judgement",
     "tracks": [
       "backend",
+      "frontend",
       "fullstack"
     ],
     "levels": [
@@ -1151,6 +1177,7 @@
     "section": "judgement",
     "tracks": [
       "backend",
+      "frontend",
       "fullstack"
     ],
     "levels": [
@@ -1165,10 +1192,10 @@
     ],
     "prompt": "A strong senior teammate often merges their own pull requests at night using admin rights, without waiting for review. Their changes are usually good, but last week one caused a short outage. Others on the team have started doing the same. What is the best response?",
     "choices": [
-      "Leave it, since their changes are usually good, the outage was short, and they are more experienced than most of the team.",
+      "Leave it alone, and say nothing about the night-time merges to the teammate or to the rest of the team.",
       "Start merging your own late-night pull requests the same way, and tell the team it makes releases much faster.",
       "Ask your manager to remove admin rights from everyone on the team, so nobody can merge without review any more.",
-      "Since others now copy them, talk to the teammate privately about last week's outage and suggest a merge rule for the team."
+      "Talk to the teammate privately about last week's outage and, since others now copy them, suggest a merge rule for the team."
     ],
     "answer": {
       "points": [
@@ -1240,7 +1267,7 @@
       "Add the warning to the scanner's ignore list for now, since a major upgrade is risky, and plan the upgrade carefully for next quarter.",
       "Check if your code uses the vulnerable feature; if so, reduce the risk now (safer settings or blocking that input) and upgrade soon.",
       "Upgrade to the new major version today and fix whatever breaks, since critical vulnerabilities must always be fixed immediately.",
-      "Ask the security team to lower the severity, since your team has no time for an upgrade this sprint and the risk seems small."
+      "Ask the security team to lower the severity, and explain that your team has no time for an upgrade this sprint."
     ],
     "answer": {
       "points": [
@@ -1259,6 +1286,7 @@
     "section": "judgement",
     "tracks": [
       "backend",
+      "frontend",
       "fullstack"
     ],
     "levels": [
@@ -1309,7 +1337,7 @@
     ],
     "prompt": "At 6 p.m., a teammate sends you a pull request with the message: \"Just approve it, it's only a config change and I need it out tonight.\" The change edits the database connection pool settings for the production API. What is the best response?",
     "choices": [
-      "Approve it, since config changes are usually low risk, it is late, and they know the production system better than you do.",
+      "Approve it straight away without reading it closely, trusting that they know the production system better than you do.",
       "Tell them you will review it properly first thing tomorrow morning, since it is late and a rushed review is not a real review.",
       "Approve it, and ask them to watch the error dashboards closely for an hour after the change goes out to production.",
       "Review it now: check the new values against the database's connection limit and ask how to roll back; approve only if safe."
@@ -1382,7 +1410,7 @@
     "choices": [
       "Run the single UPDATE at night when traffic is lowest, and watch the database dashboards closely while it runs, ready to cancel it.",
       "Update in small batches with short pauses, make the script safe to stop and restart, test it at full size, and watch the load.",
-      "Run the single UPDATE on a staging copy with production-sized data first, to measure how long it takes, then decide.",
+      "Run the single UPDATE on a staging copy with production-sized data first, so you know how long it takes, then decide.",
       "Run the single UPDATE now on the powerful production server, and check the new column on a few orders when it finishes."
     ],
     "answer": {
@@ -1402,6 +1430,7 @@
     "section": "judgement",
     "tracks": [
       "backend",
+      "frontend",
       "fullstack"
     ],
     "levels": [
@@ -1416,7 +1445,7 @@
     "prompt": "In a one-hour call, your team decided to replace polling with webhooks for a partner integration, after comparing three options. Nobody wrote anything down. You are building the first part. What is the best response?",
     "choices": [
       "Add a clear comment in the code explaining that webhooks are used instead of polling, so future readers of the integration know.",
-      "Do nothing extra for now, since everyone who matters was on the call and the code itself will show what was chosen.",
+      "Do nothing extra for now, carry on building the first part, and let the code itself show what was chosen.",
       "Write a short decision record (options, choice, reasons) so the why is kept, link it in the ticket, and ask the group to check it.",
       "Post a short summary of the decision in the team chat, where everyone who missed the call can see what was agreed and ask questions."
     ],

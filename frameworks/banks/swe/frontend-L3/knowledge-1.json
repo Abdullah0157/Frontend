@@ -1,0 +1,1617 @@
+[
+  {
+    "bank_key": "swe.frontend.k1.index-as-key-delete",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "find_bug",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L2",
+      "L3"
+    ],
+    "language": "javascript",
+    "difficulty": "easy",
+    "primary_skill_code": "engineering.frontend.components_state",
+    "secondary_skill_codes": [
+      "engineering.craft.correctness"
+    ],
+    "prompt": "In React, this list lets users type a note next to each task and delete tasks. Users report that after they delete the second task, the note they typed for it now appears next to the task that used to be third. Which line causes the bug?\n\n```jsx\n1  function TaskList({ tasks, onDelete }) {\n2    return (\n3      <ul>\n4        {tasks.map((task, index) => (\n5          <TaskRow key={index} task={task} onDelete={onDelete} />\n6        ))}\n7      </ul>\n8    );\n9  }\n10\n11 function TaskRow({ task, onDelete }) {\n12   const [note, setNote] = useState('');\n13   return (\n14     <li>\n15       {task.title}\n16       <input value={note} onChange={(e) => setNote(e.target.value)} />\n17       <button onClick={() => onDelete(task.id)}>Delete</button>\n18     </li>\n19   );\n20 }\n```",
+    "choices": [
+      "Line 12: state declared inside a list row is shared by all the rows of the list",
+      "Line 16: a controlled input keeps its old value; it should use `defaultValue`",
+      "Line 5: with an index key, React matches row state by position, not by task",
+      "Line 17: the inline arrow function captures a stale `task` after a delete"
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "explanation": "Keys tell React which item is which between renders. With `key={index}`, deleting the second task moves the third task into position 1, so it gets key 1, and React gives it the state (the note) of the row that had key 1. The row with the last key is the one that is removed. Fix: `key={task.id}`. Wrong: each `TaskRow` instance has its own `useState`; state is never shared between rows. Wrong: an uncontrolled input with `defaultValue` shows the same bug, because React also reuses the DOM input by key. Wrong: the arrow function is created again on every render with the current `task`, so it is never stale.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "swe.frontend.k1.stale-interval-counter",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "find_bug",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": "javascript",
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.frontend.components_state",
+    "secondary_skill_codes": [
+      "engineering.programming.javascript"
+    ],
+    "prompt": "In React, this timer should count up once per second. On screen it shows `1 s` and then never changes. What is wrong?\n\n```jsx\n1  function Timer() {\n2    const [seconds, setSeconds] = useState(0);\n3\n4    useEffect(() => {\n5      const id = setInterval(() => {\n6        setSeconds(seconds + 1);\n7      }, 1000);\n8      return () => clearInterval(id);\n9    }, []);\n10\n11   return <p>{seconds} s</p>;\n12 }\n```",
+    "choices": [
+      "Line 6: the callback always sees `seconds` as 0, the value from the first render",
+      "Line 5: a `setInterval` callback is not allowed to call a React state setter directly",
+      "Line 8: the cleanup function clears the interval right after its first tick",
+      "Line 9: the empty array stops the component from rendering after the first update"
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "explanation": "The effect runs once, so the interval callback is a closure over the first render, where `seconds` is 0. Every tick calls `setSeconds(0 + 1)`; after the first change React sees the same value and does nothing. Fix: the updater form `setSeconds((s) => s + 1)`, which always receives the latest value (adding `seconds` to the dependency array also works, but restarts the interval every second). Wrong: setters can be called from any callback, including timers. Wrong: the cleanup runs only when the component unmounts or before the effect runs again, and with `[]` it never runs again. Wrong: the dependency array controls when the effect runs, not when the component renders; state changes still cause renders.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "swe.frontend.k1.effect-missing-dependency",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L2",
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "engineering.frontend.components_state",
+    "secondary_skill_codes": [
+      "engineering.frontend.browser_network"
+    ],
+    "prompt": "In React, a `UserProfile` component receives a `userId` prop and loads the user like this:\n\n```jsx\nuseEffect(() => {\n  fetch(`/api/users/${userId}`)\n    .then((res) => res.json())\n    .then(setUser);\n}, []);\n```\n\nWhen the user clicks from one profile to another, `userId` changes, but the page keeps showing the first person. What is the cause?",
+    "choices": [
+      "The browser cached the first response, so the API must send `Cache-Control: no-store`",
+      "`setUser` runs asynchronously, so the second user is saved first and then overwritten",
+      "An effect cannot read props directly, so `userId` must first be copied into state",
+      "The dependency array is empty, so the effect never runs again when `userId` changes"
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "explanation": "With `[]` the effect runs only after the first render. When `userId` changes, the component renders again but the effect does not run again, so no request is sent for the new user. Fix: `[userId]` (and ignore or abort the old request in the cleanup, so a slow earlier response cannot win). Wrong: each user has a different URL, so a cached response for the first user cannot be returned for the second one. Wrong: the second request is never sent at all, so there is nothing to overwrite. Wrong: effects can read props directly; copying the prop into state would not make the effect run again.",
+    "expected_time_s": 45
+  },
+  {
+    "bank_key": "swe.frontend.k1.effect-cleanup-listener",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.frontend.components_state",
+    "secondary_skill_codes": [
+      "engineering.craft.correctness"
+    ],
+    "prompt": "In React, a modal component listens for the Escape key with a `handleKey` function defined inside the component:\n\n```jsx\nuseEffect(() => {\n  window.addEventListener('keydown', handleKey);\n}, []);\n```\n\nAfter users open and close the modal a few times, one Escape press runs `handleKey` several times, and memory use slowly grows. What is the correct fix?",
+    "choices": [
+      "Add `handleKey` to the dependency array, so that React replaces the old listener with the new one",
+      "Return a cleanup from the effect that calls `window.removeEventListener('keydown', handleKey)`",
+      "Call `event.stopPropagation()` inside `handleKey`, so that each key press is handled only once",
+      "Use `useLayoutEffect` instead, because it removes its own listeners when the component unmounts"
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "explanation": "Each time the modal mounts, the effect adds a listener to `window`, and nothing removes it when the modal unmounts. The old listeners (and everything their closures hold) stay alive, so one key press runs all of them. Returning a cleanup that removes the same function fixes both problems. Wrong: `handleKey` is created inside the component, so it is a new function every render; listing it makes the effect run after every render, which adds even more listeners when there is no cleanup. Wrong: `stopPropagation` stops the event reaching other elements, not other listeners on the same `window`. Wrong: `useLayoutEffect` only changes timing; it does not remove anything unless you return a cleanup.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "swe.frontend.k1.derived-state-in-render",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.frontend.components_state",
+    "secondary_skill_codes": [
+      "engineering.craft.readability"
+    ],
+    "prompt": "In React, a component receives `products` as a prop and keeps a search `query` in state. It also keeps `visibleProducts` in state and updates it in an effect:\n\n```jsx\nconst [visibleProducts, setVisibleProducts] = useState([]);\nuseEffect(() => {\n  setVisibleProducts(products.filter((p) => p.name.includes(query)));\n}, [products, query]);\n```\n\nIn code review, a colleague says there is a simpler and more correct approach. What is it?",
+    "choices": [
+      "Keep the effect but switch to `useLayoutEffect`, so the list updates without a flicker",
+      "Compute it during render from `products` and `query` (with `useMemo` only if slow)",
+      "Keep the list in a `useRef` instead, so updating it does not trigger another render",
+      "Move the list into a context, so every component reads the same filtered products"
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "explanation": "`visibleProducts` can always be calculated from `products` and `query`, so it should not be separate state. Computing it during render removes the extra render, the first render with an empty or old list, and the risk of the copy getting out of sync. Use `useMemo` only if filtering is measurably slow. Wrong: `useLayoutEffect` hides the flicker but keeps the duplicate state and the extra render. Wrong: changing a ref does not re-render, so the screen would not show the new list. Wrong: a context still stores a duplicate copy and makes more components re-render; it does not remove the problem.",
+    "expected_time_s": 55,
+    "group": "effect-derived-state"
+  },
+  {
+    "bank_key": "swe.frontend.k1.reset-state-with-key",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "engineering.frontend.components_state",
+    "secondary_skill_codes": [],
+    "prompt": "In React, an admin page shows a list of users and an edit form. The form is rendered as `<EditUserForm user={selectedUser} />`, and inside it:\n\n```jsx\nconst [name, setName] = useState(user.name);\n// ...\n<input value={name} onChange={(e) => setName(e.target.value)} />\n```\n\nWhen the admin selects a different user, the form still shows the previous user's name. What is the cause, and what is a clean fix?",
+    "choices": [
+      "The parent's update is still pending; use `await setSelectedUser(user)` in the click handler",
+      "React skips the render when an object is reused; pass a fresh copy with `{ ...selectedUser }`",
+      "Controlled inputs ignore prop changes; give the input `defaultValue={user.name}` instead",
+      "`useState` reads its argument only on mount; render the form with `key={selectedUser.id}`"
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "explanation": "The initial value passed to `useState` is read only when the component mounts. Selecting another user re-renders the same `EditUserForm` instance, so `name` keeps its old value. Giving the form `key={selectedUser.id}` tells React it is a different form for each user, so it mounts fresh with the new initial state (and resets any other form state too). Wrong: state setters do not return a promise; awaiting one does not change what the child's `useState` does. Wrong: the form does re-render with the new `user` prop; the problem is that `useState` ignores the new initial value. Wrong: `defaultValue` is also applied only on mount, so it has the same problem.",
+    "expected_time_s": 65
+  },
+  {
+    "bank_key": "swe.frontend.k1.lift-state-to-parent",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L2",
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "engineering.frontend.components_state",
+    "secondary_skill_codes": [],
+    "prompt": "In React, a `SearchPage` component renders two children side by side: `FilterPanel` and `ResultsList`. Right now `FilterPanel` keeps the selected category in its own state, and `ResultsList` also needs that category to show the right items. What is the usual way to share it?",
+    "choices": [
+      "Keep the category in `SearchPage` state and pass it, and its setter, down as props",
+      "Keep a copy in each component and sync the two copies with a `useEffect` in each",
+      "Let `ResultsList` read the value from `FilterPanel` through a ref to that component",
+      "Save it to `localStorage` in `FilterPanel` and read it in `ResultsList` on each render"
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "explanation": "When two siblings need the same state, it moves up to their closest common parent (\"lifting state up\"). The parent owns one copy, passes the value to `ResultsList`, and passes the value and setter to `FilterPanel`. Both always agree. Wrong: two copies synced by effects drift apart, cause extra renders, and can loop. Wrong: a ref to a component does not expose its state, and reading a ref does not re-render `ResultsList` when the category changes. Wrong: writing to `localStorage` does not trigger a render, so `ResultsList` would show an old value until something else re-renders it.",
+    "expected_time_s": 45
+  },
+  {
+    "bank_key": "swe.frontend.k1.context-value-rerenders",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3",
+      "L4"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "engineering.frontend.components_state",
+    "secondary_skill_codes": [
+      "engineering.frontend.rendering"
+    ],
+    "prompt": "In React, a large app keeps everything in one context:\n\n```jsx\n<AppContext.Provider value={{ user, theme, cart, searchText, setSearchText }}>\n```\n\nAbout 200 components call `useContext(AppContext)`, most of them only to read `user` or `theme`. Typing in the search box has become slow. What is the most likely cause?",
+    "choices": [
+      "`useContext` searches up the whole tree on every call, which is slow with 200 readers",
+      "The context value is deep-copied for each reader, so the cart is copied 200 times",
+      "Each keystroke creates a new context value, so every component that reads it re-renders",
+      "The provider remounts its children when its value changes, so their state is rebuilt"
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "explanation": "Each keystroke updates `searchText`, which creates a new `value` object. React re-renders every component that reads the context when the value changes, even if the part it uses (`user`, `theme`) is the same. That is about 200 re-renders per keystroke. Fixes: keep `searchText` in local state near the search box, split the context into smaller ones (user, theme, cart), memoize the value, or use a store that lets components select only what they need. Wrong: finding the nearest provider is cheap. Wrong: readers get the same object reference; nothing is copied. Wrong: a changed value causes re-renders, not remounts; state is kept.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "swe.frontend.k1.state-update-uses-snapshot",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L2",
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "engineering.frontend.components_state",
+    "secondary_skill_codes": [
+      "engineering.programming.javascript"
+    ],
+    "prompt": "In React, a \"quick add\" button should add 3 to a counter:\n\n```jsx\nfunction handleClick() {\n  setCount(count + 1);\n  setCount(count + 1);\n  setCount(count + 1);\n}\n```\n\nThe counter starts at 0. After one click it shows 1. Why, and what fixes it?",
+    "choices": [
+      "React ignores repeated setter calls in one handler; make each call inside a `setTimeout`",
+      "The three updates run in parallel and overwrite each other; `await` each setter call",
+      "`count` is declared with `const`, so the setter cannot change it; declare it with `let`",
+      "All three calls read the same `count` from this render; use `setCount((c) => c + 1)`"
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "explanation": "`count` is a fixed value for the current render (0). Each call queues \"set to 0 + 1\", React batches the three updates, and the result is 1. The updater form queues functions that each receive the latest value, so 0 becomes 1, 2, then 3. Wrong: React does apply every call; they all say \"1\". Since React 18, updates inside `setTimeout` are batched too, and `count` there is still 0. Wrong: setters do not return a promise, and awaiting does not refresh `count` inside this closure. Wrong: `let` only changes a local variable; React reads state from `useState` on the next render.",
+    "expected_time_s": 45
+  },
+  {
+    "bank_key": "swe.frontend.k1.uncontrolled-to-controlled-warning",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.frontend.components_state",
+    "secondary_skill_codes": [
+      "engineering.debugging.hypothesis"
+    ],
+    "prompt": "In React, a profile form renders `<input value={profile.nickname} onChange={handleChange} />`. When users who have never set a nickname start typing, the console warns: \"A component is changing an uncontrolled input to be controlled.\" What is the most likely cause?",
+    "choices": [
+      "Text inputs with `onChange` must use `defaultValue`, not `value`, to stay controlled",
+      "The input needs a `name` attribute, so React can tell which field it controls",
+      "`profile.nickname` is `undefined` at first; give the input `profile.nickname ?? ''`",
+      "`handleChange` is a new function each render, so React sees a new kind of input"
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "explanation": "React treats `value={undefined}` as \"no value\", so the input starts uncontrolled. When the user types, the handler sets `nickname` to a string, the input becomes controlled, and React warns. Always passing a string (for example `?? ''`) keeps it controlled from the start. Wrong: `defaultValue` makes an input uncontrolled; `value` plus `onChange` is the controlled pattern. Wrong: `name` matters for form submission, not for controlled mode. Wrong: a new handler function on each render is normal and does not change how React treats the input.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "swe.frontend.k1.custom-hook-state-not-shared",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.frontend.components_state",
+    "secondary_skill_codes": [],
+    "prompt": "In React, a teammate writes a custom hook `useCart()` that keeps the cart in `useState` and returns `{ items, addItem }`. The product page calls `useCart()` to add items, and the header calls `useCart()` to show the number of items. The product page shows the added items, but the header count always stays at 0. Why?",
+    "choices": [
+      "Custom hooks run only on a component's first render, so later changes to the cart are lost",
+      "Every call to `useCart()` creates its own state, so the two components have separate carts",
+      "The header renders before the product page, so it reads the cart before items are added",
+      "A custom hook must be wrapped in `memo` before two components can safely share its state"
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "explanation": "A custom hook shares logic, not state. Every component that calls it gets its own `useState`, so the product page and the header have two separate carts. To share one cart, keep it in a common parent, a context provider, or a state store, and let `useCart()` read from there. Wrong: hooks run on every render, and the product page does see its updates. Wrong: render order does not matter; even later renders of the header read its own empty cart. Wrong: `memo` is for components, and it does not make state shared.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "swe.frontend.k1.hook-after-early-return",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.frontend.components_state",
+    "secondary_skill_codes": [
+      "engineering.debugging.hypothesis"
+    ],
+    "prompt": "In React, this component works while loading, but crashes when `user` arrives, with the error \"Rendered more hooks than during the previous render\":\n\n```jsx\nfunction Profile({ user }) {\n  if (!user) return <Spinner />;\n  const [tab, setTab] = useState('posts');\n  // ...\n}\n```\n\nWhat is the cause?",
+    "choices": [
+      "`useState` is skipped on some renders, but hooks must run in the same order every time",
+      "`useState` cannot be used in a component that also receives props from its parent",
+      "A component must return the same type of element on every render, not a spinner first",
+      "The initial value `'posts'` must be defined outside the component so that it stays stable"
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "explanation": "React matches hooks to their state by call order. On the first render the early return skips `useState`; when `user` arrives, one more hook is called, so the order no longer matches and React throws. Fix: call all hooks before any early return (or move the content into a child component that is rendered only when `user` exists). Wrong: components with props use hooks all the time. Wrong: returning different elements on different renders is normal. Wrong: a string literal is the same value on every render; where it is defined does not matter.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "swe.frontend.k1.object-dependency-refetch-loop",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "find_bug",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": "javascript",
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.frontend.components_state",
+    "secondary_skill_codes": [
+      "engineering.frontend.rendering"
+    ],
+    "prompt": "In React, the browser's Network tab shows this component sending `GET /api/orders` again and again without stopping. Which line causes it?\n\n```jsx\n1  function Orders({ status }) {\n2    const [orders, setOrders] = useState([]);\n3    const filters = { status, limit: 20 };\n4\n5    useEffect(() => {\n6      fetchOrders(filters).then(setOrders);\n7    }, [filters]);\n8\n9    return <OrderTable rows={orders} />;\n10 }\n```",
+    "choices": [
+      "Line 3: `filters` is a new object each render, so the effect runs after every render",
+      "Line 2: data that is loaded from an API must start as `null`, not as an empty array `[]`",
+      "Line 6: a state setter must not be called inside an effect; call it during render",
+      "Line 9: passing new `rows` to `OrderTable` makes the parent component render again"
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "explanation": "React compares dependencies with `Object.is`. `filters` is a new object each render, so the effect runs after every render; each fetch calls `setOrders` with a new array, which renders again, which runs the effect again: an endless loop. Fix: depend on `status` and build the object inside the effect (`[status]`), or keep it stable with `useMemo`. Wrong: an empty array is a fine initial value. Wrong: setting state after a fetch inside an effect is normal; calling the setter during render would itself loop. Wrong: a child receiving new props does not make its parent render.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "swe.frontend.k1.strict-mode-double-effect",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.frontend.components_state",
+    "secondary_skill_codes": [
+      "engineering.craft.correctness"
+    ],
+    "prompt": "In React 18 or later, a chat component opens a WebSocket in a `useEffect` with `[]` as its dependency array, and the effect has no cleanup function. In development, the server log shows two connections each time the page loads; in the production build there is only one. What is going on, and what should you do?",
+    "choices": [
+      "The dependency array is incomplete; list the socket URL in it so React runs the effect once",
+      "Strict Mode remounts it in development to expose missing cleanup; close the socket in a cleanup",
+      "The development server sends each request twice for hot reload, so nothing needs to change",
+      "Strict Mode is the cause; remove `<StrictMode>` from the app root to stop the extra connection"
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "explanation": "In development, Strict Mode mounts each component, unmounts it, and mounts it again, to show effects that do not clean up. Without a cleanup, the first socket is never closed. The real fix is a cleanup that closes the socket; then development shows one open connection, and real unmounts (leaving the page) also close it. Wrong: a constant URL in the array does not change how often the effect runs, and `[]` already means \"after mount\". Wrong: hot reload does not duplicate WebSocket connections on page load; React's development behaviour does. Wrong: removing Strict Mode hides the symptom but keeps the leak when the component really unmounts.",
+    "expected_time_s": 55
+  },
+  {
+    "bank_key": "swe.frontend.k1.mutated-state-no-rerender",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L2",
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "engineering.frontend.components_state",
+    "secondary_skill_codes": [
+      "engineering.programming.javascript"
+    ],
+    "prompt": "In React, clicking \"Add\" runs this code, but the new item does not appear on the screen:\n\n```jsx\nfunction handleAdd(newItem) {\n  items.push(newItem);\n  setItems(items);\n}\n```\n\nWhat is the problem?",
+    "choices": [
+      "`push` runs asynchronously, so the item is added only after `setItems` has finished",
+      "`setItems` accepts only an updater function when the new state depends on the old one",
+      "`push` changed the same array, so React sees the same state reference and skips the render",
+      "React tracks only primitive values in state; arrays have to be stored in a `useRef`"
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "explanation": "`push` changes the existing array, so `setItems(items)` passes the same reference. React compares the old and new state with `Object.is`, sees no change, and skips the render. Fix: create a new array, for example `setItems((prev) => [...prev, newItem])`. Wrong: `push` is synchronous. Wrong: setters accept a plain value too; the updater form is safer when several updates are queued, but it does not fix the mutation here. Wrong: arrays and objects work fine in state as long as you replace them instead of changing them; a ref would never trigger a render.",
+    "expected_time_s": 45
+  },
+  {
+    "bank_key": "swe.frontend.k1.error-boundary-event-handler",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.frontend.components_state",
+    "secondary_skill_codes": [
+      "engineering.operations.reliability"
+    ],
+    "prompt": "In React, you wrap a comments widget in an error boundary, so that a crash shows \"Comments are unavailable\" instead of a blank page. A test shows that when the widget's \"Like\" button's `onClick` handler throws an error, the fallback message does not appear. Why?",
+    "choices": [
+      "The boundary must be placed inside the widget's own component, not around the widget",
+      "Error boundaries work only in production builds; development shows an error overlay instead",
+      "The handler must be an `async` function for its errors to reach the nearest error boundary",
+      "Error boundaries catch errors during rendering, not errors thrown in event handlers"
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "explanation": "Error boundaries catch errors thrown during rendering and in lifecycle methods and effects of the components below them. An event handler runs later, outside rendering, so its error is not caught. Handle it in the handler (`try/catch`, then set error state and show a message). Wrong: a boundary catches errors only from components below it, so wrapping the widget is correct. Wrong: boundaries work in development too; the development overlay can appear on top, but the fallback still renders. Wrong: errors from async code (rejected promises) are not caught by error boundaries either.",
+    "expected_time_s": 55
+  },
+  {
+    "bank_key": "swe.frontend.k1.ref-or-state",
+    "type": "multi_select",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.frontend.components_state",
+    "secondary_skill_codes": [],
+    "prompt": "In React, which of these values are better kept in a `useRef` than in state? Select all that apply.",
+    "choices": [
+      "The text in a search box, which is shown inside the input field",
+      "The id returned by `setInterval`, kept so the interval can be cleared later",
+      "Whether a dropdown menu is currently open or closed",
+      "An input element that must get focus when a button is clicked",
+      "The number of unread messages shown in a badge in the header",
+      "The last scroll position, used only inside a scroll handler to detect direction"
+    ],
+    "answer": {
+      "correct": [
+        1,
+        3,
+        5
+      ]
+    },
+    "explanation": "Rule: if a value affects what is shown, keep it in state, because only state changes re-render. If it is used only inside handlers or effects, a ref avoids needless renders. Correct: the interval id is needed only to clear the timer. Correct: a DOM element for `.focus()` is what refs are for. Correct: the last scroll position is compared inside the handler and never shown. Wrong: the search text is shown in the input, so a ref would not update the screen. Wrong: the open/closed flag decides what is rendered. Wrong: the unread count is displayed in the badge.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "swe.frontend.k1.when-to-use-effect",
+    "type": "multi_select",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.frontend.components_state",
+    "secondary_skill_codes": [
+      "engineering.craft.readability"
+    ],
+    "prompt": "In React, which of these are good uses of `useEffect`? Select all that apply.",
+    "choices": [
+      "Computing a filtered list from props and state whenever they change",
+      "Opening a WebSocket while the component is shown, and closing it in the cleanup",
+      "Setting `document.title` to show the number of unread messages",
+      "Copying a prop into state each time the prop changes",
+      "Sending a `POST` request when the user clicks the Buy button",
+      "Keeping a third-party map widget in sync with the `center` prop"
+    ],
+    "answer": {
+      "correct": [
+        1,
+        2,
+        5
+      ]
+    },
+    "explanation": "Effects are for keeping a component in sync with something outside React while it is shown. Correct: a WebSocket is an external connection that must open and close with the component. Correct: `document.title` is outside React's tree. Correct: a non-React map widget must be told about prop changes. Wrong: a filtered list can be computed during render; an effect adds an extra render and a stale first render. Wrong: copying a prop into state creates two sources of truth; use the prop directly, or a `key` to reset state. Wrong: a purchase is caused by a specific click, so it belongs in the click handler; in an effect it can fire again on re-mounts.",
+    "expected_time_s": 65,
+    "group": "effect-derived-state"
+  },
+  {
+    "bank_key": "swe.frontend.k1.what-triggers-rerender",
+    "type": "multi_select",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.frontend.rendering",
+    "secondary_skill_codes": [
+      "engineering.frontend.components_state"
+    ],
+    "prompt": "In React, which of these make a function component render again? Assume the component is not wrapped in `memo`. Select all that apply.",
+    "choices": [
+      "The parent component that creates it in its JSX renders again",
+      "A value stored in one of its refs (`ref.current`) is changed",
+      "A module-level variable that it reads is reassigned",
+      "A context it reads with `useContext` gets a new value",
+      "It calls its own state setter with a different value",
+      "A `setTimeout` it started earlier fires, and the callback only logs a message"
+    ],
+    "answer": {
+      "correct": [
+        0,
+        3,
+        4
+      ]
+    },
+    "explanation": "Correct: by default a component renders whenever the parent that creates it in its JSX renders, even if its props did not change (that is what `memo` can skip). The wording matters: an element passed in from higher up as `children` was created by that higher component, so it is not re-created, and does not re-render, when only the wrapper that displays it renders. Correct: a new context value re-renders every component that reads it. Correct: setting state to a different value schedules a render. Wrong: changing `ref.current` never triggers a render; that is the point of refs. Wrong: React does not know about module-level variables. Wrong: a timer callback that does not set state or touch anything React tracks causes no render.",
+    "expected_time_s": 55
+  },
+  {
+    "bank_key": "swe.frontend.k1.memo-inline-callback",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.frontend.rendering",
+    "secondary_skill_codes": [
+      "engineering.performance.complexity"
+    ],
+    "prompt": "In React, you wrap `ProductRow` in `memo` so the rows stop re-rendering while the user types in a search box on the same page. The Profiler shows that every row still re-renders on each keystroke. The parent renders:\n\n```jsx\n<ProductRow product={p} onSelect={() => selectProduct(p.id)} />\n```\n\nThe `product` objects do not change. What is the most likely reason?",
+    "choices": [
+      "`memo` skips renders only for components that receive no props from their parent",
+      "`memo` compares props deeply, and comparing each `product` costs more than it saves",
+      "`onSelect` is a new function on each render, so `memo` sees a changed prop every time",
+      "The Profiler forces every component to render, so what it shows is not real behaviour"
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "explanation": "`memo` skips a render only if every prop is the same as last time, compared with `Object.is`. The inline arrow function is a new function on each parent render, so `onSelect` always looks changed. Fix: pass a stable function, for example a `useCallback` handler that takes an id (`onSelect={handleSelect}`, and the row calls `onSelect(product.id)`). Wrong: `memo` works with props; that is its whole purpose. Wrong: `memo` compares props shallowly, by reference, not deeply. Wrong: the Profiler records the renders that really happen; it does not cause extra ones.",
+    "expected_time_s": 55
+  },
+  {
+    "bank_key": "swe.frontend.k1.usememo-not-free",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3",
+      "L4"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.frontend.rendering",
+    "secondary_skill_codes": [
+      "engineering.system_design.trade_offs"
+    ],
+    "prompt": "In React, a teammate proposes a team rule: \"Wrap every calculation in `useMemo` and every function in `useCallback`, so the app is always fast.\" What is the best response?",
+    "choices": [
+      "Agree: memoizing has no cost, so using it on everything can only make the app faster",
+      "Push back: these hooks were deprecated in React 18 and do nothing at all in production builds",
+      "Agree for `useCallback` only: creating a new function on every render is slow, so cache each one",
+      "Push back: they cost something too; save them for measured slow work and props of `memo` children"
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "explanation": "Both hooks run on every render to compare dependencies, keep old values in memory, and add code whose dependency lists must stay correct. For cheap work this costs about as much as it saves and makes code harder to read. They pay off for calculations that are measurably slow, or to keep a reference stable for a `memo` child or an effect dependency. Wrong: they are not free. Wrong: they are not deprecated and work in production (the optional React Compiler can add memoization for you, but that is a build tool, not a reason to say the hooks do nothing). Wrong: creating a function is very cheap; `useCallback` only helps when a stable reference matters, for example for a `memo` child or an effect dependency.",
+    "expected_time_s": 55
+  },
+  {
+    "bank_key": "swe.frontend.k1.profile-before-optimising",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L2",
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "engineering.frontend.rendering",
+    "secondary_skill_codes": [
+      "engineering.debugging.tools"
+    ],
+    "prompt": "Users say a dashboard feels slow when they type in its filter box. You have not looked into it yet. What should you do first?",
+    "choices": [
+      "Record the typing in the browser's Performance panel or React Profiler to find the slow part",
+      "Wrap every component on the dashboard in `memo`, then check whether typing feels faster",
+      "Move all of the dashboard's state into a global store, because local state is slow on big pages",
+      "Add a 500 ms debounce to every input on the page, so that fewer renders happen while typing"
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "explanation": "Measure before you optimise. A recording shows which components render on each keystroke and where the time goes (rendering, a slow calculation, layout, a network call), so the fix targets the real cause. Wrong: `memo` everywhere is a guess; it adds comparison cost and often does nothing if props change anyway. Wrong: local state is not slow; moving everything to a global store can make more components re-render. Wrong: a debounce on every input changes how the whole page feels and may hide, not fix, the slow part.",
+    "expected_time_s": 45
+  },
+  {
+    "bank_key": "swe.frontend.k1.virtualise-long-list",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "engineering.frontend.rendering",
+    "secondary_skill_codes": [
+      "engineering.performance.complexity"
+    ],
+    "prompt": "A log viewer shows 20,000 rows in a scrollable table. The first render takes several seconds and scrolling is jerky. Each row is simple. Which change helps the most?",
+    "choices": [
+      "Wrap the row component in `memo`, so that rows whose data has not changed skip rendering",
+      "Render only the rows near the visible area (list virtualization) as the user scrolls",
+      "Hide the rows outside the viewport with `display: none` once they have been rendered",
+      "Sort and filter the 20,000 rows inside `useMemo` before they are passed to the table"
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "explanation": "The cost is creating and laying out 20,000 rows of DOM. Virtualization renders only the few dozen rows that fit on screen (plus a small buffer) and swaps their content while scrolling, so the work no longer grows with the list length. Pagination is another option. Wrong: `memo` can skip later re-renders, but the first render still creates all 20,000 rows. Wrong: the rows are still created first, and toggling `display` on thousands of elements is itself expensive. Wrong: memoizing the sort saves a calculation, but every row is still rendered.",
+    "expected_time_s": 45
+  },
+  {
+    "bank_key": "swe.frontend.k1.lazy-load-heavy-route",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "engineering.frontend.rendering",
+    "secondary_skill_codes": [
+      "engineering.frontend.browser_network"
+    ],
+    "prompt": "Your single-page app downloads a 2.5 MB JavaScript bundle before the home page can be used. A bundle analysis shows that 1.2 MB of it is a charting library that is only used on the Reports page, which few users open. What is the best fix?",
+    "choices": [
+      "Load the charting library from a public CDN with a `<script>` tag in the `<head>` of every page",
+      "Load the Reports page with dynamic `import()` (for example `React.lazy`) as a separate chunk",
+      "Add the `defer` attribute to the main bundle's `<script>` tag, so it loads after the HTML",
+      "Run the bundler's minifier again on the charting library with its strictest settings"
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "explanation": "Code splitting moves the Reports page and its library into a separate chunk that is downloaded only when a user opens that page, so the home page no longer pays 1.2 MB for it. Wrong: a `<script>` tag in `<head>` still downloads the library on every page, and it can block rendering. Wrong: `defer` changes when the script runs, not how many bytes are downloaded; the home page still waits for the whole bundle. Wrong: production libraries are already minified, so minifying again saves very little.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "swe.frontend.k1.improve-lcp-hero-image",
+    "type": "multi_select",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.frontend.rendering",
+    "secondary_skill_codes": [
+      "engineering.frontend.browser_network"
+    ],
+    "prompt": "On mobile, the home page's Largest Contentful Paint (LCP) is 4.8 s. The LCP element is the hero image at the top of the page: a 2.5 MB, 4000-pixel-wide JPEG with `loading=\"lazy\"`. Which changes are likely to improve LCP? Select all that apply.",
+    "choices": [
+      "Wrap the hero image component in `React.memo`",
+      "Remove `loading=\"lazy\"` from the hero image",
+      "Serve smaller versions through `srcset`, in a modern format such as WebP or AVIF",
+      "Fade the image in with a one-second CSS opacity animation",
+      "Add `fetchpriority=\"high\"` to the hero image, or preload it",
+      "Add `width` and `height` attributes to the hero image"
+    ],
+    "answer": {
+      "correct": [
+        1,
+        2,
+        4
+      ]
+    },
+    "explanation": "LCP measures when the largest visible element is painted. Correct: lazy loading delays an image that is visible right away, because the browser waits until layout to request it. Correct: a right-sized, well-compressed image downloads far faster on mobile. Correct: a high fetch priority or a preload makes the browser start the download early. Wrong: `memo` affects React re-renders, not image download or paint time. Wrong: a fade-in never makes the image arrive or paint sooner; depending on the browser, LCP is either recorded at the first faint frame (no change) or later (worse), so it cannot improve LCP. Wrong: `width` and `height` reserve space and prevent layout shift (CLS), but they do not make the image load sooner.",
+    "expected_time_s": 65
+  },
+  {
+    "bank_key": "swe.frontend.k1.cls-reserve-space",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L2",
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "engineering.frontend.rendering",
+    "secondary_skill_codes": [
+      "engineering.frontend.css_layout"
+    ],
+    "prompt": "On an article page, the text jumps down while the page loads, because images and an ad banner appear above it. Users click the wrong links, and Cumulative Layout Shift (CLS) is 0.32. What is the main fix?",
+    "choices": [
+      "Reserve their space: image `width`/`height` (or `aspect-ratio`) and a fixed ad slot size",
+      "Lazy-load the images and the ad banner, so that they arrive later during the page load",
+      "Compress the images further, so that they finish downloading before the text appears",
+      "Move the ad script to the end of the `<body>`, so that it no longer blocks the article text"
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "explanation": "Layout shift happens when content appears in space that was not reserved for it. If the browser knows the size of each image and the ad slot before they load, the text is placed correctly from the start and does not move. Wrong: lazy loading makes the content arrive later, so the jump can happen while the user is reading. Wrong: smaller files load sooner but still push the text when they arrive; you cannot rely on timing. Wrong: moving the script changes when the ad loads, not the fact that it inserts content without reserved space.",
+    "expected_time_s": 45
+  },
+  {
+    "bank_key": "swe.frontend.k1.inp-long-click-handler",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3",
+      "L4"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "engineering.frontend.rendering",
+    "secondary_skill_codes": [
+      "engineering.programming.javascript"
+    ],
+    "prompt": "On a product page, clicking a filter checkbox freezes the page for about 600 ms before the checkbox even shows as checked. The filtering runs in the browser on 30,000 products that are already loaded. Interaction to Next Paint (INP) is poor. What is the cause, and the right direction for a fix?",
+    "choices": [
+      "The checkbox has no fixed `width` and `height`, so the layout shifts when it is checked; reserve its space first",
+      "The product data is not cached by the browser; add a long `Cache-Control` header to the product API response",
+      "The checkbox's CSS transition is too slow; remove the animation so that the checked state appears at once",
+      "Long JavaScript work in the click handler blocks the main thread; paint the checkbox first, then split the work"
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "explanation": "INP measures the time from an interaction until the next frame is painted. The browser cannot paint while JavaScript is running, so 600 ms of filtering and re-rendering inside the click handling delays even the checkbox. Fix: let the checkbox update first and run the heavy work after that or in pieces, for example with `startTransition` or `useDeferredValue` in React, by yielding to the browser between chunks, by moving the filtering to a Web Worker, or by rendering fewer rows. Wrong: size and layout shift are about CLS, not about the delay before a paint. Wrong: the data is already in memory, so the network is not involved. Wrong: a CSS transition starts after a paint; it cannot freeze the page for 600 ms.",
+    "expected_time_s": 65,
+    "group": "main-thread-blocking"
+  },
+  {
+    "bank_key": "swe.frontend.k1.hydration-mismatch-causes",
+    "type": "multi_select",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.frontend.rendering",
+    "secondary_skill_codes": [
+      "engineering.debugging.hypothesis"
+    ],
+    "prompt": "A server-rendered React app (for example, Next.js) logs hydration errors: the HTML from the server does not match what React renders in the browser. Which of these can cause that? Select all that apply.",
+    "choices": [
+      "Rendering `new Date().toLocaleTimeString()` directly in the component's output",
+      "Loading extra data in `useEffect` after the page has hydrated",
+      "Rendering different markup in the browser by checking `typeof window !== 'undefined'`",
+      "Using CSS modules to style the components",
+      "Putting a `<div>` element inside a `<p>` element",
+      "Keeping form input values in `useState`"
+    ],
+    "answer": {
+      "correct": [
+        0,
+        2,
+        4
+      ]
+    },
+    "explanation": "Hydration expects the first browser render to produce exactly the server's HTML. Correct: the time (and often the time zone and locale) differs between the server and the browser. Correct: `window` exists only in the browser, so the two renders produce different markup; render browser-only values after mount (in an effect) instead. Correct: HTML does not allow a `<div>` inside a `<p>`, so the browser's parser closes the `<p>` early and the DOM no longer matches what React expects. Wrong: effects run after hydration, so their updates are normal re-renders. Wrong: CSS modules produce the same class names on server and client. Wrong: `useState` with the same initial value renders the same on both sides.",
+    "expected_time_s": 65
+  },
+  {
+    "bank_key": "swe.frontend.k1.responsive-thumbnails",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "engineering.frontend.rendering",
+    "secondary_skill_codes": [
+      "engineering.frontend.browser_network"
+    ],
+    "prompt": "A product grid page shows 60 photos as 200 × 200 pixel thumbnails. Each image file is the original 3000-pixel photo (about 1.5 MB). On mobile data, the page takes a very long time to load. What is the best fix?",
+    "choices": [
+      "Keep the original files and set CSS `width: 200px`, so the browser downloads less data",
+      "Combine the 60 photos into one large sprite image, so the page makes only one request",
+      "Serve small resized thumbnails (with `srcset`) and lazy-load the ones below the fold",
+      "Load the images with JavaScript after the page's `load` event, so the page appears sooner"
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "explanation": "The page downloads about 90 MB to show images that need only a few kilobytes each. Generating small thumbnails (with `srcset` offering 2x versions for high-density screens) cuts the bytes dramatically, and lazy loading skips images the user never scrolls to. Wrong: CSS sizing changes only how the image is displayed; the full file is still downloaded. Wrong: a sprite built from the originals is still huge, and one request does not reduce the bytes. Wrong: loading later still downloads every full-size file, and it delays even the images at the top.",
+    "expected_time_s": 45
+  },
+  {
+    "bank_key": "swe.frontend.k1.colocate-fast-state",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "engineering.frontend.rendering",
+    "secondary_skill_codes": [
+      "engineering.frontend.components_state"
+    ],
+    "prompt": "In React, a `ReportPage` component holds `const [note, setNote] = useState('')` for a small note input at the top of the page. The same component also renders a heavy `<SalesChart data={data} />`, which does not use the note. `SalesChart` is a plain component (not wrapped in `memo`). Typing in the note input lags, and the Profiler shows `SalesChart` rendering on every keystroke. Which change stops `SalesChart` from re-rendering when the note changes, without changing how the input behaves?",
+    "choices": [
+      "Wrap `data` in `useMemo`, so the chart receives the same data object on every keystroke",
+      "Debounce `setNote` by 300 ms, so the page and the chart re-render less often while typing",
+      "Give `SalesChart` a stable `key={data.length}`, so React knows the chart has not changed",
+      "Move the note input and its state into their own small component, used by `ReportPage`"
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "explanation": "State changes re-render the component that owns the state and all of its children. If the note state lives in a small `NoteInput` component, a keystroke re-renders only that component, and `ReportPage` and `SalesChart` are not touched. Wrong: a stable `data` prop does not help on its own; `SalesChart` is not wrapped in `memo`, so it still renders whenever its parent does. Wrong: debouncing a controlled input's setter makes the typed text appear late, and the chart still re-renders after each pause. Wrong: a `key` decides whether React keeps or replaces a component; a stable key keeps it, but it still re-renders with its parent.",
+    "expected_time_s": 65
+  },
+  {
+    "bank_key": "swe.frontend.k1.component-defined-inside-render",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "find_bug",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": "javascript",
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.frontend.rendering",
+    "secondary_skill_codes": [
+      "engineering.frontend.components_state"
+    ],
+    "prompt": "In React, every time the user types one letter into this input, the input loses focus, so they have to click it again. Which line causes the bug?\n\n```jsx\n1  function SignupForm() {\n2    const [email, setEmail] = useState('');\n3\n4    function EmailField() {\n5      return (\n6        <input\n7          value={email}\n8          onChange={(e) => setEmail(e.target.value)}\n9        />\n10     );\n11   }\n12\n13   return <form><EmailField /></form>;\n14 }\n```",
+    "choices": [
+      "Line 7: `value` makes the input controlled, and controlled inputs lose focus on each change",
+      "Line 4: `EmailField` is defined inside `SignupForm`, so it is a new component every render",
+      "Line 8: the arrow function is created again on every render, which resets the input's focus",
+      "Line 13: a `<form>` element re-creates all of its fields whenever any one of them changes"
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "explanation": "Each render of `SignupForm` defines a brand-new `EmailField` function. React compares element types by identity, sees a different component, unmounts the old input and mounts a new one, and the new input does not have focus. Fix: define `EmailField` outside `SignupForm` and pass `email` and `setEmail` as props, or write the `<input>` inline. Wrong: controlled inputs keep focus normally; they are the standard pattern. Wrong: a new handler function is normal; React just updates the listener and does not touch focus. Wrong: `<form>` is a plain DOM element and does not re-create its children.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "swe.frontend.k1.layout-thrashing-loop",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3",
+      "L4"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "engineering.frontend.rendering",
+    "secondary_skill_codes": [
+      "engineering.performance.complexity"
+    ],
+    "prompt": "A page shows 300 comment boxes. This code makes each `<textarea>` as tall as its text:\n\n```js\nfor (const box of textareas) {\n  box.style.height = 'auto';\n  box.style.height = box.scrollHeight + 'px';\n}\n```\n\nThe page freezes for about a second when it runs, and the browser's Performance panel shows hundreds of \"Layout\" entries inside the loop. What is the main problem?",
+    "choices": [
+      "`scrollHeight` scrolls each box to its end in order to measure it; read `offsetHeight` instead",
+      "Setting `style.height` twice repaints the whole screen each time; toggle a CSS class instead",
+      "Each read of `scrollHeight` after a write forces a new layout; batch the reads and the writes",
+      "`for...of` is slow on DOM collections such as this one; use a classic `for` loop with an index"
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "explanation": "Changing a style marks the layout as out of date. Reading a layout value such as `scrollHeight` then forces the browser to calculate layout immediately (a forced synchronous layout). Doing that 300 times, each after a new write, means 300 full layouts. Batch instead: set every box to `auto`, then read all `scrollHeight` values, then set all heights, which needs about one layout. Wrong: `scrollHeight` does not scroll anything, and `offsetHeight` also forces layout (and measures the box, not its content). Wrong: a class change invalidates layout just like an inline style; the cost is the forced layouts, not how the style is set. Wrong: the loop type makes almost no difference compared with 300 layouts.",
+    "expected_time_s": 70
+  },
+  {
+    "bank_key": "swe.frontend.k1.fetch-http-error-not-thrown",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "find_bug",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L2",
+      "L3"
+    ],
+    "language": "javascript",
+    "difficulty": "easy",
+    "primary_skill_code": "engineering.frontend.browser_network",
+    "secondary_skill_codes": [
+      "engineering.craft.correctness"
+    ],
+    "prompt": "When the API returns `404` with the body `{ \"error\": \"User not found\" }`, this page shows an empty profile instead of the error message. Which line is the problem?\n\n```js\n1  async function loadProfile(id) {\n2    try {\n3      const res = await fetch(`/api/users/${id}`);\n4      const data = await res.json();\n5      showProfile(data);\n6    } catch (err) {\n7      showError('Could not load the profile');\n8    }\n9  }\n```",
+    "choices": [
+      "Line 4: a `404` does not make `fetch` throw, and `res.ok` is never checked",
+      "Line 3: `fetch` needs `{ method: 'GET' }`, or the request is not sent at all",
+      "Line 6: `catch` must name the error type, or it does not catch HTTP errors",
+      "Line 7: `showError` runs before `res.json()` finishes, so its message is replaced"
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "explanation": "`fetch` rejects only when the request cannot complete (network failure, CORS block, abort). A `404` or `500` is a normal response, so the code parses the error body and passes `{ error: ... }` to `showProfile`. Fix: after line 3, check `if (!res.ok)` and throw or show the error. Wrong: `GET` is the default method. Wrong: JavaScript `catch` catches every thrown error and has no typed form; the problem is that nothing is thrown. Wrong: `showError` never runs here, because nothing throws.",
+    "expected_time_s": 55,
+    "group": "fetch-http-errors"
+  },
+  {
+    "bank_key": "swe.frontend.k1.when-fetch-rejects",
+    "type": "multi_select",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.frontend.browser_network",
+    "secondary_skill_codes": [
+      "engineering.programming.javascript"
+    ],
+    "prompt": "In browser JavaScript, `await fetch(url)` either returns a `Response` or throws. In which of these cases does it throw? Select all that apply.",
+    "choices": [
+      "The device is offline, so no connection can be made",
+      "The server responds with `500 Internal Server Error`",
+      "The response body is not valid JSON",
+      "The request is cancelled with an `AbortController`",
+      "The server responds with `404 Not Found`",
+      "The browser blocks the response because of a CORS error"
+    ],
+    "answer": {
+      "correct": [
+        0,
+        3,
+        5
+      ]
+    },
+    "explanation": "`fetch` throws only when it cannot give you a response. Correct: a network failure throws a `TypeError`. Correct: an aborted request throws an `AbortError`. Correct: a CORS failure also throws a `TypeError`, because the script is not allowed to see the response. Wrong: a `500` is a complete HTTP response, so `fetch` resolves and you must check `res.ok` or `res.status`. Wrong: a `404` is also a complete response, so `fetch` resolves. Wrong: invalid JSON makes `res.json()` throw later; `fetch` itself has already resolved.",
+    "expected_time_s": 60,
+    "group": "fetch-http-errors"
+  },
+  {
+    "bank_key": "swe.frontend.k1.stale-search-response",
+    "type": "multi_select",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.frontend.browser_network",
+    "secondary_skill_codes": [
+      "engineering.concurrency.fundamentals"
+    ],
+    "prompt": "A search box calls the API as the user types. Sometimes, after the user types \"laptop\", the list shows the results for \"lap\", because that slower response arrived last. Which changes reliably stop an older response from replacing newer results? Select all that apply.",
+    "choices": [
+      "Debounce the input by 300 ms, so that fewer requests are sent",
+      "Add `cache: 'no-store'` to the `fetch` call",
+      "Abort the previous request with an `AbortController` when a new one starts",
+      "Show a loading spinner while any request is in progress",
+      "Remember the latest query, and ignore any response for an older query",
+      "Use `await` for each request instead of `.then()`"
+    ],
+    "answer": {
+      "correct": [
+        2,
+        4
+      ]
+    },
+    "explanation": "The bug is a race: responses can arrive in a different order from the requests. Correct: aborting the previous request means its response is never used. Correct: checking that a response belongs to the latest query drops late answers for old queries. Wrong: debouncing sends fewer requests, but two requests can still overlap and finish out of order. Wrong: caching has nothing to do with the order of responses. Wrong: a spinner shows that work is happening but does not stop the old result from being shown. Wrong: `await` and `.then()` behave the same; each handler still runs whenever its own response arrives.",
+    "expected_time_s": 65,
+    "group": "search-race"
+  },
+  {
+    "bank_key": "swe.frontend.k1.abort-error-not-a-failure",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.frontend.browser_network",
+    "secondary_skill_codes": [
+      "engineering.craft.correctness"
+    ],
+    "prompt": "You add an `AbortController` so that each new search cancels the previous request. Now users see the toast \"Search failed, please try again\" almost every time they type, even though the results load correctly. What is the most likely cause?",
+    "choices": [
+      "Aborted requests reject with an `AbortError`, and the `catch` block reports it as a failure",
+      "Aborting a request makes the server answer with `500`, which the code reports as an error",
+      "A new `fetch` must wait until the aborted one has fully closed, so the new one times out",
+      "The browser retries aborted requests automatically, and those retries are what fail"
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "explanation": "When you call `abort()`, the old `fetch` promise rejects with a `DOMException` named `AbortError`. The existing `catch` shows the toast for every rejection, including these expected ones. Fix: `if (err.name === 'AbortError') return;` before handling real errors. Wrong: the abort happens in the browser; the server may not even notice, and no `500` is involved. Wrong: aborting does not block new requests, and the results do load. Wrong: browsers do not retry aborted requests.",
+    "expected_time_s": 50,
+    "group": "search-race"
+  },
+  {
+    "bank_key": "swe.frontend.k1.debounce-search-input",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L2",
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "engineering.frontend.browser_network",
+    "secondary_skill_codes": [],
+    "prompt": "A search-as-you-type box sends one API request per keystroke. Typing \"wireless headphones\" sends 19 requests, and the API starts returning `429 Too Many Requests`. What is the usual fix on the client?",
+    "choices": [
+      "Throttle the input to one request every 5 seconds, so the API can never be overloaded",
+      "Retry each `429` response immediately, until the API accepts the request and returns results",
+      "Debounce the input, sending the request only after typing pauses for about 300 ms",
+      "Send the requests in parallel with `Promise.all`, so that all of them finish sooner"
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "explanation": "Debouncing waits until typing pauses, so a whole word or phrase becomes one or two requests, and results still appear soon after the user stops. Wrong: a 5-second throttle makes results feel very slow and still sends requests for half-typed words. Wrong: immediate retries add even more load and get rate-limited again; `429` means slow down. Wrong: the requests already overlap; running them in parallel does not reduce their number.",
+    "expected_time_s": 45,
+    "group": "search-debounce"
+  },
+  {
+    "bank_key": "swe.frontend.k1.debounce-recreated-each-render",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "find_bug",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": "javascript",
+    "difficulty": "hard",
+    "primary_skill_code": "engineering.frontend.components_state",
+    "secondary_skill_codes": [
+      "engineering.frontend.browser_network"
+    ],
+    "prompt": "In React, this search box should call the API once the user stops typing for 300 ms. Instead, it still sends one request per keystroke, each one 300 ms late. `debounce` is a standard, correct helper (like lodash's). Which line causes the bug?\n\n```jsx\n1  function SearchBox() {\n2    const [text, setText] = useState('');\n3    const search = debounce((q) => api.search(q), 300);\n4\n5    function handleChange(e) {\n6      setText(e.target.value);\n7      search(e.target.value);\n8    }\n9\n10   return <input value={text} onChange={handleChange} />;\n11 }\n```",
+    "choices": [
+      "Line 6: `setText` must run after `search`, or the previous text is sent to the API",
+      "Line 3: a new debounced function, with its own timer, is created on every render",
+      "Line 7: `search` must be called inside a `useEffect`, not inside an event handler",
+      "Line 10: a controlled input fires `onChange` twice for each key in development"
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "explanation": "Each keystroke calls `setText`, which re-renders `SearchBox` and creates a new debounced function. Each one is called only once, so no later keystroke ever resets its timer, and every keystroke fires its own request after 300 ms. Fix: create the debounced function once, for example `useMemo(() => debounce(...), [])` or a ref, and cancel it on unmount (or debounce the value with an effect and `setTimeout`). Wrong: `search` receives `e.target.value` directly, so the order of the two calls does not matter. Wrong: calling an API from an event handler is fine; the problem is where the debounced function is created. Wrong: Strict Mode double-calls renders and effects in development, not `onChange`, and this bug also happens in production.",
+    "expected_time_s": 70,
+    "group": "search-debounce"
+  },
+  {
+    "bank_key": "swe.frontend.k1.cache-busting-hashed-assets",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.frontend.browser_network",
+    "secondary_skill_codes": [
+      "engineering.system_design.caching"
+    ],
+    "prompt": "After each release, some users keep running the old JavaScript for days, and the app breaks because the old code calls API fields that were removed. The files are served as `/app.js` and `/styles.css` with `Cache-Control: max-age=604800` (7 days). What is the standard fix that keeps caching effective?",
+    "choices": [
+      "Serve every file, including `app.js`, with `Cache-Control: no-store`, so that nothing is ever cached",
+      "Ask users in the release notes to clear their browser cache after each deployment of the app",
+      "Add a `<meta http-equiv=\"Cache-Control\" content=\"no-cache\">` tag to the head of the HTML page",
+      "Use content-hashed file names (`app.3f9c1a.js`) with long caching, and `no-cache` on `index.html`"
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "explanation": "With a fixed file name and a 7-day `max-age`, the browser keeps using its stored `app.js` without asking the server. Hashed names change whenever the content changes, so each release is a new URL; those files can be cached for a year. `index.html` is revalidated on every visit, so it always points to the latest file names. Wrong: `no-store` fixes staleness but makes every visit download everything again. Wrong: most users never read release notes, and this does not scale. Wrong: browsers ignore cache `<meta>` tags for loading scripts and styles; caching is controlled by HTTP response headers.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "swe.frontend.k1.no-cache-means-revalidate",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.frontend.browser_network",
+    "secondary_skill_codes": [
+      "engineering.system_design.caching"
+    ],
+    "prompt": "Your `index.html` is served with `Cache-Control: no-cache` and an `ETag`. In the browser's Network tab, repeat visits show `304 Not Modified` for it. A teammate says: \"`no-cache` is broken, the browser is still caching the page.\" What is correct?",
+    "choices": [
+      "The teammate is right: `no-cache` forbids storing the page at all, so this is a browser bug",
+      "The `304` means the server is down, so the browser is showing an old copy instead",
+      "This is expected: `no-cache` allows a stored copy, but it must be revalidated before use",
+      "`no-cache` applies only to proxies; browsers need `private` to stop caching the page"
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "explanation": "`no-cache` means \"store it if you like, but revalidate before every use\". The browser sends `If-None-Match` with the stored `ETag`; the `304` is the server confirming the copy is still current, so the body is not downloaded again. If the page changes, the server returns `200` with the new body. Wrong: forbidding storage is `no-store`. Wrong: `304` is a normal answer from a working server. Wrong: `no-cache` applies to browsers too, and `private` means only the browser (not shared caches) may store the response; it does not stop caching.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "swe.frontend.k1.cors-preflight-options",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "engineering.frontend.browser_network",
+    "secondary_skill_codes": [
+      "engineering.debugging.hypothesis"
+    ],
+    "prompt": "Your app at `https://shop.example.com` calls an API at `https://api.example.com`. Plain `GET` requests to the API work. A new `POST` that sends JSON with `Content-Type: application/json` fails, and the console says: \"Response to preflight request doesn't pass access control check.\" What is happening?",
+    "choices": [
+      "Browsers allow only `GET` requests across origins, so a `POST` must go through your own server",
+      "The JSON `POST` triggers a preflight `OPTIONS` request, and the API's answer lacks CORS headers",
+      "The JSON body is too large for a cross-origin request; send the data in the URL query instead",
+      "The API rejected the user's login token; the user must sign in again to make the request work"
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "explanation": "`application/json` is not one of the \"simple\" content types, so before the `POST` the browser sends an `OPTIONS` preflight asking whether this origin may use this method and these headers. The API (or its gateway) must answer the preflight with `Access-Control-Allow-Origin`, `Access-Control-Allow-Methods` and `Access-Control-Allow-Headers` (including `Content-Type`), and must not require login for `OPTIONS`. It is fixed on the server, not in the app. Wrong: cross-origin `POST` is allowed when the server permits it. Wrong: body size has nothing to do with CORS. Wrong: the browser sends the preflight without the user's credentials, and the error names the preflight; signing in again changes nothing.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "swe.frontend.k1.cors-credentials-wildcard",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3",
+      "L4"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "engineering.frontend.browser_network",
+    "secondary_skill_codes": [
+      "engineering.security.auth"
+    ],
+    "prompt": "Your app at `https://app.example.com` calls `fetch('https://api.example.com/me', { credentials: 'include' })` so that the session cookie is sent. The API responds with `Access-Control-Allow-Origin: *`, and the browser blocks the response with a CORS error. What must the API change?",
+    "choices": [
+      "Nothing on the API; the app should drop `credentials` and send the cookie in a custom header",
+      "Add `Access-Control-Allow-Headers: Cookie`, so that the browser is allowed to attach the cookie",
+      "Also return `*` in `Access-Control-Allow-Methods`, so that every method is allowed with cookies",
+      "Return the app's exact origin instead of `*`, and add `Access-Control-Allow-Credentials: true`"
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "explanation": "For requests with credentials, browsers do not accept the `*` wildcard. The API must echo one specific allowed origin (checked against an allowlist), send `Access-Control-Allow-Credentials: true`, and add `Vary: Origin` so caches keep responses per origin apart. Wrong: if the cookie is `HttpOnly`, the app cannot read it; and copying session cookies into headers weakens security. Wrong: `Cookie` is a header the browser manages itself; `Allow-Headers` is for custom request headers and does not control cookies. Wrong: the method is not the problem, and with credentials a `*` in `Allow-Methods` is not treated as a wildcard either.",
+    "expected_time_s": 60,
+    "group": "cors-credentials"
+  },
+  {
+    "bank_key": "swe.frontend.k1.httponly-cookie-not-readable",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "engineering.frontend.browser_network",
+    "secondary_skill_codes": [
+      "engineering.security.auth"
+    ],
+    "prompt": "Your app and its API are on the same origin. After login, the API sets the session in a cookie with `HttpOnly; Secure; SameSite=Lax`. A developer wants to read the cookie with `document.cookie` to put it in an `Authorization` header, but the cookie is not in `document.cookie`. What is the right approach?",
+    "choices": [
+      "Do not read it: `HttpOnly` hides it from scripts, and the browser sends it with API requests",
+      "Remove `HttpOnly`, so the app can read the cookie and copy it into the `Authorization` header",
+      "Read it from `localStorage` instead, where the browser keeps a copy of every `HttpOnly` cookie",
+      "Change it to `SameSite=None`, which lets JavaScript running on the same site read the cookie"
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "explanation": "`HttpOnly` is meant to stop JavaScript from reading the cookie, so a script injected by an XSS bug cannot steal the session. The browser attaches the cookie to same-origin requests automatically, and the API reads it from the `Cookie` header, so no `Authorization` header is needed. Wrong: removing `HttpOnly` throws away that protection. Wrong: browsers never copy cookies into `localStorage`. Wrong: `SameSite` controls whether the cookie is sent on cross-site requests; it has nothing to do with script access.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "swe.frontend.k1.token-in-localstorage-risk",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "engineering.security.auth",
+    "secondary_skill_codes": [
+      "engineering.frontend.browser_network",
+      "engineering.security.data_protection"
+    ],
+    "prompt": "A security review flags that your single-page app keeps a long-lived access token in `localStorage`. What is the main risk the reviewer means?",
+    "choices": [
+      "`localStorage` is sent to the server with every request, so the token can leak into server logs",
+      "Other websites the user visits can read your site's `localStorage` through shared storage",
+      "Any script running on your page, for example one injected by XSS, can read the token and steal it",
+      "`localStorage` is cleared when the tab is closed, so the token is lost and users are logged out"
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "explanation": "Everything in `localStorage` is readable by any JavaScript running on your origin. One XSS bug or one compromised third-party script can read a long-lived token and use it from anywhere until it expires. Keeping tokens short-lived, or in `HttpOnly` cookies (with CSRF protection), limits this. Wrong: `localStorage` is never sent automatically; cookies are. Wrong: `localStorage` is separated by origin, so other sites cannot read it. Wrong: `localStorage` persists after the tab closes; that describes `sessionStorage`.",
+    "expected_time_s": 45,
+    "group": "token-storage"
+  },
+  {
+    "bank_key": "swe.frontend.k1.session-storage-per-tab",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L2",
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "engineering.frontend.browser_network",
+    "secondary_skill_codes": [],
+    "prompt": "A multi-step checkout saves its progress in `localStorage`, so it survives a page reload. Users who work on two different orders in two tabs find that the steps get mixed up between the tabs. Which storage keeps the progress separate for each tab and still survives a reload of that tab?",
+    "choices": [
+      "A cookie with `SameSite=Strict`, which keeps the value inside one tab",
+      "`sessionStorage`, which is kept per tab and survives a reload of that tab",
+      "IndexedDB, which stores a separate database for every open tab",
+      "React component state, which the browser restores after a reload"
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "explanation": "`sessionStorage` belongs to one tab (per origin), survives reloads of that tab, and is cleared when the tab is closed, which fits per-tab checkout progress. (A duplicated tab starts with a copy.) Wrong: cookies are shared by all tabs, and `SameSite` is about cross-site requests, not tabs. Wrong: IndexedDB is shared by every tab of the same origin, like `localStorage`. Wrong: React state lives in memory and is lost on reload.",
+    "expected_time_s": 45
+  },
+  {
+    "bank_key": "swe.frontend.k1.localstorage-design-facts",
+    "type": "multi_select",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.frontend.browser_network",
+    "secondary_skill_codes": [
+      "engineering.craft.correctness"
+    ],
+    "prompt": "You plan to save each user's table settings (visible columns, sort order) in `localStorage`. Which of these facts should your code handle? Select all that apply.",
+    "choices": [
+      "Values are stored as strings, so objects need `JSON.stringify` and `JSON.parse`",
+      "The data is sent to the server with every request, so it must stay very small",
+      "Using it can throw, for example when storage is full or blocked by browser settings",
+      "The data is removed automatically when the user closes the tab",
+      "Each page path, such as `/orders` and `/reports`, gets its own separate storage",
+      "Saved data may come from an older version of your app, so check it before use"
+    ],
+    "answer": {
+      "correct": [
+        0,
+        2,
+        5
+      ]
+    },
+    "explanation": "Correct: `localStorage` stores strings only; saving an object directly stores `\"[object Object]\"`. Correct: `setItem` throws when the quota is full, and access can throw when storage is blocked, so wrap it and fall back to defaults. Correct: data stays until it is cleared, so a user may load settings saved by an older release with a different shape; validate it or store a version number. Wrong: `localStorage` is never sent to the server; cookies are. Wrong: it persists after the tab closes; that is `sessionStorage`. Wrong: storage is shared by the whole origin, not split by path.",
+    "expected_time_s": 65
+  },
+  {
+    "bank_key": "swe.frontend.k1.long-task-blocks-paint",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.frontend.browser_network",
+    "secondary_skill_codes": [
+      "engineering.programming.javascript"
+    ],
+    "prompt": "A button handler shows a spinner, runs a CSV export that takes about 2 seconds of pure JavaScript work, and then hides the spinner:\n\n```js\nbutton.onclick = () => {\n  spinner.hidden = false;\n  buildCsv(rows);      // about 2 s of synchronous work\n  spinner.hidden = true;\n};\n```\n\nUsers never see the spinner; the page just freezes for 2 seconds. Why?",
+    "choices": [
+      "`buildCsv` runs on a separate thread, so the spinner is hidden before the export even starts",
+      "The click handler runs before the DOM is ready, so changes to `spinner` are ignored",
+      "The spinner image has not been downloaded yet, so there is nothing to show until it arrives",
+      "The browser can paint only after the handler finishes, and by then the spinner is hidden"
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "explanation": "JavaScript and painting share the main thread. The browser updates the screen only between tasks, so it never gets a chance to paint the spinner before the handler hides it again. Fix: move the work to a Web Worker, or split it into chunks and yield between them (for example with `setTimeout`) so the browser can paint and stay responsive. Wrong: the 2-second freeze shows the work runs on the main thread, not on a separate one. Wrong: the user clicked a rendered button, so the DOM is ready. Wrong: an image that has not loaded would not explain the freeze, and it would appear once loaded.",
+    "expected_time_s": 55,
+    "group": "main-thread-blocking"
+  },
+  {
+    "bank_key": "swe.frontend.k1.service-worker-update-waiting",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "engineering.frontend.browser_network",
+    "secondary_skill_codes": [
+      "engineering.system_design.caching"
+    ],
+    "prompt": "Your app uses a service worker that caches the app's files. After a deployment, users who keep the app open in a tab still see the old version, even after they reload the page. The new version appears only after they close every tab of the app. What explains this?",
+    "choices": [
+      "Browsers check for a new service worker only once every 24 hours, so users must wait a day",
+      "The new service worker stays waiting until no open tab is still controlled by the old one",
+      "The CDN still serves the old `index.html`; purge the CDN cache after each deployment",
+      "Browsers cache service worker scripts forever, so the file must be renamed on each release"
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "explanation": "When the browser finds a changed service worker, it installs it, but the new one stays \"waiting\" while any tab is still controlled by the old one. A reload does not free it, because the old page is still open while the new one loads. Closing all tabs lets it activate. Common fix: show a \"new version available\" prompt, then call `skipWaiting()` in the new worker (often with `clients.claim()`) and reload. Wrong: browsers check for an updated worker on each navigation to the app; 24 hours is only the longest time the worker script may come from the HTTP cache, not a fixed delay. Wrong: a stale CDN would not be fixed by closing tabs. Wrong: the worker script is checked for changes; renaming it is a known anti-pattern that can leave old workers running.",
+    "expected_time_s": 65
+  },
+  {
+    "bank_key": "swe.frontend.k1.service-worker-cache-strategy",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3",
+      "L4"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.frontend.browser_network",
+    "secondary_skill_codes": [
+      "engineering.system_design.caching"
+    ],
+    "prompt": "Your service worker answers every request cache-first: if a response is in its cache, it is returned without asking the network. The app loads fast, but users report that their account balance and order status are often out of date. What is the best change?",
+    "choices": [
+      "Keep cache-first for every request, but delete the whole cache each time the app starts up",
+      "Switch every request to network-only, because a service worker should never cache any response",
+      "Send `Cache-Control: no-store` on API responses, because the service worker cache obeys it",
+      "Use network-first for API data (cache as offline fallback) and cache-first for hashed files"
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "explanation": "Different resources need different strategies. Versioned (hashed) static files never change, so cache-first is safe and fast. Balances and order status change often, so they should come from the network, with the cached copy used only when offline. Wrong: clearing the cache on start loses the offline and speed benefits, and data can still go stale during a session. Wrong: network-only for everything throws away fast loading and offline support for files that are safe to cache. Wrong: the Cache Storage API does not follow `Cache-Control` headers; the service worker code decides what is stored and served.",
+    "expected_time_s": 55
+  },
+  {
+    "bank_key": "swe.frontend.k1.cookie-auth-needs-csrf-protection",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.security.auth",
+    "secondary_skill_codes": [
+      "engineering.frontend.browser_network"
+    ],
+    "prompt": "Your team moves the access token from `localStorage` to an `HttpOnly` cookie, so the browser now sends it automatically with each request to your API. Which risk do you now need to handle that you did not have before?",
+    "choices": [
+      "Cross-site request forgery: other sites can make the browser send requests that carry the cookie",
+      "Cross-site scripting: injected scripts can read `HttpOnly` cookies more easily than `localStorage`",
+      "Token expiry: a cookie cannot have an expiry time, so the token now stays valid forever",
+      "Cookie theft: other websites the user visits can read your site's cookies and copy the token"
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "explanation": "Before, the token was added by your own JavaScript, so other sites could not make authenticated requests. A cookie is attached by the browser, including to requests started by another site (a form post, an image, a link), so CSRF becomes possible. Mitigations: `SameSite=Lax` or `Strict`, a CSRF token for state-changing requests, and checking the `Origin` header. Wrong: `HttpOnly` makes the cookie unreadable to scripts, which is the point of the move. Wrong: cookies support `Max-Age` and `Expires`. Wrong: a browser gives a site's cookies only to requests sent to that site; other websites cannot read them, and `HttpOnly` hides them even from your own scripts.",
+    "expected_time_s": 55,
+    "group": "token-storage"
+  }
+]

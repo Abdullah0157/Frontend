@@ -1,6 +1,6 @@
 # Software Engineering Written Assessment: Design v1
 
-Status: DRAFT, waiting for owner approval (4 Oct 2026).
+Status: APPROVED (4 Oct 2026). Built: Backend, Frontend and Full stack at Mid level (L3). Other tracks and levels need their question banks.
 Family: Software Engineering (family 1 of 22). One design, six tracks, four levels.
 Builds on: `CLAUDE.md` Part 11 (Assessment Intelligence Layer), `frameworks/skills-taxonomy.yaml`,
 `frameworks/swe-backend-v1.yaml`, `lib/assessment.js`, `lib/coding-problems.js`.

@@ -182,6 +182,25 @@ domains:
           - code: engineering.algorithms.data_structures
             label: Data structures
 
+      frontend:
+        label: Frontend
+        skills:
+          - code: engineering.frontend.components_state
+            label: Components and state
+            description: Component design, props vs state, effects, keys, data flow.
+          - code: engineering.frontend.rendering
+            label: Rendering and performance
+            description: Re-renders, memoisation, large lists, bundle size, loading speed.
+          - code: engineering.frontend.browser_network
+            label: Browser and network
+            description: Fetching, caching, cookies, CORS from the browser side, storage, the event loop in the browser.
+          - code: engineering.frontend.accessibility
+            label: Accessibility
+            description: Semantic HTML, keyboard use, labels, focus, contrast.
+          - code: engineering.frontend.css_layout
+            label: CSS and layout
+            description: Flexbox, grid, responsive layout, specificity, stacking.
+
   # ==========================================================================
   product:
     label: Product

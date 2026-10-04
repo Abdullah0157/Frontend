@@ -81,8 +81,8 @@ async function answerFor(strong, sessionId, item, language) {
   return { text: strong ? 'A careful, structured answer.' : '' }
 }
 
-async function playThrough({ strong, language, integrityEvents = null }) {
-  const start = await call('/api/assessment/start', { method: 'POST', body: { mode: 'written', track: 'backend', level: 'L3', language } })
+async function playThrough({ strong, language, integrityEvents = null, track = 'backend' }) {
+  const start = await call('/api/assessment/start', { method: 'POST', body: { mode: 'written', track, level: 'L3', language } })
   assert.equal(start.status, 200, JSON.stringify(start.data))
   const { sessionId, token } = start.data
   assert.equal(start.data.status, 'section_intro')
@@ -251,6 +251,34 @@ try {
     assert.ok(strong.report.followups.length >= 1, 'follow-up questions written')
     console.log(`  report flags: ${JSON.stringify(strong.report.validation.flags)}; summary: ${strong.report.summary ? 'yes' : 'no'}; integrity: ${strong.report.integrity.level} ${JSON.stringify(strong.report.integrity.notes)}`)
   }
+  // Frontend (JavaScript only) and Full stack (half backend, half frontend).
+  const py = await call('/api/assessment/start', { method: 'POST', body: { mode: 'written', track: 'frontend', level: 'L3', language: 'python' } })
+  assert.equal(py.status, 400, 'Frontend refuses Python')
+  for (const [track, language] of [['frontend', 'javascript'], ['fullstack', 'python'], ['fullstack', 'typescript']]) {
+    const strong = await playThrough({ strong: true, language, track })
+    const weak = await playThrough({ strong: false, language, track })
+    const line = (r) => `${r.report.overall_score * 10} (${r.report.band}) ${r.report.sections.map((s) => `${s.key}:${s.score}`).join(' ')}`
+    console.log(`${track}/${language} strong: ${line(strong)}`)
+    console.log(`${track}/${language} weak:   ${line(weak)}`)
+    assert.ok(strong.report.overall_score > weak.report.overall_score + 4, `${track}: strong clearly beats weak`)
+    assert.equal(strong.report.sections.find((s) => s.key === 'knowledge').score, 100)
+    const { rows: drawn } = await db.query(
+      `SELECT i.tracks, i.type, i.content FROM item_responses ir JOIN items i ON i.id = ir.item_id
+       JOIN assessment_sessions s ON s.id = ir.session_id WHERE s.id = $1`, [strong.sessionId])
+    assert.ok(drawn.every((d) => d.tracks.includes(track)), `${track}: only ${track} items drawn`)
+    if (language === 'python') {
+      assert.ok(drawn.filter((d) => d.type === 'coding').every((d) => d.content.function_name.python), 'Python candidate only gets Python-ready coding tasks')
+    }
+    if (track === 'fullstack') {
+      const concept = drawn.filter((d) => d.type === 'mcq' || d.type === 'multi_select')
+      const fe = concept.filter((d) => d.tracks.includes('frontend')).length
+      const be = concept.filter((d) => d.tracks.includes('backend')).length
+      const only = concept.filter((d) => d.tracks.length === 1).length
+      console.log(`  full stack knowledge mix: ${be} backend-side, ${fe} frontend-side, ${only} full-stack-only (shared items count for both sides)`)
+      assert.ok(fe >= 7 && be >= 7 && only === 3, 'full stack mixes both sides plus 3 full-stack questions')
+    }
+  }
+
   console.log('\nE2E PASSED')
 } catch (e) {
   console.error('\nE2E FAILED:', e.message)

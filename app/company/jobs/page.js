@@ -29,8 +29,8 @@ export default function CompanyJobsPage() {
   ]
   const TRACK_OPTIONS = [
     { key: 'backend', label: 'Backend', available: true },
-    { key: 'frontend', label: 'Frontend', available: false },
-    { key: 'fullstack', label: 'Full stack', available: false },
+    { key: 'frontend', label: 'Frontend', available: true },
+    { key: 'fullstack', label: 'Full stack', available: true },
     { key: 'mobile', label: 'Mobile', available: false },
     { key: 'qa', label: 'QA / Test automation', available: false },
     { key: 'devops', label: 'DevOps / Cloud', available: false },
@@ -46,7 +46,16 @@ export default function CompanyJobsPage() {
     { key: 'typescript', label: 'TypeScript' },
     { key: 'python', label: 'Python' },
   ]
-  const setTest = (patch) => setForm((f) => ({ ...f, writtenTest: { ...f.writtenTest, ...patch } }))
+  // Frontend work is JavaScript/TypeScript only; the other tracks also allow Python.
+  const TRACK_LANGUAGES = { frontend: ['javascript', 'typescript'] }
+  const languagesFor = (track) => TRACK_LANGUAGES[track] || LANGUAGE_OPTIONS.map((l) => l.key)
+  const setTest = (patch) => setForm((f) => {
+    const next = { ...f.writtenTest, ...patch }
+    const allowed = languagesFor(next.track)
+    next.languages = next.languages.filter((l) => allowed.includes(l))
+    if (next.languages.length === 0) next.languages = [...allowed]
+    return { ...f, writtenTest: next }
+  })
 
   async function suggestTest() {
     setSuggesting(true)
@@ -234,7 +243,7 @@ export default function CompanyJobsPage() {
                     <div className="md:col-span-2 grid gap-1 text-xs">
                       <span className="font-black uppercase tracking-widest text-slate-500">Candidates may code in</span>
                       <div className="flex flex-wrap gap-2">
-                        {LANGUAGE_OPTIONS.map((l) => {
+                        {LANGUAGE_OPTIONS.filter((l) => languagesFor(form.writtenTest.track).includes(l.key)).map((l) => {
                           const on = form.writtenTest.languages.includes(l.key)
                           return (
                             <button

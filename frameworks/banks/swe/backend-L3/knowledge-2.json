@@ -161,6 +161,7 @@
     "format": "concept",
     "tracks": [
       "backend",
+      "frontend",
       "fullstack"
     ],
     "levels": [
@@ -197,6 +198,7 @@
     "format": "concept",
     "tracks": [
       "backend",
+      "frontend",
       "fullstack"
     ],
     "levels": [
@@ -328,6 +330,7 @@
     "format": "concept",
     "tracks": [
       "backend",
+      "frontend",
       "fullstack"
     ],
     "levels": [
@@ -359,6 +362,7 @@
     "format": "concept",
     "tracks": [
       "backend",
+      "frontend",
       "fullstack"
     ],
     "levels": [
@@ -451,6 +455,7 @@
     "format": "concept",
     "tracks": [
       "backend",
+      "frontend",
       "fullstack"
     ],
     "levels": [
@@ -487,6 +492,7 @@
     "format": "concept",
     "tracks": [
       "backend",
+      "frontend",
       "fullstack"
     ],
     "levels": [
@@ -519,6 +525,7 @@
     "format": "concept",
     "tracks": [
       "backend",
+      "frontend",
       "fullstack"
     ],
     "levels": [
@@ -551,6 +558,7 @@
     "format": "concept",
     "tracks": [
       "backend",
+      "frontend",
       "fullstack"
     ],
     "levels": [
@@ -582,6 +590,7 @@
     "format": "concept",
     "tracks": [
       "backend",
+      "frontend",
       "fullstack"
     ],
     "levels": [
@@ -613,6 +622,7 @@
     "format": "concept",
     "tracks": [
       "backend",
+      "frontend",
       "fullstack"
     ],
     "levels": [
@@ -649,6 +659,7 @@
     "format": "concept",
     "tracks": [
       "backend",
+      "frontend",
       "fullstack"
     ],
     "levels": [
@@ -678,6 +689,7 @@
     "format": "concept",
     "tracks": [
       "backend",
+      "frontend",
       "fullstack"
     ],
     "levels": [
@@ -711,6 +723,7 @@
     "format": "concept",
     "tracks": [
       "backend",
+      "frontend",
       "fullstack"
     ],
     "levels": [
@@ -742,6 +755,7 @@
     "format": "concept",
     "tracks": [
       "backend",
+      "frontend",
       "fullstack"
     ],
     "levels": [
@@ -1131,6 +1145,7 @@
     "format": "find_bug",
     "tracks": [
       "backend",
+      "frontend",
       "fullstack"
     ],
     "levels": [
@@ -1220,6 +1235,7 @@
     "format": "code_output",
     "tracks": [
       "backend",
+      "frontend",
       "fullstack"
     ],
     "levels": [
@@ -1311,6 +1327,7 @@
     "format": "code_output",
     "tracks": [
       "backend",
+      "frontend",
       "fullstack"
     ],
     "levels": [

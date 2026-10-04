@@ -24,6 +24,7 @@ Design: `frameworks/swe-assessment-design.md`.
 | `secondary_skill_codes` | Zero to two codes from the list below. |
 | `prompt` | What the candidate reads. Markdown, code in fenced blocks. Plain English (candidates may be non-native speakers). |
 | `explanation` | For reviewers only, never shown: why the key is right and every other option is wrong. |
+| `languages` | Coding and code-review items only. The languages the item is written in: `["javascript"]`, `["python"]` or both (the default when omitted). Frontend items are JavaScript only (candidates may also answer in TypeScript). A candidate only gets items in their chosen language. |
 | `group` | Optional lowercase slug. Items that are near-duplicates share a group, and a candidate never sees two items from the same group. |
 | `expected_time_s` | Realistic seconds: knowledge 40 to 75, judgement 50 to 80, review 420 to 540, coding 1200 to 1500. |
 
@@ -101,3 +102,4 @@ Design: `frameworks/swe-assessment-design.md`.
   - `engineering.performance.complexity`
   - `engineering.tooling.{git,containers}`
   - `engineering.algorithms.data_structures`
+  - `engineering.frontend.{components_state,rendering,browser_network,accessibility,css_layout}`

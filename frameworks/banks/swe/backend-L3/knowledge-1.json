@@ -6,6 +6,7 @@
     "format": "concept",
     "tracks": [
       "backend",
+      "frontend",
       "fullstack"
     ],
     "levels": [
@@ -38,6 +39,7 @@
     "format": "concept",
     "tracks": [
       "backend",
+      "frontend",
       "fullstack"
     ],
     "levels": [
@@ -91,7 +93,8 @@
       "correct": 0
     },
     "explanation": "With OFFSET, every new notification at the top pushes older rows down one position, so the next page starts earlier and repeats items. A cursor (keyset), such as `WHERE (created_at, id) < (:last_created_at, :last_id)`, continues from the last item the user saw, so inserts do not affect it; it is also faster on deep pages. Wrong: a bigger page size only makes the problem rarer. Wrong: caching pages per user is complex and still mixes pages taken at different moments. Wrong: a total count can tell the client that something changed, but it does not change which rows the next page returns.",
-    "expected_time_s": 60
+    "expected_time_s": 60,
+    "group": "cursor-pagination"
   },
   {
     "bank_key": "swe.backend.k1.get-with-side-effects",
@@ -131,6 +134,7 @@
     "format": "concept",
     "tracks": [
       "backend",
+      "frontend",
       "fullstack"
     ],
     "levels": [
@@ -162,6 +166,7 @@
     "format": "concept",
     "tracks": [
       "backend",
+      "frontend",
       "fullstack"
     ],
     "levels": [
@@ -262,6 +267,7 @@
     "format": "concept",
     "tracks": [
       "backend",
+      "frontend",
       "fullstack"
     ],
     "levels": [
@@ -1548,6 +1554,7 @@
     "format": "concept",
     "tracks": [
       "backend",
+      "frontend",
       "fullstack"
     ],
     "levels": [

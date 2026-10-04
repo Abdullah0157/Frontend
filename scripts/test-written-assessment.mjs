@@ -52,8 +52,8 @@ function fakeBank() {
   add({ type: 'multi_select', format: 'concept', content: { choices: ['a', 'b', 'c', 'd', 'e'] } }, 8)
   add({ type: 'mcq', format: 'code_output', language: 'javascript', content: { choices: ['1', '2', '3', '4'] } }, 6)
   add({ type: 'mcq', format: 'code_output', language: 'python', content: { choices: ['1', '2', '3', '4'] } }, 6)
-  add({ type: 'coding' }, 4)
-  add({ type: 'code_review' }, 3)
+  add({ type: 'coding', content: { function_name: { javascript: 'f', python: 'f' } } }, 4)
+  add({ type: 'code_review', content: { code_by_language: { javascript: 'x', python: 'x' } } }, 3)
   add({ type: 'sjt', content: { choices: ['a', 'b', 'c', 'd'] } }, 12)
   add({ type: 'mcq', format: 'concept', levels: ['L5'] }, 5) // wrong level: must never be drawn
   return bank
@@ -282,8 +282,13 @@ test('suggestion: track, level and languages come from the title and description
   const ts = suggestAssessment({ title: 'API Engineer', description: 'TypeScript services' })
   assert.deepEqual(ts.languages.sort(), ['javascript', 'typescript'])
   const fe = suggestAssessment({ title: 'React Frontend Developer' })
-  assert.equal(fe.track, 'backend', 'unbuilt tracks fall back to Backend')
-  assert.ok(fe.reasons.some((r) => /not ready yet/.test(r)))
+  assert.deepEqual([fe.track, fe.languages], ['frontend', ['javascript']])
+  const fePy = suggestAssessment({ title: 'Frontend Engineer', description: 'Our backend is Python' })
+  assert.deepEqual(fePy.languages.sort(), ['javascript', 'typescript'], 'frontend is never coded in Python')
+  assert.equal(suggestAssessment({ title: 'Full Stack Developer (Django + React)' }).track, 'fullstack')
+  const mob = suggestAssessment({ title: 'iOS Developer' })
+  assert.equal(mob.track, 'backend', 'unbuilt tracks fall back to Backend')
+  assert.ok(mob.reasons.some((r) => /not ready yet/.test(r)))
   assert.deepEqual(suggestAssessment({ title: 'Engineer' }).languages.sort(), ['javascript', 'python', 'typescript'])
 })
 
@@ -353,4 +358,54 @@ test('follow-up questions come from the results, at most five', () => {
   assert.ok(qs.some((q) => /Indexes and query performance/.test(q.question)), 'weakest skill uses its label')
   assert.ok(qs.every((q) => q.why && q.skill))
   assert.equal(buildFollowups({ skillMap: [], coding: null, resumeCheck: null, integrity: { level: 'clear', notes: [] } }).length, 0)
+})
+
+test('frontend allows only JavaScript/TypeScript; items in other languages are never drawn', () => {
+  assert.throws(() => normaliseAssessmentConfig({ track: 'frontend', level: 'L3', languages: ['python'] }), /JavaScript|javascript/)
+  assert.deepEqual(normaliseAssessmentConfig({ track: 'frontend', level: 'L3', languages: ['python', 'typescript'] }).languages, ['typescript'])
+  const bank = fakeBank().map((it) => ({ ...it, tracks: ['frontend'] }))
+  // One coding task exists only in Python: a JavaScript candidate must not get it.
+  bank.filter((i) => i.type === 'coding').forEach((i, k) => { i.content = { function_name: k === 0 ? { python: 'f' } : { javascript: 'f' } } })
+  const pyOnly = bank.find((i) => i.type === 'coding' && !i.content.function_name.javascript).id
+  for (let seed = 1; seed <= 15; seed++) {
+    const form = drawForm(getBlueprint({ track: 'frontend', level: 'L3' }), bank, { language: 'javascript', seed })
+    assert.ok(!form.sections.flatMap((s) => s.items).some((i) => i.itemId === pyOnly))
+  }
+})
+
+test('full stack takes half its concept questions from each side', () => {
+  const bank = []
+  let n = 0
+  const add = (tracks, count, extra = {}) => { for (let i = 0; i < count; i++) bank.push({ id: `fs-${++n}`, type: 'mcq', format: 'concept', tracks, levels: ['L3'], language: null, primary_skill_code: `s.${n % 9}`, content: { choices: ['a', 'b', 'c', 'd'] }, ...extra }) }
+  add(['backend', 'fullstack'], 30)
+  add(['frontend', 'fullstack'], 30)
+  add(['fullstack'], 4)
+  add(['backend', 'fullstack'], 6, { format: 'code_output', language: 'javascript' })
+  add(['backend', 'fullstack'], 3, { type: 'coding', content: { function_name: { javascript: 'f' } } })
+  add(['frontend', 'fullstack'], 3, { type: 'code_review', content: { code_by_language: { javascript: 'x' } } })
+  add(['backend', 'fullstack'], 8, { type: 'sjt', content: { choices: ['a', 'b', 'c', 'd'] } })
+  const bp = getBlueprint({ track: 'fullstack', level: 'L3' })
+  const byId = new Map(bank.map((b) => [b.id, b]))
+  const form = drawForm(bp, bank, { language: 'javascript', seed: 11 })
+  assert.ok(formIsUsable(form))
+  for (let seed = 1; seed <= 20; seed++) {
+    const f = drawForm(bp, bank, { language: 'javascript', seed })
+    const concept = f.sections[0].items.map((i) => byId.get(i.itemId)).filter((it) => it.format === 'concept')
+    const fe = concept.filter((it) => it.tracks.includes('frontend')).length
+    const be = concept.filter((it) => it.tracks.includes('backend')).length
+    const only = concept.filter((it) => it.tracks.length === 1).length
+    assert.deepEqual([concept.length, only, be, fe], [17, 3, 7, 7], `seed ${seed}: backend ${be}, frontend ${fe}, full-stack-only ${only}`)
+  }
+})
+
+import { toItemRow } from '../lib/assessment-bank.js'
+
+test('seeder change detection covers tags, not just the text', () => {
+  const base = { bank_key: 'x.y.z', type: 'mcq', section: 'knowledge', format: 'concept', tracks: ['backend'], levels: ['L3'], language: null,
+    difficulty: 'easy', primary_skill_code: 'engineering.backend.http', prompt: 'p'.repeat(30), choices: ['a', 'b', 'c', 'd'], answer: { correct: 0 }, explanation: 'e'.repeat(40), expected_time_s: 60 }
+  const h = (it) => toItemRow(it).content_hash
+  assert.notEqual(h(base), h({ ...base, tracks: ['backend', 'frontend'] }), 'retagging a track is a change')
+  assert.notEqual(h(base), h({ ...base, levels: ['L2', 'L3'] }))
+  assert.notEqual(h(base), h({ ...base, group: 'g' }))
+  assert.equal(h(base), h({ ...base }), 'same item, same hash')
 })
