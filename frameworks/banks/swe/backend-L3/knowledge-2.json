@@ -1,0 +1,1578 @@
+[
+  {
+    "bank_key": "swe.backend.k2.sql-injection-bound-parameter",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L2",
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "engineering.security.injection",
+    "secondary_skill_codes": [
+      "engineering.programming.sql"
+    ],
+    "prompt": "An endpoint builds this query by joining the `name` value from the URL straight into the SQL text:\n\n```sql\nSELECT * FROM orders WHERE customer = '...name from the URL...'\n```\n\nA security scan flags it as SQL injection. What is the most reliable fix?",
+    "choices": [
+      "Remove single quote characters from the name before adding it to the query text",
+      "Reject any name that contains words such as SELECT, DROP, UNION or DELETE",
+      "Pass the name as a bound parameter (such as `customer = $1`), not inside the SQL text",
+      "Run the query as a read-only database user, so that an attacker cannot change any data"
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "explanation": "Correct: a bound parameter is sent to the database separately from the SQL text, so the value is never parsed as SQL, whatever characters it contains. Wrong (remove quotes): this is a home-made escape that breaks real names such as O'Brien and does not protect places in a query where no quote is needed, such as numeric comparisons. Wrong (keyword blocklist): easy to bypass with comments, mixed case or encodings, and it also rejects real data. Wrong (read-only user): good defence in depth, but the attacker can still read every row the user can see, which is often the worst outcome.",
+    "expected_time_s": 45
+  },
+  {
+    "bank_key": "swe.backend.k2.command-injection-argument-list",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.security.injection",
+    "secondary_skill_codes": [],
+    "prompt": "A service makes thumbnails by building one command string and running it through the system shell:\n\n```\nconvert <file name from the upload form> -resize 200x200 out.png\n```\n\nThe file name comes straight from the user. Which change best removes the command injection risk?",
+    "choices": [
+      "Put double quotes around the file name inside the command string before running it",
+      "Wrap the call in error handling, and log every command that fails so it can be reviewed",
+      "Limit the file name to 100 characters, so that a long attack payload cannot fit inside it",
+      "Pass the name as a separate argument with no shell, and check it against an allowed pattern"
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "explanation": "Correct: running the program with an argument list (for example `execFile` in Node.js, or `subprocess.run([...])` without `shell=True` in Python) means no shell parses the input, so `;`, `&&` and `$( )` have no effect; the allowed pattern also stops names like `-option` being read as program flags. Wrong (double quotes): `$( )` still runs inside double quotes, and the attacker can close the quotes with their own quote character. Wrong (error handling): it runs after the injected command has already executed. Wrong (length limit): payloads such as `x; rm -rf /` are very short.",
+    "expected_time_s": 55
+  },
+  {
+    "bank_key": "swe.backend.k2.idor-missing-ownership-check",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L2",
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "engineering.security.auth",
+    "secondary_skill_codes": [
+      "engineering.backend.api_design"
+    ],
+    "prompt": "A signed-in user changes the URL from `/api/invoices/1041` to `/api/invoices/1042` and sees another company's invoice. Their session token is valid and belongs to them. What is the root cause?",
+    "choices": [
+      "The session token is not signed, so the user was able to forge a new one",
+      "The endpoint checks who the user is, but not whether the invoice belongs to them",
+      "Invoice ids are sequential numbers, which makes other companies' invoices easy to find",
+      "The endpoint uses GET, but reading private data should always use POST"
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "explanation": "Correct: authentication (who you are) worked; authorization (what you may access) is missing. The server must check on every request that the invoice belongs to the caller's company (this bug is called an insecure direct object reference). Wrong (unsigned token): the token was valid and was the user's own, so nothing was forged. Wrong (sequential ids): they make the hole easier to find, but random ids only hide it; any leaked id would still work. Wrong (GET vs POST): the HTTP method does not control access; a POST endpoint without the ownership check has the same hole.",
+    "expected_time_s": 45,
+    "group": "ownership-check"
+  },
+  {
+    "bank_key": "swe.backend.k2.password-storage-slow-hash",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L2",
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "engineering.security.data_protection",
+    "secondary_skill_codes": [
+      "engineering.security.auth"
+    ],
+    "prompt": "You are building sign-up for a new service. How should you store user passwords?",
+    "choices": [
+      "Hash them with a slow, salted password hashing function such as bcrypt or Argon2",
+      "Hash them with SHA-256 and a per-user salt, because SHA-256 is a secure hash",
+      "Encrypt them with AES, and keep the key in an environment variable on the server",
+      "Hash them twice with MD5, so that standard MD5 lookup tables no longer work"
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "explanation": "Correct: bcrypt, scrypt and Argon2 are built to be slow (Argon2 and scrypt also use lots of memory), with a tunable cost and a built-in salt, so an attacker who steals the table can test very few guesses per second. Wrong (salted SHA-256): the salt stops precomputed tables, but SHA-256 is fast, so GPUs try billions of guesses per second and weak passwords fall quickly. Wrong (AES): encryption is reversible; whoever gets the key (often stolen with the database) gets every password, and login never needs to decrypt. Wrong (double MD5): still very fast and unsalted, so it is cracked as easily as plain MD5.",
+    "expected_time_s": 40
+  },
+  {
+    "bank_key": "swe.backend.k2.jwt-cannot-revoke",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.security.auth",
+    "secondary_skill_codes": [],
+    "prompt": "Your API issues JWT access tokens that are valid for 7 days. The server accepts any token with a valid signature and does not store tokens anywhere. A user's laptop is stolen, and they ask you to sign them out on all devices. What is the problem with this design?",
+    "choices": [
+      "The thief can change the user id in the token, because its payload is only Base64-encoded",
+      "Deleting the user's row in the sessions table signs the thief out, so there is no problem",
+      "Tokens already issued keep working until they expire, because the server cannot reject them",
+      "The tokens stop working when the password changes, because the password is used to sign them"
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "explanation": "Correct: a stateless JWT is valid until it expires, and with no state on the server there is nothing to check it against, so it cannot be revoked. Common fixes: short-lived access tokens (minutes) with refresh tokens stored on the server that can be revoked, or a per-user token version or deny list checked on each request. Wrong (change the user id): anyone can read the payload, but changing it breaks the signature, so the server would reject it. Wrong (sessions table): this design has no sessions table; that is how server-side sessions work, not stateless JWTs. Wrong (password signs them): tokens are signed with the server's key, not the user's password, so a password change does not affect tokens already issued.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "swe.backend.k2.session-cookie-flags",
+    "type": "multi_select",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.security.auth",
+    "secondary_skill_codes": [
+      "engineering.backend.http"
+    ],
+    "prompt": "Your web app keeps the session id in a cookie. Which cookie settings reduce the risk of the session being stolen or misused? Select all that apply.",
+    "choices": [
+      "`HttpOnly`, so JavaScript running on the page cannot read the cookie",
+      "A `Max-Age` of one year, so users rarely have to sign in again",
+      "`Secure`, so the browser only sends the cookie over HTTPS",
+      "Also storing the user's email address in the cookie, next to the session id",
+      "`SameSite=Lax` or `Strict`, so most cross-site requests do not include it"
+    ],
+    "answer": {
+      "correct": [
+        0,
+        2,
+        4
+      ]
+    },
+    "explanation": "Correct: HttpOnly stops a cross-site scripting bug from reading the session id; Secure stops it being sent over plain HTTP, where it can be captured; SameSite stops the browser attaching it to most requests started by other sites, which blocks most cross-site request forgery. Wrong (one-year Max-Age): a convenience choice that makes a stolen cookie useful for longer. Wrong (email in the cookie): it leaks personal data and adds nothing the server cannot look up from the session.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "swe.backend.k2.leaked-secret-rotate-first",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.security.data_protection",
+    "secondary_skill_codes": [
+      "engineering.tooling.git"
+    ],
+    "prompt": "A developer pushed a commit containing the production database password to the shared Git repository an hour ago. What should happen first?",
+    "choices": [
+      "Push a new commit that deletes the password, and add the file to `.gitignore`",
+      "Rewrite the Git history to remove the commit, then force-push the shared branch",
+      "Make the repository private, so that nobody else is able to open the commit",
+      "Change the database password and disable the old one, then remove it from the code"
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "explanation": "Correct: once pushed, assume the secret is compromised; it may already be in clones, forks, CI caches and logs. Rotating it is the only step that makes the leaked value useless; cleaning the code comes after. Wrong (delete in a new commit): the password stays in the history, where anyone can find it. Wrong (rewrite history first): this can be done later, but copies already pulled still contain the password, and it keeps working in the meantime. Wrong (make private): it does not affect people or systems that already have a copy, and the repository may already be private.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "swe.backend.k2.least-privilege-db-user",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "engineering.security.data_protection",
+    "secondary_skill_codes": [
+      "engineering.security.auth"
+    ],
+    "prompt": "A reporting service only reads from three tables. Today it connects to the database as the same user as the main app, which owns every table. What is the main benefit of giving it its own database user that can only SELECT from those three tables?",
+    "choices": [
+      "A bug or an attack in that service can no longer change data or read the app's other tables",
+      "Its queries run faster, because the database has fewer permissions to check each time",
+      "Its password can be shared more widely, because a user that only reads cannot cause harm",
+      "SQL injection in the service is no longer a risk, because only SELECT statements are allowed"
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "explanation": "Correct: least privilege limits the damage of a breach or a bug: the service cannot write or delete data, and it cannot read tables it does not need. Wrong (faster): permission checks are not a meaningful performance cost. Wrong (share the password): read access to business data is valuable to attackers, so the credentials still need the same care. Wrong (no injection risk): an attacker can still inject queries that read everything in those three tables; parameterised queries fix injection, while least privilege only limits the damage.",
+    "expected_time_s": 45
+  },
+  {
+    "bank_key": "swe.backend.k2.ssrf-link-preview",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3",
+      "L4"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "engineering.security.injection",
+    "secondary_skill_codes": [
+      "engineering.backend.http"
+    ],
+    "prompt": "A \"link preview\" feature lets users submit a URL; your server fetches it and returns the page title. A security review warns that an attacker could make the server fetch `http://169.254.169.254/` (the cloud metadata service, which can return credentials) or internal admin services. Which defence is most effective?",
+    "choices": [
+      "Reject any URL whose text contains `169.254`, `localhost` or `127.0.0.1`",
+      "Only allow URLs that start with `https://`, since internal services normally use plain HTTP",
+      "Require users to be signed in before they can use the link preview feature",
+      "Resolve the host, block private and link-local IPs, and repeat the check on every redirect"
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "explanation": "Correct: this is server-side request forgery. The check must be on the IP address the server will actually connect to, after DNS resolution, and repeated for every redirect (ideally connect to the address you checked, and also limit outgoing traffic at the network level). Wrong (text blocklist): easy to bypass with a domain name that resolves to an internal IP, another IP format such as `2852039166`, or a redirect from an outside site. Wrong (https only): internal services can use HTTPS too, and DNS or redirect tricks still reach them. Wrong (sign-in): it limits who can attack, but any signed-in user can still make the server fetch internal addresses.",
+    "expected_time_s": 65
+  },
+  {
+    "bank_key": "swe.backend.k2.logs-keep-secrets-out",
+    "type": "multi_select",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "engineering.security.data_protection",
+    "secondary_skill_codes": [
+      "engineering.operations.monitoring"
+    ],
+    "prompt": "You are adding request logging to a payments API. Which of these values should be kept out of the logs, or masked before logging? Select all that apply.",
+    "choices": [
+      "The HTTP status code and how long the request took",
+      "The full card number from the request body",
+      "The request id that links the log lines of one request",
+      "The `Authorization` header containing the user's bearer token",
+      "The route name, such as `POST /payments`",
+      "The password sent to the login endpoint"
+    ],
+    "answer": {
+      "correct": [
+        1,
+        3,
+        5
+      ]
+    },
+    "explanation": "Correct: card numbers, bearer tokens and passwords are secrets or regulated data. Logs are copied to many systems and read by many people, so anyone with log access could take over accounts or steal card data (card rules also forbid storing full card numbers this way). Drop them or mask them, for example keep only the last 4 digits. Wrong: the status code, duration, request id and route name contain no secrets and are exactly what you need for debugging and metrics.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "swe.backend.k2.vulnerable-indirect-dependency",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.security.data_protection",
+    "secondary_skill_codes": [
+      "engineering.craft.testing"
+    ],
+    "prompt": "A dependency scanner reports a critical vulnerability in a library your service uses indirectly (a package you depend on uses it). A fixed version of the library exists. What is the best next step?",
+    "choices": [
+      "Ignore the report, because your own code never calls the vulnerable library directly",
+      "Upgrade it to the fixed version (with an override if needed), run the tests, then deploy",
+      "Delete the lock file and reinstall, so every package moves to its newest version",
+      "Copy the library's code into your repository so the scanner stops reporting it"
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "explanation": "Correct: indirect dependencies run inside your process, and the package that uses them may pass your input straight to the vulnerable code. Upgrade the library (package managers support an override or resolution when the parent package pins the old version), run the tests to catch breaking changes, and deploy. Wrong (ignore): your direct dependency calls the vulnerable code for you. Wrong (delete the lock file): it pulls in many unrelated changes that are hard to test, and may still not move the pinned version. Wrong (copy the code): it hides the warning but keeps the vulnerability, and you now maintain unpatched code yourself.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "swe.backend.k2.server-side-authorization",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L2",
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "engineering.security.auth",
+    "secondary_skill_codes": [
+      "engineering.backend.api_design"
+    ],
+    "prompt": "The admin page hides the \"Delete user\" button from normal users. The button calls `DELETE /api/users/:id`. A tester shows that a normal user can still delete users by calling that API directly with curl. What is the correct fix?",
+    "choices": [
+      "Rename the endpoint to a long random path that normal users cannot guess",
+      "Check the user's role in the frontend code before it sends the request",
+      "Check the caller's role on the server in that endpoint, and return 403 if not allowed",
+      "Require a CSRF token on the request, so that only the admin page is able to call the API"
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "explanation": "Correct: authorization must be enforced on the server, because everything on the client is under the user's control. Wrong (random path): security by obscurity; the path appears in the browser's network tab and in the frontend code. Wrong (frontend check): a user-interface convenience that curl skips completely. Wrong (CSRF token): it stops other websites from making requests in the user's name, but here the attacker is the signed-in user, who can read their own token.",
+    "expected_time_s": 45
+  },
+  {
+    "bank_key": "swe.backend.k2.integration-test-for-sql",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.craft.testing",
+    "secondary_skill_codes": [
+      "engineering.programming.sql"
+    ],
+    "prompt": "Your `OrderRepository` runs a hand-written SQL query with a JOIN and a date range filter. Which test gives the most confidence that this query returns the right rows?",
+    "choices": [
+      "An integration test that runs it on a real database of the same type, with known data",
+      "A unit test that mocks the database driver and checks the exact SQL string sent",
+      "An end-to-end browser test that opens the order history page and counts the rows",
+      "A unit test that mocks the repository and checks the service calls it exactly once"
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "explanation": "Correct: only running the query on the same database engine checks the syntax, the join and the date boundaries (including time zones) against real rows; a container makes this fast and repeatable. Wrong (check the SQL string): it only proves you typed what you typed; a wrong JOIN still passes. Wrong (browser test): slow, flaky and far from the query, and the date edge cases are hard to reach through the UI. Wrong (mock the repository): the query never runs at all.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "swe.backend.k2.mock-at-the-boundary",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.craft.testing",
+    "secondary_skill_codes": [],
+    "prompt": "You are unit testing `chargeCustomer()`. It calculates the amount (discounts and tax), calls a third-party payment API over HTTP, and saves the result. What is the best way to use mocks here?",
+    "choices": [
+      "Mock every function that `chargeCustomer` calls, including the amount calculation",
+      "Use no mocks, and call the payment provider's real API in every unit test run",
+      "Mock the HTTP library's internal functions, so that the request looks real to your own code",
+      "Replace the payment API client with a fake, and let your own calculation code run for real"
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "explanation": "Correct: mock at the boundary you do not own (the network call to the provider), ideally behind your own small client interface, and keep your own logic real so the test catches calculation bugs. Wrong (mock everything): the calculation is no longer tested, and the test breaks on every refactor. Wrong (real API): slow, fails for reasons outside your code, and may create real charges. Wrong (mock the HTTP library's internals): ties your tests to how another library works inside; a fake of your own client, or an HTTP-level stub, is far more stable.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "swe.backend.k2.flaky-test-causes",
+    "type": "multi_select",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.craft.testing",
+    "secondary_skill_codes": [
+      "engineering.debugging.hypothesis"
+    ],
+    "prompt": "A test passes on your laptop but sometimes fails on the CI server, with no code changes. Which of these are likely causes? Select all that apply.",
+    "choices": [
+      "The test uses the real current time, so its result changes near midnight or month end",
+      "The test checks the exact text of the error message the function returns",
+      "The test relies on data left by another test, and CI runs tests in a different order",
+      "The test is written with async/await instead of callbacks",
+      "The test waits a fixed 100 ms for a background job, and CI machines are slower"
+    ],
+    "answer": {
+      "correct": [
+        0,
+        2,
+        4
+      ]
+    },
+    "explanation": "Correct: the real clock, shared state that depends on test order, and fixed sleeps that race against slower machines are three of the most common causes of intermittent failures. Wrong (exact message): brittle, because it breaks when the message changes, but it gives the same result on every run, so it is not flaky. Wrong (async/await): the syntax itself is deterministic; flakiness comes from missing awaits or races, not from using async/await.",
+    "expected_time_s": 65
+  },
+  {
+    "bank_key": "swe.backend.k2.test-pyramid-direction",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3",
+      "L4"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.craft.testing",
+    "secondary_skill_codes": [
+      "engineering.system_design.trade_offs"
+    ],
+    "prompt": "Your team's suite has 400 end-to-end browser tests and very few unit tests. It takes 50 minutes to run and fails at random a few times a week. What is the best long-term direction?",
+    "choices": [
+      "Cover most rules with unit and integration tests, and keep a few end-to-end tests for key flows",
+      "Run the same 400 tests in parallel on more CI machines, so the suite finishes sooner",
+      "Keep all the tests, and add automatic retries so each failing test runs up to three times",
+      "Run the end-to-end tests only once a month, so that they block the team less often"
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "explanation": "Correct: the test pyramid trade-off. Unit and integration tests are fast, stable and point at the broken code; a small set of end-to-end tests still checks that the parts work together on the most important user journeys. Wrong (run in parallel): it cuts the waiting time, but the suite stays flaky, expensive to maintain and slow to point at the broken code. Wrong (retries): they hide real failures, including real race conditions, and make the suite slower still. Wrong (monthly): bugs are found weeks after they were written, when they are much harder to trace.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "swe.backend.k2.boundary-test-cases",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L2",
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "engineering.craft.testing",
+    "secondary_skill_codes": [
+      "engineering.craft.correctness"
+    ],
+    "prompt": "You wrote a function for shipping cost: orders of 50.00 or more ship free, otherwise shipping costs 4.99, and an order must have at least one item. Which set of test cases is most useful?",
+    "choices": [
+      "Orders of 10.00, 20.00 and 30.00, to check that the paid case works several times",
+      "One order of 100.00, because a single passing test shows that the logic works",
+      "Orders of 49.99, 50.00 and 50.01, plus an empty order that must be rejected",
+      "Orders of 0.01 and 1,000,000.00, because extreme values find the most bugs"
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "explanation": "Correct: bugs cluster at boundaries (for example `>` instead of `>=` at exactly 50.00), and the empty-order rule needs its own test. Wrong (10, 20, 30): three values from the same range test the same path three times. Wrong (one order of 100): it covers only the free-shipping path and none of the rules around it. Wrong (extremes): sometimes worth adding, but these two miss the 50.00 boundary and the empty-order rule, which is where the real risk is.",
+    "expected_time_s": 45
+  },
+  {
+    "bank_key": "swe.backend.k2.refactor-untested-code",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.craft.refactoring",
+    "secondary_skill_codes": [
+      "engineering.craft.testing"
+    ],
+    "prompt": "You must restructure a 300-line function in the billing service. It has no tests and runs in production every day. What is the safest way to start?",
+    "choices": [
+      "Rewrite the function from scratch in a cleaner style, then test the new version by hand",
+      "Make every change in one large commit, so it is easy to revert if something breaks",
+      "Ask a senior engineer to review the new code carefully, instead of writing tests first",
+      "Write tests that pin down today's behaviour, then change the code in small, tested steps"
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "explanation": "Correct: characterisation tests capture what the code does now, including odd cases callers may rely on; small steps, with the tests run after each one, show exactly which change broke something. Wrong (rewrite and test by hand): a rewrite loses undocumented behaviour, and manual testing misses cases. Wrong (one large commit): hard to review and debug, and a revert only helps after customers are affected. Wrong (review instead of tests): reviewers are good at design and style problems but poor at spotting small behaviour changes in 300 lines of billing logic.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "swe.backend.k2.error-handling-catch-what-you-can",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.craft.correctness",
+    "secondary_skill_codes": [
+      "engineering.craft.readability"
+    ],
+    "prompt": "A function that loads a user profile catches every exception, logs the word \"error\", and returns `null`. Callers later fail with \"cannot read property name of null\", far from the real cause. What is the best improvement?",
+    "choices": [
+      "Keep catching everything, but return an empty profile object so callers do not crash",
+      "Handle only expected errors like 'not found', and let others pass up with message and stack",
+      "Remove all error handling, so that any problem crashes the process straight away",
+      "Catch every error and retry the whole function three times before finally returning `null`"
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "explanation": "Correct: handle the cases you can handle meaningfully (a missing user becomes a clear \"not found\" result or a 404), and let unexpected errors propagate, or wrap them with context, so the logs show the real message and stack where it happened. Wrong (empty object): it hides the failure even further and can show wrong data to users. Wrong (no handling at all): some errors are normal, and a missing user should not crash the service. Wrong (retry three times): retries help only with temporary failures; they waste time on bugs and on \"not found\", and still hide the cause.",
+    "expected_time_s": 55
+  },
+  {
+    "bank_key": "swe.backend.k2.tests-coupled-to-implementation",
+    "type": "multi_select",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3",
+      "L4"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.craft.testing",
+    "secondary_skill_codes": [
+      "engineering.craft.refactoring"
+    ],
+    "prompt": "You are reviewing unit tests for an `OrderService`. Its public method is `placeOrder`, which uses private helper functions such as `validateBasket`, `calcSubtotal` and `applyTax`. Which of these assertions test implementation details, and are likely to break during a refactor that does not change behaviour? Select all that apply.",
+    "choices": [
+      "It asserts that `calcSubtotal` was called exactly twice",
+      "It asserts that `placeOrder` returns a total of 23.50 for a given basket",
+      "It asserts that one `OrderPlaced` message is published to the queue per order",
+      "It asserts that `validateBasket` ran before `calcSubtotal` and `applyTax`",
+      "It asserts that `placeOrder` rejects an empty basket with a validation error"
+    ],
+    "answer": {
+      "correct": [
+        0,
+        3
+      ]
+    },
+    "explanation": "Correct: the call count of a private helper and the order in which private helpers run describe how the code works today, not what it promises; merging or reordering helpers breaks these tests even when every result is the same. Wrong (returned total): that is the main behaviour. Wrong (OrderPlaced message): publishing the event is an observable effect that other services rely on, so checking it at the boundary is a behaviour test. Wrong (empty basket rejected): rejecting invalid input is part of the contract.",
+    "expected_time_s": 70
+  },
+  {
+    "bank_key": "swe.backend.k2.rebase-shared-branch",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.tooling.git",
+    "secondary_skill_codes": [],
+    "prompt": "You pushed your feature branch yesterday, and a teammate pulled it and is adding commits on top of it locally. Today you rebase your branch onto the latest `main` and try to push it. What happens?",
+    "choices": [
+      "A normal push works, and Git updates your teammate's copy smoothly on their next pull",
+      "A normal push works, because a rebase keeps the same commit ids and only moves them",
+      "A normal push is rejected; force-pushing replaces commits your teammate's work is built on",
+      "The push is rejected, and the only fix is to delete the branch and open a new pull request"
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "explanation": "Correct: rebasing creates new commits with new ids, so the remote branch is no longer an ancestor of yours and a normal push is rejected. A force-push replaces the old commits, but your teammate's local work still sits on them, so their next pull brings duplicate commits or conflicts. Agree with them first, or merge `main` into shared branches instead of rebasing. Wrong (works smoothly): Git sees two histories that have split. Wrong (same ids): a commit's id depends on its parent, so a rebase always creates new ids. Wrong (delete the branch): force-pushing (ideally with `--force-with-lease`) or merging are normal options; deleting the branch is not needed.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "swe.backend.k2.undo-pushed-commit",
+    "type": "multi_select",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L2",
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "engineering.tooling.git",
+    "secondary_skill_codes": [],
+    "prompt": "A commit merged into the shared `main` branch yesterday broke a feature. Several teammates have pushed commits after it. Which are safe ways to undo the damage? Select all that apply.",
+    "choices": [
+      "`git reset --hard` to the commit before it, then force-push `main`",
+      "`git revert <commit>`, which adds a new commit that undoes it, then push",
+      "Drop the commit with an interactive rebase, then force-push `main`",
+      "Push a new commit that fixes the broken code (a fix forward)"
+    ],
+    "answer": {
+      "correct": [
+        1,
+        3
+      ]
+    },
+    "explanation": "Correct: revert and fix-forward both add new commits, so the shared history is not rewritten and teammates can pull normally. Wrong (reset and force-push): it deletes every teammate commit made after the bad one and breaks everyone's local copy. Wrong (interactive rebase and force-push): it rewrites the ids of every later commit, which breaks everyone who has already pulled `main`.",
+    "expected_time_s": 55
+  },
+  {
+    "bank_key": "swe.backend.k2.resolve-merge-conflict",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "engineering.tooling.git",
+    "secondary_skill_codes": [
+      "engineering.craft.correctness"
+    ],
+    "prompt": "During a merge, Git reports a conflict in the file that calculates prices. Your branch changed the discount rule; `main` changed the tax rule in the same function. How should you resolve it?",
+    "choices": [
+      "Keep your version of the whole file, since your branch is the one being merged",
+      "Remove the conflict markers only, and leave both versions of the code in the file",
+      "Keep `main`'s version of the whole file, and redo your own change in a later pull request",
+      "Edit the code to keep both the new discount rule and the new tax rule, then run the tests"
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "explanation": "Correct: both changes are wanted, so the resolved code must combine them; then remove the markers, run the tests (the two rules interact in one function) and commit. Wrong (keep your file): it silently throws away the tax change from `main`. Wrong (remove markers only): it leaves duplicate or broken code. Wrong (keep main's file): it throws away your work and creates needless rework.",
+    "expected_time_s": 45
+  },
+  {
+    "bank_key": "swe.backend.k2.gitignore-tracked-file",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.tooling.git",
+    "secondary_skill_codes": [
+      "engineering.security.data_protection"
+    ],
+    "prompt": "A `.env` file was committed to the repository weeks ago. You add `.env` to `.gitignore`, but `git status` still shows the file as modified whenever you edit it. Why?",
+    "choices": [
+      "Ignore rules only apply to untracked files; `git rm --cached .env` stops tracking it",
+      "Changes to `.gitignore` only take effect after you push them to the remote",
+      "The pattern needs a leading slash, written as `/.env`, to match a file in the root folder",
+      "Git caches `.gitignore`, so you have to restart your terminal or editor first"
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "explanation": "Correct: once a file is tracked, ignore rules do not apply to it. `git rm --cached` removes it from the index while keeping your local copy, and after the next commit Git stops tracking it. The file is still in old commits, so any real secrets in it must also be rotated. Wrong (push first): `.gitignore` is read locally; pushing changes nothing. Wrong (leading slash): `.env` without a slash matches the file in any folder, including the root. Wrong (restart): Git reads `.gitignore` every time it runs; there is nothing to restart.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "swe.backend.k2.docker-layer-cache-order",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.tooling.containers",
+    "secondary_skill_codes": [],
+    "prompt": "Every build of this image takes 4 minutes, even when you change only one line in `server.js`:\n\n```dockerfile\nFROM node:22-slim\nWORKDIR /app\nCOPY . .\nRUN npm ci          # install dependencies\nCMD [\"node\", \"server.js\"]\n```\n\nWhich change makes most builds much faster?",
+    "choices": [
+      "Replace `npm ci` with `npm install`, which reuses packages that are already installed",
+      "Copy only `package.json` and `package-lock.json`, run `npm ci`, then copy the rest",
+      "Move the `WORKDIR /app` line below the `COPY` line, so that Docker can cache it",
+      "Switch to a larger base image that already has many common packages installed"
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "explanation": "Correct: each instruction is a cached layer, and a layer is rebuilt when its inputs change. `COPY . .` changes whenever any file changes, so the install reruns every time. Copying only the dependency files first lets Docker reuse the install layer until the dependencies change (the same idea applies to `requirements.txt` and `pip install`). Wrong (npm install): a fresh build has no installed packages to reuse and the layer reruns anyway; `npm ci` is also the right choice for repeatable builds. Wrong (move WORKDIR): it is almost free and does not affect when the install reruns. Wrong (larger base image): it does not fix the cache problem and makes the image bigger.",
+    "expected_time_s": 55
+  },
+  {
+    "bank_key": "swe.backend.k2.container-config-at-runtime",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L2",
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "engineering.tooling.containers",
+    "secondary_skill_codes": [
+      "engineering.security.data_protection"
+    ],
+    "prompt": "Your team builds one Docker image and deploys it to staging and to production. The database URL and password are different in each place. Where should they come from?",
+    "choices": [
+      "From `ENV` lines in the Dockerfile, with a separate image built for each environment",
+      "From both sets of values in the code, picking one based on the container's host name",
+      "From environment variables or mounted secrets given to the container when it starts",
+      "From a file baked into the image, edited inside the running container after it starts"
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "explanation": "Correct: build once, configure at run time. The exact image tested on staging is the one that runs in production, and secrets never end up inside image layers. Wrong (ENV lines, one image per environment): production then runs an image that was never tested, and anyone who can pull the image can read the password. Wrong (both sets in the code): production credentials leak to everyone with repository access. Wrong (edit inside the running container): the change is lost on restart and cannot be repeated reliably.",
+    "expected_time_s": 45
+  },
+  {
+    "bank_key": "swe.backend.k2.container-exits-immediately",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.tooling.containers",
+    "secondary_skill_codes": [
+      "engineering.debugging.hypothesis"
+    ],
+    "prompt": "A container starts and stops straight away with exit code 0. The Dockerfile ends with `CMD [\"sh\", \"start.sh\"]`, and `start.sh` runs `node server.js &` and then reaches the end of the script. What is the cause?",
+    "choices": [
+      "Exit code 0 means Docker stopped the container because it used too much memory",
+      "The script starts the server in the background and ends, and the container stops with it",
+      "The image has no `HEALTHCHECK` line, so Docker stops the container after it starts",
+      "`CMD` only runs while the image is being built, so it must be changed to `ENTRYPOINT`"
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "explanation": "Correct: a container lives only as long as its main process. The `&` sends the server to the background, the script finishes, the main process exits with code 0, and the container stops, taking the server with it. Fix: run the server in the foreground, for example `exec node server.js`. Wrong (memory): an out-of-memory kill shows exit code 137, not 0. Wrong (no HEALTHCHECK): a health check only reports status; Docker does not stop a container for lacking one. Wrong (CMD at build time): `CMD` runs when the container starts; `RUN` is the instruction that runs during the build.",
+    "expected_time_s": 55
+  },
+  {
+    "bank_key": "swe.backend.k2.liveness-vs-readiness",
+    "type": "multi_select",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3",
+      "L4"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "engineering.tooling.containers",
+    "secondary_skill_codes": [
+      "engineering.operations.reliability"
+    ],
+    "prompt": "Your platform restarts a container when its liveness check fails, and stops sending it traffic when its readiness check fails. The API depends on a database. Which of these designs are good? Select all that apply.",
+    "choices": [
+      "Readiness fails while the app is still starting and loading its cache",
+      "Liveness fails whenever the database is slow, so the container gets restarted",
+      "Liveness only checks that the process can answer, without calling the database",
+      "The health endpoint runs a full report query that takes about 20 seconds",
+      "Readiness fails once shutdown begins, so new traffic goes to the other copies"
+    ],
+    "answer": {
+      "correct": [
+        0,
+        2,
+        4
+      ]
+    },
+    "explanation": "Correct: readiness controls traffic, so it should fail while the app cannot serve yet (starting) or should not take new work (shutting down). Liveness answers \"is this process stuck?\", so it should not depend on other systems. Wrong (liveness tied to the database): a slow database then restarts every copy at once, which makes the outage worse and fixes nothing. Wrong (20-second query): health checks run every few seconds, so this adds heavy load and times out, marking healthy containers as failed.",
+    "expected_time_s": 70
+  },
+  {
+    "bank_key": "swe.backend.k2.trace-for-per-service-time",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "engineering.operations.monitoring",
+    "secondary_skill_codes": [
+      "engineering.debugging.distributed"
+    ],
+    "prompt": "A checkout request is slow. It passes through the API gateway, the order service and the payment service. Which tool shows how much of the time was spent in each service for one specific request?",
+    "choices": [
+      "A metrics dashboard that shows the average CPU use of each service over the last hour",
+      "The payment service's error log, filtered to the minutes around the slow request",
+      "An uptime check that calls the checkout endpoint every minute",
+      "A distributed trace, with a timed span for each service the request passed through"
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "explanation": "Correct: a trace follows one request across services and records the start and duration of each step (span), so you can see exactly where the time went. Wrong (average CPU): an aggregate metric, not per request, and slow requests are often waiting on I/O rather than using CPU. Wrong (error log): a slow request may log no error, and the log has no timing for the other services. Wrong (uptime check): it shows whether the endpoint responds, not where the time goes inside it.",
+    "expected_time_s": 45,
+    "group": "trace-latency"
+  },
+  {
+    "bank_key": "swe.backend.k2.alerts-worth-waking-for",
+    "type": "multi_select",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.operations.monitoring",
+    "secondary_skill_codes": [
+      "engineering.operations.incident_response"
+    ],
+    "prompt": "You are choosing alerts that will wake the on-call engineer at night. Which are good candidates? Select all that apply.",
+    "choices": [
+      "More than 5% of checkout requests have failed for the last 10 minutes",
+      "CPU on one of twenty identical servers reached 90% for one minute",
+      "At the current rate, the database disk will be full in about 4 hours",
+      "The TLS certificate of the public API will expire in 20 days",
+      "Half of all public API requests have taken more than 5 seconds for the last 15 minutes"
+    ],
+    "answer": {
+      "correct": [
+        0,
+        2,
+        4
+      ]
+    },
+    "explanation": "Correct: alerts that wake people should be about user impact or an outage that is close, need action now, and last long enough to rule out brief spikes: failing checkouts, a disk that will fill before morning, and very slow responses for half of all users all qualify. Wrong (one server's CPU spike): it usually has no user impact and passes on its own; it belongs on a dashboard. Wrong (certificate in 20 days): important, but there is plenty of time, so it should be a ticket or a daytime alert; paging for it at night causes alert fatigue.",
+    "expected_time_s": 65
+  },
+  {
+    "bank_key": "swe.backend.k2.correlation-id",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L2",
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "engineering.debugging.distributed",
+    "secondary_skill_codes": [
+      "engineering.operations.monitoring"
+    ],
+    "prompt": "A customer reports an error at 14:02. Your system has five services, and each writes its own logs. What makes it easiest to find every log line for that one request?",
+    "choices": [
+      "Create a request id where the request arrives, pass it to every service, log it on every line",
+      "Set every service to DEBUG logging, so that no detail about any request is ever missed",
+      "Search the logs of all five services for lines written between 14:01 and 14:03",
+      "Write the logs of all five services into one shared file, so the lines sit next to each other"
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "explanation": "Correct: a correlation (request) id, created where the request enters the system and passed in a header to every downstream call, lets one search return exactly that request's lines from every service. Wrong (DEBUG logging): more volume and cost, but still nothing links lines from different services. Wrong (time window): a busy system writes thousands of lines from other requests in those two minutes, and server clocks can differ. Wrong (one file): putting lines together does not say which lines belong to which request.",
+    "expected_time_s": 45
+  },
+  {
+    "bank_key": "swe.backend.k2.reading-p99-latency",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3",
+      "L4"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.operations.monitoring",
+    "secondary_skill_codes": [
+      "engineering.operations.reliability"
+    ],
+    "prompt": "An endpoint receives about 1,000,000 requests per day. Its dashboard shows: average 120 ms, p50 80 ms, p99 2,400 ms. Which statement is correct?",
+    "choices": [
+      "Almost every request takes about 120 ms, because the average is close to the median",
+      "About 100 requests a day take 2.4 seconds or more, which is too few to matter",
+      "The p99 must be a measuring error, because it cannot be 20 times the average",
+      "About 10,000 requests a day take 2.4 seconds or more, so many users are affected"
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "explanation": "Correct: p99 = 2,400 ms means 1% of requests take at least 2.4 seconds, and 1% of 1,000,000 is about 10,000 slow requests a day; users who make many requests, or pages that call this endpoint several times, hit that tail often. Wrong (about 120 ms each): the average hides the tail; a p50 of 80 ms with a p99 of 2,400 ms shows a wide spread. Wrong (about 100 a day): that would be 0.01% (p99.99), not 1%. Wrong (measuring error): a small share of very slow requests easily gives a p99 many times the average; these numbers are consistent.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "swe.backend.k2.graceful-shutdown-sigterm",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.operations.reliability",
+    "secondary_skill_codes": [
+      "engineering.tooling.containers"
+    ],
+    "prompt": "During each deploy, the platform sends SIGTERM to the old container, waits up to 30 seconds, then kills it. Users see a burst of failed requests at every deploy. What should the service do when it receives SIGTERM?",
+    "choices": [
+      "Stop accepting new requests, finish the ones in progress, close connections, then exit",
+      "Exit straight away with code 0, so the new version can start as fast as possible",
+      "Ignore the signal and keep serving all traffic until the platform kills the process",
+      "Restart itself inside the same container, so that it loads the new version of the code"
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "explanation": "Correct: graceful shutdown means stop taking new work (fail readiness, close the listener), let in-flight requests and jobs finish within the grace period, close database and queue connections cleanly, then exit. Wrong (exit at once): it cuts off requests in progress, which is exactly the burst of failures. Wrong (ignore the signal): the process is killed mid-request after 30 seconds, with the same failures. Wrong (restart in place): the new version runs in a new container; restarting inside the old one does not load new code.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "swe.backend.k2.metrics-vs-logs",
+    "type": "multi_select",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.operations.monitoring",
+    "secondary_skill_codes": [],
+    "prompt": "Which of these questions are best answered with metrics (numbers recorded over time) rather than by searching logs? Select all that apply.",
+    "choices": [
+      "What exact error message did the request with id `abc123` receive?",
+      "How has the API's error rate changed over the last week?",
+      "How many requests per second is the service handling right now?",
+      "What input did user 42 send that caused the crash at 14:02?",
+      "Is the job queue backlog growing or shrinking over the last hour?"
+    ],
+    "answer": {
+      "correct": [
+        1,
+        2,
+        4
+      ]
+    },
+    "explanation": "Correct: rates, counts and trends over time are cheap to store and fast to query as metrics, and they are what dashboards and alerts are built on. Wrong: the exact message for one request and the input one user sent are details about single events; they belong in logs (or traces), because metrics keep only aggregated numbers.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "swe.backend.k2.node-event-loop-order",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "code_output",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3",
+      "L4"
+    ],
+    "language": "javascript",
+    "difficulty": "hard",
+    "primary_skill_code": "engineering.programming.javascript",
+    "secondary_skill_codes": [
+      "engineering.concurrency.fundamentals"
+    ],
+    "prompt": "This file is run with `node app.js`. What does it print?\n\n```javascript\nconst out = [];\nasync function loadUser() {\n  out.push('B');\n  await Promise.resolve();\n  out.push('C');\n}\nout.push('A');\nsetTimeout(() => {\n  out.push('D');\n  console.log(out.join(' '));\n}, 0);\nloadUser();\nout.push('E');\n```",
+    "choices": [
+      "A E B C D",
+      "A B C E D",
+      "A B E C D",
+      "A B E D C"
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "explanation": "Correct (run on Node 24, same result as CommonJS and as an ES module): an async function runs at once, synchronously, up to its first `await`, so B comes right after A. The `await` pauses `loadUser` and returns control to the caller, so E is pushed. When the script ends, pending promise work (microtasks) runs before the event loop reaches timers, so C comes before D, and the timer prints the line. Wrong (A E B C D): assumes calling an async function delays its whole body; it starts straight away. Wrong (A B C E D): assumes awaiting an already resolved promise does not pause; `await` always gives control back to the caller first. Wrong (A B E D C): assumes a 0 ms timer runs before pending promise continuations; those always run first.",
+    "expected_time_s": 70
+  },
+  {
+    "bank_key": "swe.backend.k2.foreach-does-not-await",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "find_bug",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": "javascript",
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.programming.javascript",
+    "secondary_skill_codes": [
+      "engineering.concurrency.fundamentals"
+    ],
+    "prompt": "Callers report that `saveAll` always returns 0, although the rows do appear in the database a moment later. Which line causes this?\n\n```javascript\nasync function saveAll(items) {\n  let saved = 0;\n  items.forEach(async (item) => {\n    await db.save(item);\n    saved += 1;\n  });\n  return saved;\n}\n```",
+    "choices": [
+      "`let saved = 0;`: the counter must be declared outside the function to keep its value",
+      "`saved += 1;`: callbacks running in parallel overwrite each other's updates to `saved`",
+      "`return saved;`: it should be `return await saved;` so the function waits for the count",
+      "`items.forEach(async (item) => {`: forEach does not wait for the async callbacks to finish"
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "explanation": "Correct: forEach ignores the promise each async callback returns, so `return saved` runs before any `await db.save` has finished, while `saved` is still 0 (confirmed by running it with a fake `db`). Fix with `for...of` plus `await`, or `await Promise.all(items.map(...))`. Wrong (`let saved`): a counter outside the function would also be read before the saves finish, and would mix calls together. Wrong (`saved += 1`): JavaScript runs these callbacks on one thread, so the update is not interrupted between read and write. Wrong (`return await saved`): `saved` is a number, not a promise; awaiting it gives the same 0 straight away.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "swe.backend.k2.var-closure-in-loop",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "code_output",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": "javascript",
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.programming.javascript",
+    "secondary_skill_codes": [],
+    "prompt": "What does this print?\n\n```javascript\nconst jobs = ['a', 'b', 'c'];\nconst handlers = [];\nfor (var i = 0; i < jobs.length; i++) {\n  handlers.push(() => jobs[i]);\n}\nconsole.log(handlers.map((h) => h()));\n```",
+    "choices": [
+      "[ 'a', 'b', 'c' ]",
+      "[ 'c', 'c', 'c' ]",
+      "[ undefined, undefined, undefined ]",
+      "It throws an error: index 3 is out of range"
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "explanation": "Correct: `var` is function-scoped, so all three arrow functions share one `i`. They run after the loop has finished, when `i` is 3, and `jobs[3]` is `undefined`. With `let`, each iteration gets its own `i`. Wrong ([ 'a', 'b', 'c' ]): that is what `let` would print. Wrong ([ 'c', 'c', 'c' ]): assumes `i` stops at 2, but the loop only ends when `i < 3` is false, at 3. Wrong (error): reading past the end of an array in JavaScript returns `undefined`; it does not throw.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "swe.backend.k2.lost-this-binding",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "code_output",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": "javascript",
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.programming.javascript",
+    "secondary_skill_codes": [],
+    "prompt": "A method is passed around as a plain function, as often happens with route handlers and event callbacks. What does this print?\n\n```javascript\nclass Counter {\n  constructor() { this.count = 0; }\n  increment() { this.count += 1; return this.count; }\n}\nconst counter = new Counter();\nconst onRequest = counter.increment;\ntry {\n  console.log(onRequest());\n} catch (err) {\n  console.log(err.constructor.name);\n}\n```",
+    "choices": [
+      "1",
+      "NaN",
+      "undefined",
+      "TypeError"
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "explanation": "Correct: `onRequest` is the bare function with no object attached, so `this` is `undefined` when it is called (class bodies always run in strict mode). Reading `this.count` throws a TypeError, and the catch prints its name. Fix with `counter.increment.bind(counter)` or an arrow function. Wrong (1): assumes `this` still points to `counter`. Wrong (NaN): that needs `this` to be an object without `count`, as with the global object in old non-strict code. Wrong (undefined): the method never reaches its return statement, so nothing is returned.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "swe.backend.k2.loose-equality-query-strings",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "code_output",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L2",
+      "L3"
+    ],
+    "language": "javascript",
+    "difficulty": "easy",
+    "primary_skill_code": "engineering.programming.javascript",
+    "secondary_skill_codes": [],
+    "prompt": "Values from a URL query string always arrive as strings. What does this print?\n\n```javascript\nconst query = { page: '0', limit: '' };\nconst a = query.page == 0;\nconst b = query.page === 0;\nconst c = query.limit == 0;\nconsole.log(a, b, c);\n```",
+    "choices": [
+      "true false true",
+      "true false false",
+      "false false false",
+      "true true true"
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "explanation": "Correct: `==` converts types before comparing, so `'0' == 0` is true, and the empty string converts to the number 0, so `'' == 0` is also true. `===` never converts, so a string never equals a number. Wrong (true false false): forgets that `''` converts to 0. Wrong (false false false): assumes `==` does not convert types. Wrong (true true true): assumes `===` converts types too. Using `===` and converting input on purpose, for example `Number(query.page)`, avoids this class of bug.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "swe.backend.k2.array-sort-default-order",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "code_output",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L2",
+      "L3"
+    ],
+    "language": "javascript",
+    "difficulty": "easy",
+    "primary_skill_code": "engineering.programming.javascript",
+    "secondary_skill_codes": [],
+    "prompt": "What does this print?\n\n```javascript\nconst latenciesMs = [100, 25, 3, 1000];\nlatenciesMs.sort();\nconsole.log(latenciesMs.join(','));\n```",
+    "choices": [
+      "3,25,100,1000",
+      "100,1000,25,3",
+      "1000,100,25,3",
+      "100,25,3,1000"
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "explanation": "Correct: with no compare function, `sort()` turns the values into strings and sorts them as text, so '100' < '1000' < '25' < '3'. Use `sort((a, b) => a - b)` for numbers. Wrong (3,25,100,1000): numeric order needs a compare function. Wrong (1000,100,25,3): descending numeric order. Wrong (100,25,3,1000): assumes the array is unchanged, but `sort()` sorts in place.",
+    "expected_time_s": 45
+  },
+  {
+    "bank_key": "swe.backend.k2.unawaited-promise-crash",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "find_bug",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": "javascript",
+    "difficulty": "hard",
+    "primary_skill_code": "engineering.programming.javascript",
+    "secondary_skill_codes": [
+      "engineering.operations.reliability"
+    ],
+    "prompt": "On a current Node.js version, when the mail server is down the whole API process crashes, even though the user is created and gets a 201 response. Which line is the problem?\n\n```javascript\nasync function sendWelcomeEmail(user) {\n  await mailer.send(user.email, 'Welcome!');\n}\n\napp.post('/signup', async (req, res) => {\n  try {\n    const user = await createUser(req.body);\n    sendWelcomeEmail(user);\n    res.status(201).json(user);\n  } catch (err) {\n    res.status(500).json({ error: 'signup failed' });\n  }\n});\n```",
+    "choices": [
+      "`app.post('/signup', async (req, res) => {`: Express route handlers cannot be async functions",
+      "`sendWelcomeEmail(user);`: its promise is never awaited or caught, so the rejection escapes",
+      "`await mailer.send(user.email, 'Welcome!');`: the `await` turns the mail error into a crash",
+      "`res.status(500).json({ error: 'signup failed' });`: the catch block must rethrow the error"
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "explanation": "Correct: calling an async function without `await` or `.catch` means its rejection happens later, outside the try/catch, and current Node.js versions crash the process on an unhandled rejection (confirmed by running it with fakes: 201 is sent, then the process exits with code 1). Fix: `await` it inside the try, or, if the email must not block signup, add `.catch(err => log(err))`. Wrong (async handler): route handlers can be async; here every awaited call is inside the try/catch. Wrong (`await mailer.send`): the `await` is correct; without it the rejected promise would still be unhandled. Wrong (rethrow): the mail error never reaches that catch block, and rethrowing would cause a crash, not prevent one.",
+    "expected_time_s": 70
+  },
+  {
+    "bank_key": "swe.backend.k2.json-large-integer-id",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "code_output",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": "javascript",
+    "difficulty": "hard",
+    "primary_skill_code": "engineering.programming.javascript",
+    "secondary_skill_codes": [
+      "engineering.backend.api_design"
+    ],
+    "prompt": "Another service sends 64-bit integer order ids in its JSON. What does this print?\n\n```javascript\nconst body = '{\"orderId\": 9007199254740993}';\nconst order = JSON.parse(body);\nconsole.log(order.orderId);\n```",
+    "choices": [
+      "9007199254740992",
+      "9007199254740993",
+      "9.007199254740993e+15",
+      "SyntaxError: number too large"
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "explanation": "Correct: JavaScript numbers are 64-bit floating point and hold every integer exactly only up to 2^53 - 1 (9007199254740991). 9007199254740993 is silently rounded to the nearest value that fits, 9007199254740992, so the wrong order could be loaded. Send such ids as strings, or parse them as BigInt. Wrong (...993): assumes integers are exact at any size. Wrong (exponent form): Node prints numbers below 1e21 in normal notation, and the value is rounded anyway. Wrong (SyntaxError): JSON.parse accepts large numbers and rounds them without any error.",
+    "expected_time_s": 55
+  },
+  {
+    "bank_key": "swe.backend.k2.mutable-default-argument",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "find_bug",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": "python",
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.programming.python",
+    "secondary_skill_codes": [],
+    "prompt": "A long-running worker calls `collect_errors(rows)` once for each nightly report. After a few nights, reports list errors for rows that were fixed days ago. Which line causes this?\n\n```python\ndef collect_errors(rows, errors=[]):\n    for row in rows:\n        if row.get(\"amount\") is None:\n            errors.append(row[\"id\"])\n    return errors\n```",
+    "choices": [
+      "`def collect_errors(rows, errors=[]):`: the default list is created once and shared by all calls",
+      "`if row.get(\"amount\") is None:`: it should be `== None`, otherwise valid rows are counted",
+      "`errors.append(row[\"id\"])`: append also changes `rows`, because lists are passed by reference",
+      "`return errors`: it returns a reference, so it should return `errors.copy()` instead"
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "explanation": "Correct: default values are evaluated once, when the function is defined. Every call that does not pass `errors` appends to the same list, which keeps growing for the life of the process (confirmed by running two calls: the second report still contains the first report's id). Fix: `errors=None`, then `if errors is None: errors = []`. Wrong (`is None`): it is the recommended way to test for None and gives the same result here. Wrong (append changes rows): `errors` and `rows` are different lists. Wrong (return a copy): the caller would get a copy, but the shared default list would still grow on every call.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "swe.backend.k2.generator-consumed-once",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "code_output",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": "python",
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.programming.python",
+    "secondary_skill_codes": [],
+    "prompt": "What does this print?\n\n```python\ndef active_names(rows):\n    for row in rows:\n        if row[\"active\"]:\n            yield row[\"name\"]\n\nnames = active_names([{\"name\": \"ana\", \"active\": True},\n                      {\"name\": \"bo\", \"active\": True}])\nprint(len(list(names)), len(list(names)))\n```",
+    "choices": [
+      "2 2",
+      "2 0",
+      "0 0",
+      "TypeError: object of type 'generator' has no len()"
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "explanation": "Correct: a generator produces its values only once. The first `list(names)` consumes both names; the second finds the generator already finished and returns an empty list. Wrong (2 2): assumes a generator can be read again like a list; convert it to a list once and reuse that list. Wrong (0 0): assumes it produces nothing, but both rows are active. Wrong (TypeError): `len()` is called on the lists returned by `list()`, not on the generator.",
+    "expected_time_s": 55
+  },
+  {
+    "bank_key": "swe.backend.k2.late-binding-lambda",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "code_output",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": "python",
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.programming.python",
+    "secondary_skill_codes": [],
+    "prompt": "What does this print?\n\n```python\nhandlers = []\nfor status in [\"new\", \"paid\", \"shipped\"]:\n    handlers.append(lambda: status)\n\nprint([h() for h in handlers])\n```",
+    "choices": [
+      "['new', 'paid', 'shipped']",
+      "['shipped', 'shipped', 'shipped']",
+      "['new', 'new', 'new']",
+      "NameError: name 'status' is not defined"
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "explanation": "Correct: each lambda looks up `status` when it is called, not when it is created. By then the loop has finished and `status` is 'shipped'. Fix by binding the current value, for example `lambda status=status: status`. Wrong (new, paid, shipped): assumes the value is captured when the lambda is created. Wrong (new, new, new): assumes the first value is captured. Wrong (NameError): a `for` loop variable still exists after the loop ends in Python.",
+    "expected_time_s": 55
+  },
+  {
+    "bank_key": "swe.backend.k2.is-versus-equals",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "find_bug",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": "python",
+    "difficulty": "easy",
+    "primary_skill_code": "engineering.programming.python",
+    "secondary_skill_codes": [
+      "engineering.craft.correctness"
+    ],
+    "prompt": "Support says refunds are refused for some orders whose status is \"Paid\" or \" paid \". Which line causes this?\n\n```python\ndef can_refund(order):\n    status = order.get(\"status\", \"\")\n    status = status.strip().lower()\n    if status is \"paid\":\n        return True\n    return False\n```",
+    "choices": [
+      "`status = order.get(\"status\", \"\")`: `.get()` returns None for a missing key, so the next line fails",
+      "`status = status.strip().lower()`: strings cannot change, so this line has no effect on `status`",
+      "`if status is \"paid\":`: `is` checks for the same object, not equal text, so it can be False",
+      "`status = status.strip().lower()`: `.lower()` must come before `.strip()`, or the spaces remain"
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "explanation": "Correct: `is` tests identity (the same object in memory), not equality. Python does not promise that two equal strings are the same object, so `status is \"paid\"` can be False even when the text matches; that is why Python 3.8+ warns about `is` with a literal. A string built at run time by `strip()` and `lower()`, or read from JSON, is normally a new object (confirmed on Python 3.14: \"Paid\", \" paid \" and even \"paid\" all return False). Use `==`. Wrong (`.get()` returns None): the default \"\" is returned for a missing key. Wrong (strings cannot change): true, but the line assigns the new string back to `status`, so it takes effect. Wrong (order of strip and lower): each works independently, so the order does not matter.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "swe.backend.k2.dict-changed-during-iteration",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "code_output",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": "python",
+    "difficulty": "hard",
+    "primary_skill_code": "engineering.programming.python",
+    "secondary_skill_codes": [
+      "engineering.craft.correctness"
+    ],
+    "prompt": "A cleanup job removes expired sessions. What does this print?\n\n```python\nsessions = {\"a\": 1, \"b\": 0, \"c\": 0}\ntry:\n    for key in sessions:\n        if sessions[key] == 0:\n            del sessions[key]\n    print(\"done\", sessions)\nexcept RuntimeError:\n    print(\"error\", sessions)\n```",
+    "choices": [
+      "done {'a': 1}",
+      "error {'a': 1, 'c': 0}",
+      "error {'a': 1, 'b': 0, 'c': 0}",
+      "done {'a': 1, 'c': 0}"
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "explanation": "Correct: deleting 'b' works, but the next step of the loop sees that the dict changed size and raises RuntimeError. So 'b' is gone, 'c' was never checked, and the except branch prints the half-cleaned dict. Fix: loop over a copy with `for key in list(sessions):`, or build a new dict. Wrong (done {'a': 1}): what most people expect, but Python does not allow a dict to change size while it is being iterated. Wrong (error with 'b' still present): the delete succeeds; the error is raised on the next iteration. Wrong (done {'a': 1, 'c': 0}): Python does not silently skip the next key; it raises an error.",
+    "expected_time_s": 70
+  },
+  {
+    "bank_key": "swe.backend.k2.asyncio-missing-await",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "code_output",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": "python",
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.programming.python_async",
+    "secondary_skill_codes": [
+      "engineering.programming.python"
+    ],
+    "prompt": "What does the `print(saved)` line output?\n\n```python\nimport asyncio\n\nsaved = []\n\nasync def save(order_id):\n    saved.append(order_id)\n\nasync def main():\n    for order_id in [1, 2, 3]:\n        save(order_id)\n    await save(4)\n    print(saved)\n\nasyncio.run(main())\n```",
+    "choices": [
+      "[1, 2, 3, 4]",
+      "[4]",
+      "[]",
+      "[4, 1, 2, 3]"
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "explanation": "Correct: calling an async function without `await` only creates a coroutine object; its body never runs (Python warns \"coroutine 'save' was never awaited\" on stderr). Only `save(4)` is awaited, so only 4 is appended. Fix: `await save(order_id)`, or `await asyncio.gather(...)` to run them together. Wrong ([1, 2, 3, 4]): assumes calling the function runs it. Wrong ([]): ignores that `save(4)` is awaited before the print. Wrong ([4, 1, 2, 3]): assumes the calls without await run later in the background; they are never scheduled, unlike tasks made with `asyncio.create_task`.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "swe.backend.k2.except-clause-order",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "code_output",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": "python",
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.programming.python",
+    "secondary_skill_codes": [
+      "engineering.craft.readability"
+    ],
+    "prompt": "What does this print?\n\n```python\ndef parse_amount(text):\n    try:\n        return int(text)\n    except Exception:\n        return \"bad input\"\n    except ValueError:\n        return \"not a number\"\n\nprint(parse_amount(\"12x\"))\n```",
+    "choices": [
+      "bad input",
+      "not a number",
+      "12",
+      "ValueError: invalid literal for int() with base 10: '12x'"
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "explanation": "Correct: `int(\"12x\")` raises ValueError, and Python uses the first `except` clause that matches. ValueError is a subclass of Exception, so `except Exception` catches it and the ValueError clause is never reached. Put specific exceptions before general ones. Wrong (not a number): assumes Python picks the most specific clause. Wrong (12): `int()` does not stop at the first non-digit like JavaScript's `parseInt`; it rejects the whole string. Wrong (ValueError message): the error is caught, so it is never printed.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "swe.backend.k2.shallow-copy-nested-list",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "code_output",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": "python",
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.programming.python",
+    "secondary_skill_codes": [],
+    "prompt": "You create a staging config from the production config. What does this print?\n\n```python\nimport copy\n\nconfig = {\"name\": \"api\", \"ports\": [80]}\nstaging = copy.copy(config)\nstaging[\"name\"] = \"api-staging\"\nstaging[\"ports\"].append(8080)\nprint(config)\n```",
+    "choices": [
+      "{'name': 'api', 'ports': [80]}",
+      "{'name': 'api-staging', 'ports': [80, 8080]}",
+      "{'name': 'api', 'ports': [80, 8080]}",
+      "{'name': 'api-staging', 'ports': [80]}"
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "explanation": "Correct: `copy.copy` makes a shallow copy: a new dict whose values are the same objects. Reassigning `staging[\"name\"]` changes only the copy, but `staging[\"ports\"]` is the very same list as `config[\"ports\"]`, so appending to it changes both. Use `copy.deepcopy` for nested data. Wrong ({'name': 'api', 'ports': [80]}): assumes the copy is deep. Wrong (the two 'api-staging' options): reassigning a key in the new dict never touches the original dict.",
+    "expected_time_s": 55
+  }
+]

@@ -1,0 +1,1614 @@
+[
+  {
+    "bank_key": "swe.backend.k1.error-status-not-200",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L2",
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "engineering.backend.http",
+    "secondary_skill_codes": [
+      "engineering.backend.api_design"
+    ],
+    "prompt": "A mobile team reports a problem with your API. When an order is invalid (for example, `quantity` is `-3`), the API returns `200 OK` with the body `{ \"error\": \"quantity must be at least 1\" }`. Their error handling never runs. What should the API return instead?",
+    "choices": [
+      "`500 Internal Server Error` with the same error message kept in the body",
+      "`409 Conflict`, because the value conflicts with a business rule",
+      "`400 Bad Request` (or `422`) with a body naming the invalid field",
+      "`204 No Content`, so the client knows that no order was created"
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "explanation": "The client sent invalid input, so a 4xx client-error status is correct. `400` and `422` are both widely used for validation errors, and a body that names the field lets the client show a useful message. Wrong: `500` says the server failed, which is untrue, and it makes clients retry and alerts the on-call engineer. Wrong: `409` is for a conflict with the current state of a resource (for example, saving an outdated version), not for invalid input. Wrong: `204` is a success status, so the client's error handling would still not run.",
+    "expected_time_s": 45
+  },
+  {
+    "bank_key": "swe.backend.k1.idempotent-method-retry",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.backend.http",
+    "secondary_skill_codes": [
+      "engineering.system_design.consistency"
+    ],
+    "prompt": "Your HTTP client library can retry a request automatically when it times out. Which of these requests is safe to retry automatically, without extra protection such as an idempotency key?",
+    "choices": [
+      "`POST /payments` with a body that charges the card 20 dollars",
+      "`POST /orders/77/items` with a body that adds one item to the order",
+      "`PATCH /accounts/9` with body `{ \"balanceChange\": -50 }`",
+      "`PUT /users/42/email` with body `{ \"email\": \"ana@example.com\" }`"
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "explanation": "A `PUT` that sets a field to a given value is idempotent: doing it twice leaves the same state as doing it once, so a retry after a lost response is harmless. Wrong: a retried payment `POST` can charge the card twice. Wrong: a retried \"add item\" `POST` can add two items. Wrong: this `PATCH` applies a relative change, so repeating it subtracts 50 twice. `PATCH` is not idempotent in general, and this one clearly is not.",
+    "expected_time_s": 55
+  },
+  {
+    "bank_key": "swe.backend.k1.cursor-pagination",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.backend.api_design",
+    "secondary_skill_codes": [
+      "engineering.programming.sql"
+    ],
+    "prompt": "Your `GET /notifications?page=3&limit=20` endpoint uses `ORDER BY created_at DESC` with `OFFSET (page - 1) * limit`. New notifications arrive all the time. Users who scroll down the list report seeing some notifications twice. What is the best fix?",
+    "choices": [
+      "Switch to cursor pagination based on the last item's `created_at` and `id`",
+      "Raise the page size to 100, so users need to load fewer pages in total",
+      "Cache each page for five minutes, so its contents do not shift while scrolling",
+      "Return the total count on each page, so the client can detect new arrivals"
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "explanation": "With OFFSET, every new notification at the top pushes older rows down one position, so the next page starts earlier and repeats items. A cursor (keyset), such as `WHERE (created_at, id) < (:last_created_at, :last_id)`, continues from the last item the user saw, so inserts do not affect it; it is also faster on deep pages. Wrong: a bigger page size only makes the problem rarer. Wrong: caching pages per user is complex and still mixes pages taken at different moments. Wrong: a total count can tell the client that something changed, but it does not change which rows the next page returns.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "swe.backend.k1.get-with-side-effects",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "engineering.backend.http",
+    "secondary_skill_codes": [
+      "engineering.backend.api_design"
+    ],
+    "prompt": "An old endpoint `GET /invoices/55/send` emails an invoice to the customer. Support notices that a duplicate invoice email often goes out right after someone pastes this link into a team chat app, even though nobody clicked it. What is the most likely cause?",
+    "choices": [
+      "The chat app sent a CORS preflight request, which ran the endpoint again",
+      "The chat app fetched the URL to build a link preview, which ran the endpoint",
+      "The URL was too long for the chat app, so the server retried the request",
+      "The response had no `Cache-Control` header, so the browser re-sent the request"
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "explanation": "`GET` is meant to be safe (no side effects), so chat apps that build link previews, crawlers, security scanners and browser prefetching all call `GET` URLs without asking anyone. The lesson: actions such as sending an email belong in `POST`. Wrong: a CORS preflight is an `OPTIONS` request that browsers send for some cross-origin calls; it does not run the `GET` handler, and a chat app's server does not use CORS at all. Wrong: a URL that is too long fails, it is not retried by the server. Wrong: a missing `Cache-Control` header does not make anyone send a request that nobody asked for.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "swe.backend.k1.etag-conditional-get",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.backend.http",
+    "secondary_skill_codes": [
+      "engineering.system_design.caching"
+    ],
+    "prompt": "Mobile clients poll `GET /config` every 30 seconds. The response is 200 KB and changes only a few times a day. Clients must see a change within one minute. Which change cuts the most bandwidth while keeping that promise?",
+    "choices": [
+      "Set `Cache-Control: max-age=86400`, so clients keep the config for a whole day",
+      "Return `204 No Content` when the config has not changed in the last 30 seconds",
+      "Send an `ETag`; clients send `If-None-Match` and get `304` if nothing changed",
+      "Compress the response with gzip, so each poll transfers fewer bytes"
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "explanation": "With an `ETag`, the client sends the version it already has in `If-None-Match`. When nothing changed, the server answers `304 Not Modified` with no body, so almost every poll costs a few hundred bytes, and a change still arrives on the next poll. Wrong: a one-day `max-age` saves bandwidth but breaks the one-minute promise. Wrong: the `204` rule depends on timing, not on what the client actually has; a client that was offline when the config changed would never get the update. Wrong: gzip helps, but every poll still downloads the whole compressed body, which is far more than a `304`.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "swe.backend.k1.cors-fix-on-server",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L2",
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "engineering.backend.http",
+    "secondary_skill_codes": [
+      "engineering.security.auth"
+    ],
+    "prompt": "Your web app at `https://app.example.com` calls your API at `https://api.example.com`. The same request works in curl and Postman, but in the browser it fails with a CORS error. What is the correct fix?",
+    "choices": [
+      "Add an `Access-Control-Allow-Origin` header to the requests that the web app sends",
+      "Set `mode: 'no-cors'` on the browser `fetch` call so that the check is skipped",
+      "Move the API to plain HTTP, because browsers only check CORS on HTTPS sites",
+      "Return `Access-Control-Allow-Origin` with the app's origin from the API"
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "explanation": "CORS is enforced by the browser, based on headers the server returns. The API must send `Access-Control-Allow-Origin: https://app.example.com` and answer the preflight `OPTIONS` request when the browser sends one. curl and Postman do not enforce CORS, which is why they work. Wrong: a header on the request does nothing, because the browser checks the response. Wrong: `no-cors` makes the response opaque, so the app cannot read the data. Wrong: CORS applies to HTTP and HTTPS alike, and dropping HTTPS would also be a security problem.",
+    "expected_time_s": 45
+  },
+  {
+    "bank_key": "swe.backend.k1.rate-limit-per-instance",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.backend.api_design",
+    "secondary_skill_codes": [
+      "engineering.system_design.scaling"
+    ],
+    "prompt": "Your API promises each API key at most 100 requests per minute. The API runs on 6 instances behind a round-robin load balancer, and each instance counts requests in its own memory. A customer says they can send about 600 requests per minute without ever being limited. What is the cause and the best fix?",
+    "choices": [
+      "Each instance counts on its own; keep the counters in one shared store",
+      "Fixed windows allow bursts at the edges; switch to a sliding-window algorithm",
+      "The load balancer caches responses; turn off caching for requests with API keys",
+      "The instance clocks drift apart; sync the clocks so that the windows line up"
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "explanation": "With round-robin, each instance sees about one sixth of the traffic and allows 100 per minute by itself, so the real limit is about 6 × 100. Counting in one shared store (or at a gateway that sees all traffic) gives one limit per key. Wrong: a fixed window can let through up to about 2 × the limit around a window edge, not 6 ×, and only in short bursts. Wrong: cached responses would never reach the instances at all, which does not explain a limit that grows exactly with the number of instances. Wrong: clock drift can move window edges a little but cannot multiply the limit by the number of instances.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "swe.backend.k1.backward-compatible-changes",
+    "type": "multi_select",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.backend.api_design",
+    "secondary_skill_codes": [
+      "engineering.operations.reliability"
+    ],
+    "prompt": "Your public JSON API is used by mobile apps, and some users never update their app. Your API contract tells client developers to ignore response fields they do not recognise, and the apps follow it. Which of these changes can you ship without breaking existing clients? Select all that apply.",
+    "choices": [
+      "Rename the response field `user_name` to `username`",
+      "Add a new field to a response object",
+      "Make a request field that used to be optional required",
+      "Add a new optional query parameter whose default keeps the old behaviour",
+      "Add a new endpoint for a new feature",
+      "Change `id` in responses from a number to a string"
+    ],
+    "answer": {
+      "correct": [
+        1,
+        3,
+        4
+      ]
+    },
+    "explanation": "Correct: adding a response field is safe here, because the contract says clients ignore fields they do not know (without that rule, a strict JSON parser that rejects unknown fields would break). Correct: a new optional parameter with a default that keeps the old behaviour changes nothing for old clients. Correct: a new endpoint is not called by old clients at all. Wrong: renaming a field breaks every client that reads `user_name`. Wrong: making a field required breaks old clients that do not send it; they start getting 400 errors. Wrong: changing a number to a string breaks parsing and comparisons in typed clients.",
+    "expected_time_s": 65
+  },
+  {
+    "bank_key": "swe.backend.k1.retryable-responses",
+    "type": "multi_select",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.backend.http",
+    "secondary_skill_codes": [
+      "engineering.operations.reliability"
+    ],
+    "prompt": "Your service calls a partner's API. Failed calls are retried with backoff, and every retry sends the same idempotency key. Which of these outcomes are reasonable to retry? Select all that apply.",
+    "choices": [
+      "`400 Bad Request`, with a message that `amount` is missing",
+      "`503 Service Unavailable`",
+      "`429 Too Many Requests`, with the header `Retry-After: 10`",
+      "`403 Forbidden`, because your API key lacks the needed permission",
+      "`422 Unprocessable Content`, because the card number is invalid",
+      "A timeout, where no response arrived at all"
+    ],
+    "answer": {
+      "correct": [
+        1,
+        2,
+        5
+      ]
+    },
+    "explanation": "Correct: `503` means the service is temporarily unable to handle the request. Correct: `429` asks you to slow down, and you can retry after the `Retry-After` delay. Correct: after a timeout you do not know if the call worked, and the idempotency key makes a retry safe. Wrong: `400` and `422` mean the request itself is wrong, so sending the same request again will fail the same way; the request must be fixed. Wrong: `403` is a permission problem that retrying cannot change.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "swe.backend.k1.delete-missing-ownership-check",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "find_bug",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "engineering.security.auth",
+    "secondary_skill_codes": [
+      "engineering.backend.api_design"
+    ],
+    "prompt": "Any logged-in user can call this handler. What is the most serious problem?\n\n```\n1  function deleteOrder(request):\n2      user = authenticate(request)\n3      if user is null:\n4          return response(401, { error: \"login required\" })\n5      order = db.findOrderById(request.params.id)\n6      if order is null:\n7          return response(404, { error: \"order not found\" })\n8      db.deleteOrder(order.id)\n9      return response(204)\n```",
+    "choices": [
+      "Line 4: it should return `403`, not `401`, when nobody is logged in",
+      "Line 7: `DELETE` must be idempotent, so it should also return `204` here",
+      "Line 5: nothing checks that the order belongs to the logged-in `user`",
+      "Line 9: a successful `DELETE` must return `200` with the deleted order in it"
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "explanation": "Line 5 loads the order by id only, and nothing checks that it belongs to the caller. Any logged-in user can delete other users' orders by trying ids (broken object-level authorization). Fix: query by id and owner, or check `order.userId == user.id` and return `404` or `403`. Wrong: `401` is correct when the caller is not authenticated; `403` is for a known user without permission. Wrong: idempotency is about the server state after repeats, not about returning the same status code; `404` on a second delete is fine. Wrong: `204` with no body is a normal success response for `DELETE`.",
+    "expected_time_s": 55,
+    "group": "ownership-check"
+  },
+  {
+    "bank_key": "swe.backend.k1.composite-index-order",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "engineering.data.indexing",
+    "secondary_skill_codes": [
+      "engineering.programming.sql"
+    ],
+    "prompt": "This query runs thousands of times a minute and is slow on a 50-million-row `orders` table:\n\n```sql\nSELECT id, total, created_at\nFROM orders\nWHERE customer_id = ? AND status = 'open'\nORDER BY created_at DESC\nLIMIT 20;\n```\n\nWhich index helps this query the most?",
+    "choices": [
+      "One index on `(created_at, customer_id, status)`",
+      "One index on `(status, created_at)`",
+      "One index on `(customer_id, status, created_at)`",
+      "Three indexes: `(customer_id)`, `(status)`, `(created_at)`"
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "explanation": "Put the equality columns first and the sort column last. The database jumps straight to this customer's open orders, which are already stored in `created_at` order, reads 20 entries from the newest end and stops, with no sort. Wrong: starting with `created_at` means walking the index in date order across all customers and filtering, which is slow for a customer whose orders are old or few. Wrong: `(status, created_at)` ignores the customer, so it reads many other customers' open orders. Wrong: separate single-column indexes can at best be combined to filter, but they cannot return this customer's rows already in `created_at` order, so the database must still fetch all matches and sort them.",
+    "expected_time_s": 75
+  },
+  {
+    "bank_key": "swe.backend.k1.external-call-inside-transaction",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.data.transactions",
+    "secondary_skill_codes": [
+      "engineering.operations.reliability"
+    ],
+    "prompt": "A checkout handler does this: begin a database transaction, set the order row to `processing`, call an external payment provider (this can take up to 10 seconds), save the result, then commit. Under load, other requests that touch the same orders time out while waiting, and the connection pool runs out. What is the best fix?",
+    "choices": [
+      "Raise the connection pool size and the database lock wait timeout",
+      "Run the transaction at `SERIALIZABLE`, so the order row is better protected",
+      "Call the provider outside the transaction; save its result in a short one",
+      "Add an index on `orders.id`, so the row lock is taken and released faster"
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "explanation": "While the transaction is open, it holds the row lock and a pooled connection for as long as the provider takes, so slow calls block other requests and drain the pool. Keep slow network calls out of transactions: mark the order `processing` in one short transaction, call the provider (with an idempotency key), then save the result in a second short transaction. Wrong: a bigger pool and longer timeouts only hide the problem and let even more requests pile up. Wrong: `SERIALIZABLE` adds conflicts and retries; it does not reduce waiting. Wrong: `id` is already the primary key, and the lock time comes from the 10-second call, not from finding the row.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "swe.backend.k1.n-plus-one-queries",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L2",
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "engineering.programming.sql",
+    "secondary_skill_codes": [
+      "engineering.performance.complexity"
+    ],
+    "prompt": "An endpoint lists 50 orders with each order's customer name. The logs show 51 SQL queries for every request: one query for the orders, then one query per order to load its customer. What is the usual fix?",
+    "choices": [
+      "Run the 50 customer queries in parallel threads to save time",
+      "Load the customers in one query, with a JOIN or `IN (...)`",
+      "Add an index on `orders.id`, so each customer query runs faster",
+      "Increase the database connection pool, so the queries wait less"
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "explanation": "This is the N+1 query problem. One JOIN, or one `IN (...)` query for all the customer ids (what ORMs call eager loading), replaces 50 round trips with one. Wrong: parallel queries still make 51 round trips and use many more connections. Wrong: `orders.id` is already the primary key, and the customer queries filter on `customers.id` anyway; the cost is the number of queries, not each query's speed. Wrong: a bigger pool does not reduce the number of queries.",
+    "expected_time_s": 45
+  },
+  {
+    "bank_key": "swe.backend.k1.read-committed-report-mismatch",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3",
+      "L4"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "engineering.data.transactions",
+    "secondary_skill_codes": [
+      "engineering.system_design.consistency"
+    ],
+    "prompt": "In PostgreSQL, a nightly report runs two queries inside one transaction at the default `READ COMMITTED` isolation level: first the total revenue for the day, then the revenue per hour. Orders keep coming in while it runs. On busy nights the hourly numbers do not add up to the total. What explains this?",
+    "choices": [
+      "Each query sees rows committed before it starts, so late orders reach only the second",
+      "The second query also counted rows from other transactions that had not committed yet",
+      "The open transaction locks the orders table, so new orders queue until it ends",
+      "The database reuses the first query's rows, and the second mixes old and new rows"
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "explanation": "In PostgreSQL, READ COMMITTED gives each statement a fresh snapshot of the data committed before that statement starts. Orders that commit between the two queries are counted in the hourly query but not in the total. Fix: run the report at REPEATABLE READ, which in PostgreSQL uses one snapshot for the whole transaction, or compute both numbers from one query or a fixed time cutoff. Wrong: READ COMMITTED never shows uncommitted rows; that would be a dirty read, which PostgreSQL never allows. Wrong: plain reads in PostgreSQL do not lock the table against inserts; and if they did, the numbers would match. Wrong: PostgreSQL does not reuse an earlier query's rows inside a transaction.",
+    "expected_time_s": 70
+  },
+  {
+    "bank_key": "swe.backend.k1.deadlock-lock-order",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.data.transactions",
+    "secondary_skill_codes": [
+      "engineering.concurrency.fundamentals"
+    ],
+    "prompt": "A money transfer runs in one transaction: update the sender's account row, then update the receiver's account row. Under load, the database reports deadlocks when two users send money to each other at the same moment. What is the standard fix?",
+    "choices": [
+      "Switch to `SERIALIZABLE` isolation, which prevents deadlocks between any transfers",
+      "Split the transfer into two transactions, one for each account update",
+      "Use `READ UNCOMMITTED`, so the two transactions stop waiting for each other",
+      "Lock rows in one fixed order (such as lower id first), and retry on deadlock"
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "explanation": "Transfer A→B locks A then waits for B, while B→A locks B then waits for A: a cycle. If every transfer locks rows in the same global order (for example, by account id), the cycle cannot form; a retry for the rare deadlock that still happens is standard practice. Wrong: SERIALIZABLE adds more conflicts and aborts; it does not remove deadlocks. Wrong: two separate transactions remove the deadlock but break atomicity, so money can leave one account and never arrive. Wrong: the isolation level changes what reads see; updates still take row locks, so READ UNCOMMITTED does not prevent this.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "swe.backend.k1.rename-column-expand-contract",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3",
+      "L4"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "engineering.system_design.data_modeling",
+    "secondary_skill_codes": [
+      "engineering.operations.reliability"
+    ],
+    "prompt": "You need to rename the column `user_name` to `username` in a busy table. The app runs on several instances, and a deploy replaces them one at a time over about 10 minutes. Which plan avoids errors during the deploy?",
+    "choices": [
+      "Rename the column and deploy the new code together in the same release window",
+      "Add `username`, write to both, backfill, switch reads, drop `user_name` later",
+      "Rename the column first, then deploy the new code within the next few minutes",
+      "Deploy the new code first, then rename the column once all instances run it"
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "explanation": "During a rolling deploy, old and new code run at the same time, so the schema must work for both. This is \"expand and contract\": add the new column, make the code write to both columns, backfill old rows in batches, switch reads to the new column, and drop the old column in a later release when no running code uses it. Wrong: renaming in the same window, renaming first, or deploying the code first each leaves a period in which some running instances query a column that does not exist, and those requests fail.",
+    "expected_time_s": 70
+  },
+  {
+    "bank_key": "swe.backend.k1.batched-backfill",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.data.transactions",
+    "secondary_skill_codes": [
+      "engineering.operations.reliability"
+    ],
+    "prompt": "A migration runs `UPDATE orders SET region = 'EU' WHERE region IS NULL;` on a table with 80 million rows. While it runs, the app's writes to `orders` time out, and the read replica falls far behind. What is the best way to run this change?",
+    "choices": [
+      "Update in batches of about 10,000 rows per transaction, with short pauses",
+      "Run it as one `SERIALIZABLE` transaction, so it cannot conflict with the app",
+      "Drop the indexes on `orders` first, and create them again after the update",
+      "Run it at night as one transaction, and raise the app's write timeout"
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "explanation": "One huge UPDATE keeps every changed row locked until it commits and produces a huge change log that the replica must replay. Small batches keep each transaction short, release locks often, let the replica keep up, and can resume where they stopped if something fails. Wrong: SERIALIZABLE does not reduce locking; it adds conflicts and aborts. Wrong: dropping indexes makes the app's queries slow during the change and removes unique checks. Wrong: running at night reduces the impact, but it still locks rows for a long time, still makes the replica lag, and a failure rolls back hours of work.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "swe.backend.k1.unique-constraint-race",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.system_design.data_modeling",
+    "secondary_skill_codes": [
+      "engineering.concurrency.fundamentals"
+    ],
+    "prompt": "During signup, the code runs `SELECT id FROM users WHERE email = ?` and inserts the new user only if no row is found. Still, a few users end up with two accounts with exactly the same email, usually after a double-click on \"Sign up\". What is the best fix?",
+    "choices": [
+      "Add a `UNIQUE` constraint on `email` and handle the duplicate-key error",
+      "Add a normal index on `email`, so the check is fast enough to close the gap",
+      "Run the check and the insert in one transaction at `READ COMMITTED`",
+      "Disable the \"Sign up\" button in the browser after the first click"
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "explanation": "Two requests both run the SELECT before either INSERT commits, so both see no row and both insert. Only the database can enforce uniqueness across concurrent requests: a UNIQUE constraint rejects the second insert, and the app turns that error into \"email already registered\". Wrong: a faster check makes the gap smaller but never closes it. Wrong: a READ COMMITTED transaction does not stop two transactions from inserting the same new value, because there is no existing row to lock. Wrong: disabling the button helps the user, but retries, two browser tabs or direct API calls can still race.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "swe.backend.k1.many-to-many-join-table",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L2",
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "engineering.system_design.data_modeling",
+    "secondary_skill_codes": [
+      "engineering.data.indexing"
+    ],
+    "prompt": "A product can belong to many categories, and a category has many products. A teammate stores the category ids in `products.category_ids` as text, such as `'3,17,42'`. Which design is better?",
+    "choices": [
+      "A JSON array of product ids stored in each `categories` row instead",
+      "One `products` row per category, each with a single `category_id`",
+      "A separate table for each category, such as `products_shoes`",
+      "A join table `product_categories` with a foreign key to each side"
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "explanation": "A join table models a many-to-many relationship: lookups in both directions can use indexes, foreign keys guarantee that the ids exist, and a primary key on the pair stops duplicates. Wrong: a JSON array in `categories` has the same problems in the other direction (hard to index and query, no foreign keys). Wrong: one product row per category copies the name and price, so updates become inconsistent. Wrong: a table per category needs a schema change for every new category and makes queries across categories painful.",
+    "expected_time_s": 45
+  },
+  {
+    "bank_key": "swe.backend.k1.equals-null-never-true",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "find_bug",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L2",
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "engineering.programming.sql",
+    "secondary_skill_codes": [
+      "engineering.craft.correctness"
+    ],
+    "prompt": "This query should list users who are not deleted and were created on or after 1 January 2026. It always returns zero rows, even though many such users exist. Which line is wrong?\n\n```sql\n1  SELECT u.id, u.email\n2  FROM users u\n3  WHERE u.deleted_at = NULL\n4    AND u.created_at >= '2026-01-01'\n5  ORDER BY u.created_at DESC;\n```",
+    "choices": [
+      "Line 2: a table alias needs the `AS` keyword, so `u` is not recognised",
+      "Line 5: you cannot sort by a column that is not in the `SELECT` list",
+      "Line 4: a date string cannot be compared with a timestamp without a cast",
+      "Line 3: `= NULL` is never true; it must be `u.deleted_at IS NULL`"
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "explanation": "In SQL, any comparison with NULL using `=` gives UNKNOWN, never TRUE, so the WHERE clause filters out every row. Use `IS NULL`. Wrong: table aliases without `AS` are valid in standard SQL (some databases do not even allow `AS` for table aliases). Wrong: ordering by a column that is not selected is allowed; the exception is `SELECT DISTINCT`. Wrong: databases convert a date literal like this to the column's type automatically.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "swe.backend.k1.left-join-where-filter",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "find_bug",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.programming.sql",
+    "secondary_skill_codes": [
+      "engineering.craft.correctness"
+    ],
+    "prompt": "This report should list every customer with the number of orders they placed in 2026, and show 0 for customers with no 2026 orders. Customers with no 2026 orders are missing from the result. Which line causes this?\n\n```sql\n1  SELECT c.id, c.name, COUNT(o.id) AS orders_2026\n2  FROM customers c\n3  LEFT JOIN orders o ON o.customer_id = c.id\n4  WHERE o.created_at >= '2026-01-01'\n5  GROUP BY c.id, c.name;\n```",
+    "choices": [
+      "Line 4: a `WHERE` filter on `o` drops those customers; move it into the `ON` clause",
+      "Line 1: `COUNT(o.id)` skips customers without orders; use `COUNT(*)` there instead",
+      "Line 3: it should be a `RIGHT JOIN`, so every customer is kept in the result",
+      "Line 5: grouping by `c.name` merges different customers who share a name"
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "explanation": "For a customer with no 2026 orders, the LEFT JOIN gives rows where the order columns are NULL or hold older dates. `WHERE o.created_at >= '2026-01-01'` is not true for those rows, so they are removed, which turns the LEFT JOIN into an inner join. Putting the date condition in the `ON` clause keeps every customer and joins only 2026 orders. Wrong: `COUNT(*)` would count the empty joined row as 1, giving wrong numbers, and it does not fix the WHERE filter. Wrong: a RIGHT JOIN keeps all orders, not all customers. Wrong: grouping by `c.id` first already keeps customers with the same name apart.",
+    "expected_time_s": 65
+  },
+  {
+    "bank_key": "swe.backend.k1.not-in-with-null",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "find_bug",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.programming.sql",
+    "secondary_skill_codes": [
+      "engineering.craft.correctness"
+    ],
+    "prompt": "This query should list customers who have never placed an order. It returns zero rows, although you know such customers exist. Some orders are guest checkouts, where `customer_id` is NULL. What is wrong?\n\n```sql\n1  SELECT c.id, c.name\n2  FROM customers c\n3  WHERE c.id NOT IN (\n4    SELECT o.customer_id\n5    FROM orders o\n6  );\n```",
+    "choices": [
+      "Line 4: the subquery needs `DISTINCT`, because duplicate ids break `NOT IN`",
+      "Lines 3-6: `NOT IN` cannot take a subquery, only a fixed list of values",
+      "Lines 3-6: a NULL in the subquery makes `NOT IN` never true",
+      "Line 4: the NULL ids from guest orders make the subquery return no rows"
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "explanation": "`c.id NOT IN (1, 2, NULL)` means `c.id <> 1 AND c.id <> 2 AND c.id <> NULL`. The last comparison is UNKNOWN, so the whole condition is never TRUE and every customer is filtered out. Fix: `NOT EXISTS (SELECT 1 FROM orders o WHERE o.customer_id = c.id)`, or add `WHERE o.customer_id IS NOT NULL` to the subquery. Wrong: duplicate values do not change the result of `NOT IN`. Wrong: subqueries inside `NOT IN` are valid SQL. Wrong: the subquery still returns every `customer_id`, NULLs included; and if it returned no rows, `NOT IN` would be true for every customer, so all customers would be listed, not none.",
+    "expected_time_s": 70
+  },
+  {
+    "bank_key": "swe.backend.k1.index-not-used-reasons",
+    "type": "multi_select",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.data.indexing",
+    "secondary_skill_codes": [
+      "engineering.programming.sql"
+    ],
+    "prompt": "The `orders` table has an index on `created_at`. In which of these situations is the database likely to scan the whole table instead of using that index? Select all that apply.",
+    "choices": [
+      "The index was created before most of the rows were inserted",
+      "Other sessions are inserting rows into the table while the query runs",
+      "The table holds only about 300 rows",
+      "The query is `WHERE YEAR(created_at) = 2026`, which wraps the column in a function",
+      "The query selects only two columns instead of using `SELECT *`",
+      "The condition `created_at > '2015-01-01'` matches 95% of the rows"
+    ],
+    "answer": {
+      "correct": [
+        2,
+        3,
+        5
+      ]
+    },
+    "explanation": "Correct: a tiny table is cheaper to read in full than through an index. Correct: a function on the column hides it from a plain index; use a range such as `created_at >= '2026-01-01' AND created_at < '2027-01-01'`, or an index on the expression. Correct: when a condition matches most rows, reading the table in order is cheaper than millions of index lookups. Wrong: indexes are updated on every insert, so rows added later are in the index. Wrong: concurrent inserts do not stop a query from using an index. Wrong: selecting fewer columns can only make the index more attractive, never less.",
+    "expected_time_s": 65
+  },
+  {
+    "bank_key": "swe.backend.k1.foreign-key-guarantees",
+    "type": "multi_select",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.system_design.data_modeling",
+    "secondary_skill_codes": [
+      "engineering.craft.correctness"
+    ],
+    "prompt": "In PostgreSQL, you add a foreign key from `orders.customer_id` to `customers.id`, using the default rule for deletes. What does this foreign key give you? Select all that apply.",
+    "choices": [
+      "`orders.customer_id` can no longer be NULL",
+      "Inserting an order with a `customer_id` that does not exist is rejected",
+      "Joins between `orders` and `customers` become faster automatically",
+      "Each customer can have at most one order",
+      "Deleting a customer who still has orders is rejected"
+    ],
+    "answer": {
+      "correct": [
+        1,
+        4
+      ]
+    },
+    "explanation": "Correct: the foreign key checks that the referenced customer exists on every insert and update. Correct: with the default rule (NO ACTION), deleting a customer who is still referenced is rejected. Wrong: a foreign key only checks non-NULL values; the column must also be declared NOT NULL to forbid NULL. Wrong: a foreign key does not speed up joins, and PostgreSQL does not create an index on `orders.customer_id` for it (MySQL does), so you usually add one yourself. Wrong: \"at most one order per customer\" would need a UNIQUE constraint, not a foreign key.",
+    "expected_time_s": 55
+  },
+  {
+    "bank_key": "swe.backend.k1.idempotency-key-lost-response",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L2",
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "engineering.system_design.consistency",
+    "secondary_skill_codes": [
+      "engineering.backend.api_design"
+    ],
+    "prompt": "A client calls `POST /transfers` to send money. Sometimes the transfer succeeds, but the response is lost on a bad network, so the client retries and the money is sent twice. Which design prevents the double transfer?",
+    "choices": [
+      "The server rejects a second transfer with the same amount and receiver within 60 seconds",
+      "The client sends a unique key; the server returns the saved result for a repeated key",
+      "The client waits 30 seconds before it retries any request that has failed",
+      "The server saves each transfer inside a database transaction, so it is atomic"
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "explanation": "An idempotency key lets the server recognise a repeat of the same request. It stores the key with the result and returns the stored result instead of sending money again. Wrong: an amount-and-receiver rule blocks real repeat transfers and still misses retries after 60 seconds. Wrong: waiting longer does not help, because the first request already succeeded; the retry still sends money again. Wrong: a transaction makes one request atomic, but it cannot tell that the second request is a repeat of the first.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "swe.backend.k1.idempotency-key-concurrent",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "engineering.system_design.consistency",
+    "secondary_skill_codes": [
+      "engineering.concurrency.fundamentals"
+    ],
+    "prompt": "Your payment endpoint supports idempotency keys. It looks up the key in a table, charges the card if the key is not there, then saves the key with the result. Logs show a customer charged twice: two requests with the same key arrived 5 ms apart on two different servers. What is the best fix?",
+    "choices": [
+      "Look up the key in the table twice: once before the charge and once again after it",
+      "Keep idempotency keys in each server's memory, which is faster than a table",
+      "Insert the key first under a unique constraint; only a successful insert may charge",
+      "Make the client wait at least one second before resending the same key"
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "explanation": "Look up, then charge, then save is a check-then-act race: both requests look up the key before either one saves it. Claiming the key first with an atomic insert (unique constraint, status \"in progress\") means exactly one request wins; the other gets a `409`, or waits and then returns the stored result. Wrong: a second lookup after the charge is too late; the card is already charged. Wrong: per-server memory makes it worse, because the two requests hit different servers. Wrong: the server cannot rely on client timing, and duplicates from network retries or double sends can arrive at any moment.",
+    "expected_time_s": 70
+  },
+  {
+    "bank_key": "swe.backend.k1.at-least-once-idempotent-consumer",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "engineering.system_design.queueing",
+    "secondary_skill_codes": [
+      "engineering.system_design.consistency"
+    ],
+    "prompt": "A worker reads `UserSignedUp` messages from a queue that guarantees at-least-once delivery, and sends one welcome email per message. A few users get two welcome emails. You must not lose any emails. What is the right fix?",
+    "choices": [
+      "Record the id of each handled message, and skip messages already handled",
+      "Acknowledge each message as soon as it arrives, before sending the email",
+      "Add more worker instances, so that each message is processed sooner",
+      "Set the queue's retry count to zero, so a message is never delivered twice"
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "explanation": "At-least-once delivery means duplicates are normal (for example, after a slow acknowledgement or a worker crash), so the consumer must be idempotent: store each handled message id, ideally with a unique constraint, and skip repeats. Wrong: acknowledging first turns this into at-most-once delivery, so a crash before sending loses the email. Wrong: more workers do not change the delivery guarantee and can even add duplicates while work is rebalanced. Wrong: zero retries loses messages when sending fails, and messages can still be redelivered after a timeout.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "swe.backend.k1.transactional-outbox",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3",
+      "L4"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "engineering.system_design.consistency",
+    "secondary_skill_codes": [
+      "engineering.system_design.queueing"
+    ],
+    "prompt": "A service saves a new order in its database, then publishes an `OrderCreated` event to a message broker. A few times a week, the order is saved but the event is never published, because the process crashed between the two steps. Which design fixes this?",
+    "choices": [
+      "Publish the event first, then save the order once the broker confirms it",
+      "Save the order and an outbox row in one transaction; a relay then publishes the row",
+      "Put the database save and the broker publish inside the same database transaction",
+      "Retry the publish up to five times before returning the API response"
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "explanation": "This is the transactional outbox pattern. The order and the event row commit together in one database transaction, so either both exist or neither does. A separate relay (polling or change data capture) publishes pending outbox rows and marks them sent, retrying until it succeeds; consumers must handle duplicates. Wrong: publishing first just reverses the problem: an event for an order that was never saved. Wrong: a database transaction cannot include the broker; the publish can succeed and the commit fail, or the other way round. Wrong: retries inside the request do not help when the process crashes.",
+    "expected_time_s": 70
+  },
+  {
+    "bank_key": "swe.backend.k1.cache-delete-before-update",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "engineering.system_design.caching",
+    "secondary_skill_codes": [
+      "engineering.system_design.consistency"
+    ],
+    "prompt": "Product reads use cache-aside: read the cache; on a miss, read the database and store the value in the cache with no expiry. An update does two steps: (1) delete the cache key, (2) update the database row. After some updates, users keep seeing the old price for days. What is happening?",
+    "choices": [
+      "Deleted keys stay readable in the cache until the cache server runs out of memory",
+      "The cache and database clocks differ, so the newer value is treated as older",
+      "Cache-aside cannot handle updates at all; only write-through caching can",
+      "A read between steps 1 and 2 puts the old row back in the cache, and it stays"
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "explanation": "Race: the key is deleted, a concurrent read misses, reads the old row before the update commits, and writes the old value back to the cache. With no expiry it never goes away. Fix: update the database first, then delete the key, and always set an expiry as a safety net (a smaller race remains, and the expiry limits it). Wrong: a deleted key is gone at once; it does not wait for memory pressure. Wrong: cache-aside does not compare clocks between the cache and the database. Wrong: cache-aside handles updates well when invalidation happens after the write and keys have an expiry.",
+    "expected_time_s": 70
+  },
+  {
+    "bank_key": "swe.backend.k1.cache-stampede",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.system_design.caching",
+    "secondary_skill_codes": [
+      "engineering.system_design.scaling"
+    ],
+    "prompt": "The home page query is cached with a 60-second expiry and the page gets 2,000 requests per second. Exactly once a minute, the database CPU jumps to 100% for a few seconds. What is the most likely cause and fix?",
+    "choices": [
+      "The cache is full and evicts keys at random; give the cache server more memory",
+      "At expiry, many requests rebuild the value at once; let only one rebuild it",
+      "The 60-second expiry is too long; lower it to 5 seconds to keep data fresh",
+      "The connection pool is too small; add connections for the rebuild queries"
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "explanation": "This is a cache stampede: at expiry, hundreds of requests miss at the same moment and all run the same expensive query. Fixes: let one request rebuild while the others wait or get the old value (a lock or \"single flight\"), or refresh the value shortly before it expires. Wrong: eviction caused by memory pressure would not line up exactly with the 60-second expiry. Wrong: a 5-second expiry makes the stampede happen 12 times more often. Wrong: more connections let even more identical queries reach the database at once.",
+    "expected_time_s": 55
+  },
+  {
+    "bank_key": "swe.backend.k1.poison-message-dlq",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "engineering.system_design.queueing",
+    "secondary_skill_codes": [
+      "engineering.operations.reliability"
+    ],
+    "prompt": "One malformed message makes your queue consumer throw an exception every time it is processed. The queue keeps redelivering it, and the messages behind it are badly delayed. What is the standard fix?",
+    "choices": [
+      "Catch the exception and acknowledge the message without logging it",
+      "Raise the visibility timeout, so the bad message is retried less often",
+      "After a few failed attempts, move it to a dead-letter queue and alert",
+      "Restart the consumer automatically each time the exception is thrown"
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "explanation": "A retry limit plus a dead-letter queue gets the poison message out of the way so other messages flow again, keeps it for inspection, and the alert makes sure someone looks at it. Wrong: acknowledging silently throws the data away and hides the bug. Wrong: a longer visibility timeout only slows the loop; the message still fails forever and still delays others. Wrong: restarting the consumer just picks up the same message and fails again.",
+    "expected_time_s": 45
+  },
+  {
+    "bank_key": "swe.backend.k1.read-replica-lag",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "engineering.system_design.consistency",
+    "secondary_skill_codes": [
+      "engineering.system_design.scaling"
+    ],
+    "prompt": "The team recently moved all reads to a database read replica; writes still go to the primary. Now, right after users change their display name, the profile page they are sent to sometimes shows the old name. A refresh one second later shows the new name. What is the best fix?",
+    "choices": [
+      "Read a user's own data from the primary for a short time after they write",
+      "Restart the replica, because replication has stopped working correctly",
+      "Add `Cache-Control: no-store` to the profile page, so browsers cannot cache it",
+      "Commit the update in a transaction, because uncommitted writes are not copied"
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "explanation": "Replication to the replica is asynchronous, so the replica can be a moment behind the primary. Reads that must show the user's own recent change should go to the primary for a short time after a write (read-your-writes). Wrong: replication works; the new name appears a second later. Wrong: the problem started with the replica change and clears within a second, which points to replication lag, not browser caching. Wrong: the update was already committed when the request returned; the delay is in replication.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "swe.backend.k1.saga-compensation",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3",
+      "L4"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.system_design.consistency",
+    "secondary_skill_codes": [
+      "engineering.system_design.trade_offs"
+    ],
+    "prompt": "Checkout first calls the inventory service to reserve stock, then calls the payment service to charge the card. Each service has its own database. Sometimes the payment fails after the stock was reserved, and that stock stays reserved forever. What is the standard approach?",
+    "choices": [
+      "Hold a distributed lock across both calls, so the steps cannot fail apart",
+      "Retry the payment until it succeeds, so the reservation is always used",
+      "When the payment fails, run an undo step that releases the reserved stock",
+      "Charge the card first and reserve stock after, so nothing needs undoing"
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "explanation": "Without a shared transaction, each step needs a compensating (undo) action: when the payment fails, release the reservation. This is the saga pattern. The release must be retried until it succeeds and be idempotent; an expiry on reservations is a useful safety net. Wrong: a lock stops other requests from running at the same time, but it cannot undo a step that already happened. Wrong: a declined card will never succeed, however often you retry. Wrong: reversing the order only moves the problem: stock can be unavailable after the charge, and then the charge must be refunded.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "swe.backend.k1.retry-backoff-jitter",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.operations.reliability",
+    "secondary_skill_codes": [
+      "engineering.debugging.distributed"
+    ],
+    "prompt": "A downstream service had a short outage. It came back up, but it was immediately overloaded again, because your 200 instances all retry failed calls every 1 second. Which change helps most?",
+    "choices": [
+      "Raise the retry count from 3 to 10, so fewer user requests end in an error",
+      "Retry with exponential backoff, random jitter and a cap on attempts",
+      "Retry immediately with no delay, so users wait less after the outage ends",
+      "Shorten the call timeout, so failed calls give up and are retried sooner"
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "explanation": "Exponential backoff spreads retries out over time, random jitter stops all instances from retrying at the same moment, and a maximum number of attempts caps the extra load (a circuit breaker helps too). Wrong: more retries multiply the load on a service that is already struggling. Wrong: no delay creates an even bigger retry storm. Wrong: a shorter timeout makes calls fail and retry faster, which adds load.",
+    "expected_time_s": 55
+  },
+  {
+    "bank_key": "swe.backend.k1.out-of-order-events-version",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3",
+      "L4"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "engineering.system_design.consistency",
+    "secondary_skill_codes": [
+      "engineering.system_design.queueing"
+    ],
+    "prompt": "A consumer keeps a search index in sync using `ProductUpdated` events. Each event carries the whole product. Events for the same product sometimes arrive out of order, so the index can end up with an older price than the database. Which fix is most reliable?",
+    "choices": [
+      "Add more consumer threads, so that each event is applied to the index sooner",
+      "Wait 5 seconds before applying each event, so that late events can catch up",
+      "Send any event that arrives out of order to a dead-letter queue for review",
+      "Version each event, and skip any event older than the version already stored"
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "explanation": "Each event carries a version that increases with every change to the product. The consumer applies an event only if its version is higher than the one stored in the index (a conditional write), so a late, older event is ignored. Wrong: more threads cause more reordering, not less. Wrong: a delay makes reordering rarer but does not prevent it, and it adds lag to every update. Wrong: without a version, the consumer cannot even tell that an event is out of order, and a dead-letter queue does not repair the index.",
+    "expected_time_s": 65
+  },
+  {
+    "bank_key": "swe.backend.k1.reduce-stale-cache-window",
+    "type": "multi_select",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.system_design.caching",
+    "secondary_skill_codes": [
+      "engineering.system_design.consistency"
+    ],
+    "prompt": "Product details are kept in a shared cache with a 10-minute expiry. After an admin edits a price, customers can see the old price for up to 10 minutes. Which of these are safe ways to shorten that window? Select all that apply.",
+    "choices": [
+      "Delete the product's cache key right after the database update commits",
+      "Write the new price to the cache before the database transaction commits",
+      "On a cache miss, load the product from a read replica instead of the primary",
+      "Lower the cache expiry from 10 minutes to 1 minute",
+      "Add more memory to the cache server"
+    ],
+    "answer": {
+      "correct": [
+        0,
+        3
+      ]
+    },
+    "explanation": "Correct: deleting the key after the commit means the next read loads the new price (any small remaining race is limited by the expiry). Correct: a 1-minute expiry caps how long a stale price can live, at the cost of more database reads. Wrong: writing to the cache before the commit can show a price that is then rolled back and never saved. Wrong: a lagging replica can put the old price straight back into the cache right after the delete. Wrong: memory size does not change how long an entry is kept before it expires.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "swe.backend.k1.stateless-scale-out",
+    "type": "multi_select",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.system_design.scaling",
+    "secondary_skill_codes": [
+      "engineering.system_design.trade_offs"
+    ],
+    "prompt": "You will run 10 instances of an API service behind a load balancer instead of 1. Which parts of the current design must change for this to work correctly? Select all that apply.",
+    "choices": [
+      "Uploaded files are saved on the server's local disk and served from there",
+      "Configuration is read from environment variables at startup",
+      "Logs are written to standard output",
+      "Responses are compressed with gzip before they are sent",
+      "Login sessions are stored in the memory of the app process",
+      "An hourly job that sends invoices runs inside every app process"
+    ],
+    "answer": {
+      "correct": [
+        0,
+        4,
+        5
+      ]
+    },
+    "explanation": "Correct: in-memory sessions are lost when the next request goes to another instance, so users are logged out; use a shared store or signed tokens. Correct: files on one server's disk are missing on the other nine; use shared storage. Correct: a job inside every process runs 10 times, so customers get 10 invoices; run it once (a separate worker, or a lock). Wrong: environment variables are set the same way for every instance. Wrong: logs on standard output are collected per instance by the platform, which works fine. Wrong: gzip works per response and does not depend on how many instances there are.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "swe.backend.k1.ack-before-processing",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "find_bug",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.system_design.queueing",
+    "secondary_skill_codes": [
+      "engineering.operations.reliability"
+    ],
+    "prompt": "This worker processes payment messages. The queue redelivers any message that is not acknowledged within 30 seconds. After a worker crashes or restarts, some orders are never paid. Which line causes this?\n\n```\n1  loop forever:\n2      msg = queue.receive()\n3      queue.ack(msg)\n4      order = db.findOrder(msg.orderId)\n5      if order.status == \"paid\":\n6          continue\n7      payments.capture(order, idempotencyKey = msg.id)\n8      db.setStatus(order.id, \"paid\")\n```",
+    "choices": [
+      "Line 3: it acknowledges the message before the work, so a crash loses it",
+      "Line 5: the status check should be removed, because it skips valid messages",
+      "Line 7: the capture should run after line 8, so the status is saved first",
+      "Line 2: `receive` needs a longer wait time, or some messages are skipped"
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "explanation": "Once a message is acknowledged, the queue forgets it. If the worker crashes anywhere between lines 3 and 8, the order is never paid and the message is never redelivered. Fix: acknowledge after line 8; the status check and the idempotency key already make a redelivered message safe. Wrong: the status check on line 5 is what makes redelivery safe; removing it does not help. Wrong: saving \"paid\" before the capture would mark orders as paid that were never charged if the worker crashes in between. Wrong: the receive wait time only controls how long the worker waits when the queue is empty; it does not lose messages.",
+    "expected_time_s": 65
+  },
+  {
+    "bank_key": "swe.backend.k1.lost-update-balance",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.concurrency.fundamentals",
+    "secondary_skill_codes": [
+      "engineering.data.transactions"
+    ],
+    "prompt": "Two requests withdraw 30 from the same account at the same moment. Each one reads the balance (100), subtracts 30 in application code, and writes the result back. The final balance is 70 instead of 40. What is the best fix?",
+    "choices": [
+      "Wrap the read and the write in one transaction at the `READ COMMITTED` level",
+      "Subtract in the database with one atomic `UPDATE`: `SET balance = balance - 30`",
+      "Add an index on `accounts.id`, so each write finishes before the other one reads",
+      "Retry the write when it takes over 500 ms, since slow writes cause the overlap"
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "explanation": "Both requests read 100 and both write 70, so one withdrawal is lost (a lost update). One atomic statement, such as `UPDATE accounts SET balance = balance - 30 WHERE id = ? AND balance >= 30`, lets the database apply both changes in turn. `SELECT ... FOR UPDATE` or a version column also work. Wrong: at READ COMMITTED, plain reads do not lock the row, so both requests still read 100. Wrong: the primary key is already indexed, and a faster write only narrows the race. Wrong: retrying slow writes does not detect that another request changed the balance.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "swe.backend.k1.hash-map-matching",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L2",
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "engineering.algorithms.data_structures",
+    "secondary_skill_codes": [
+      "engineering.performance.complexity"
+    ],
+    "prompt": "A nightly job matches 200,000 payments to 200,000 invoices. For each payment, it loops through the whole invoice list to find the invoice with the same `invoiceId`. The job now takes hours. What is the best change?",
+    "choices": [
+      "Build a hash map of invoices by `invoiceId` once, and look up each payment",
+      "Store the invoices in a linked list, which is faster to search than an array",
+      "Sort the invoice list once, then keep looping through it from the start",
+      "Run the loop in 4 threads, each one handling a quarter of the payments"
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "explanation": "The current job does up to 200,000 × 200,000 comparisons, which is O(n × m). A hash map makes each lookup O(1) on average, so the whole job becomes O(n + m) and runs in seconds. Wrong: searching a linked list is still O(n), and it is usually slower than an array in practice. Wrong: sorting helps only if you then use binary search; looping from the start is still linear. Wrong: 4 threads divide the time by at most 4, and the job is still quadratic.",
+    "expected_time_s": 45
+  },
+  {
+    "bank_key": "swe.backend.k1.min-heap-top-k",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.algorithms.data_structures",
+    "secondary_skill_codes": [
+      "engineering.performance.complexity"
+    ],
+    "prompt": "A dashboard must show the 10 slowest requests out of 50 million log lines. The current code loads every duration into memory and sorts the whole list, and the job runs out of memory. Which approach fits best?",
+    "choices": [
+      "Put every duration in a hash map from duration to request, then read the top 10",
+      "Keep a sorted array of all durations, inserting each one at its right position",
+      "Put every duration in a binary search tree, then walk it from the largest end",
+      "Keep a min-heap of the 10 slowest seen so far, and replace its top if slower"
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "explanation": "A min-heap of size 10 holds the 10 slowest requests seen so far, with the fastest of them on top. Each new duration is compared with the top and replaces it if slower. That is one pass, O(n log 10) time and memory for only 10 items. Wrong: a hash map has no order and still holds all 50 million entries. Wrong: a sorted array of everything still holds all entries, and each insert is O(n). Wrong: a binary search tree of 50 million entries has the same memory problem.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "swe.backend.k1.array-queue-remove-first",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.performance.complexity",
+    "secondary_skill_codes": [
+      "engineering.algorithms.data_structures"
+    ],
+    "prompt": "A job processes 1 million tasks. It keeps them in a dynamic array used as a queue: new tasks are appended at the end, and the next task is taken with \"remove first element\" (like `pop(0)` on a Python list or `remove(0)` on a Java `ArrayList`). The job is far slower than expected. What is the most likely reason?",
+    "choices": [
+      "Appending to the end of an array copies the whole array on every append",
+      "Removing the first element moves all the others, so the job becomes O(n²)",
+      "The array is unsorted, so each removal must search for the first task",
+      "Arrays cannot hold a million items, so the runtime splits them into parts"
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "explanation": "Removing the first element shifts every remaining element down by one, which is O(n). Doing it n times makes the job O(n²). Use a real queue or deque, or keep an index to the head of the array. Wrong: appending is amortized O(1); the array is copied only when its capacity grows, which is rare. Wrong: \"first\" means the first position, so no search is needed. Wrong: a million items is small for an array.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "swe.backend.k1.read-the-trace-first",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L2",
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "engineering.debugging.tools",
+    "secondary_skill_codes": [
+      "engineering.operations.monitoring"
+    ],
+    "prompt": "A request takes about 2 seconds. A teammate wants to switch to a faster JSON library. You pull a trace of a slow request:\n\n```\nauth check            15 ms\n3 database queries    40 ms total\npricing service call  1,850 ms\nJSON serialization    30 ms\n```\n\nWhat should the team work on first?",
+    "choices": [
+      "Switch to the faster JSON library, since serialization runs on every request",
+      "Add indexes, so that the three database queries finish faster",
+      "Find out why the pricing call is slow, or cache, batch or parallelize it",
+      "Cache the auth check result, so it is not repeated on every request"
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "explanation": "Measure before optimising: the pricing call is about 92% of the time, so that is where any real gain is. Wrong: even a 10 times faster JSON library saves about 27 ms, around 1%. Wrong: the database queries take 40 ms in total, so faster queries cannot fix a 2-second request. Wrong: the auth check is 15 ms, so caching it changes almost nothing.",
+    "expected_time_s": 50,
+    "group": "trace-latency"
+  },
+  {
+    "bank_key": "swe.backend.k1.bounded-in-memory-cache",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.system_design.trade_offs",
+    "secondary_skill_codes": [
+      "engineering.system_design.caching"
+    ],
+    "prompt": "Each instance of a service keeps an in-memory map from customer id to computed pricing data. Entries are never removed. Every few days, instances crash with out-of-memory errors. What is the best fix?",
+    "choices": [
+      "Double the instances' memory, so the map has room to keep growing",
+      "Restart every instance each night, before the memory has time to run out",
+      "Run the garbage collector by hand after each request to free old entries",
+      "Cap the map's size and evict least recently used entries, plus an expiry"
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "explanation": "A cache with no limit is a memory leak. A size cap with least-recently-used eviction (plus an expiry for freshness) trades a little CPU, to recompute entries that were evicted, for memory use that stays flat. Wrong: more memory only delays the crash. Wrong: nightly restarts hide the leak and empty the cache every day. Wrong: the garbage collector can only free objects nothing points to; entries in the map are still referenced.",
+    "expected_time_s": 55
+  },
+  {
+    "bank_key": "swe.backend.k1.async-check-then-act",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "engineering.concurrency.fundamentals",
+    "secondary_skill_codes": [
+      "engineering.system_design.caching"
+    ],
+    "prompt": "This code runs on a single-threaded event loop (such as Node.js or Python asyncio):\n\n```\nasync function getRates(currency):\n    if not cache.has(currency):\n        rates = await fetchRatesFromProvider(currency)   // about 300 ms\n        cache.set(currency, rates)\n    return cache.get(currency)\n```\n\nJust after the service starts, 500 requests for `USD` arrive at once, and the provider receives about 500 calls instead of 1. Why?",
+    "choices": [
+      "While the first call awaits, other requests run, see no entry, and fetch too",
+      "The cache map is not thread-safe, so it needs a concurrent map or a mutex around it",
+      "The event loop runs async functions on several threads at the same time",
+      "`cache.has` is slow, so it takes longer than the provider call to finish"
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "explanation": "One thread does not mean no races. Each `await` hands control to other requests, so all 500 pass the `cache.has` check before the first one stores a value. Fix: store the in-flight promise or future in the cache, so later callers wait for the same call (\"single flight\"). Wrong: there is only one thread, so thread-safety of the map is not the problem. Wrong: the event loop runs one piece of code at a time on one thread. Wrong: a map lookup takes microseconds, far less than a 300 ms network call.",
+    "expected_time_s": 70
+  },
+  {
+    "bank_key": "swe.backend.k1.lock-expired-during-task",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3",
+      "L4"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "engineering.concurrency.fundamentals",
+    "secondary_skill_codes": [
+      "engineering.debugging.distributed"
+    ],
+    "prompt": "A scheduled task must never run on two workers at once. Each worker takes a lock in a shared cache with a 30-second expiry, runs the task, then releases the lock. The task usually takes 10 seconds, but sometimes 45 seconds. Logs show it occasionally running on two workers at the same time. What is the most likely cause?",
+    "choices": [
+      "The cache server is single-threaded, so it handed the same lock to both workers",
+      "The workers' clocks differ, so each one thinks the other worker's lock has expired",
+      "The lock expired while the slow task was still running, so another worker took it",
+      "Both workers asked for the lock in the same millisecond, so both were given it"
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "explanation": "After 30 seconds the lock expires on its own, even though the 45-second task is still running, so another worker can take it. Fixes: renew the lock regularly while the task runs, make the expiry longer than the worst case, release only a lock you still own (compare a token), and make the task safe to run twice or check a fencing token. Wrong: a single-threaded cache server handles one command at a time, which is exactly why \"set if not exists\" is atomic. Wrong: the expiry is measured by the cache server's clock, not the workers' clocks. Wrong: \"set if not exists\" is atomic, so only one of two simultaneous requests can win.",
+    "expected_time_s": 70
+  },
+  {
+    "bank_key": "swe.backend.k1.event-loop-blocked-by-cpu",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.concurrency.fundamentals",
+    "secondary_skill_codes": [
+      "engineering.performance.complexity"
+    ],
+    "prompt": "A service runs on a single-threaded event loop (such as Node.js or Python asyncio). One endpoint builds a large PDF report, which takes 3 seconds of pure CPU work. While a report is being built, every other request to that instance stalls, even health checks. What is the cause and the fix?",
+    "choices": [
+      "The report holds a database connection; increase the connection pool size",
+      "The CPU work blocks the single thread; move it to a worker or a job queue",
+      "Health checks have low priority in the event loop; raise their priority",
+      "The garbage collector pauses during big allocations; tune the collector"
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "explanation": "An event loop runs one piece of code at a time. Three seconds of CPU work without an `await` means nothing else can run, including health checks. Move CPU-heavy work to a worker thread, a separate process, or a background job queue. Wrong: a busy database connection would only block requests that need the database, not health checks. Wrong: an event loop has no priorities that would let a health check interrupt running code. Wrong: garbage collection pauses are short and are not the cause of a 3-second stall that matches the report time.",
+    "expected_time_s": 55
+  },
+  {
+    "bank_key": "swe.backend.k1.spot-race-conditions",
+    "type": "multi_select",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.concurrency.fundamentals",
+    "secondary_skill_codes": [
+      "engineering.craft.correctness"
+    ],
+    "prompt": "Two requests can run the same code at the same moment. Which of these can produce a wrong result? Select all that apply.",
+    "choices": [
+      "`UPDATE stock SET qty = qty - 1 WHERE id = 7 AND qty > 0`",
+      "Read a view counter, add 1 in application code, then save it",
+      "Check that a file does not exist, then create it with a separate call",
+      "Insert into a table with a `UNIQUE` constraint; treat a duplicate-key error as \"already done\"",
+      "If `user.welcomeSent` is false, send the welcome email, then set it to true",
+      "Read a setting that is loaded once at startup and never changed"
+    ],
+    "answer": {
+      "correct": [
+        1,
+        2,
+        4
+      ]
+    },
+    "explanation": "Correct: read, add, write loses an update when both requests read the same value. Correct: both requests can see `welcomeSent` as false and both send the email. Correct: both can see that the file is missing, and then both try to create it. Wrong: the single UPDATE statement is atomic in the database, and `qty > 0` is checked at the moment the row is changed. Wrong: the unique constraint lets the database pick exactly one winner. Wrong: a value that never changes cannot be raced on.",
+    "expected_time_s": 65
+  },
+  {
+    "bank_key": "swe.backend.k1.constant-time-operations",
+    "type": "multi_select",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L2",
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "engineering.performance.complexity",
+    "secondary_skill_codes": [
+      "engineering.algorithms.data_structures"
+    ],
+    "prompt": "A service holds about 1 million items in memory. Which of these operations take roughly constant time (on average), no matter how many items there are? Select all that apply.",
+    "choices": [
+      "Look up a value by key in a hash map",
+      "Check whether a value is in an unsorted array",
+      "Insert an item at the front of a dynamic array",
+      "Append an item to the end of a dynamic array",
+      "Find an item by value in a linked list",
+      "Read the smallest item of a min-heap, without removing it"
+    ],
+    "answer": {
+      "correct": [
+        0,
+        3,
+        5
+      ]
+    },
+    "explanation": "Correct: a hash map lookup is O(1) on average. Correct: appending to a dynamic array is amortized O(1); it copies only when the capacity grows. Correct: the smallest item of a min-heap is always at the root, so reading it is O(1). Wrong: searching an unsorted array is O(n). Wrong: inserting at the front shifts every element, which is O(n). Wrong: finding a value in a linked list means walking it, which is O(n).",
+    "expected_time_s": 55
+  },
+  {
+    "bank_key": "swe.backend.k1.read-outside-lock",
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "find_bug",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L2",
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "engineering.concurrency.fundamentals",
+    "secondary_skill_codes": [
+      "engineering.craft.correctness"
+    ],
+    "prompt": "Many threads call `deposit` at the same time. The final balance is sometimes lower than the sum of all deposits. Which line causes this?\n\n```\n1  lock = new Mutex()\n2  balance = 0\n3\n4  function deposit(amount):\n5      current = balance\n6      lock.acquire()\n7      balance = current + amount\n8      lock.release()\n```",
+    "choices": [
+      "Line 1: each call to `deposit` should create its own new `Mutex`",
+      "Line 8: the lock should be released before line 7, not after it",
+      "Line 6: `acquire` needs a timeout, or the threads can wait forever",
+      "Line 5: `balance` is read before the lock is acquired"
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "explanation": "Two threads can both read the same `balance` on line 5, then each writes `current + amount` in turn, so one deposit is lost. The read must be inside the lock (and the release should be in a `finally` block). Wrong: a new mutex per call means no thread ever waits for another, so nothing is protected. Wrong: releasing before line 7 leaves the write unprotected. Wrong: a timeout changes how long a thread waits; it does not cause or fix lost deposits.",
+    "expected_time_s": 55
+  }
+]

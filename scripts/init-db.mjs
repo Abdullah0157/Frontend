@@ -372,11 +372,45 @@ CREATE TABLE IF NOT EXISTS expert_assessments (
   created_at        timestamptz NOT NULL DEFAULT now()
 );
 CREATE INDEX IF NOT EXISTS idx_expert_candidate ON expert_assessments(candidate_user_id, created_at DESC);
+
+-- ==========================================================================
+-- WRITTEN ASSESSMENTS v1 (frameworks/swe-assessment-design.md)
+-- Additive only. Items gain bank metadata and a candidate-visible \`content\`
+-- block (answer keys stay in scoring_rubric, never sent to the browser).
+-- Sessions gain a frozen per-candidate form, a progress pointer and an access
+-- token hash. Reports gain section scores, band and skill map.
+-- ==========================================================================
+ALTER TABLE items ADD COLUMN IF NOT EXISTS bank_key   text;
+ALTER TABLE items ADD COLUMN IF NOT EXISTS section    text;
+ALTER TABLE items ADD COLUMN IF NOT EXISTS format     text;
+ALTER TABLE items ADD COLUMN IF NOT EXISTS language   text;
+ALTER TABLE items ADD COLUMN IF NOT EXISTS difficulty text;
+ALTER TABLE items ADD COLUMN IF NOT EXISTS tracks     text[] NOT NULL DEFAULT '{}';
+ALTER TABLE items ADD COLUMN IF NOT EXISTS levels     text[] NOT NULL DEFAULT '{}';
+ALTER TABLE items ADD COLUMN IF NOT EXISTS content    jsonb;
+CREATE UNIQUE INDEX IF NOT EXISTS idx_items_bank_key ON items(bank_key) WHERE bank_key IS NOT NULL;
+CREATE INDEX IF NOT EXISTS idx_items_section ON items(section, status) WHERE section IS NOT NULL;
+ALTER TABLE items DROP CONSTRAINT IF EXISTS items_type_check;
+ALTER TABLE items ADD CONSTRAINT items_type_check CHECK (type IN (
+  'mcq','multi_select','sjt','coding','code_review',
+  'scenario_response','voice_response','video_response','system_design'));
+
+ALTER TABLE assessment_sessions ADD COLUMN IF NOT EXISTS track             text;
+ALTER TABLE assessment_sessions ADD COLUMN IF NOT EXISTS language          text;
+ALTER TABLE assessment_sessions ADD COLUMN IF NOT EXISTS form              jsonb;
+ALTER TABLE assessment_sessions ADD COLUMN IF NOT EXISTS progress          jsonb;
+ALTER TABLE assessment_sessions ADD COLUMN IF NOT EXISTS access_token_hash text;
+
+ALTER TABLE item_responses ADD COLUMN IF NOT EXISTS section text;
+
+ALTER TABLE assessment_reports ADD COLUMN IF NOT EXISTS sections  jsonb;
+ALTER TABLE assessment_reports ADD COLUMN IF NOT EXISTS band      text;
+ALTER TABLE assessment_reports ADD COLUMN IF NOT EXISTS skill_map jsonb;
 `
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false },
+  ssl: process.env.DATABASE_SSL === 'false' ? false : { rejectUnauthorized: false },
 })
 
 try {

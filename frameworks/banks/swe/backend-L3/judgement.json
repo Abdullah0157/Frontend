@@ -1,0 +1,1434 @@
+[
+  {
+    "bank_key": "swe.backend.j.error-spike-after-own-deploy",
+    "type": "sjt",
+    "section": "judgement",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "engineering.operations.incident_response",
+    "secondary_skill_codes": [
+      "behavioral.ownership.accountability",
+      "behavioral.communication.clarity"
+    ],
+    "prompt": "Twenty minutes after you deployed a change to the checkout service, the checkout error rate jumps from 0.1% to 6%. The graphs show the errors started exactly when your deploy finished. Nobody else has noticed yet. What do you do first?",
+    "choices": [
+      "Roll back your deploy with the normal process and tell the team channel what you saw and that you are rolling back.",
+      "Send the graphs to your lead and the on-call engineer, and ask them whether you should roll back your change or keep it.",
+      "Find the most likely bug in your change, write a quick fix and deploy it straight away, since you know this code best.",
+      "Study the logs and traces until you understand the root cause, then ship a proper fix instead of undoing the whole release."
+    ],
+    "answer": {
+      "points": [
+        3,
+        2,
+        1,
+        0
+      ]
+    },
+    "explanation": "Best (3): \"Roll back and announce\". The errors match your deploy, and a rollback is the fastest safe way to stop customers failing to pay. Telling the team keeps everyone informed, and the cause can be found once customers are safe. \"Ask lead and on-call whether to roll back\" (2): Good communication, but it is your change and a rollback is a standard, low-risk step. Waiting for an answer keeps the outage going. \"Quick fix forward\" (1): A rushed fix based on a guess is slower and riskier than a rollback and can add a second bug. It also leaves the team uninformed. \"Find the root cause first\" (0): Every minute of investigation leaves about 6% of checkouts failing. Protecting the release instead of customers is the wrong priority.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "swe.backend.j.chaotic-incident-channel",
+    "type": "sjt",
+    "section": "judgement",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3",
+      "L4"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.operations.incident_response",
+    "secondary_skill_codes": [
+      "behavioral.leadership.decision_making",
+      "behavioral.communication.clarity"
+    ],
+    "prompt": "During an outage of the payments API, fifteen people join the incident channel. Several suggest different fixes at the same time, and you notice that two engineers are both changing production settings without telling each other. Nobody is clearly in charge. What is the best response?",
+    "choices": [
+      "Start a written timeline in the channel of who changed what and when, so the team can see every change and undo any of them later.",
+      "Apply the fix you believe is most likely to work, quickly, since ending the outage fast is what matters most right now.",
+      "Since changes are clashing, ask for one incident lead (offer to do it yourself) and for every change to be announced first.",
+      "Leave the channel to reduce the noise and wait for a summary, since enough experienced people are already working on it."
+    ],
+    "answer": {
+      "points": [
+        2,
+        0,
+        3,
+        1
+      ]
+    },
+    "explanation": "Best (3): \"Ask for one incident lead and announced changes\". Uncoordinated changes are the biggest risk right now. One lead and announced changes is standard incident practice and makes the fixes safe and traceable. \"Write a timeline\" (2): Useful for undoing changes and for the review afterwards, but it does not stop two people changing production at the same time. \"Apply your own fix\" (0): Adds a third uncoordinated change, which is exactly the problem. It can make the outage worse and hide which change helped. \"Leave the channel\" (1): Reduces noise, but you saw a real risk (two people changing production) and said nothing about it.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "swe.backend.j.export-drops-rows-before-demo",
+    "type": "sjt",
+    "section": "judgement",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "behavioral.problem_solving.pragmatism",
+    "secondary_skill_codes": [
+      "engineering.craft.testing",
+      "behavioral.communication.clarity"
+    ],
+    "prompt": "The product manager wants your new invoice export released today, because a large customer will see it in a demo tomorrow. In final testing you find that invoices with more than 100 lines silently lose their last rows in the export. The demo customer's invoices are all small, and new features can be switched on for one customer at a time. What is the best response?",
+    "choices": [
+      "Release as planned for everyone, and add a high-priority ticket to fix the large-invoice export in the next sprint.",
+      "Tell the product manager about the bug and who it affects, and suggest releasing behind a flag only for the demo customer.",
+      "Tell the product manager that the release must wait until the bug is fixed and tested, even if the demo has to move to another day.",
+      "Work late tonight to fix the bug and release with the fix included, without raising it, so the product manager is not worried."
+    ],
+    "answer": {
+      "points": [
+        0,
+        3,
+        2,
+        1
+      ]
+    },
+    "explanation": "Best (3): \"Explain and release behind a flag\". The demo still happens, no customer gets wrong invoice data, and the product manager decides with full information. \"Release as planned\" (0): Knowingly ships silent data loss in financial documents to every customer with large invoices. \"Block the release\" (2): Protects customers and is honest, but misses a safe option that also meets the business need. \"Fix late without telling\" (1): Hides a risk from the person who owns the decision and rushes an untested change into the release.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "swe.backend.j.cosmetic-bug-on-release-day",
+    "type": "sjt",
+    "section": "judgement",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L2",
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "behavioral.problem_solving.pragmatism",
+    "secondary_skill_codes": [
+      "behavioral.communication.written"
+    ],
+    "prompt": "On release day you notice that the order confirmation email shows dates in US format (month/day) for every user, including users in Europe. The rest of the release is tested and includes an important fix for a payment bug. The product manager wants to ship today. What is the best response?",
+    "choices": [
+      "Ask to hold the whole release until the date format is fixed, because customers in Europe may misread their order dates.",
+      "Make the one-line date fix directly on the release branch and ship it without review, since the change is so small and safe.",
+      "Ship today and fix the date format the next time you are working on the email code, since it is only a display problem.",
+      "Ship today, since the payment fix matters more, log a ticket for the date bug, and tell support customers may ask about it."
+    ],
+    "answer": {
+      "points": [
+        1,
+        0,
+        2,
+        3
+      ]
+    },
+    "explanation": "Best (3): \"Ship, ticket and tell support\". The bug is cosmetic and the release fixes a real payment problem. Recording it and telling support makes sure it gets fixed and that customers get good answers. \"Hold the release\" (1): Delays an important payment fix because of a cosmetic problem. \"Unreviewed change on the release branch\" (0): Adds an untested, unreviewed change to a tested release on release day. Small changes break releases too, and skipping review is a bad habit. \"Ship and fix later, with no record\" (2): The right decision to ship, but nothing is recorded, so the fix may be forgotten and support is not prepared.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "swe.backend.j.senior-asks-for-rewrite",
+    "type": "sjt",
+    "section": "judgement",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "behavioral.collaboration.conflict",
+    "secondary_skill_codes": [
+      "behavioral.communication.clarity",
+      "engineering.system_design.trade_offs"
+    ],
+    "prompt": "In code review, a senior colleague asks you to rewrite your working, tested module using a design pattern they prefer. You believe your version is simpler, and the rewrite would take about two days. The team has no rule about this pattern. What is the best response?",
+    "choices": [
+      "Do the rewrite, because the colleague is more senior, has worked on this codebase longer, and probably knows something you do not.",
+      "Reply with your reasons, and if they still insist after one more comment, do the rewrite so the discussion does not drag on.",
+      "Explain your reasons and ask what problem they see, since they may know something; if you still disagree, ask the tech lead to decide.",
+      "Get the second approval you need from another reviewer and merge, since the code works, is tested, and their comment is only a preference."
+    ],
+    "answer": {
+      "points": [
+        1,
+        2,
+        3,
+        0
+      ]
+    },
+    "explanation": "Best (3): \"Explain, ask, and agree how to decide\". Shares facts, tries to understand the concern, and has a clear, respectful way to reach a decision. \"Rewrite because they are senior\" (1): Spends two days without understanding the benefit. Seniority alone is not a reason, and nobody learns anything. \"Explain, then give in\" (2): Explaining is good, but giving in without understanding their concern or getting a decision leaves the real question open. \"Merge around the reviewer\" (0): Avoids the discussion and goes around a colleague, which damages trust and the review process.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "swe.backend.j.reviewing-unneeded-cache",
+    "type": "sjt",
+    "section": "judgement",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3",
+      "L4"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "behavioral.collaboration.conflict",
+    "secondary_skill_codes": [
+      "engineering.system_design.trade_offs",
+      "behavioral.communication.written"
+    ],
+    "prompt": "You are reviewing a teammate's pull request. It works, but it adds a new caching layer that you think is not needed and could show users stale data. The teammate spent a week on it and is clearly proud of it. What is the best response?",
+    "choices": [
+      "Comment respectfully: ask what problem the cache solves, explain the stale-data risk with an example, and offer to talk.",
+      "Approve it with a friendly comment, since it works and blocking a week of someone's work would hurt the relationship.",
+      "Approve it, but add a non-blocking note saying you are not sure the cache is needed and that they could remove it later.",
+      "Ask your manager to look at the pull request and make the call, so the criticism of a week's work does not come from you."
+    ],
+    "answer": {
+      "points": [
+        3,
+        0,
+        1,
+        1
+      ]
+    },
+    "explanation": "Best (3): \"Respectful, specific questions\". Raises a real risk honestly, invites their reasoning and data, and keeps the discussion about the code, not the person. \"Approve to protect the relationship\" (0): Lets in a risk you believe is real and gives the teammate no chance to explain or learn. \"Approve with a weak note\" (1): Mentions the concern, but too weakly; the stale-data risk ships anyway. \"Hand it to your manager\" (1): Avoids the conversation and asks the manager to judge a technical point you can discuss with your teammate directly.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "swe.backend.j.vague-csv-export-ticket",
+    "type": "sjt",
+    "section": "judgement",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "behavioral.communication.clarity",
+    "secondary_skill_codes": [
+      "behavioral.problem_solving.decomposition",
+      "engineering.system_design.trade_offs"
+    ],
+    "prompt": "A ticket says only: \"Add CSV export to the orders page.\" It does not say whether to export the current page, the filtered results or all orders, and the orders table has 3 million rows. The product manager is busy today but answers messages. What do you do first?",
+    "choices": [
+      "Build an export of all orders, since that covers every possible need and avoids having to come back to the ticket later.",
+      "Build an export of the current page only, since it is the fastest option to ship, and change it later if anyone asks for more.",
+      "Wait until you can get a meeting with the product manager, and agree the full requirement there before you write any of the code.",
+      "Message the product manager the options, your suggestion and the cost of each, and start on the parts that do not depend on it."
+    ],
+    "answer": {
+      "points": [
+        0,
+        1,
+        1,
+        3
+      ]
+    },
+    "explanation": "Best (3): \"Ask with options, keep moving\". Gets a clear decision quickly from the right person, shows the trade-offs, and keeps work moving. \"Export everything\" (0): Builds the most expensive option on a guess; exporting 3 million rows in one request can overload the database and time out. \"Current page only\" (1): Quick, but it is a guess that may have to be redone, and nobody agreed to it. \"Wait for a meeting\" (1): Loses time when a short message would do, and blocks work that does not depend on the answer.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "swe.backend.j.requirement-changes-mid-sprint",
+    "type": "sjt",
+    "section": "judgement",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "behavioral.communication.clarity",
+    "secondary_skill_codes": [
+      "engineering.system_design.trade_offs",
+      "behavioral.problem_solving.pragmatism"
+    ],
+    "prompt": "Halfway through a two-week task, the product manager changes the requirement: the sales report must now update in real time instead of once a day. You think this roughly doubles the work, but the deadline has not changed. What is the best response?",
+    "choices": [
+      "Accept the change and work evenings and weekends so the deadline can still be met, since the product manager clearly needs this.",
+      "Give a new estimate and offer choices: same date with less scope, a later date, or daily now and real time later. Let them choose.",
+      "Tell the product manager the change must wait for the next sprint, and keep building the daily version that was agreed in planning.",
+      "Keep building the daily version for now, and bring up the change at the next sprint review when the whole team is together."
+    ],
+    "answer": {
+      "points": [
+        1,
+        3,
+        2,
+        0
+      ]
+    },
+    "explanation": "Best (3): \"Explain the impact and offer choices\". Makes the trade-off visible and lets the person who owns priorities decide with real numbers. \"Absorb it with overtime\" (1): Hides the real cost of the change, is not sustainable, and rushed work raises the risk of bugs. \"Defer to the next sprint\" (2): Protects the plan and is open about it, but decides for the business without checking how important real time is. \"Ignore it until the review\" (0): Silently ignores a stated requirement; the product manager finds out late that they will not get what they asked for.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "swe.backend.j.estimate-unknown-feature",
+    "type": "sjt",
+    "section": "judgement",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L2",
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "behavioral.problem_solving.decomposition",
+    "secondary_skill_codes": [
+      "behavioral.communication.clarity"
+    ],
+    "prompt": "Your lead asks how long it will take to add a \"forgot password\" flow. You have not worked in this part of the codebase, and the email service is owned by another team. Your lead wants a number at stand-up in ten minutes. What is the best response?",
+    "choices": [
+      "Give a range, such as 3 to 5 days, with your assumptions and risks, and offer a firmer number after half a day of investigation.",
+      "Say two days, which is how long a similar flow took at your last job, and plan to work extra hours if it turns out to be bigger.",
+      "Say that you need to study the code and talk to the email team first, and promise a firm number by the end of the day.",
+      "Avoid giving a number at stand-up, and report how long it took once the work is finished, so the estimate cannot be wrong."
+    ],
+    "answer": {
+      "points": [
+        3,
+        1,
+        2,
+        0
+      ]
+    },
+    "explanation": "Best (3): \"Range with assumptions\". Honest about the uncertainty, still useful for planning, and gives a clear path to a better number. \"Optimistic number, covered by overtime\" (1): Ignores the unknowns in this codebase and the other team; a likely miss later is worse than a range now. \"Number by the end of the day\" (2): Reasonable and honest, but gives the lead nothing to plan with now, when a range was possible. \"No estimate\" (0): Gives the team nothing to plan with and avoids responsibility for the estimate.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "swe.backend.j.idor-in-other-team-api",
+    "type": "sjt",
+    "section": "judgement",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.security.data_protection",
+    "secondary_skill_codes": [
+      "behavioral.ownership.initiative",
+      "behavioral.communication.written"
+    ],
+    "prompt": "While testing your feature, you notice that another team's endpoint `GET /api/accounts/{id}` returns any customer's account details if you change the id, even when you are logged in as a different customer. The endpoint has been live for months. What do you do first?",
+    "choices": [
+      "Mention it to the other team's lead the next time you see them, since it is their code and they understand the risks best.",
+      "Fix it yourself in their repository and merge it quickly, so that customers are protected as soon as possible, then tell them.",
+      "Since data is exposed now, report it urgently through the security process, or privately to the owning team and your lead.",
+      "Post the steps to reproduce in the company-wide engineering channel, so everyone sees how serious it is and it gets fixed fast."
+    ],
+    "answer": {
+      "points": [
+        0,
+        1,
+        3,
+        1
+      ]
+    },
+    "explanation": "Best (3): \"Report privately and urgently\". Gets the right owners working on it immediately, while keeping the details of the hole private until it is fixed. \"Mention it later\" (0): Customer data is exposed right now; waiting for a chance meeting can leave it open for days. \"Fix it yourself in their repository\" (1): Means well and tells them afterwards, but changes another team's code without their review, may break their clients, and skips the security process (past exposure still needs to be checked). \"Post in a company-wide channel\" (1): It is reported quickly, but the steps to exploit it are shared with many people before it is fixed.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "swe.backend.j.api-key-in-public-repo",
+    "type": "sjt",
+    "section": "judgement",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L2",
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "engineering.security.data_protection",
+    "secondary_skill_codes": [
+      "behavioral.ownership.initiative"
+    ],
+    "prompt": "You notice that a teammate's commit from yesterday added a live payment-provider API key to a config file. The repository is public on GitHub. What do you do first?",
+    "choices": [
+      "Make a new commit that removes the key from the config file right away, so it is no longer visible to anyone browsing the repository.",
+      "Tell the teammate privately so they can deal with it themselves, and avoid embarrassing them in front of the rest of the team.",
+      "Add the config file to .gitignore so it cannot happen again, and open a ticket to move all secrets into a vault next sprint.",
+      "Get the key revoked and replaced now with the teammate and security or on-call, since anyone may have copied it, then clean up."
+    ],
+    "answer": {
+      "points": [
+        1,
+        2,
+        0,
+        3
+      ]
+    },
+    "explanation": "Best (3): \"Revoke and replace it now\". A secret pushed to a public repository must be assumed stolen. Revoking it first is the only real fix, followed by cleanup and a check for misuse. \"Delete it in a new commit\" (1): The key stays in the git history, and bots scan public repositories within minutes. Only revoking the key removes the risk. \"Tell the teammate privately\" (2): Kind and quick, but leaves the urgent step (revoking the key) to chance and may not reach the people who can act. \"Gitignore and a ticket\" (0): Only affects future commits; the exposed key keeps working and is already public.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "swe.backend.j.account-deletion-request",
+    "type": "sjt",
+    "section": "judgement",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.security.data_protection",
+    "secondary_skill_codes": [
+      "behavioral.collaboration.cross_functional",
+      "behavioral.ownership.accountability"
+    ],
+    "prompt": "Support forwards you a user's request to delete their account and personal data under privacy law. The \"delete account\" button only removes the row in the users table. You know their data is also in the orders table, the analytics database and the log archive. What is the best response?",
+    "choices": [
+      "Click the official delete account button for this user, and then tell support that the deletion request is complete.",
+      "Tell support and your lead what the button misses, and follow the data-deletion process with the privacy owner until it is done.",
+      "Write a script that deletes every row with that user's id from all of the databases, test it on staging, and then run it in production.",
+      "Delete the users row and analytics data now, tell support the rest is still pending, and open a ticket for the orders and logs."
+    ],
+    "answer": {
+      "points": [
+        0,
+        3,
+        1,
+        2
+      ]
+    },
+    "explanation": "Best (3): \"Raise the gap and follow the process\". Honest about the gap and involves the privacy owner, who owns the legal decision (some order data may have to be kept for tax law and anonymised instead), and sees the request through to the end within the legal deadline. \"Use the button and report it done\" (0): Tells support something that is not true; the user's data remains and the company may break the law. \"Delete everything with a script\" (1): Well meant, but it may permanently delete records the company must keep by law (for example invoices for tax) and can break references; the decision is not yours alone and cannot be undone. \"Partial delete, tell support, ticket\" (2): Honest with support, makes progress and records the rest, but decides alone what to delete and keep, skips the privacy owner, and risks missing the legal deadline. It ranks above the script because nothing that must be kept is destroyed and the rest can still be handled properly.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "swe.backend.j.marketing-wants-customer-export",
+    "type": "sjt",
+    "section": "judgement",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.security.data_protection",
+    "secondary_skill_codes": [
+      "behavioral.collaboration.cross_functional"
+    ],
+    "prompt": "A marketing manager asks you to export all customers' names, emails and phone numbers to a spreadsheet so an outside agency can run a campaign. They say it is urgent and that your manager is fine with it. Not all customers agreed to receive marketing. What is the best response?",
+    "choices": [
+      "Explain that sharing it needs the privacy owner's approval, and offer an export of only opted-in customers once that is approved.",
+      "Do the export, since your manager has approved it, and send the file by email only to the marketing manager who asked for it.",
+      "Check with your manager that they really approved it, and do the export only after they have confirmed it to you in writing.",
+      "Export only the customers who agreed to marketing, and share the file with the marketing manager through the company's secure storage."
+    ],
+    "answer": {
+      "points": [
+        3,
+        0,
+        1,
+        2
+      ]
+    },
+    "explanation": "Best (3): \"Require privacy approval, offer a compliant export\". Sharing customer data with an outside agency needs approval from the person who owns privacy decisions (consent, a data-sharing contract with the agency), and only opted-in customers may be contacted. This protects customers and the company and still helps marketing reach their goal. \"Export because the manager agreed\" (0): A manager's approval does not make it legal to share the data of people who did not consent, and email is an unsafe way to move a full customer list. \"Confirm with your manager in writing, then export\" (1): Checking the claim protects you, but your manager is not the privacy owner, and the data of customers who did not consent still goes to an outside company. This matches the bank's scoring of \"copy it after the manager's written approval\" in the laptop-copy item. \"Opted-in export through secure storage\" (2): Fixes the consent problem and moves the file safely, but hands customer data on for an outside agency without the privacy owner checking that sharing with that agency is allowed.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "swe.backend.j.untested-legacy-billing",
+    "type": "sjt",
+    "section": "judgement",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.craft.testing",
+    "secondary_skill_codes": [
+      "engineering.craft.refactoring",
+      "behavioral.problem_solving.pragmatism"
+    ],
+    "prompt": "You need to change how tax is calculated inside a 600-line billing function. It has no tests, the original author has left the company, and it runs for every invoice. Your change is about 20 lines. What is the best approach?",
+    "choices": [
+      "Rewrite the whole function in a cleaner, modern style while you are there, and make the tax change inside the new version.",
+      "Make the 20-line change carefully, test it by hand with a few typical invoices, get it reviewed, and release it.",
+      "Ask the team whether anyone has worked on this function before, and make the change once you understand the code better.",
+      "Write tests that capture today's results for real invoices, including the tax cases, then make the change and compare."
+    ],
+    "answer": {
+      "points": [
+        0,
+        1,
+        2,
+        3
+      ]
+    },
+    "explanation": "Best (3): \"Characterisation tests first\". Creates a safety net for risky untested code, proves the change does only what was intended, and leaves the code safer for the next person. \"Rewrite it\" (0): Turns a 20-line change into a risky rewrite of code that bills every customer, with no tests to show that nothing else changed. \"Change and test by hand\" (1): A review and a few manual checks are a weak safety net for code that runs on every invoice; side effects on other invoice types are likely to be missed. \"Ask the team first\" (2): Sensible and may give useful knowledge, but it still leaves no safety net for this or future changes.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "swe.backend.j.strange-legacy-sleep",
+    "type": "sjt",
+    "section": "judgement",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3",
+      "L4"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.craft.refactoring",
+    "secondary_skill_codes": [
+      "engineering.debugging.hypothesis",
+      "behavioral.problem_solving.first_principles"
+    ],
+    "prompt": "While working on a small feature, you find a `sleep(2)` call in old order-processing code, with no comment. It makes every order two seconds slower. It has been there for four years, and removing it looks safe. What is the best response?",
+    "choices": [
+      "Remove it in your current pull request, since it is an obvious improvement, the tests still pass, and it saves time on every order.",
+      "Leave it alone and say nothing about it, since old code that has worked for four years should not be touched without a reason.",
+      "Check the git history and tickets to learn why it is there, then remove it in its own small change and watch for errors.",
+      "Open a ticket describing the two-second slowdown and suggest that someone on the team investigates it in a future sprint."
+    ],
+    "answer": {
+      "points": [
+        1,
+        0,
+        3,
+        2
+      ]
+    },
+    "explanation": "Best (3): \"Learn why, then change it separately\". Accepts that odd code may exist for a reason, finds that reason first, and makes the change easy to watch and roll back. \"Remove it in the feature pull request\" (1): Mixes a risky, unrelated change into a feature. A delay like this often hides a timing problem (for example waiting for a database replica or a partner system) that tests do not cover. \"Ignore it\" (0): Every order stays two seconds slower and what you found is lost. \"Open a ticket\" (2): Records the problem, but passes on work you are well placed to start now.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "swe.backend.j.night-disk-alert-runbook",
+    "type": "sjt",
+    "section": "judgement",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.operations.incident_response",
+    "secondary_skill_codes": [
+      "behavioral.ownership.accountability"
+    ],
+    "prompt": "You are on call. At 2 a.m. an alert says the main database disk is 85% full and growing about 2% per hour. There is a runbook for this alert, and nobody else is online. What do you do first?",
+    "choices": [
+      "Snooze the alert until the morning, since at this rate the disk will not be full for several hours and the team will be online.",
+      "Follow the runbook to find what is growing and free space or add capacity, post updates in the channel, and escalate if it fails.",
+      "Page the database owner right away, since a problem with the main database is too risky to handle alone in the middle of the night.",
+      "Delete the oldest log and backup files on the database server to free up space quickly, then check again in the morning."
+    ],
+    "answer": {
+      "points": [
+        1,
+        3,
+        2,
+        0
+      ]
+    },
+    "explanation": "Best (3): \"Follow the runbook and post updates\". This is exactly what the runbook is for. It fixes the problem before it hurts users, leaves a record, and escalates if needed. \"Snooze until morning\" (1): At 2% per hour the disk is nearly full by early morning, just when traffic rises; the risk grows while you sleep. \"Page the database owner first\" (2): Safe, but wakes someone for a problem the runbook is written to handle; better as the next step if the runbook fails. \"Delete old logs and backups\" (0): May destroy backups needed for recovery and is not in the runbook; a quick guess on a production database at night is risky.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "swe.backend.j.flapping-alert-at-night",
+    "type": "sjt",
+    "section": "judgement",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.operations.incident_response",
+    "secondary_skill_codes": [
+      "engineering.operations.monitoring"
+    ],
+    "prompt": "You are on call. For the third night this week, a \"high latency\" alert for the search service wakes you at 3 a.m. Each time it clears by itself within five minutes, and you find no customer impact. What is the best response?",
+    "choices": [
+      "Delete the alert, and tell the team in the channel that it has fired three nights in a row without any customer impact.",
+      "Keep acknowledging it each night, and leave the alert unchanged until the whole team can review all alerts together.",
+      "Raise the alert threshold yourself so it stops firing at night, and mention the change to the team at the next team meeting.",
+      "Find what happens at 3 a.m. (for example a batch job), note it, and agree a fix to the alert or its cause with the team."
+    ],
+    "answer": {
+      "points": [
+        0,
+        1,
+        2,
+        3
+      ]
+    },
+    "explanation": "Best (3): \"Find the pattern and fix it with the team\". Finds the cause, keeps useful monitoring, and fixes the noise properly with the team's agreement. \"Delete the alert\" (0): Removes the monitoring completely; a real latency problem would then go unnoticed. \"Keep acknowledging it until a full review\" (1): Accepts alert fatigue, which teaches people to ignore alerts, including real ones. \"Raise the threshold yourself\" (2): Reduces the noise and is shared later, but changes monitoring before understanding the cause, which might be real.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "swe.backend.j.junior-stuck-says-almost-done",
+    "type": "sjt",
+    "section": "judgement",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "behavioral.leadership.mentorship",
+    "secondary_skill_codes": [
+      "behavioral.communication.listening"
+    ],
+    "prompt": "A junior developer on your team has said \"almost done\" at stand-up for four days on a small task. From their branch, you can see they are stuck on the same database error. They have not asked for help. What do you do first?",
+    "choices": [
+      "Message them privately, ask how it is going, and offer to pair on the error for half an hour, with them typing so they learn.",
+      "Fix the error yourself on their branch tonight, so they can finish the task tomorrow and stop feeling stuck at stand-up.",
+      "Tell your manager that the junior seems to be hiding problems at stand-up, so the manager can decide how to deal with it.",
+      "Post a link to a good guide about that database error in the team channel, where they can find the answer on their own later."
+    ],
+    "answer": {
+      "points": [
+        3,
+        1,
+        0,
+        2
+      ]
+    },
+    "explanation": "Best (3): \"Offer private pairing\". Respectful, removes the block quickly, and helps them learn both the fix and that asking for help is normal. \"Fix it for them\" (1): Unblocks the task, but they learn nothing and may feel their work was taken over. \"Report them to the manager\" (0): Treats a common learning problem as a discipline issue before even talking to them, which damages trust. \"Post a guide in the channel\" (2): Helpful in intent, but indirect and public; it may not solve their exact problem or address why they did not ask.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "swe.backend.j.first-pr-many-problems",
+    "type": "sjt",
+    "section": "judgement",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3",
+      "L4"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "behavioral.leadership.mentorship",
+    "secondary_skill_codes": [
+      "behavioral.communication.written"
+    ],
+    "prompt": "You are reviewing the first pull request from a new junior developer. It works, but it has about 25 problems: a few real bugs, missing tests and many small style issues. They seem nervous about the review. What is the best response?",
+    "choices": [
+      "Approve it and fix the problems yourself in a follow-up pull request, so the new developer is not discouraged so early on.",
+      "Focus your comments on the bugs and missing tests, group the small style points, and offer a short call to go through it.",
+      "Leave a precise comment on every one of the 25 problems, so they learn all of the team's standards at once and in writing.",
+      "Request changes with one comment asking them to study the team's coding guide carefully and then submit the work again."
+    ],
+    "answer": {
+      "points": [
+        1,
+        3,
+        2,
+        0
+      ]
+    },
+    "explanation": "Best (3): \"Prioritised review plus a call\". Makes the important problems clear, avoids overwhelming them with small points, and supports their learning. \"Approve and fix it yourself\" (1): Avoids discomfort, but the junior learns nothing and the bugs reach the main branch. \"Comment on all 25\" (2): Thorough and correct, but 25 comments of equal weight hide what matters and can overwhelm a nervous new developer. \"Reject and point to the guide\" (0): Gives no specific help, does not show what is wrong, and is likely to discourage them.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "swe.backend.j.estimate-wrong-on-day-two",
+    "type": "sjt",
+    "section": "judgement",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L2",
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "behavioral.communication.clarity",
+    "secondary_skill_codes": [
+      "behavioral.ownership.accountability"
+    ],
+    "prompt": "You estimated five days for a feature, and that date is in the release plan. On day two you find that the partner API you depend on does not support filtering, so the work will take about nine days. What do you do first?",
+    "choices": [
+      "Work extra hours to try to make the original date, and raise the problem with your lead only if you are still behind on day four.",
+      "Keep working quietly and explain the reason at the end if the feature is late, since the partner API is not your fault.",
+      "Tell your lead and the product manager today, with the new estimate and options such as reducing scope or moving the date.",
+      "Tell your lead today that the feature will probably be late, and give a new date once you have finished the hardest part."
+    ],
+    "answer": {
+      "points": [
+        1,
+        0,
+        3,
+        2
+      ]
+    },
+    "explanation": "Best (3): \"Tell them today, with options\". Early, honest news with options lets the people who own the plan make a good decision while there is still time. \"Try harder, raise it later\" (1): Delays bad news while others could still adjust the plan, and four extra days of work are unlikely to be closed with overtime. \"Say nothing until the end\" (0): Others plan around a date you know is wrong; finding out at the end is the worst outcome for the team. \"Warn today, date later\" (2): Raises it early, which is good, but without a new estimate or options the plan cannot be adjusted yet.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "swe.backend.j.deadline-tomorrow-edge-cases",
+    "type": "sjt",
+    "section": "judgement",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "behavioral.problem_solving.pragmatism",
+    "secondary_skill_codes": [
+      "engineering.craft.testing",
+      "behavioral.communication.clarity"
+    ],
+    "prompt": "Your new version of the checkout flow is due to replace the old one tomorrow. The main flow works and is tested, but refunds and partial cancellations in the new version are not finished and could create wrong balances. Very few orders use them. What is the best response?",
+    "choices": [
+      "Ship everything tomorrow as planned, and fix refunds and partial cancellations quickly if a customer complains about a balance.",
+      "Work through the night to finish the refunds and partial cancellations, and ship everything tomorrow after some quick tests in staging.",
+      "Tell your lead the feature will be late, and ship nothing until every case, including refunds and cancellations, is fully tested.",
+      "Tell your lead and product manager today; suggest shipping the tested main flow and keeping refunds and cancellations on the old code."
+    ],
+    "answer": {
+      "points": [
+        0,
+        1,
+        2,
+        3
+      ]
+    },
+    "explanation": "Best (3): \"Ship the safe part, plan the rest\". Delivers what is ready, keeps customers safe from wrong balances by leaving the unfinished cases on the old code, and lets the decision makers plan the rest early. \"Ship and wait for complaints\" (0): Knowingly releases code that can create wrong balances, and lets customers find the problem. \"All-nighter with light testing\" (1): Hides the problem, and tired, lightly tested code in money-related cases is risky. \"Delay everything\" (2): Safe and honest, but holds back a tested main flow that could deliver value now.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "swe.backend.j.flaky-test-blocks-merges",
+    "type": "sjt",
+    "section": "judgement",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L2",
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "engineering.craft.testing",
+    "secondary_skill_codes": [
+      "behavioral.ownership.initiative"
+    ],
+    "prompt": "A test in the shared CI suite fails about one run in five, for reasons unrelated to most changes. The team's habit is to re-run CI until it passes. Today it has blocked your merge three times. What is the best response?",
+    "choices": [
+      "Open a ticket with the failure logs for the test's owner, and propose a tracked quarantine so it stops blocking everyone.",
+      "Re-run CI again for now, and bring up the flaky test at the next retrospective so the whole team can agree what to do about it.",
+      "Delete the test in your pull request, since it is unrelated to your change, it fails randomly, and it keeps blocking your work.",
+      "Merge with your admin rights this time, since you have checked that the failure is not caused by your change."
+    ],
+    "answer": {
+      "points": [
+        3,
+        2,
+        0,
+        1
+      ]
+    },
+    "explanation": "Best (3): \"Ticket, owner and tracked quarantine\". Treats the flaky test as a real problem, removes the block for the whole team, and makes sure the test is not lost. \"Re-run and raise it later\" (2): Raises it with the team, but everyone keeps losing time until then. \"Delete the test\" (0): Removes coverage without the owner's agreement; whatever the test protects is no longer checked. \"Admin merge\" (1): Solves only your own problem this time and weakens the rule that CI must pass.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "swe.backend.j.borrow-colleague-prod-login",
+    "type": "sjt",
+    "section": "judgement",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "engineering.security.data_protection",
+    "secondary_skill_codes": [
+      "behavioral.ownership.accountability"
+    ],
+    "prompt": "A bug affects only one customer, and you think you need to look at their records in the production database to understand it. You do not have production access. Your company allows engineers with access to run read-only queries for a colleague's investigation. A colleague who has access offers to let you use their login for an hour. What do you do first?",
+    "choices": [
+      "Use the colleague's login for just one hour, look only at that one customer's records, and log out as soon as you are done.",
+      "Ask the colleague to export that customer's full records to a file and send it to you, so you can study it without any login.",
+      "Decline, request access through the normal process, and meanwhile pair with the colleague while they run read-only queries.",
+      "Decline the login, request production access through the normal process, and wait until it is approved before going further."
+    ],
+    "answer": {
+      "points": [
+        0,
+        1,
+        3,
+        2
+      ]
+    },
+    "explanation": "Best (3): \"Decline, request access, pair on queries\". Stays within the access rules stated in the scenario (the colleague may run read-only queries for you), looks only at the data needed, and keeps the investigation moving while access is requested. \"Use the colleague's login\" (0): Breaks access rules and makes the audit logs show the wrong person, even with good intentions. \"Get an export file\" (1): Avoids sharing a login, but copies a customer's full personal data into a file outside the protected system, which the rule does not allow. \"Decline and wait for access\" (2): Correct on access rules, but loses time when an allowed way to keep working was available.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "swe.backend.j.copy-prod-table-to-laptop",
+    "type": "sjt",
+    "section": "judgement",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3",
+      "L4"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "engineering.security.data_protection",
+    "secondary_skill_codes": [
+      "engineering.debugging.tools"
+    ],
+    "prompt": "You have read access to production for debugging. A report query is slow only with real data volumes. A teammate suggests copying the full production customers table to your laptop so you can test index changes quickly. What is the best response?",
+    "choices": [
+      "Ask your manager whether it is all right to copy the table for a few days, and copy it only if they agree in writing.",
+      "Do not copy personal data to a laptop; use anonymised or generated data of the same size, or run EXPLAIN on a replica.",
+      "Copy the table, since you already have read access to this data for debugging and your laptop disk is fully encrypted.",
+      "Try the index changes directly on the production database during a quiet hour at night, since that is where the real data is."
+    ],
+    "answer": {
+      "points": [
+        1,
+        3,
+        0,
+        1
+      ]
+    },
+    "explanation": "Best (3): \"Anonymised data or EXPLAIN on a replica\". Gets realistic performance evidence without moving customer data out of protected systems. \"Copy with the manager's approval\" (1): Asking is better than not asking, but approval does not make a laptop a safe place for every customer's personal data. \"Copy it, access and encryption are enough\" (0): Read access for debugging is not permission to take a full copy; laptops get lost and stolen, and the copy is outside all controls. \"Test on production at a quiet hour\" (1): Avoids copying data, but building test indexes on a live database without a plan can lock tables and affect users.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "swe.backend.j.angry-customer-wants-fix-date",
+    "type": "sjt",
+    "section": "judgement",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "behavioral.collaboration.cross_functional",
+    "secondary_skill_codes": [
+      "behavioral.communication.clarity"
+    ],
+    "prompt": "Support escalates an angry enterprise customer whose monthly usage report has shown wrong numbers for two weeks. Support asks you to join a call with the customer today and promise a fix by Friday. You do not know the cause yet. What is the best response?",
+    "choices": [
+      "Join the call and promise a fix by Friday, because the customer needs reassurance today and you are confident you will find a way.",
+      "Decline the call, since you do not know the cause yet, and ask support to tell the customer that the team is looking into it.",
+      "Join the call, apologise, and explain honestly that you cannot promise any date until the cause of the bug has been found.",
+      "First confirm the problem and its size, then join the call to share what you know, your next steps and when you will update them."
+    ],
+    "answer": {
+      "points": [
+        0,
+        1,
+        2,
+        3
+      ]
+    },
+    "explanation": "Best (3): \"Confirm, then explain next steps honestly\". Shows the customer they are taken seriously, gives real information and a clear next update, and avoids a promise that may be broken. \"Promise Friday\" (0): A promise made without knowing the cause is likely to be broken, which hurts trust more than the bug. \"Decline and pass a vague message\" (1): Avoids a broken promise, but support asked for help and the customer gets only a general holding message, with no facts or next step. \"Join, apologise, no date yet\" (2): Shows up and is honest, but leaves an angry customer with no plan, next step or time for the next update.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "swe.backend.j.small-requests-in-chat",
+    "type": "sjt",
+    "section": "judgement",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "behavioral.collaboration.cross_functional",
+    "secondary_skill_codes": [
+      "behavioral.problem_solving.pragmatism"
+    ],
+    "prompt": "You are building a new admin page. Over the past week, a stakeholder has sent five \"small\" extra requests in chat (an extra filter, a bulk action, a new column and so on). Each one seems easy, but together they will delay the agreed release by a week. What is the best response?",
+    "choices": [
+      "List the requests with a rough cost for each, and agree with the stakeholder and product manager what goes in this release.",
+      "Build all of them, since each one is small on its own and keeping an important stakeholder happy matters for the project.",
+      "Politely decline the new requests in chat and point the stakeholder to the original ticket and the scope agreed in planning.",
+      "Build the ones you think are most useful for users and quietly leave the others out, so the release date does not move."
+    ],
+    "answer": {
+      "points": [
+        3,
+        1,
+        2,
+        0
+      ]
+    },
+    "explanation": "Best (3): \"Make the scope visible and agree it\". Makes the hidden cost visible and lets the right people choose, so the release date and the stakeholder's needs are both handled openly. \"Build everything\" (1): The agreed release slips by a week without anyone deciding that it should. \"Decline in chat\" (2): Protects the date, but some requests may matter more than the original plan, and nobody who owns priorities decided. \"Pick quietly\" (0): Makes product decisions alone and hides them; the stakeholder discovers the missing work later.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "swe.backend.j.tech-debt-slows-every-change",
+    "type": "sjt",
+    "section": "judgement",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3",
+      "L4"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.system_design.trade_offs",
+    "secondary_skill_codes": [
+      "behavioral.communication.clarity",
+      "behavioral.collaboration.cross_functional"
+    ],
+    "prompt": "The order service has a slow, fragile deploy process. Every change takes your team about a day longer than it should, and the process caused two incidents last quarter. The product manager wants only new features this quarter. What is the best response?",
+    "choices": [
+      "Quietly add the deploy rebuild to your feature estimates for the quarter, without telling the product manager what the time is for.",
+      "Accept the plan, since the product manager decides priorities, and keep working around the deploy problems as carefully as you can.",
+      "Measure the cost (days lost, incidents) and propose a small, specific fix that the product manager can plan next to features.",
+      "Ask your manager to push the product manager to give the team a full quarter for tech-debt work, starting with the deploys."
+    ],
+    "answer": {
+      "points": [
+        0,
+        1,
+        3,
+        2
+      ]
+    },
+    "explanation": "Best (3): \"Show the cost and propose a small fix\". Turns tech debt into a business case, keeps the decision with the people who set priorities, and asks for a focused investment. \"Hide it in feature estimates\" (0): Pads estimates to hide a large piece of work, so planning is based on false numbers and trust is damaged when it is discovered. \"Accept and work around it\" (1): Respects the role, but the product manager decided without knowing the cost, and the team keeps paying it. \"Escalate for a tech-debt quarter\" (2): Raises the issue, but skips the direct conversation and asks for a large, vague block of time.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "swe.backend.j.own-script-changed-wrong-rows",
+    "type": "sjt",
+    "section": "judgement",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "behavioral.ownership.accountability",
+    "secondary_skill_codes": [
+      "engineering.operations.incident_response",
+      "behavioral.ownership.failure_reflection"
+    ],
+    "prompt": "This morning you ran an approved script to change the shipping status of 300 orders. You now see that a wrong filter also changed about 2,000 other orders, and some of those customers received a \"shipped\" email. Nobody has noticed yet. What do you do first?",
+    "choices": [
+      "Write a second script that sets the 2,000 orders back to their old status, run it quickly, and then tell your lead what happened.",
+      "Tell your lead and team now with the facts, stop anything that could send more emails, and plan the correction together.",
+      "Correct the 2,000 orders quietly and say nothing, since the data will be right again after the fix and nobody has noticed.",
+      "Tell your lead exactly what happened, and wait for their instructions before you do anything else to the orders."
+    ],
+    "answer": {
+      "points": [
+        1,
+        3,
+        0,
+        2
+      ]
+    },
+    "explanation": "Best (3): \"Tell the team now and contain it\". Owns the mistake quickly, limits further harm, and lets the team plan a safe fix and the message to customers. \"Quick undo script, then tell\" (1): A rushed second script can make things worse (some orders may have changed since), and the team learns late. \"Fix it quietly\" (0): Hides a mistake that already reached customers; support and the team cannot respond, and trust is damaged if it is found. \"Tell the lead and wait\" (2): Honest and quick, but passive: you know the details best and could help stop more emails.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "swe.backend.j.own-bug-blocked-reset-emails",
+    "type": "sjt",
+    "section": "judgement",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L2",
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "behavioral.ownership.accountability",
+    "secondary_skill_codes": [
+      "behavioral.ownership.failure_reflection"
+    ],
+    "prompt": "You discover that a change you shipped last week stopped password-reset emails for users with a plus sign in their email address (like name+shop@mail.com). About 40 users were affected. Nobody has reported it. What is the best response?",
+    "choices": [
+      "Fix the bug quietly in your next pull request, since only a small number of users were affected and nobody has complained.",
+      "Fix the bug and tell your lead, and leave the affected users to request a new reset email themselves when they need one.",
+      "Wait to see whether any of the affected users complain before spending more time on it, since there are only about 40.",
+      "Tell your lead, ship a fix with a test for this case, and suggest contacting the 40 users and checking why tests missed it."
+    ],
+    "answer": {
+      "points": [
+        1,
+        2,
+        0,
+        3
+      ]
+    },
+    "explanation": "Best (3): \"Own it fully\". Owns the mistake, fixes it with a test so it does not come back, helps the affected users and improves the process. \"Fix it quietly\" (1): Fixes the code, but hides the mistake and leaves the affected users without help. \"Fix and tell, but no user contact\" (2): Honest and fixed, but users who tried and failed may think the product is broken and may not try again. \"Wait for complaints\" (0): Leaves a known bug in place and lets users find it.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "swe.backend.j.two-managers-two-priorities",
+    "type": "sjt",
+    "section": "judgement",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "behavioral.communication.clarity",
+    "secondary_skill_codes": [
+      "behavioral.collaboration.cross_functional"
+    ],
+    "prompt": "Your manager wants you to finish the billing feature this week. A manager from another team messages you directly, saying their integration is blocked and asking you to spend the next three days helping them. Both say their work is the top priority. What do you do first?",
+    "choices": [
+      "Tell the other manager you will check, since your manager set your week, then ask your manager (or both together) to decide.",
+      "Start helping the other team today, since a blocked team costs the company more than a feature that is a few days late.",
+      "Split your time and do a little of both every day, so that neither manager is disappointed and both pieces of work move.",
+      "Ignore the other manager's message and keep working on billing, since they are not your manager and cannot set your priorities."
+    ],
+    "answer": {
+      "points": [
+        3,
+        1,
+        1,
+        0
+      ]
+    },
+    "explanation": "Best (3): \"Let the managers decide together\". Choosing between two managers' priorities is not your decision. This gets a fast, clear decision and keeps both sides informed. \"Help the other team\" (1): May be the right priority, but you change your own manager's plan without telling them. \"Split your time\" (1): Avoids the decision and probably delays both pieces of work. \"Ignore the message\" (0): Leaves a blocked team without an answer and hides a real priority conflict.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "swe.backend.j.lead-presents-your-work",
+    "type": "sjt",
+    "section": "judgement",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "behavioral.collaboration.conflict",
+    "secondary_skill_codes": [
+      "behavioral.communication.clarity"
+    ],
+    "prompt": "In a company demo, your team lead presents the new search feature that you designed and built mostly alone. They talk about it as their own work and do not mention you. Your performance review is next month. What is the best response?",
+    "choices": [
+      "Politely correct them in the demo chat, so everyone in the company knows who really designed and built the search feature.",
+      "Talk to your lead privately soon after, since it may be an oversight; calmly ask for credit and keep notes for your review.",
+      "Say nothing about it, since team results matter more than individual credit and raising it could look like complaining.",
+      "Mention your role in the feature to your lead's manager at your next one-to-one meeting, before the performance reviews are written."
+    ],
+    "answer": {
+      "points": [
+        0,
+        3,
+        1,
+        1
+      ]
+    },
+    "explanation": "Best (3): \"Raise it privately and keep a record\". Assumes it may be an oversight, gives the lead a chance to fix it, keeps the relationship respectful, and makes sure your work is visible in the review. \"Correct them publicly\" (0): Embarrasses the lead in public and turns something that may be fixable into a conflict. \"Say nothing\" (1): Avoids conflict, but your work may not be recognised and the pattern can repeat. \"Go to the lead's manager\" (1): May get you credit, but goes over the lead's head without talking to them first.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "swe.backend.j.teammate-skipped-failing-test",
+    "type": "sjt",
+    "section": "judgement",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "behavioral.collaboration.conflict",
+    "secondary_skill_codes": [
+      "engineering.craft.testing"
+    ],
+    "prompt": "A teammate's merged pull request marked a failing payment test as \"skip\" with the note \"flaky, will fix later\". You look at the test and believe it is failing because of a real bug in their change. What do you do first?",
+    "choices": [
+      "Fix the bug and turn the test back on yourself, without bringing it up, to avoid an awkward conversation with the teammate.",
+      "Report the teammate to your manager for skipping a failing payment test, and ask the manager to make them fix it.",
+      "Tell the teammate directly what you found, with the evidence, and fix it with them soon, since payments may be affected.",
+      "Leave a comment on the merged pull request asking why the payment test was skipped and when it will be fixed."
+    ],
+    "answer": {
+      "points": [
+        1,
+        0,
+        3,
+        2
+      ]
+    },
+    "explanation": "Best (3): \"Talk to them with evidence, fix it together\". Direct and respectful, treats a possible payment bug as urgent, and helps the teammate learn. \"Fix it silently\" (1): Fixes the code, but the teammate does not learn and the habit of skipping failing tests continues. \"Report them\" (0): Escalates before even talking to them, and does not get the bug fixed any faster. \"Ask in a pull request comment\" (2): Polite and visible, but slow for a possible payment bug, and the comment may not be seen.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "swe.backend.j.teammate-self-merges-at-night",
+    "type": "sjt",
+    "section": "judgement",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3",
+      "L4"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "behavioral.leadership.setting_norms",
+    "secondary_skill_codes": [
+      "behavioral.collaboration.conflict"
+    ],
+    "prompt": "A strong senior teammate often merges their own pull requests at night using admin rights, without waiting for review. Their changes are usually good, but last week one caused a short outage. Others on the team have started doing the same. What is the best response?",
+    "choices": [
+      "Leave it, since their changes are usually good, the outage was short, and they are more experienced than most of the team.",
+      "Start merging your own late-night pull requests the same way, and tell the team it makes releases much faster.",
+      "Ask your manager to remove admin rights from everyone on the team, so nobody can merge without review any more.",
+      "Since others now copy them, talk to the teammate privately about last week's outage and suggest a merge rule for the team."
+    ],
+    "answer": {
+      "points": [
+        1,
+        0,
+        2,
+        3
+      ]
+    },
+    "explanation": "Best (3): \"Talk to them, then agree a team rule\". Respectful to the colleague, uses a concrete example, and fixes the norm for the whole team with a rule that still allows emergencies. \"Leave it\" (1): Accepts a risk that has already caused an outage and is spreading. \"Copy them\" (0): Adds to the risk and makes the bad habit stronger. \"Ask to remove admin rights\" (2): Better than leaving it, because a control actually stops unreviewed merges after a real outage. It is not the best because it goes over the teammate's head without a conversation, takes rights from everyone for one person's habit, and leaves no emergency path.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "swe.backend.j.vague-app-is-slow",
+    "type": "sjt",
+    "section": "judgement",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L2",
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "engineering.debugging.hypothesis",
+    "secondary_skill_codes": [
+      "behavioral.communication.listening"
+    ],
+    "prompt": "A sales manager messages you: \"The app is really slow, customers are complaining, please fix it.\" There are no other details, and your dashboards look normal. What do you do first?",
+    "choices": [
+      "Ask which customers, which pages or actions, since when, and for an example time, then check logs and traces for those requests.",
+      "Reply that the dashboards look normal, so the problem is probably the customers' own network or devices, and ask them to retry.",
+      "Start profiling the slowest API endpoints on the dashboard and optimise them, since faster endpoints help every customer anyway.",
+      "Add more servers to be safe while you look into it, and tell the sales manager that extra capacity has been added."
+    ],
+    "answer": {
+      "points": [
+        3,
+        0,
+        2,
+        1
+      ]
+    },
+    "explanation": "Best (3): \"Ask for specifics, then check\". Turns a vague report into something you can test, and finds the real problem, which dashboards of averages often hide. \"Blame the customer side\" (0): Dismisses a real report without checking anything; averages can look normal while some customers have a bad experience. \"Optimise the slowest endpoints\" (2): Useful work, but it may not be what these customers are experiencing. \"Add servers while looking into it\" (1): Keeps investigating, but spends money on a guess; with normal dashboards, more capacity probably does not touch the actual problem.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "swe.backend.j.critical-cve-major-upgrade",
+    "type": "sjt",
+    "section": "judgement",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "engineering.system_design.trade_offs",
+    "secondary_skill_codes": [
+      "engineering.security.injection",
+      "engineering.craft.testing"
+    ],
+    "prompt": "A security scan reports a critical vulnerability in the XML parsing library your API uses. The fixed version is a new major version with breaking changes. Your service accepts XML uploads from customers. What is the best response?",
+    "choices": [
+      "Add the warning to the scanner's ignore list for now, since a major upgrade is risky, and plan the upgrade carefully for next quarter.",
+      "Check if your code uses the vulnerable feature; if so, reduce the risk now (safer settings or blocking that input) and upgrade soon.",
+      "Upgrade to the new major version today and fix whatever breaks, since critical vulnerabilities must always be fixed immediately.",
+      "Ask the security team to lower the severity, since your team has no time for an upgrade this sprint and the risk seems small."
+    ],
+    "answer": {
+      "points": [
+        1,
+        3,
+        2,
+        0
+      ]
+    },
+    "explanation": "Best (3): \"Assess, reduce the risk now, upgrade soon\". Bases the urgency on real exposure, protects users quickly, and still does the upgrade safely. \"Ignore it now, upgrade next quarter\" (1): Leaves a known critical risk on a customer-facing input for months. \"Rush the major upgrade\" (2): Takes the risk seriously, but a rushed breaking upgrade can cause an outage; there may be faster, safer ways to reduce the risk first. \"Ask to lower the severity\" (0): Changes the label instead of the risk, based on your schedule rather than on facts.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "swe.backend.j.manager-says-skip-review-hotfix",
+    "type": "sjt",
+    "section": "judgement",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "behavioral.problem_solving.pragmatism",
+    "secondary_skill_codes": [
+      "engineering.operations.incident_response",
+      "behavioral.leadership.setting_norms"
+    ],
+    "prompt": "A bug is stopping some customers from logging in. You have a small, tested fix. The only other reviewer on your team is on a flight, and your manager says: \"Just push it straight to main, we can't wait.\" What do you do first?",
+    "choices": [
+      "Push it straight to main as your manager asked, since it is their decision and customers are locked out right now.",
+      "Refuse to deploy until the reviewer lands, because the team rule is that every change is reviewed, even a small tested fix.",
+      "Ask your manager or an engineer from a nearby team to review it now, even briefly, and use the emergency release process.",
+      "Push it straight to main as asked, then leave a note asking the reviewer to check the change carefully when they land."
+    ],
+    "answer": {
+      "points": [
+        1,
+        1,
+        3,
+        2
+      ]
+    },
+    "explanation": "Best (3): \"Get a quick review and use the emergency process\". Keeps a second pair of eyes and a record, and still ships the fix fast. \"Push as told\" (1): Fixes the login quickly, but no second person checks the change and nothing is recorded. \"Wait for the reviewer\" (1): Respects the review rule, but applies it so strictly that customers stay locked out for hours when a quick review from someone else was possible. Managers in regulated companies may prefer this to pushing unreviewed code, and others may not, so both get 1. \"Push now, review later\" (2): Fast and leaves a record, but skips a quick review that was easy to get.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "swe.backend.j.just-approve-it-config",
+    "type": "sjt",
+    "section": "judgement",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L2",
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "behavioral.leadership.setting_norms",
+    "secondary_skill_codes": [
+      "behavioral.communication.clarity"
+    ],
+    "prompt": "At 6 p.m., a teammate sends you a pull request with the message: \"Just approve it, it's only a config change and I need it out tonight.\" The change edits the database connection pool settings for the production API. What is the best response?",
+    "choices": [
+      "Approve it, since config changes are usually low risk, it is late, and they know the production system better than you do.",
+      "Tell them you will review it properly first thing tomorrow morning, since it is late and a rushed review is not a real review.",
+      "Approve it, and ask them to watch the error dashboards closely for an hour after the change goes out to production.",
+      "Review it now: check the new values against the database's connection limit and ask how to roll back; approve only if safe."
+    ],
+    "answer": {
+      "points": [
+        0,
+        2,
+        1,
+        3
+      ]
+    },
+    "explanation": "Best (3): \"Do a quick, real review\". Respects their urgency while still checking the risky part and the rollback plan. \"Approve without reading\" (0): Connection pool settings can take the whole API down; approving without looking makes the review meaningless. \"Review it tomorrow\" (2): Keeps the review real, but they may have a good reason for tonight and a short review now was possible. \"Approve and ask them to monitor\" (1): Monitoring helps catch problems, but the risky change still was not reviewed.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "swe.backend.j.rename-column-live-services",
+    "type": "sjt",
+    "section": "judgement",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.system_design.data_modeling",
+    "secondary_skill_codes": [
+      "engineering.operations.reliability"
+    ],
+    "prompt": "You need to rename the column `user_name` to `display_name` in a busy table. Three services read this column, and different teams deploy them at different times. What is the best response?",
+    "choices": [
+      "Add the new column, write to both and backfill, move each service to it, then drop the old column once every service has moved.",
+      "Rename the column in one migration, and ask the other two teams to deploy their updated code at the same time as yours.",
+      "Write the code changes for all three services yourself and release everything with the migration in one planned deploy window.",
+      "Rename the column at night, when traffic is low, and fix any of the services that break first thing the next morning."
+    ],
+    "answer": {
+      "points": [
+        3,
+        1,
+        2,
+        0
+      ]
+    },
+    "explanation": "Best (3): \"Expand, migrate, then contract\". Each step is safe on its own and can be undone, so no service ever reads a column that does not exist. \"Rename and deploy together\" (1): Deploys never happen at exactly the same moment, so some services fail in the gap, and one late team causes an outage. \"One coordinated deploy window\" (2): Planned and coordinated, but still has a gap with errors, changes other teams' code, and is hard to roll back. \"Rename at night and fix later\" (0): Knowingly breaks services and leaves them broken for hours.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "swe.backend.j.backfill-50m-rows",
+    "type": "sjt",
+    "section": "judgement",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3",
+      "L4"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.operations.reliability",
+    "secondary_skill_codes": [
+      "engineering.system_design.trade_offs"
+    ],
+    "prompt": "You need to fill a new column for 50 million existing rows in the orders table, which the live checkout uses all the time. Your first version of the script is a single `UPDATE orders SET ...` statement. What is the best response?",
+    "choices": [
+      "Run the single UPDATE at night when traffic is lowest, and watch the database dashboards closely while it runs, ready to cancel it.",
+      "Update in small batches with short pauses, make the script safe to stop and restart, test it at full size, and watch the load.",
+      "Run the single UPDATE on a staging copy with production-sized data first, to measure how long it takes, then decide.",
+      "Run the single UPDATE now on the powerful production server, and check the new column on a few orders when it finishes."
+    ],
+    "answer": {
+      "points": [
+        1,
+        3,
+        2,
+        0
+      ]
+    },
+    "explanation": "Best (3): \"Batched, restartable and tested\". Keeps each transaction short so checkout keeps working, can be paused or resumed, and is tested before it touches production. \"Single UPDATE at night\" (1): One huge update can still lock rows for a long time, grow logs and replication lag, and cancelling it halfway causes a long rollback; it cannot be paused safely. \"Measure on staging first\" (2): Testing first is good, but it keeps the risky single-statement design. \"Run it now\" (0): Risks long locks and a slow checkout at peak time, with no safe way to stop.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "swe.backend.j.decision-made-on-a-call",
+    "type": "sjt",
+    "section": "judgement",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "behavioral.communication.written",
+    "secondary_skill_codes": [
+      "behavioral.leadership.setting_norms"
+    ],
+    "prompt": "In a one-hour call, your team decided to replace polling with webhooks for a partner integration, after comparing three options. Nobody wrote anything down. You are building the first part. What is the best response?",
+    "choices": [
+      "Add a clear comment in the code explaining that webhooks are used instead of polling, so future readers of the integration know.",
+      "Do nothing extra for now, since everyone who matters was on the call and the code itself will show what was chosen.",
+      "Write a short decision record (options, choice, reasons) so the why is kept, link it in the ticket, and ask the group to check it.",
+      "Post a short summary of the decision in the team chat, where everyone who missed the call can see what was agreed and ask questions."
+    ],
+    "answer": {
+      "points": [
+        1,
+        0,
+        3,
+        2
+      ]
+    },
+    "explanation": "Best (3): \"Short decision record\". Saves the reasoning where people will look for it, and checking with the group makes sure it is accurate. \"Code comment\" (1): Better than nothing, but it records what was chosen, not why or what else was considered, and few people will find it there. \"Nothing\" (0): People forget, leave and join; in a few months nobody will know why this was chosen. \"Chat summary\" (2): Shares the decision quickly with everyone, but chat is hard to search later and a short message rarely records the options and the reasons.",
+    "expected_time_s": 60
+  }
+]

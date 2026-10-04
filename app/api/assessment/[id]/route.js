@@ -1,7 +1,34 @@
 import { NextResponse } from 'next/server'
 import { query } from '@/lib/db'
+import { getState, candidateResult } from '@/lib/written-assessment'
+import { authorizedSession, errorResponse } from '@/lib/written-api'
 
 export const dynamic = 'force-dynamic'
+
+// Written assessments: the candidate (token or own login) gets the live state
+// or, once finished, coarse feedback. A super admin gets the full report.
+async function writtenView(req, sessionId) {
+  try {
+    const { session, isAdmin } = await authorizedSession(req, sessionId, { allowAdmin: true })
+    if (isAdmin && new URL(req.url).searchParams.get('view') === 'report') {
+      const { rows: report } = await query(`SELECT * FROM assessment_reports WHERE session_id = $1`, [sessionId])
+      const { rows: responses } = await query(
+        `SELECT ir.seq, ir.section, ir.score, ir.score_confidence, ir.raw_response, ir.ai_evaluation,
+                ir.time_spent_ms, i.bank_key, i.type, i.primary_skill_code, i.prompt
+         FROM item_responses ir JOIN items i ON i.id = ir.item_id
+         WHERE ir.session_id = $1 ORDER BY ir.seq`,
+        [sessionId]
+      )
+      const { form, progress, access_token_hash, ...meta } = session
+      return NextResponse.json({ session: meta, report: report[0] || null, responses })
+    }
+    const state = await getState(session)
+    if (state.status === 'completed') return NextResponse.json({ ...state, result: await candidateResult(session) })
+    return NextResponse.json(state)
+  } catch (e) {
+    return errorResponse(e, 'assessment/[id]')
+  }
+}
 
 // GET /api/assessment/[id]
 // Returns the session state, response history, and (for completed sessions)
@@ -9,6 +36,12 @@ export const dynamic = 'force-dynamic'
 export async function GET(_req, { params }) {
   const sessionId = params.id
   if (!sessionId) return NextResponse.json({ error: 'id required' }, { status: 400 })
+
+  const { rows: kind } = await query(
+    `SELECT form IS NOT NULL AS written FROM assessment_sessions WHERE id = $1`,
+    [sessionId]
+  ).catch(() => ({ rows: [] }))
+  if (kind[0]?.written) return writtenView(_req, sessionId)
 
   try {
     const { rows: sess } = await query(

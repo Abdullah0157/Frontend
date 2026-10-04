@@ -1,0 +1,546 @@
+[
+  {
+    "bank_key": "swe.backend.r.product-search-handler",
+    "type": "code_review",
+    "section": "review",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.security.injection",
+    "secondary_skill_codes": [
+      "engineering.craft.correctness",
+      "engineering.debugging.hypothesis"
+    ],
+    "prompt": "This API endpoint lets a logged-in user search products by name and shows whether each product is in stock.\n\nList the problems, most serious first, and how you would fix each.",
+    "review": {
+      "code": {
+        "javascript": "// GET /api/products/search?name=lamp\n// rateLimiter.allow(userId) and db.query(sql, params) are both async.\napp.get('/api/products/search', requireLogin, async (req, res) => {\n  const name = req.query.name || '';\n\n  if (!rateLimiter.allow(req.user.id)) {\n    return res.status(429).json({ error: 'Too many searches, try again later' });\n  }\n\n  const products = await db.query(\n    \"SELECT id, name, price_cents FROM products WHERE name ILIKE '%\" + name + \"%'\"\n  );\n\n  const results = [];\n  for (const p of products.rows) {\n    const stock = await db.query(\n      'SELECT SUM(quantity) AS qty FROM stock WHERE product_id = $1',\n      [p.id]\n    );\n    results.push({ ...p, inStock: Number(stock.rows[0].qty) > 0 });\n  }\n\n  res.json(results);\n});\n",
+        "python": "# GET /api/products/search?name=lamp\n# rate_limiter.allow(user_id), db.fetch_all() and db.fetch_one() are all async.\n@app.get(\"/api/products/search\")\nasync def search_products(name: str = \"\", user=Depends(require_login)):\n    if not rate_limiter.allow(user.id):\n        raise HTTPException(status_code=429, detail=\"Too many searches, try again later\")\n\n    products = await db.fetch_all(\n        \"SELECT id, name, price_cents FROM products WHERE name ILIKE '%\" + name + \"%'\"\n    )\n\n    results = []\n    for p in products:\n        stock = await db.fetch_one(\n            \"SELECT SUM(quantity) AS qty FROM stock WHERE product_id = :pid\",\n            {\"pid\": p[\"id\"]},\n        )\n        results.append({**dict(p), \"in_stock\": (stock[\"qty\"] or 0) > 0})\n\n    return results\n"
+      },
+      "issues": [
+        {
+          "id": "sql_injection",
+          "severity": "critical",
+          "points": 3,
+          "description": "The search text from the query string is joined straight into the SQL string, so a value such as ' OR 1=1 -- or a UNION SELECT can read or change other data."
+        },
+        {
+          "id": "missing_await_rate_limit",
+          "severity": "major",
+          "points": 2,
+          "description": "rateLimiter.allow() / rate_limiter.allow() is async but is not awaited. A Promise (JS) or coroutine (Python) is always truthy, so the 429 branch never runs and the rate limit is never enforced."
+        },
+        {
+          "id": "n_plus_one_stock",
+          "severity": "major",
+          "points": 2,
+          "description": "One stock query runs for every product found (N+1 queries): 500 results means 501 database round trips."
+        },
+        {
+          "id": "unbounded_results",
+          "severity": "minor",
+          "points": 1,
+          "description": "No LIMIT or pagination, and name defaults to an empty string, so an empty search returns the whole catalogue (and runs one stock query per product)."
+        }
+      ],
+      "ideal_answer": "1. SQL injection (critical). The search text is joined into the SQL string, so input like ' OR 1=1 -- or a UNION SELECT can read or change other tables. Fix: use a bound parameter, WHERE name ILIKE $1 (Python: :name), and pass '%' + name + '%' as the value; escape % and _ in the input if they should match literally.\n2. Missing await on the rate limiter (major). allow() is async, so it returns a Promise (Python: a coroutine object). That object is always truthy, so !allow(...) is always false and nobody is ever rate limited (Python also warns \"coroutine was never awaited\"). Fix: if (!(await rateLimiter.allow(req.user.id))) / if not await rate_limiter.allow(user.id).\n3. N+1 queries (major). The loop runs one stock query per product. Fix: get stock for all products in one query, either with a LEFT JOIN and GROUP BY in the search query, or with WHERE product_id = ANY($1) for the list of ids, then map the results in memory.\n4. No limit on results (minor). An empty name matches every product, and with issue 3 that means one query per product in the catalogue. Fix: require a minimum search length and add LIMIT with page or cursor parameters.\nNot a problem: a product with no stock rows. SUM(quantity) returns NULL, and the code treats it as 0 (Number(null) is 0 / \"or 0\"), so it does not crash.\nValid extras (not false alarms, but not keyed): a leading % in ILIKE cannot use a normal index (a trigram index would); no error handling around the queries (in Express 4 a rejected promise leaves the request hanging)."
+    },
+    "explanation": "Keyed in order of severity: SQL injection (any user can read or change data), missing await (the rate limit silently never works), N+1 queries (slow, heavy on the database), no LIMIT (load). Full marks need the injection first with a parameterised fix; the missing await is the subtle issue that separates careful readers. SUM(quantity) returns NULL when a product has no stock rows and the code treats NULL as 0, so \"crashes when there is no stock row\" is not a valid issue. There is no deliberate red herring in this item. The NULL-stock note and the valid extras are repeated in ideal_answer, because the marker only sees issues and ideal_answer.",
+    "expected_time_s": 480
+  },
+  {
+    "bank_key": "swe.backend.r.wallet-transfer",
+    "type": "code_review",
+    "section": "review",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3",
+      "L4"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "engineering.concurrency.fundamentals",
+    "secondary_skill_codes": [
+      "engineering.data.transactions",
+      "engineering.craft.correctness"
+    ],
+    "prompt": "This API endpoint moves money from the logged-in user's wallet to another user's wallet.\n\nList the problems, most serious first, and how you would fix each.",
+    "review": {
+      "code": {
+        "javascript": "// POST /api/wallet/transfer   body: { toUserId, amount }\n// wallets.balance is a FLOAT column (dollars). One wallet row per user.\n// db.query() runs each statement on its own (auto-commit).\napp.post('/api/wallet/transfer', requireLogin, async (req, res) => {\n  const fromId = req.user.id;\n  const toId = req.body.toUserId;\n  const amount = parseFloat(req.body.amount);\n\n  const sender = await db.query(\n    'SELECT balance FROM wallets WHERE user_id = $1', [fromId]);\n  const balance = sender.rows[0].balance;\n\n  if (balance < amount) {\n    return res.status(400).json({ error: 'Insufficient funds' });\n  }\n\n  await db.query('UPDATE wallets SET balance = $1 WHERE user_id = $2',\n    [balance - amount, fromId]);\n\n  const receiver = await db.query(\n    'SELECT balance FROM wallets WHERE user_id = $1', [toId]);\n  await db.query('UPDATE wallets SET balance = $1 WHERE user_id = $2',\n    [receiver.rows[0].balance + amount, toId]);\n\n  res.json({ ok: true, newBalance: balance - amount });\n});\n",
+        "python": "# POST /api/wallet/transfer   body: {\"to_user_id\": ..., \"amount\": ...}\n# wallets.balance is a FLOAT column (dollars). One wallet row per user.\n# db.query_one() and db.execute() run each statement on its own (auto-commit).\n@app.post(\"/api/wallet/transfer\")\n@require_login\ndef transfer():\n    from_id = g.user.id\n    to_id = request.json[\"to_user_id\"]\n    amount = float(request.json[\"amount\"])\n\n    sender = db.query_one(\"SELECT balance FROM wallets WHERE user_id = %s\", (from_id,))\n    balance = sender[\"balance\"]\n\n    if balance < amount:\n        return jsonify(error=\"Insufficient funds\"), 400\n\n    db.execute(\"UPDATE wallets SET balance = %s WHERE user_id = %s\",\n               (balance - amount, from_id))\n\n    receiver = db.query_one(\"SELECT balance FROM wallets WHERE user_id = %s\", (to_id,))\n    db.execute(\"UPDATE wallets SET balance = %s WHERE user_id = %s\",\n               (receiver[\"balance\"] + amount, to_id))\n\n    return jsonify(ok=True, new_balance=balance - amount)\n"
+      },
+      "issues": [
+        {
+          "id": "race_condition_balance",
+          "severity": "critical",
+          "points": 3,
+          "description": "Read-modify-write on the balance: the balance is read, checked, and a computed value is written back. Two transfers at the same time both read the same balance, both pass the check, and the user spends the same money twice; concurrent credits to the receiver can also overwrite each other (lost update)."
+        },
+        {
+          "id": "amount_not_validated",
+          "severity": "critical",
+          "points": 3,
+          "description": "amount is never validated. A negative amount passes the funds check and moves money from the receiver to the sender; NaN also passes (every comparison with NaN is false) and corrupts the balance."
+        },
+        {
+          "id": "no_transaction",
+          "severity": "major",
+          "points": 2,
+          "description": "The debit and the credit are separate auto-committed statements. If the receiver does not exist or the second update fails, the sender has already lost the money and nobody receives it."
+        },
+        {
+          "id": "float_money",
+          "severity": "minor",
+          "points": 1,
+          "description": "Money is stored and calculated as floating point (FLOAT dollars), so rounding errors slowly make balances wrong by fractions of a cent."
+        }
+      ],
+      "ideal_answer": "1. Race condition on the balance (critical). The code reads the balance, checks it, then writes back balance - amount. Two requests at the same time both read 100, both pass the check, and the user sends 200 from a wallet that had 100. Credits to the receiver have the same lost-update problem. Fix: let the database change the value atomically: UPDATE wallets SET balance = balance - $1 WHERE user_id = $2 AND balance >= $1, and treat 0 updated rows as \"insufficient funds\"; credit with SET balance = balance + $1. Or lock both rows with SELECT ... FOR UPDATE inside a transaction, always in the same order (for example lower user id first) to avoid deadlocks.\n2. Amount is not validated (critical). A negative amount passes the check and takes money from the other user. NaN also passes, because comparisons with NaN are false, and turns the balance into NaN. Fix: reject anything that is not a finite number greater than zero (and above a sensible maximum), and reject transfers to yourself or to a wallet that does not exist.\n3. No transaction (major). The debit and the credit commit separately. If the receiver does not exist (rows[0] is undefined / query_one returns None) or the second update fails, the money has left the sender and never arrives. Fix: run the debit and the credit in one database transaction, so it is all or nothing, and record the transfer in a ledger table in the same transaction.\n4. Money as floating point (minor). FLOAT dollars collect rounding errors. Fix: store integer cents (or NUMERIC/DECIMAL) and accept at most two decimal places in the input.\nNot a problem: taking toUserId / to_user_id from the request body. The sender comes from the logged-in session (req.user.id / g.user.id), and choosing who receives the money is the purpose of the endpoint, so this is not an authorization bug.\nOrdering: the two criticals (race, missing validation) may come in either order; both should come before the transaction and float issues.\nValid extras (not false alarms, but not keyed): no idempotency key, so a client that retries the request can send the money twice; no ledger or audit record of transfers; no error handling around the queries."
+    },
+    "explanation": "Two criticals: the read-modify-write race (double spend) and the missing validation (a negative amount lets a user pull money from anyone); either order is fine. The missing transaction is major (money lost on partial failure) and float money is minor. Red herring: the receiver id from the body is correct because the sender comes from the session; calling it an IDOR shows a weaker grasp of authorization and earns nothing. A strong answer names an atomic conditional UPDATE or SELECT FOR UPDATE in a transaction; \"add a lock in application memory\" is only partial credit because it fails with several server instances.",
+    "expected_time_s": 480
+  },
+  {
+    "bank_key": "swe.backend.r.signup-handler",
+    "type": "code_review",
+    "section": "review",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.security.data_protection",
+    "secondary_skill_codes": [
+      "engineering.security.auth",
+      "engineering.craft.correctness"
+    ],
+    "prompt": "This API endpoint creates a new user account from a signup form.\n\nList the problems, most serious first, and how you would fix each.",
+    "review": {
+      "code": {
+        "javascript": "// POST /api/signup   body: { email, password, name }\n// users columns: id, email, name, passwordHash, role, isVerified, createdAt\napp.post('/api/signup', async (req, res) => {\n  logger.info('Signup request', req.body);\n\n  const email = String(req.body.email).trim().toLowerCase();\n  const passwordHash = crypto\n    .createHash('md5')\n    .update(req.body.password)\n    .digest('hex');\n\n  const { password, ...fields } = req.body;\n\n  try {\n    const user = await User.create({\n      ...fields,\n      email,\n      passwordHash,\n    });\n    res.status(201).json({ id: user.id, email: user.email });\n  } catch (err) {\n    res.status(500).json({ error: err.message });\n  }\n});\n",
+        "python": "# POST /api/signup   body: {\"email\": ..., \"password\": ..., \"name\": ...}\n# users columns: id, email, name, password_hash, role, is_verified, created_at\n@app.post(\"/api/signup\")\ndef signup():\n    data = request.get_json()\n    logger.info(\"Signup request: %s\", data)\n\n    email = str(data[\"email\"]).strip().lower()\n    password_hash = hashlib.md5(data[\"password\"].encode()).hexdigest()\n\n    fields = {k: v for k, v in data.items() if k != \"password\"}\n    fields.update(email=email, password_hash=password_hash)\n\n    try:\n        user = User(**fields)\n        db.session.add(user)\n        db.session.commit()\n        return jsonify(id=user.id, email=user.email), 201\n    except Exception as e:\n        return jsonify(error=str(e)), 500\n"
+      },
+      "issues": [
+        {
+          "id": "mass_assignment",
+          "severity": "critical",
+          "points": 3,
+          "description": "Every field from the request body except password is copied into the new user, so a caller can send role: \"admin\" or isVerified / is_verified: true and create an admin or pre-verified account."
+        },
+        {
+          "id": "weak_password_hash",
+          "severity": "critical",
+          "points": 3,
+          "description": "Passwords are hashed with MD5 and no salt. MD5 is very fast, so a leaked table is cracked quickly with GPUs or precomputed tables, and equal passwords have equal hashes."
+        },
+        {
+          "id": "password_in_logs",
+          "severity": "major",
+          "points": 2,
+          "description": "The whole request body is logged, including the plaintext password and the email address, so anyone with access to the logs can read passwords."
+        },
+        {
+          "id": "error_handling",
+          "severity": "minor",
+          "points": 1,
+          "description": "Every error returns 500 with the raw database message: a duplicate email should be 409 (or a neutral message), invalid input 400, and raw messages leak table and constraint names."
+        }
+      ],
+      "ideal_answer": "1. Mass assignment (critical). All body fields except password go into the new user, so a request with role: \"admin\" or isVerified: true creates an admin or skips email verification. Fix: build the user from an allowlist (email, name) after validating them; role and verification status are set by the server only.\n2. Weak password hashing (critical). MD5 without a salt is fast to brute force and shows which users share a password. Fix: use bcrypt, scrypt or Argon2id (each has a per-user salt built in) with a proper work factor, for example bcrypt cost 12, and enforce a minimum password length.\n3. Plaintext password in the logs (major). The log line contains the full body, including the password and email. Fix: never log credentials; log only the new user id or a masked email, and add redaction for fields like password and token in the logger.\n4. Error handling (minor). Every failure returns 500 with err.message / str(e). Fix: return 409 or a neutral message for a duplicate email, 400 for invalid input, and a generic 500 for the rest; log the real error on the server instead of sending it to the client.\nNot a problem: trimming and lowercasing the email. Email addresses are treated as case-insensitive in practice, and normalising them before saving prevents duplicate accounts such as Ana@mail.com and ana@mail.com.\nOrdering: the two criticals (mass assignment, MD5) may come in either order.\nValid extras (not false alarms, but not keyed): no validation of email format or password length (a missing password crashes the hash call); no rate limiting or bot protection on signup."
+    },
+    "explanation": "Two criticals: mass assignment (anyone can make themselves admin) and MD5 without salt (a database leak becomes a password leak); either order earns full marks. Logging the plaintext password is major; error handling is minor. Red herring: normalising the email is good practice. Good extras that are not keyed (listed in ideal_answer so the marker does not count them as false alarms): validating email format and password length, and rate limiting signups.",
+    "expected_time_s": 480
+  },
+  {
+    "bank_key": "swe.backend.r.invoice-download",
+    "type": "code_review",
+    "section": "review",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.security.auth",
+    "secondary_skill_codes": [
+      "engineering.craft.correctness",
+      "engineering.security.data_protection"
+    ],
+    "prompt": "This API endpoint lets a logged-in customer download the PDF of one of their invoices.\n\nList the problems, most serious first, and how you would fix each.",
+    "review": {
+      "code": {
+        "javascript": "// GET /api/invoices/:id/pdf   returns the PDF of one invoice\n// invoices columns: id, customer_id, file_name, total_cents, billing_address\n// file_name is set by our own invoice generator when the invoice is created.\napp.get('/api/invoices/:id/pdf', requireLogin, async (req, res) => {\n  const client = await pool.connect();\n  const result = await client.query(\n    'SELECT * FROM invoices WHERE id = $1', [req.params.id]);\n\n  if (result.rows.length === 0) {\n    return res.status(404).json({ error: 'Invoice not found' });\n  }\n\n  const invoice = result.rows[0];\n  logger.info('Invoice download', { user: req.user, invoice });\n\n  const filePath = path.join(INVOICE_DIR, invoice.file_name);\n  const pdf = await fs.promises.readFile(filePath);\n  client.release();\n\n  res.setHeader('Content-Type', 'application/pdf');\n  res.send(pdf);\n});\n",
+        "python": "# GET /api/invoices/<id>/pdf   returns the PDF of one invoice\n# invoices columns: id, customer_id, file_name, total_cents, billing_address\n# file_name is set by our own invoice generator when the invoice is created.\n@app.get(\"/api/invoices/<int:invoice_id>/pdf\")\n@require_login\ndef download_invoice(invoice_id):\n    conn = pool.getconn()\n    cur = conn.cursor(cursor_factory=RealDictCursor)\n    cur.execute(\"SELECT * FROM invoices WHERE id = %s\", (invoice_id,))\n    invoice = cur.fetchone()\n\n    if invoice is None:\n        return jsonify(error=\"Invoice not found\"), 404\n\n    logger.info(\"Invoice download user=%s invoice=%s\", g.user, invoice)\n\n    file_path = os.path.join(INVOICE_DIR, invoice[\"file_name\"])\n    with open(file_path, \"rb\") as f:\n        pdf = f.read()\n    pool.putconn(conn)\n\n    return Response(pdf, mimetype=\"application/pdf\")\n"
+      },
+      "issues": [
+        {
+          "id": "idor_no_ownership_check",
+          "severity": "critical",
+          "points": 3,
+          "description": "The invoice is loaded by id only. Nothing checks that invoice.customer_id belongs to the logged-in user, so any customer can download any other customer's invoice by changing the id (insecure direct object reference)."
+        },
+        {
+          "id": "connection_leak",
+          "severity": "major",
+          "points": 2,
+          "description": "The pool connection is released only on the success path. Every 404 and every error (for example a missing file) leaves a connection checked out; after enough of these the pool is empty and every request hangs."
+        },
+        {
+          "id": "pii_in_logs",
+          "severity": "minor",
+          "points": 1,
+          "description": "The log line contains the whole user object and the whole invoice row (email, billing address, totals) on every download."
+        }
+      ],
+      "ideal_answer": "1. Missing authorization check, IDOR (critical). Any logged-in user can read any invoice, and ids are easy to guess, so every customer's name, address and amounts can be downloaded. Fix: query WHERE id = $1 AND customer_id = $2 with the session user's id (and an explicit rule for admins), and return 404 for both \"not found\" and \"not yours\" so ids cannot be probed.\n2. Connection leak (major). client.release() / pool.putconn() runs only on the happy path. The 404 return and any exception (file missing, read error) skip it, so the pool slowly runs out and the whole API stops responding. Fix: release in a finally block (or use pool.query / a context manager), and release it before reading the file, since the file read does not need the database.\n3. Personal data in the logs (minor). The full user and invoice objects are logged. Fix: log only ids (user id, invoice id) and the result.\nNot a problem: path.join / os.path.join with invoice.file_name. It looks like a path traversal risk, but file_name comes from our own database, written by our invoice generator, not from the request. (If users could ever set it, it would need validation.)\nValid extras (not false alarms, but not keyed): SELECT * fetches more than needed; private documents should be sent with Cache-Control: private, no-store; the Python cursor is never closed; the JS id is not checked to be a number."
+    },
+    "explanation": "The IDOR is critical: every customer's invoices are exposed. The connection leak is major: ordinary 404s slowly turn into a full outage. Logging personal data is minor here. Red herring: joining a file name that comes from our own database; a candidate who ranks path traversal as the top issue has missed the real one. Unkeyed extras: SELECT * fetches more than needed, and private documents should be sent with Cache-Control: private, no-store.",
+    "expected_time_s": 480
+  },
+  {
+    "bank_key": "swe.backend.r.payout-worker",
+    "type": "code_review",
+    "section": "review",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.craft.correctness",
+    "secondary_skill_codes": [
+      "engineering.data.transactions",
+      "engineering.debugging.hypothesis"
+    ],
+    "prompt": "This background job sends an approved payout to a partner bank through the bank's API.\n\nList the problems, most serious first, and how you would fix each.",
+    "review": {
+      "code": {
+        "javascript": "// Queue worker: sends one approved payout to our partner bank.\n// The queue runs the job again later if this function throws.\nasync function processPayout(job) {\n  const payout = await db.payouts.findById(job.payoutId);\n\n  for (let attempt = 1; attempt <= 3; attempt++) {\n    try {\n      const resp = await fetch(`${BANK_API}/transfers`, {\n        method: 'POST',\n        headers: {\n          Authorization: `Bearer ${process.env.BANK_API_KEY}`,\n          'Content-Type': 'application/json',\n        },\n        body: JSON.stringify({\n          account: payout.accountNumber,\n          amountCents: payout.amountCents,\n        }),\n      });\n      if (resp.ok) {\n        await db.payouts.update(payout.id, { status: 'sent' });\n        return;\n      }\n    } catch (err) {\n      // network problem, try again\n    }\n  }\n}\n",
+        "python": "# Queue worker: sends one approved payout to our partner bank.\n# The queue runs the job again later if this function raises an exception.\ndef process_payout(job):\n    payout = Payout.get(job[\"payout_id\"])\n\n    for attempt in range(1, 4):\n        try:\n            resp = requests.post(\n                f\"{BANK_API}/transfers\",\n                headers={\"Authorization\": f\"Bearer {os.environ['BANK_API_KEY']}\"},\n                json={\n                    \"account\": payout.account_number,\n                    \"amount_cents\": payout.amount_cents,\n                },\n            )\n            if resp.ok:\n                payout.status = \"sent\"\n                payout.save()\n                return\n        except requests.RequestException:\n            pass  # network problem, try again\n"
+      },
+      "issues": [
+        {
+          "id": "duplicate_payout_on_retry",
+          "severity": "critical",
+          "points": 3,
+          "description": "Retries are not idempotent. If the bank receives the transfer but the response is lost (timeout, reset connection, error after processing), the loop sends it again and the person is paid twice. When the queue re-runs the job, nothing checks payout.status first, so it can pay again."
+        },
+        {
+          "id": "no_timeout",
+          "severity": "major",
+          "points": 2,
+          "description": "The HTTP call has no timeout set. requests.post waits forever by default, and Node's fetch only gives up after a built-in limit of several minutes. If the bank API hangs, each attempt blocks the worker for minutes or for ever, and a few hung calls are enough to stop all payout processing."
+        },
+        {
+          "id": "failures_swallowed",
+          "severity": "major",
+          "points": 2,
+          "description": "Errors are ignored and, after three failed attempts, the function returns normally. The queue thinks the job succeeded, the payout stays \"approved\" forever and nobody is alerted. Non-2xx answers such as 400 (invalid account) are retried for no reason and then dropped silently."
+        },
+        {
+          "id": "no_backoff",
+          "severity": "minor",
+          "points": 1,
+          "description": "The three attempts happen immediately one after another, which adds load to a bank API that may already be struggling."
+        }
+      ],
+      "ideal_answer": "1. Duplicate payouts (critical). A lost response does not mean the transfer failed, so the loop (and the queue re-running the job) can send the same payout two or three times. Fix: send an idempotency key that the bank de-duplicates on (for example the payout id); before calling, check the payout is still \"approved\" and atomically move it to \"sending\"; if the outcome is unclear, ask the bank for the status of that key instead of sending again.\n2. No timeout (major). requests.post waits forever by default, and Node's fetch waits several minutes before its built-in limit. Fix: set a timeout (AbortSignal.timeout(10000) in JS, timeout=(3, 10) in requests) and treat a timeout as \"unknown outcome\", handled safely by the idempotency key.\n3. Failures are swallowed (major). Exceptions are ignored and the function returns normally after the last attempt, so the queue marks the job done and the payout is silently stuck. Fix: log each failure with the payout id and status code; mark permanent errors (4xx) as \"failed\" and alert; throw after the last attempt so the queue retries later or moves the job to a dead-letter queue.\n4. No backoff (minor). Instant retries hammer the bank. Fix: exponential backoff with jitter, or let the queue's delayed retry handle it.\nNot a problem: reading the API key from process.env / os.environ and sending it in the Authorization header. It is not hard-coded in the source, and a Bearer header over HTTPS is the normal way to call this kind of API.\nOther paths to the same duplicate payout (part of issue 1): in JS the catch also swallows a failed status update after the bank accepted the transfer, so the loop sends it again; in Python a failed save() raises, and the queue re-runs the whole job.\nOrdering: the two majors (timeout, swallowed failures) may come in either order.\nValid extras (not false alarms, but not keyed): no check that the payout exists before using it."
+    },
+    "explanation": "The duplicate payout is critical (direct money loss); the key insight is that a timeout or network error does not mean the bank did nothing. No timeout and swallowed failures are both major; either order is fine. Missing backoff is minor. Red herring: the API key comes from the environment; flagging it as a leaked secret earns nothing.",
+    "expected_time_s": 480
+  },
+  {
+    "bank_key": "swe.backend.r.daily-sales-report",
+    "type": "code_review",
+    "section": "review",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3",
+      "L4"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "engineering.craft.correctness",
+    "secondary_skill_codes": [
+      "engineering.debugging.hypothesis"
+    ],
+    "prompt": "This API endpoint returns the daily sales report shown on the admin dashboard.\n\nList the problems, most serious first, and how you would fix each.",
+    "review": {
+      "code": {
+        "javascript": "// GET /api/reports/daily-sales?date=2026-03-14   (admin dashboard)\n// orders.created_at is stored in UTC. The shop and its staff are in New York.\nconst reportCache = {};\n\napp.get('/api/reports/daily-sales', requireAdmin, async (req, res) => {\n  const day = req.query.date || new Date().toISOString().slice(0, 10);\n\n  if (reportCache[day]) {\n    return res.json(reportCache[day]);\n  }\n\n  const start = new Date(`${day}T00:00:00`);\n  const end = new Date(start.getTime() + 24 * 60 * 60 * 1000);\n\n  const result = await db.query(\n    'SELECT * FROM orders WHERE created_at >= $1 AND created_at < $2',\n    [start, end]\n  );\n\n  let totalCents = 0;\n  for (const order of result.rows) {\n    totalCents += order.total_cents;\n  }\n\n  const report = { day, count: result.rows.length, totalCents, orders: result.rows };\n  reportCache[day] = report;\n  res.json(report);\n});\n",
+        "python": "# GET /api/reports/daily-sales?date=2026-03-14   (admin dashboard)\n# orders.created_at is stored in UTC. The shop and its staff are in New York.\nreport_cache = {}\n\n@app.get(\"/api/reports/daily-sales\")\n@require_admin\ndef daily_sales():\n    day = request.args.get(\"date\") or datetime.now(timezone.utc).date().isoformat()\n\n    if day in report_cache:\n        return jsonify(report_cache[day])\n\n    start = datetime.strptime(day, \"%Y-%m-%d\")\n    end = start + timedelta(days=1)\n\n    rows = db.query(\n        \"SELECT * FROM orders WHERE created_at >= %s AND created_at < %s\",\n        (start, end),\n    )\n\n    total_cents = 0\n    for order in rows:\n        total_cents += order[\"total_cents\"]\n\n    report = {\"day\": day, \"count\": len(rows), \"total_cents\": total_cents, \"orders\": rows}\n    report_cache[day] = report\n    return jsonify(report)\n"
+      },
+      "issues": [
+        {
+          "id": "cache_never_expires",
+          "severity": "major",
+          "points": 2,
+          "description": "The in-memory cache has no TTL and is never invalidated. Today's report is cached the first time someone opens it and never changes, so new orders, refunds and corrections never appear until a restart. Each server instance also has its own copy, so admins can see different numbers."
+        },
+        {
+          "id": "wrong_day_boundaries",
+          "severity": "major",
+          "points": 2,
+          "description": "Day boundaries use the server's time zone (or UTC), not New York time. The default date is the UTC date, so in the New York evening \"today\" is already tomorrow, and every report covers the wrong 24 hours. Adding exactly 24 hours is also wrong on daylight-saving change days (23 or 25 hours)."
+        },
+        {
+          "id": "unbounded_rows",
+          "severity": "major",
+          "points": 2,
+          "description": "SELECT * loads every order of the day into memory and returns all of them in the response just to count and sum them. On a busy day this is a huge, slow response and a memory spike."
+        },
+        {
+          "id": "date_not_validated",
+          "severity": "minor",
+          "points": 1,
+          "description": "The date parameter is not validated. A bad value causes a server error, and every distinct accepted string (2026-3-14 and 2026-03-14, or any date in any year) becomes a new cache entry that is never removed, so the cache can grow very large."
+        }
+      ],
+      "ideal_answer": "1. Cache never expires (major). The first request for today stores the report forever, so the dashboard shows stale totals all day and late orders or refunds never appear. Every server has its own copy, and the object grows with every date ever requested. Fix: cache only closed days (past dates) or give today a short TTL (for example 1 to 5 minutes); use a shared cache such as Redis with a TTL and a size limit; invalidate a past day when its orders change.\n2. Wrong time zone for the day (major). The default date is the UTC date and the start of the day is midnight in the server's time zone, but the business day is New York. The report covers the wrong hours, and in the New York evening \"today\" is already tomorrow. Adding 24 hours is also wrong on daylight-saving days. Fix: treat the date as a New York calendar date, compute start and end as midnight in America/New_York (with a time-zone library, or AT TIME ZONE 'America/New_York' in SQL), convert them to UTC, and use the next local midnight as the end.\n3. Unbounded query (major). All orders of the day are loaded and returned. Fix: compute the count and total in SQL (SELECT COUNT(*), SUM(total_cents) ...), and if the list is really needed, return it separately with pagination and only the needed columns.\n4. Input not validated (minor). Check the date format (YYYY-MM-DD) and return 400 for bad values; this also keeps junk keys out of the cache.\nNot a problem: created_at >= start AND created_at < end. The half-open range is the correct way to select one day: it includes every moment of the day and never counts an order at exactly midnight twice, unlike BETWEEN or <= 23:59:59.\nOrdering: the three majors may come in any order; the minor input-validation issue should come last.\nValid extras (not false alarms, but not keyed): selecting only the needed columns (part of issue 3); two requests for the same new day both run the query (a small cache stampede); in JS an invalid date reaches the database and the async error is not handled."
+    },
+    "explanation": "No security issue here; the item tests correctness and data reasoning. The three majors can be in any order, but a strong answer explains why each one gives wrong or slow results (stale numbers, wrong day, memory). The time-zone issue is the hardest and the clearest sign of a strong Mid answer; mentioning daylight saving is a bonus. Three majors and no critical is honest here: nothing is exposed and no money moves, but every report can be wrong or stale. Red herring: the half-open time range is correct.",
+    "expected_time_s": 480
+  },
+  {
+    "bank_key": "swe.backend.r.appointment-reminders",
+    "type": "code_review",
+    "section": "review",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.craft.correctness",
+    "secondary_skill_codes": [
+      "engineering.concurrency.fundamentals",
+      "engineering.data.transactions"
+    ],
+    "prompt": "This scheduled job emails customers a reminder before their appointments.\n\nList the problems, most serious first, and how you would fix each.",
+    "review": {
+      "code": {
+        "javascript": "// Runs every hour. Emails a reminder for each appointment in the next 24 hours.\n// appointments.starts_at is a UTC timestamp. users.timezone is like 'Europe/Berlin'.\n// Two copies of this worker run on different servers, for redundancy.\nasync function sendReminders() {\n  const now = new Date();\n  const in24h = new Date(now.getTime() + 24 * 60 * 60 * 1000);\n\n  const { rows: appts } = await db.query(\n    `SELECT * FROM appointments\n     WHERE starts_at BETWEEN $1 AND $2 AND reminder_sent = false`,\n    [now, in24h]\n  );\n\n  for (const appt of appts) {\n    const { rows } = await db.query(\n      'SELECT email, name, timezone FROM users WHERE id = $1', [appt.user_id]);\n    const user = rows[0];\n    const time = appt.starts_at.toISOString().slice(11, 16); // \"14:30\"\n\n    try {\n      await mailer.send(user.email, 'Appointment reminder',\n        `Hi ${user.name}, see you at ${time}.`);\n    } catch (err) {\n      // the email service is sometimes flaky, skip\n    }\n\n    await db.query(\n      'UPDATE appointments SET reminder_sent = true WHERE id = $1', [appt.id]);\n  }\n}\n",
+        "python": "# Runs every hour. Emails a reminder for each appointment in the next 24 hours.\n# appointments.starts_at is a UTC timestamp. users.timezone is like \"Europe/Berlin\".\n# Two copies of this worker run on different servers, for redundancy.\ndef send_reminders():\n    now = datetime.now(timezone.utc)\n    in_24h = now + timedelta(hours=24)\n\n    appts = db.query(\n        \"\"\"SELECT * FROM appointments\n           WHERE starts_at BETWEEN %s AND %s AND reminder_sent = false\"\"\",\n        (now, in_24h),\n    )\n\n    for appt in appts:\n        user = db.query_one(\n            \"SELECT email, name, timezone FROM users WHERE id = %s\", (appt[\"user_id\"],)\n        )\n        time = appt[\"starts_at\"].strftime(\"%H:%M\")  # \"14:30\"\n\n        try:\n            mailer.send(user[\"email\"], \"Appointment reminder\",\n                        f\"Hi {user['name']}, see you at {time}.\")\n        except Exception:\n            pass  # the email service is sometimes flaky, skip\n\n        db.execute(\n            \"UPDATE appointments SET reminder_sent = true WHERE id = %s\", (appt[\"id\"],)\n        )\n"
+      },
+      "issues": [
+        {
+          "id": "wrong_time_zone",
+          "severity": "major",
+          "points": 2,
+          "description": "The appointment time is formatted in UTC. users.timezone is loaded but never used, so a customer in Berlin sees 13:30 for a 14:30 appointment and may arrive at the wrong time."
+        },
+        {
+          "id": "marked_sent_on_failure",
+          "severity": "major",
+          "points": 2,
+          "description": "If sending fails, the error is swallowed and the appointment is still marked reminder_sent = true, so the reminder is lost for good, with no log or metric to show it."
+        },
+        {
+          "id": "duplicate_sends_two_workers",
+          "severity": "major",
+          "points": 2,
+          "description": "Two copies of the worker run. Both select the same unsent appointments before either one updates them, so customers get two emails (select-then-update race)."
+        },
+        {
+          "id": "n_plus_one_users",
+          "severity": "minor",
+          "points": 1,
+          "description": "One users query runs for every appointment (N+1 queries)."
+        }
+      ],
+      "ideal_answer": "1. Wrong time in the email (major). starts_at is UTC and is printed as UTC; the user's time zone is fetched but ignored, so many customers see the wrong hour. Fix: convert to the user's zone before formatting (Intl.DateTimeFormat with timeZone: user.timezone / starts_at.astimezone(ZoneInfo(user[\"timezone\"]))), and include the date and the zone in the text.\n2. Failed emails are marked as sent (major). The catch / except hides the error and the UPDATE runs anyway. Fix: mark the reminder sent only after mailer.send succeeds; log the error with the appointment id; let the next hourly run retry, with a retry count so one bad address does not retry forever; alert if failures rise.\n3. Duplicate emails from two workers (major). Both workers read the same rows. Fix: claim each row atomically before sending, for example UPDATE appointments SET reminder_status = 'sending' WHERE id = $1 AND reminder_status = 'pending' RETURNING id (send only if a row comes back), or SELECT ... FOR UPDATE SKIP LOCKED, or a scheduler lock so only one copy runs the job. Fixes 2 and 3 fit together as a status column: pending, sending, sent, failed.\n4. N+1 queries (minor). Load the user's email, name and time zone with a JOIN in the first query.\nOrdering: the three majors may come in any order; the N+1 should come last.\nNot a problem: BETWEEN including both ends. The reminder_sent flag stops a second email in the next hourly run.\nValid extras (not false alarms, but not keyed): if a user row is missing, user is undefined / None and the whole run crashes, so one bad row stops every later reminder; the email shows only a time, not the date."
+    },
+    "explanation": "Three majors that hurt customers in different ways (wrong time, missing reminder, duplicate reminder); any order among them is acceptable, but the N+1 should come last. A strong answer combines fixes 2 and 3 with a status column. The N+1 is minor here (an hourly background job), unlike the N+1 on a user-facing search endpoint, which is keyed major. Three majors and no critical is honest: no data is exposed and no money moves, but each one directly hurts customers. No deliberate red herring. BETWEEN including both ends is acceptable here, because the reminder_sent flag stops double sends across hourly runs. Unkeyed extra: if a user row is missing, user is undefined / None and the whole run crashes, so one bad row stops every later reminder.",
+    "expected_time_s": 480
+  },
+  {
+    "bank_key": "swe.backend.r.profile-update",
+    "type": "code_review",
+    "section": "review",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "engineering.security.auth",
+    "secondary_skill_codes": [
+      "engineering.security.data_protection",
+      "engineering.craft.correctness"
+    ],
+    "prompt": "This API endpoint lets a logged-in user update their profile.\n\nList the problems, most serious first, and how you would fix each.",
+    "review": {
+      "code": {
+        "javascript": "// PATCH /api/users/:id   body: the profile fields to change, e.g. { name, phone }\n// User fields: name, phone, email, passwordHash, role, isVerified, creditBalance\n// res.json(user) sends every field of the user document.\napp.patch('/api/users/:id', requireLogin, async (req, res) => {\n  try {\n    const user = await User.findById(req.params.id);\n\n    Object.assign(user, req.body);\n    await user.save();\n\n    await cache.del(`user:${user.id}`);\n    res.json(user);\n  } catch (err) {\n    logger.error(err);\n    res.status(200).json({ ok: false });\n  }\n});\n",
+        "python": "# PATCH /api/users/<id>   body: the profile fields to change, e.g. {\"name\": ..., \"phone\": ...}\n# User columns: name, phone, email, password_hash, role, is_verified, credit_balance\n# user.to_dict() returns every column.\n@app.patch(\"/api/users/<int:user_id>\")\n@require_login\ndef update_user(user_id):\n    try:\n        user = db.session.get(User, user_id)\n\n        for key, value in request.get_json().items():\n            setattr(user, key, value)\n        db.session.commit()\n\n        cache.delete(f\"user:{user.id}\")\n        return jsonify(user.to_dict())\n    except Exception as e:\n        logger.error(e)\n        return jsonify(ok=False), 200\n"
+      },
+      "issues": [
+        {
+          "id": "idor_any_user",
+          "severity": "critical",
+          "points": 3,
+          "description": "Nothing checks that :id is the logged-in user (or that the caller is an admin), so any user can change any other user's profile, including their email, which leads to account takeover through password reset."
+        },
+        {
+          "id": "mass_assignment",
+          "severity": "critical",
+          "points": 3,
+          "description": "Every field in the body is copied onto the user, so a caller can set role, isVerified / is_verified, creditBalance / credit_balance or even the password hash."
+        },
+        {
+          "id": "sensitive_fields_in_response",
+          "severity": "major",
+          "points": 2,
+          "description": "The response contains every field of the user, including the password hash and internal fields."
+        },
+        {
+          "id": "errors_return_200",
+          "severity": "minor",
+          "points": 1,
+          "description": "Every error returns HTTP 200 with ok: false. A missing user (null / None) crashes into the catch, and invalid input also looks like success to clients and monitoring."
+        }
+      ],
+      "ideal_answer": "1. Missing authorization, IDOR (critical). Anyone logged in can PATCH /api/users/123. Changing another user's email lets an attacker reset that user's password and take over the account. Fix: allow the update only when the id equals the session user's id (or the caller has an admin role checked on the server); better, offer PATCH /api/me.\n2. Mass assignment (critical). Object.assign / setattr copies every field, so a user can send role: \"admin\", isVerified: true, creditBalance: 99999 or a new password hash. Fix: allowlist the editable fields (name, phone), validate them, and handle email changes with re-verification.\n3. Sensitive data in the response (major). res.json(user) / to_dict() returns the password hash, role and credit data. Fix: return a safe view (id, name, phone, email) built by a serializer or DTO.\n4. Wrong status codes (minor). All errors become 200 with ok: false. Fix: 404 if the user does not exist, 403 if not allowed, 400 for invalid fields, and 500 (logged with details) for unexpected errors.\nNot a problem: deleting the cache entry after the save. Deleting the cached copy after the database write is the normal cache-aside pattern; the next read loads fresh data.\nOrdering: the two criticals (IDOR, mass assignment) may come in either order.\nValid extras (not false alarms, but not keyed): no validation of the field values (for example phone format); an email change should need re-verification (part of fix 2)."
+    },
+    "explanation": "Two criticals (IDOR and mass assignment); either order is fine. Returning the password hash is major and 200-on-error is minor. Red herring: the cache delete after save is correct invalidation. A candidate who only says \"add validation\" without naming the ownership check has missed the IDOR.",
+    "expected_time_s": 480
+  },
+  {
+    "bank_key": "swe.backend.r.password-reset",
+    "type": "code_review",
+    "section": "review",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.security.auth",
+    "secondary_skill_codes": [
+      "engineering.security.data_protection"
+    ],
+    "prompt": "These two API endpoints let a user reset a forgotten password: the first emails a reset link, the second sets the new password.\n\nList the problems, most serious first, and how you would fix each.",
+    "review": {
+      "code": {
+        "javascript": "// POST /api/password-reset           body: { email }\n// POST /api/password-reset/confirm   body: { token, newPassword }\napp.post('/api/password-reset', async (req, res) => {\n  const { rows } = await db.query(\n    'SELECT id, email FROM users WHERE email = $1', [req.body.email]);\n  if (rows.length === 0) {\n    return res.status(404).json({ error: 'No account with this email' });\n  }\n\n  const user = rows[0];\n  const token = Math.random().toString(36).slice(2, 12);\n  await db.query(\n    \"INSERT INTO reset_tokens (user_id, token, expires_at) VALUES ($1, $2, now() + interval '1 hour')\",\n    [user.id, token]);\n\n  const link = `${APP_URL}/reset?token=${token}`;\n  logger.info(`Reset link for ${user.email}: ${link}`);\n  await mailer.send(user.email, 'Reset your password', link);\n  res.json({ ok: true });\n});\n\napp.post('/api/password-reset/confirm', async (req, res) => {\n  const { rows } = await db.query(\n    'SELECT user_id FROM reset_tokens WHERE token = $1 AND expires_at > now()',\n    [req.body.token]);\n  if (rows.length === 0) {\n    return res.status(400).json({ error: 'Invalid or expired token' });\n  }\n\n  const hash = await bcrypt.hash(req.body.newPassword, 12);\n  await db.query('UPDATE users SET password_hash = $1 WHERE id = $2', [hash, rows[0].user_id]);\n  res.json({ ok: true });\n});\n",
+        "python": "# POST /api/password-reset           body: {\"email\": ...}\n# POST /api/password-reset/confirm   body: {\"token\": ..., \"new_password\": ...}\n@app.post(\"/api/password-reset\")\ndef request_reset():\n    user = db.query_one(\"SELECT id, email FROM users WHERE email = %s\", (request.json[\"email\"],))\n    if user is None:\n        return jsonify(error=\"No account with this email\"), 404\n\n    token = \"\".join(random.choices(string.ascii_lowercase + string.digits, k=10))\n    db.execute(\n        \"INSERT INTO reset_tokens (user_id, token, expires_at) \"\n        \"VALUES (%s, %s, now() + interval '1 hour')\",\n        (user[\"id\"], token),\n    )\n\n    link = f\"{APP_URL}/reset?token={token}\"\n    logger.info(\"Reset link for %s: %s\", user[\"email\"], link)\n    mailer.send(user[\"email\"], \"Reset your password\", link)\n    return jsonify(ok=True)\n\n\n@app.post(\"/api/password-reset/confirm\")\ndef confirm_reset():\n    row = db.query_one(\n        \"SELECT user_id FROM reset_tokens WHERE token = %s AND expires_at > now()\",\n        (request.json[\"token\"],),\n    )\n    if row is None:\n        return jsonify(error=\"Invalid or expired token\"), 400\n\n    hashed = bcrypt.hashpw(request.json[\"new_password\"].encode(), bcrypt.gensalt(rounds=12))\n    db.execute(\"UPDATE users SET password_hash = %s WHERE id = %s\", (hashed.decode(), row[\"user_id\"]))\n    return jsonify(ok=True)\n"
+      },
+      "issues": [
+        {
+          "id": "predictable_token",
+          "severity": "critical",
+          "points": 3,
+          "description": "The reset token comes from Math.random() / random.choices(), which are not cryptographically secure and can be predicted, and it is only 10 characters long. An attacker who can guess a valid token can reset any account."
+        },
+        {
+          "id": "reset_link_logged",
+          "severity": "major",
+          "points": 2,
+          "description": "The full reset link, which works like a password for one hour, is written to the logs, so anyone who can read the logs can take over accounts."
+        },
+        {
+          "id": "token_reusable",
+          "severity": "major",
+          "points": 2,
+          "description": "The token is not deleted or marked used after a successful reset, so the same link works again until it expires; other reset tokens also stay valid."
+        },
+        {
+          "id": "user_enumeration",
+          "severity": "minor",
+          "points": 1,
+          "description": "Returning 404 \"No account with this email\" tells anyone which email addresses have accounts."
+        }
+      ],
+      "ideal_answer": "1. Predictable token (critical). Math.random / the random module are not secure random sources and their output can be predicted; 10 base-36 characters is also short. Fix: crypto.randomBytes(32).toString('hex') / secrets.token_urlsafe(32), and store only a hash (for example SHA-256) of the token, so a database leak does not leak working links.\n2. Reset link in the logs (major). The link is effectively a one-hour password. Fix: never log tokens or links; log the user id and \"reset requested\".\n3. Token can be reused (major). Fix: after a successful reset, delete this token (and all other reset tokens for the user) in the same transaction as the password update, and end the user's existing sessions.\n4. User enumeration (minor). Fix: always return the same 200 response (\"If an account exists, we have sent an email\") and keep the timing similar; add rate limiting per email and per IP.\nNot a problem: bcrypt with cost 12 for the new password. It is slow on purpose, which is what you want for password hashing, and 12 is a common, sensible cost.\nOrdering: the two majors (logged link, reusable token) may come in either order.\nValid extras (not false alarms, but not keyed): no rate limiting on reset requests or on confirm attempts; tokens stored in plain text in the database; no minimum length for the new password; existing sessions stay valid after the reset."
+    },
+    "explanation": "The predictable token is critical (account takeover). The logged link and the reusable token are both major; either order is fine. Enumeration is minor. Red herring: bcrypt cost 12 is correct; calling it \"too slow\" is wrong. Rate limiting, storing a hash of the token and a minimum password length are good extras (listed in ideal_answer so they are not counted as false alarms).",
+    "expected_time_s": 480
+  },
+  {
+    "bank_key": "swe.backend.r.payment-webhook",
+    "type": "code_review",
+    "section": "review",
+    "tracks": [
+      "backend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "engineering.security.auth",
+    "secondary_skill_codes": [
+      "engineering.data.transactions",
+      "engineering.craft.correctness"
+    ],
+    "prompt": "This endpoint receives webhooks from the payment provider, marks orders as paid and adds the credits the user bought.\n\nList the problems, most serious first, and how you would fix each.",
+    "review": {
+      "code": {
+        "javascript": "// Webhook called by our payment provider when a payment changes state.\n// The provider retries a delivery if it does not get a 2xx response within 10 seconds.\n// db.transaction(fn) runs fn in one database transaction: everything commits, or nothing.\napp.post('/webhooks/payments', express.json(), async (req, res) => {\n  const event = req.body;\n\n  try {\n    if (event.type === 'payment.succeeded') {\n      const { orderId, userId, credits } = event.data.metadata;\n\n      await db.transaction(async (tx) => {\n        await tx.query(\"UPDATE orders SET status = 'paid' WHERE id = $1\", [orderId]);\n        await tx.query('UPDATE users SET credits = credits + $1 WHERE id = $2',\n          [credits, userId]);\n      });\n\n      await fetch(`${EMAIL_API}/send`, {\n        method: 'POST',\n        headers: { 'Content-Type': 'application/json' },\n        body: JSON.stringify({ template: 'receipt', userId, orderId }),\n      });\n    }\n  } catch (err) {\n    console.error('webhook failed');\n  }\n\n  res.sendStatus(200);\n});\n",
+        "python": "# Webhook called by our payment provider when a payment changes state.\n# The provider retries a delivery if it does not get a 2xx response within 10 seconds.\n# db.transaction() commits everything inside the block together, or nothing.\n@app.post(\"/webhooks/payments\")\ndef payment_webhook():\n    event = request.get_json()\n\n    try:\n        if event[\"type\"] == \"payment.succeeded\":\n            meta = event[\"data\"][\"metadata\"]\n\n            with db.transaction():\n                db.execute(\"UPDATE orders SET status = 'paid' WHERE id = %s\", (meta[\"order_id\"],))\n                db.execute(\"UPDATE users SET credits = credits + %s WHERE id = %s\",\n                           (meta[\"credits\"], meta[\"user_id\"]))\n\n            requests.post(f\"{EMAIL_API}/send\", json={\n                \"template\": \"receipt\",\n                \"user_id\": meta[\"user_id\"],\n                \"order_id\": meta[\"order_id\"],\n            })\n    except Exception:\n        logger.error(\"webhook failed\")\n\n    return \"\", 200\n"
+      },
+      "issues": [
+        {
+          "id": "no_signature_verification",
+          "severity": "critical",
+          "points": 3,
+          "description": "The handler trusts any POST to the URL. Anyone who finds the endpoint can send a fake payment.succeeded event and get orders marked paid and free credits."
+        },
+        {
+          "id": "not_idempotent",
+          "severity": "major",
+          "points": 2,
+          "description": "Payment providers deliver events at least once and retry them. Each repeated delivery of the same event adds the credits again."
+        },
+        {
+          "id": "errors_hidden_200",
+          "severity": "major",
+          "points": 2,
+          "description": "Any failure is caught, logged without details, and still answered with 200. The provider will not retry, so a paid order can stay unpaid with no record of why."
+        },
+        {
+          "id": "slow_call_no_timeout",
+          "severity": "minor",
+          "points": 1,
+          "description": "The email call runs inside the webhook request with no timeout set (requests waits forever by default; Node's fetch waits minutes). A slow email service can push the response past the provider's 10-second limit, which causes a retry (and, with the idempotency bug, duplicate credits)."
+        }
+      ],
+      "ideal_answer": "1. No signature check (critical). Verify the provider's signature header: compute the HMAC of the raw request body with the webhook secret, compare in constant time, check the timestamp, and reject with 400 or 401 if it fails. (This needs the raw body, so the parsed JSON alone is not enough.) Even better, take the amount and credits from your own order record, or re-fetch the payment from the provider's API, instead of trusting the event.\n2. Not idempotent (major). Store event.id in a processed_events table with a unique constraint, in the same transaction as the updates, and skip events already processed. Or add credits only when the order really changes state: UPDATE orders SET status = 'paid' WHERE id = $1 AND status = 'pending', and add credits only if one row changed.\n3. Errors hidden behind 200 (major). Return a 5xx when processing fails so the provider retries (safe once processing is idempotent), and log the error with the event id and order id.\n4. Slow email call without timeout (minor). Put the receipt email on a queue (or send it after responding) with a timeout, so the webhook answers quickly and an email failure cannot affect the payment.\nNot a problem: UPDATE users SET credits = credits + $1. The increment happens inside the database in one statement, so two concurrent updates cannot overwrite each other; the only problem is that the same event can be applied twice (issue 2).\nNote: the order update and the credit update already run in one transaction, so a failure between them is not an issue here.\nOrdering: the two majors (idempotency, hidden errors) may come in either order.\nValid extras (not false alarms, but not keyed): credits and user id are trusted from the event metadata (part of fix 1); nothing checks that the order was still pending before marking it paid (part of fix 2)."
+    },
+    "explanation": "Missing signature verification is critical (free credits for anyone). Non-idempotent processing and hidden errors are both major; either order is fine. Duplicate credits are major, not critical (unlike the duplicate bank payout item): once signatures are checked, only the provider's retries cause them, not an attacker, and in-app credits can be corrected, while a bank transfer cannot be pulled back. The two updates are wrapped in a transaction on purpose, so \"no transaction\" is not a valid finding. The email call is minor. Red herring: the atomic SQL increment is safe from lost updates; a candidate who calls it a race condition is confusing it with read-modify-write in application code.",
+    "expected_time_s": 480
+  }
+]

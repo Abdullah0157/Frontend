@@ -123,6 +123,65 @@ domains:
             label: Refactoring judgment
             description: Knowing when and how to refactor without breaking things.
 
+      # ── Added for the written assessments (frameworks/swe-assessment-design.md).
+      # Each leaf has real items measuring it in frameworks/banks/.
+      backend:
+        label: Backend
+        skills:
+          - code: engineering.backend.api_design
+            label: API design
+            description: Resources, status codes, pagination, versioning, idempotent methods.
+          - code: engineering.backend.http
+            label: HTTP
+            description: Request semantics, caching headers, CORS, timeouts.
+
+      data:
+        label: Data
+        skills:
+          - code: engineering.data.transactions
+            label: Transactions and locking
+            description: Isolation levels, locking, safe read-modify-write.
+          - code: engineering.data.indexing
+            label: Indexes and query performance
+            description: When indexes are used, N+1 queries, query plans.
+
+      security:
+        label: Security
+        skills:
+          - code: engineering.security.injection
+            label: Injection attacks
+          - code: engineering.security.auth
+            label: Authentication and authorisation
+          - code: engineering.security.data_protection
+            label: Protecting data and secrets
+
+      concurrency:
+        label: Concurrency
+        skills:
+          - code: engineering.concurrency.fundamentals
+            label: Concurrency
+            description: Race conditions, locks, the event loop, async pitfalls.
+
+      performance:
+        label: Performance
+        skills:
+          - code: engineering.performance.complexity
+            label: Performance and complexity
+
+      tooling:
+        label: Tooling
+        skills:
+          - code: engineering.tooling.git
+            label: Git
+          - code: engineering.tooling.containers
+            label: Containers
+
+      algorithms:
+        label: Algorithms
+        skills:
+          - code: engineering.algorithms.data_structures
+            label: Data structures
+
   # ==========================================================================
   product:
     label: Product

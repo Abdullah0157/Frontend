@@ -1,0 +1,269 @@
+// Unit tests for the written assessment's pure logic.
+//   node --test scripts/test-written-assessment.mjs
+// (Python runner tests need CODE_RUNNER_URL; they are skipped without it.)
+
+import { test } from 'node:test'
+import assert from 'node:assert/strict'
+import {
+  getBlueprint, drawForm, formIsUsable, bandFor, LEVELS, TRACKS, seededRandom,
+} from '../lib/assessment-blueprint.js'
+import { scoreKeyedItem, reviewScoreFrom } from '../lib/written-scoring.js'
+import { summariseResponses } from '../lib/written-report.js'
+import { resultsMatch, runTests } from '../lib/code-runner.js'
+
+// ── Blueprint ─────────────────────────────────────────────────────────────
+
+test('every level: weights add up to 100 and minutes match the design', () => {
+  const minutes = { L2: 59, L3: 55, L4: 55, L5: 46 }
+  for (const level of Object.keys(LEVELS)) {
+    const bp = getBlueprint({ track: 'backend', level })
+    const sum = bp.sections.reduce((a, s) => a + s.weight, 0)
+    assert.ok(Math.abs(sum - 100) < 0.05, `${level} weights sum to ${sum}`)
+    assert.equal(bp.totalMinutes, minutes[level], `${level} minutes`)
+  }
+})
+
+test('switching off the Junior reasoning section rescales the other weights to 100', () => {
+  const bp = getBlueprint({ track: 'backend', level: 'L2', disabledSections: ['reasoning'] })
+  assert.ok(!bp.sections.some((s) => s.key === 'reasoning'))
+  assert.ok(Math.abs(bp.sections.reduce((a, s) => a + s.weight, 0) - 100) < 0.05)
+})
+
+test('only Mid has no reasoning section; unknown track or level is rejected', () => {
+  assert.ok(!getBlueprint({ track: 'backend', level: 'L3' }).sections.some((s) => s.key === 'reasoning'))
+  assert.throws(() => getBlueprint({ track: 'nope', level: 'L3' }))
+  assert.throws(() => getBlueprint({ track: 'backend', level: 'L9' }))
+  assert.equal(Object.keys(TRACKS).length, 6)
+})
+
+// A synthetic bank big enough for a Mid backend form.
+function fakeBank() {
+  const bank = []
+  let n = 0
+  const add = (extra, count) => {
+    for (let i = 0; i < count; i++) {
+      bank.push({
+        id: `item-${++n}`, tracks: ['backend', 'fullstack'], levels: ['L3'], language: null,
+        format: null, primary_skill_code: `skill.${n % 7}`, content: {}, ...extra,
+      })
+    }
+  }
+  add({ type: 'mcq', format: 'concept', content: { choices: ['a', 'b', 'c', 'd'] } }, 40)
+  add({ type: 'multi_select', format: 'concept', content: { choices: ['a', 'b', 'c', 'd', 'e'] } }, 8)
+  add({ type: 'mcq', format: 'code_output', language: 'javascript', content: { choices: ['1', '2', '3', '4'] } }, 6)
+  add({ type: 'mcq', format: 'code_output', language: 'python', content: { choices: ['1', '2', '3', '4'] } }, 6)
+  add({ type: 'coding' }, 4)
+  add({ type: 'code_review' }, 3)
+  add({ type: 'sjt', content: { choices: ['a', 'b', 'c', 'd'] } }, 12)
+  add({ type: 'mcq', format: 'concept', levels: ['L5'] }, 5) // wrong level: must never be drawn
+  return bank
+}
+
+test('a Mid form has the planned counts, no repeats, and only the candidate language', () => {
+  const bp = getBlueprint({ track: 'backend', level: 'L3' })
+  const bank = fakeBank()
+  const form = drawForm(bp, bank, { language: 'python', seed: 42 })
+  assert.ok(formIsUsable(form))
+  assert.deepEqual(form.shortfall, [])
+  const counts = Object.fromEntries(form.sections.map((s) => [s.key, s.items.length]))
+  assert.deepEqual(counts, { knowledge: 20, coding: 1, review: 1, judgement: 6 })
+  const ids = form.sections.flatMap((s) => s.items.map((i) => i.itemId))
+  assert.equal(new Set(ids).size, ids.length, 'no item drawn twice')
+  const byId = new Map(bank.map((b) => [b.id, b]))
+  for (const id of ids) {
+    const it = byId.get(id)
+    assert.ok(it.levels.includes('L3'))
+    assert.notEqual(it.language, 'javascript', 'a Python candidate never sees JavaScript-only items')
+  }
+  const codeOutput = ids.filter((id) => byId.get(id).format === 'code_output').length
+  assert.equal(codeOutput, 3, 'Mid knowledge has 3 code-output items in the candidate language')
+})
+
+test('TypeScript candidates get the JavaScript items; draws are reproducible from the seed', () => {
+  const bp = getBlueprint({ track: 'backend', level: 'L3' })
+  const bank = fakeBank()
+  const a = drawForm(bp, bank, { language: 'typescript', seed: 7 })
+  const b = drawForm(bp, bank, { language: 'typescript', seed: 7 })
+  const c = drawForm(bp, bank, { language: 'typescript', seed: 8 })
+  assert.deepEqual(a, b)
+  assert.notDeepEqual(a.sections, c.sections)
+  const byId = new Map(bank.map((x) => [x.id, x]))
+  const langs = a.sections.flatMap((s) => s.items).map((i) => byId.get(i.itemId).language).filter(Boolean)
+  assert.ok(langs.length > 0 && langs.every((l) => l === 'javascript'))
+})
+
+test('knowledge items are spread across skills, not clustered', () => {
+  const bp = getBlueprint({ track: 'backend', level: 'L3' })
+  const bank = fakeBank()
+  const byId = new Map(bank.map((x) => [x.id, x]))
+  const form = drawForm(bp, bank, { language: 'javascript', seed: 3 })
+  const skills = form.sections[0].items.map((i) => byId.get(i.itemId).primary_skill_code)
+  const max = Math.max(...Object.values(skills.reduce((m, k) => ({ ...m, [k]: (m[k] || 0) + 1 }), {})))
+  assert.ok(max <= 4, `one skill took ${max} of 20 slots`)
+})
+
+test('a bank too small for a section is reported, and the form is unusable without any items', () => {
+  const bp = getBlueprint({ track: 'backend', level: 'L3' })
+  const form = drawForm(bp, fakeBank().filter((i) => i.type !== 'code_review'), { language: 'javascript', seed: 1 })
+  assert.ok(form.shortfall.some((s) => s.section === 'review'))
+  assert.equal(formIsUsable(form), false)
+})
+
+test('seeded random is deterministic and in [0,1)', () => {
+  const r1 = seededRandom(5); const r2 = seededRandom(5)
+  for (let i = 0; i < 100; i++) {
+    const x = r1()
+    assert.equal(x, r2())
+    assert.ok(x >= 0 && x < 1)
+  }
+})
+
+// ── Keyed scoring through the per-candidate shuffle ───────────────────────
+
+const mcq = { type: 'mcq', content: { choices: ['A', 'B', 'C', 'D'] }, scoring_rubric: { answer: { correct: 2 } } }
+
+test('mcq: the shown option is mapped back through the shuffle', () => {
+  const order = [3, 2, 0, 1] // option C (original 2) is shown second
+  assert.equal(scoreKeyedItem(mcq, { choice: 1 }, order).score, 1)
+  assert.equal(scoreKeyedItem(mcq, { choice: 0 }, order).score, 0)
+  assert.equal(scoreKeyedItem(mcq, { choice: null }, order).score, 0)
+  assert.equal(scoreKeyedItem(mcq, { choice: 9 }, order).score, 0)
+})
+
+test('multi_select: partial credit, wrong picks cost, never below zero', () => {
+  const item = { type: 'multi_select', content: { choices: ['a', 'b', 'c', 'd', 'e'] }, scoring_rubric: { answer: { correct: [0, 3] } } }
+  const order = [0, 1, 2, 3, 4]
+  assert.equal(scoreKeyedItem(item, { choices: [0, 3] }, order).score, 1)
+  assert.equal(scoreKeyedItem(item, { choices: [0] }, order).score, 0.5)
+  assert.equal(scoreKeyedItem(item, { choices: [0, 1] }, order).score, 0)
+  assert.equal(scoreKeyedItem(item, { choices: [1, 2, 4] }, order).score, 0)
+  assert.equal(scoreKeyedItem(item, { choices: [0, 0, 3] }, order).score, 1, 'duplicate picks count once')
+  assert.equal(scoreKeyedItem(item, { choices: [0, 1, 2, 3, 4] }, order).score, 0, 'ticking everything does not pay')
+})
+
+test('sjt: points scaled to 0..1 through the shuffle', () => {
+  const item = { type: 'sjt', content: { choices: ['a', 'b', 'c', 'd'] }, scoring_rubric: { answer: { points: [1, 3, 0, 2] } } }
+  const order = [1, 3, 0, 2]
+  assert.equal(scoreKeyedItem(item, { choice: 0 }, order).score, 1)
+  assert.equal(scoreKeyedItem(item, { choice: 1 }, order).score, 2 / 3)
+  assert.equal(scoreKeyedItem(item, { choice: 3 }, order).score, 0)
+})
+
+// ── Code review maths ─────────────────────────────────────────────────────
+
+test('code review: found issues weighted by severity, fix quality and false alarms', () => {
+  const issues = [
+    { id: 'inj', severity: 'critical', points: 3 },
+    { id: 'await', severity: 'major', points: 2 },
+    { id: 'n1', severity: 'minor', points: 1 },
+  ]
+  const perfect = reviewScoreFrom(issues, { issues: issues.map((i) => ({ id: i.id, found: 1, fix: 1 })), prioritised: 1, false_alarms: 0 })
+  assert.equal(perfect.score, 1)
+  const none = reviewScoreFrom(issues, { issues: [], prioritised: 0, false_alarms: 0 })
+  assert.equal(none.score, 0)
+  const critOnly = reviewScoreFrom(issues, { issues: [{ id: 'inj', found: 1, fix: 1 }], prioritised: 1, false_alarms: 0 })
+  assert.ok(critOnly.score > 0.55 && critOnly.score < 0.6, `critical only = ${critOnly.score}`)
+  const noisy = reviewScoreFrom(issues, { issues: [{ id: 'inj', found: 1, fix: 1 }], prioritised: 1, false_alarms: 20 })
+  assert.equal(noisy.score, 0, 'false alarms can pull to zero, never below')
+  const junk = reviewScoreFrom(issues, { issues: [{ id: 'inj', found: 7, fix: 9 }], prioritised: 'x', false_alarms: -3 })
+  assert.equal(junk.score, 0, 'out-of-range marker output is ignored, not trusted')
+})
+
+// ── Report maths ──────────────────────────────────────────────────────────
+
+test('report: unanswered items count as zero, weights apply, band and skill map', () => {
+  const form = {
+    sections: [
+      { key: 'knowledge', label: 'K', weight: 25, items: [{}, {}, {}, {}] },
+      { key: 'coding', label: 'C', weight: 40, items: [{}] },
+      { key: 'review', label: 'R', weight: 15, items: [{}] },
+      { key: 'judgement', label: 'J', weight: 20, items: [{}, {}] },
+    ],
+  }
+  const r = (section, score, skill, extra = {}) => ({ section, score, primary_skill_code: skill, secondary_skill_codes: [], raw_response: {}, ai_evaluation: {}, ...extra })
+  const responses = [
+    r('knowledge', 1, 'a'), r('knowledge', 1, 'a'), r('knowledge', 0, 'b'),
+    // 4th knowledge item never reached
+    r('coding', 0.8, 'c'),
+    r('review', 0.5, 'd'),
+    r('judgement', 1, 'e'), r('judgement', 0, 'e', { raw_response: { skipped: true } }),
+  ]
+  const out = summariseResponses(form, responses)
+  const k = out.sections.find((s) => s.key === 'knowledge')
+  assert.equal(k.score, 50, 'two of four right, the unreached one is zero')
+  assert.equal(out.sections.find((s) => s.key === 'judgement').answered, 1)
+  assert.equal(out.overall, Math.round(50 * 0.25 + 80 * 0.4 + 50 * 0.15 + 50 * 0.2))
+  assert.equal(out.band.key, 'borderline')
+  assert.equal(out.skillMap.find((s) => s.skill === 'a').level, 'strong')
+  assert.equal(out.skillMap.find((s) => s.skill === 'b').level, 'weak')
+})
+
+test('report: an item the AI could not mark is flagged and left out, not counted as zero', () => {
+  const form = { sections: [{ key: 'coding', label: 'C', weight: 100, items: [{}, {}] }] }
+  const out = summariseResponses(form, [
+    { section: 'coding', score: 1, primary_skill_code: 'x', raw_response: {}, ai_evaluation: {} },
+    { section: 'coding', score: null, primary_skill_code: 'x', raw_response: {}, ai_evaluation: {} },
+  ])
+  assert.equal(out.overall, 100)
+  assert.ok(out.flags.some((f) => f.kind === 'not_scored'))
+})
+
+test('bands follow the design cut points', () => {
+  assert.equal(bandFor(80).key, 'strong')
+  assert.equal(bandFor(79).key, 'good')
+  assert.equal(bandFor(65).key, 'good')
+  assert.equal(bandFor(64).key, 'borderline')
+  assert.equal(bandFor(50).key, 'borderline')
+  assert.equal(bandFor(49).key, 'not_yet')
+  assert.equal(bandFor(null), null)
+})
+
+// ── Code runner ───────────────────────────────────────────────────────────
+
+test('result comparison modes', () => {
+  assert.ok(resultsMatch({ a: 1, b: [1, 2] }, { b: [1, 2], a: 1 }), 'object key order ignored')
+  assert.ok(!resultsMatch([1, 2], [2, 1]))
+  assert.ok(resultsMatch([1, 2], [2, 1], 'unordered'))
+  assert.ok(resultsMatch([{ x: 1 }, { y: 2 }], [{ y: 2 }, { x: 1 }], 'unordered'))
+  assert.ok(resultsMatch(0.1 + 0.2, 0.3, 'float'))
+  assert.ok(!resultsMatch(0.1 + 0.2, 0.3))
+  assert.ok(!resultsMatch(null, undefined))
+})
+
+const fn = { javascript: 'add', python: 'add' }
+const tests = [{ name: 't', calls: [{ args: [2, 3], expected: 5 }] }]
+
+test('JavaScript sandbox: correct, wrong, no host access, loops stopped', async () => {
+  assert.equal((await runTests({ language: 'javascript', code: 'function add(a,b){return a+b}', functionName: fn, tests })).passed, 1)
+  assert.equal((await runTests({ language: 'javascript', code: 'function add(a,b){return a-b}', functionName: fn, tests })).passed, 0)
+  const host = await runTests({ language: 'javascript', code: 'function add(){ return typeof process + typeof require }', functionName: fn,
+    tests: [{ name: 'h', calls: [{ args: [], expected: 'undefinedundefined' }] }] })
+  assert.equal(host.passed, 1)
+  const loop = await runTests({ language: 'javascript', code: 'function add(){ for(;;){} }', functionName: fn, tests, timeoutMs: 500 })
+  assert.equal(loop.results[0].error, 'Time limit exceeded')
+})
+
+test('TypeScript is accepted, including export and type annotations', async () => {
+  const r = await runTests({ language: 'typescript', code: 'export function add(a: number, b: number): number { return a + b }', functionName: fn, tests })
+  assert.equal(r.passed, 1)
+})
+
+test('Python sandbox (needs CODE_RUNNER_URL)', { skip: !process.env.CODE_RUNNER_URL }, async () => {
+  assert.equal((await runTests({ language: 'python', code: 'def add(a, b):\n    return a + b\n', functionName: fn, tests })).passed, 1)
+  const loop = await runTests({ language: 'python', code: 'def add(a, b):\n    while True: pass\n', functionName: fn, tests, timeoutMs: 1000 })
+  assert.equal(loop.results[0].error, 'Time limit exceeded')
+})
+
+test('near-duplicate items (same group) never appear in the same form', () => {
+  const bp = getBlueprint({ track: 'backend', level: 'L3' })
+  const bank = fakeBank()
+  // Put every knowledge mcq into 5 groups: at most 5 of them can be drawn.
+  let k = 0
+  for (const it of bank) if (it.type === 'mcq' && it.format === 'concept' && it.levels.includes('L3')) it.tags = [`group:g${k++ % 5}`]
+  for (let seed = 1; seed <= 20; seed++) {
+    const form = drawForm(bp, bank, { language: 'javascript', seed })
+    const byId = new Map(bank.map((x) => [x.id, x]))
+    const groups = form.sections.flatMap((s) => s.items).map((i) => (byId.get(i.itemId).tags || [])[0]).filter(Boolean)
+    assert.equal(new Set(groups).size, groups.length, `seed ${seed}: a group appeared twice`)
+  }
+})
