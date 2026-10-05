@@ -1,0 +1,684 @@
+[
+  {
+    "bank_key": "cs.w.late-delivery",
+    "type": "scenario_response",
+    "section": "written_reply",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "customer_service.written_tone",
+    "secondary_skill_codes": [
+      "customer_service.empathy",
+      "customer_service.policy_adherence"
+    ],
+    "prompt": "**Channel:** Email\n\nYou work in customer service for an online furniture shop.\n\n**The customer's message (from Daniel):**\n\n> Subject: WHERE IS MY ORDER??\n> I ordered a desk chair on the 3rd and you said it would come in 3 to 5 working days. Its now been 10 working days and nothing. Your tracking page hasnt changed for a week. I work from home and im sitting on a kitchen chair. I want to know where it is or I want my money back.\n\n**What you found:** The latest promised day has passed, and the order is now 5 working days late. The tracking has not changed since the courier collected it.\n\n**Company policy:**\n\n- If an order is more than 3 working days late, refund the delivery charge (7.50) straight away.\n- Open a search with the courier. The courier replies within 2 working days.\n- If the courier cannot find the parcel, the customer chooses a full refund or a free replacement sent by express delivery (1 to 2 working days). A full refund or a replacement is only arranged after the courier search.\n\nWrite your reply to the customer. Write 60 to 150 words.",
+    "writing": {
+      "min_words": 60,
+      "max_words": 150,
+      "dimensions": [
+        {
+          "name": "Empathy",
+          "weight": 0.2,
+          "low": "no apology, or only a standard line that ignores his situation",
+          "high": "apologises for the delay and shows it understands he is working without a proper chair"
+        },
+        {
+          "name": "Solves or moves the problem forward",
+          "weight": 0.3,
+          "low": "only says the order is delayed and asks him to wait",
+          "high": "refunds the delivery charge and opens the courier search now, and explains what happens if the parcel is lost"
+        },
+        {
+          "name": "Follows the stated policy",
+          "weight": 0.25,
+          "low": "promises a delivery date, or gives a full refund before the courier search",
+          "high": "states the 7.50 refund, the 2-working-day courier reply and the choice of refund or express replacement exactly as the policy says"
+        },
+        {
+          "name": "Clear next steps",
+          "weight": 0.15,
+          "low": "he cannot tell what happens next or when",
+          "high": "says who will contact him, by when, and what he can choose"
+        },
+        {
+          "name": "Clear, professional writing",
+          "weight": 0.1,
+          "low": "mistakes, text-speak, shouting capitals or an unsuitable tone make the reply hard to follow or look careless",
+          "high": "easy to understand on first reading, with a polite opening and closing that suit the channel and mostly correct spelling and grammar; small slips that do not change the meaning, and plain or non-native phrasing, are not marked down"
+        }
+      ],
+      "ideal_answer": "Dear Daniel,\n\nI am sorry your chair has not arrived. Ten working days is far too long, especially when you need it to work from home.\n\nI have refunded your delivery charge of 7.50 today, and I have opened a search with the courier. They will reply within 2 working days, and I will email you as soon as I hear from them.\n\nIf the courier cannot find your parcel, you can choose a full refund or a free replacement sent by express delivery, which takes 1 to 2 working days. You are welcome to tell me your choice now, so we are ready.\n\nThank you for your patience.\n\nKind regards,\nCustomer Service",
+      "must_include": [
+        "an apology for the late delivery",
+        "the 7.50 delivery charge is refunded now",
+        "a courier search with a reply within 2 working days",
+        "if the parcel is not found: a full refund or a free express replacement (1 to 2 working days)"
+      ],
+      "must_avoid": [
+        "promising a delivery date",
+        "a full refund now, before the courier search",
+        "blaming the customer, or putting all the blame on the courier instead of apologising",
+        "asking the customer to contact the courier himself"
+      ]
+    },
+    "expected_time_s": 360
+  },
+  {
+    "bank_key": "cs.w.double-charge",
+    "type": "scenario_response",
+    "section": "written_reply",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "customer_service.written_tone",
+    "secondary_skill_codes": [
+      "customer_service.problem_resolution",
+      "customer_service.empathy"
+    ],
+    "prompt": "**Channel:** Chat\n\nYou work in customer service for an online electronics shop.\n\n**The customer's message:**\n\n> hi i just checked my bank app and you took 34.99 TWICE for the same order!! i need that money back today, i have rent to pay. order 58213\n\n**What you found:** Order 58213 was charged twice. You have refunded the second payment. The refund reference is RF-77120.\n\n**Company policy:**\n\n- When a double charge is confirmed, refund the second payment straight away.\n- Refunds reach the customer's card in 3 to 5 working days. Agents cannot make the bank go faster.\n- Always give the customer the refund reference number.\n- If the money has not arrived after 5 working days, the customer contacts us again with the reference.\n\nWrite your reply to the customer. Write 60 to 150 words.",
+    "writing": {
+      "min_words": 60,
+      "max_words": 150,
+      "dimensions": [
+        {
+          "name": "Empathy",
+          "weight": 0.2,
+          "low": "ignores that the money matters to the customer this week",
+          "high": "apologises and shows it understands the worry about rent, without overdoing it"
+        },
+        {
+          "name": "Solves or moves the problem forward",
+          "weight": 0.3,
+          "low": "says the charge will be \"looked into\"",
+          "high": "confirms the double charge and says clearly that the 34.99 has already been refunded"
+        },
+        {
+          "name": "Follows the stated policy",
+          "weight": 0.25,
+          "low": "promises the money today, or gives no reference",
+          "high": "gives the 3 to 5 working day timeline honestly and the reference RF-77120"
+        },
+        {
+          "name": "Clear next steps",
+          "weight": 0.15,
+          "low": "no idea what to do if the money does not arrive",
+          "high": "tells the customer what to do, with the reference, if the money has not arrived after 5 working days"
+        },
+        {
+          "name": "Clear, professional writing",
+          "weight": 0.1,
+          "low": "mistakes, text-speak, shouting capitals or an unsuitable tone make the reply hard to follow or look careless",
+          "high": "easy to understand on first reading, with a polite opening and closing that suit the channel and mostly correct spelling and grammar; small slips that do not change the meaning, and plain or non-native phrasing, are not marked down"
+        }
+      ],
+      "ideal_answer": "Hi, thank you for telling me, and I am sorry about this, especially with your rent due. I have checked order 58213 and you are right: 34.99 was taken twice. I have refunded the second payment now, and your refund reference is RF-77120.\n\nThe money will be back on your card in 3 to 5 working days. I know you hoped for today, but card refunds take this long to show and I cannot make it faster. If it has not arrived after 5 working days, message us with the reference and we will chase it for you.\n\nIs there anything else I can help with?",
+      "must_include": [
+        "confirms the order was charged twice",
+        "the second payment of 34.99 has been refunded",
+        "the refund reference RF-77120",
+        "the money arrives in 3 to 5 working days"
+      ],
+      "must_avoid": [
+        "promising the money today",
+        "blaming the customer or the customer's bank",
+        "asking the customer to get the money back through their own bank"
+      ]
+    },
+    "expected_time_s": 360
+  },
+  {
+    "bank_key": "cs.w.faulty-outside-return-window",
+    "type": "scenario_response",
+    "section": "written_reply",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "customer_service.policy_adherence",
+    "secondary_skill_codes": [
+      "customer_service.written_tone",
+      "customer_service.empathy"
+    ],
+    "prompt": "**Channel:** Email\n\nYou work in customer service for an online kitchen shop.\n\n**The customer's message (from Mrs Okafor):**\n\n> Hello, I bought your blender 50 days ago and now it wont turn on at all. I have only used it maybe 10 times. I want a full refund please. This is really poor quality for the price I paid.\n\n**What you found:** The blender was delivered 50 days ago.\n\n**Company policy:**\n\n- Refunds are possible within 30 days of delivery.\n- Every product has a 12-month warranty. Faulty products are repaired or replaced free of charge.\n- To start a warranty claim, the customer replies with the order number and a photo or short video of the fault. We then email a free collection label within 2 working days.\n\nWrite your reply to the customer. Write 60 to 150 words.",
+    "writing": {
+      "min_words": 60,
+      "max_words": 150,
+      "dimensions": [
+        {
+          "name": "Empathy",
+          "weight": 0.2,
+          "low": "no recognition that the product failed after little use",
+          "high": "says sorry that it failed so soon and takes her disappointment seriously"
+        },
+        {
+          "name": "Solves or moves the problem forward",
+          "weight": 0.25,
+          "low": "stops at \"no refund\"",
+          "high": "moves her straight to the warranty and asks for exactly what is needed to start it"
+        },
+        {
+          "name": "Follows the stated policy",
+          "weight": 0.3,
+          "low": "promises a refund, or says nothing can be done",
+          "high": "explains kindly that refunds end at 30 days and offers free repair or replacement under the 12-month warranty"
+        },
+        {
+          "name": "Clear next steps",
+          "weight": 0.15,
+          "low": "she does not know what to send or what happens next",
+          "high": "asks for the order number and a photo or video, and says the collection label follows within 2 working days"
+        },
+        {
+          "name": "Clear, professional writing",
+          "weight": 0.1,
+          "low": "mistakes, text-speak, shouting capitals or an unsuitable tone make the reply hard to follow or look careless",
+          "high": "easy to understand on first reading, with a polite opening and closing that suit the channel and mostly correct spelling and grammar; small slips that do not change the meaning, and plain or non-native phrasing, are not marked down"
+        }
+      ],
+      "ideal_answer": "Dear Mrs Okafor,\n\nI am sorry your blender has stopped working after so little use. That is not the quality we expect either.\n\nBecause it is now 50 days since delivery, we cannot offer a refund, as refunds are only possible within 30 days. However, your blender has a 12-month warranty, so we will repair or replace it free of charge.\n\nTo start, please reply with your order number and a short photo or video showing that it will not turn on. We will then email you a free collection label within 2 working days.\n\nThank you, and I am sorry again for the trouble.\n\nKind regards,\nCustomer Service",
+      "must_include": [
+        "a refund is not possible after 30 days",
+        "the 12-month warranty: free repair or replacement",
+        "reply with the order number and a photo or video of the fault",
+        "a free collection label within 2 working days"
+      ],
+      "must_avoid": [
+        "promising a refund",
+        "suggesting she misused or broke the blender",
+        "saying nothing can be done"
+      ]
+    },
+    "expected_time_s": 360
+  },
+  {
+    "bank_key": "cs.w.company-cancelled-trip",
+    "type": "scenario_response",
+    "section": "written_reply",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "customer_service.empathy",
+    "secondary_skill_codes": [
+      "customer_service.written_tone",
+      "customer_service.policy_adherence"
+    ],
+    "prompt": "**Channel:** Email\n\nYou work in customer service for a company that runs day trips by bus.\n\n**The customer's message (from Ahmed):**\n\n> I just got a text saying my trip on Saturday is CANCELLED. I booked this 2 months ago for my parents anniversary. Ten seats! What am I supposed to tell my family now? This is unbelievable and nobody has even said why.\n\n**What you found:** The trip was cancelled because the bus failed its safety check. The next two Saturdays both have 10 free seats on the same trip.\n\n**Company policy:**\n\n- Always tell the customer the real reason for a cancellation.\n- When we cancel, the customer chooses: a full refund within 5 working days, or a free move to another date plus a 10% voucher for a future trip.\n\nWrite your reply to the customer. Write 60 to 150 words.",
+    "writing": {
+      "min_words": 60,
+      "max_words": 150,
+      "dimensions": [
+        {
+          "name": "Empathy",
+          "weight": 0.25,
+          "low": "treats it as a routine cancellation",
+          "high": "apologises sincerely and recognises that it was a family celebration"
+        },
+        {
+          "name": "Solves or moves the problem forward",
+          "weight": 0.25,
+          "low": "only confirms the cancellation",
+          "high": "offers both options clearly and mentions the next two Saturdays with 10 free seats"
+        },
+        {
+          "name": "Follows the stated policy",
+          "weight": 0.25,
+          "low": "gives no reason or a vague one, or offers extra compensation",
+          "high": "states the safety-check reason honestly and offers exactly the refund (5 working days) or the new date plus 10% voucher"
+        },
+        {
+          "name": "Clear next steps",
+          "weight": 0.15,
+          "low": "the customer does not know how to choose",
+          "high": "asks him to reply with his choice and says it will be arranged straight away"
+        },
+        {
+          "name": "Clear, professional writing",
+          "weight": 0.1,
+          "low": "mistakes, text-speak, shouting capitals or an unsuitable tone make the reply hard to follow or look careless",
+          "high": "easy to understand on first reading, with a polite opening and closing that suit the channel and mostly correct spelling and grammar; small slips that do not change the meaning, and plain or non-native phrasing, are not marked down"
+        }
+      ],
+      "ideal_answer": "Dear Ahmed,\n\nI am very sorry that your trip on Saturday has been cancelled, especially when it was planned for your parents' anniversary.\n\nThe trip was cancelled because the bus failed its safety check, and we will not travel unless the bus is safe.\n\nYou can choose what suits your family best:\n- a full refund for all ten seats, paid within 5 working days, or\n- a free move to another date, plus a 10% voucher for a future trip. The next two Saturdays both have ten free seats.\n\nPlease reply with your choice and I will arrange it straight away.\n\nAgain, I am sorry for the disappointment.\n\nKind regards,\nCustomer Service",
+      "must_include": [
+        "the real reason: the bus failed its safety check",
+        "a full refund within 5 working days",
+        "or a free move to another date plus a 10% voucher",
+        "the next two Saturdays have 10 free seats"
+      ],
+      "must_avoid": [
+        "a vague reason such as \"operational reasons\"",
+        "promising the original trip may still go ahead",
+        "offering compensation beyond the policy"
+      ]
+    },
+    "expected_time_s": 360
+  },
+  {
+    "bank_key": "cs.w.rude-previous-agent",
+    "type": "scenario_response",
+    "section": "written_reply",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "customer_service.de_escalation",
+    "secondary_skill_codes": [
+      "customer_service.written_tone",
+      "customer_service.privacy_verification"
+    ],
+    "prompt": "**Channel:** Chat\n\nYou work in customer service for an internet and phone company.\n\n**The customer's message:**\n\n> yesterday i called to change my address and the guy was so rude, he said \"i already told you\" and then HUNG UP on me. i still havent got my address changed. honestly why do i even bother with you people\n\n**Company policy:**\n\n- Apologise and record every complaint about an agent. A team leader reviews it and contacts the customer within 5 working days.\n- Never tell the customer what action is taken against a colleague.\n- Address changes need a security check: the customer confirms their date of birth and the last 4 digits of the card on the account.\n\nWrite your reply to the customer. Write 60 to 150 words.",
+    "writing": {
+      "min_words": 60,
+      "max_words": 150,
+      "dimensions": [
+        {
+          "name": "Empathy",
+          "weight": 0.25,
+          "low": "defends the company or skips the apology",
+          "high": "apologises sincerely for how the customer was treated, without making excuses"
+        },
+        {
+          "name": "Solves or moves the problem forward",
+          "weight": 0.25,
+          "low": "only deals with the complaint and forgets the address",
+          "high": "records the complaint and offers to change the address now, in this chat"
+        },
+        {
+          "name": "Follows the stated policy",
+          "weight": 0.25,
+          "low": "says what will happen to the colleague, or skips the security check",
+          "high": "explains the team leader review within 5 working days, says nothing about action against the colleague, and asks for date of birth and last 4 card digits"
+        },
+        {
+          "name": "Clear next steps",
+          "weight": 0.15,
+          "low": "the customer does not know what to send or what happens next",
+          "high": "tells the customer exactly what to send now and when the team leader will be in touch"
+        },
+        {
+          "name": "Clear, professional writing",
+          "weight": 0.1,
+          "low": "mistakes, text-speak, shouting capitals or an unsuitable tone make the reply hard to follow or look careless",
+          "high": "easy to understand on first reading, with a polite opening and closing that suit the channel and mostly correct spelling and grammar; small slips that do not change the meaning, and plain or non-native phrasing, are not marked down"
+        }
+      ],
+      "ideal_answer": "Hi, I am really sorry about yesterday. Being spoken to like that and then cut off is not how we should treat you. I have recorded your complaint, and a team leader will review it and contact you within 5 working days.\n\nLet me make sure your address is changed today. For security, please confirm your date of birth and the last 4 digits of the card on your account. Then send me your new address, and I will update it while we chat and confirm it for you.",
+      "must_include": [
+        "a sincere apology for the previous call",
+        "the complaint is recorded and a team leader will contact the customer within 5 working days",
+        "asks for the date of birth and the last 4 digits of the card",
+        "offers to change the address now"
+      ],
+      "must_avoid": [
+        "saying what will happen to the colleague (for example a warning or dismissal)",
+        "defending the colleague or suggesting the customer caused it",
+        "changing the address without the security check"
+      ]
+    },
+    "expected_time_s": 360
+  },
+  {
+    "bank_key": "cs.w.account-locked",
+    "type": "scenario_response",
+    "section": "written_reply",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "customer_service.privacy_verification",
+    "secondary_skill_codes": [
+      "customer_service.written_tone",
+      "customer_service.problem_resolution"
+    ],
+    "prompt": "**Channel:** Chat\n\nYou work in customer service for an energy company. Customers pay their bills online.\n\n**The customer's message (from Lin):**\n\n> My account is LOCKED and I need to pay a bill today before 5pm or I get a late fee. Just unlock it please, I am the owner, my name is Lin Wei.\n\n**Company policy:**\n\n- For security, agents cannot unlock accounts or reset passwords in chat.\n- The customer can unlock the account at once with the \"Forgot password\" link, which sends a code to the email or phone number on the account. If the code does not arrive, the customer calls the phone line, where an agent checks their identity.\n- Bills can be paid without logging in, on the \"Quick pay\" page, using the bill number.\n\nWrite your reply to the customer. Write 60 to 150 words.",
+    "writing": {
+      "min_words": 60,
+      "max_words": 150,
+      "dimensions": [
+        {
+          "name": "Empathy",
+          "weight": 0.15,
+          "low": "ignores the deadline and the worry about a late fee",
+          "high": "recognises the deadline today and the worry about the late fee"
+        },
+        {
+          "name": "Solves or moves the problem forward",
+          "weight": 0.35,
+          "low": "only says the agent cannot help in chat",
+          "high": "gives two working routes: Forgot password to unlock, and Quick pay with the bill number to pay today"
+        },
+        {
+          "name": "Follows the stated policy",
+          "weight": 0.25,
+          "low": "unlocks the account, or asks for a password or code in chat",
+          "high": "explains kindly that accounts cannot be unlocked in chat for security, and gives the phone line if the code does not arrive"
+        },
+        {
+          "name": "Clear next steps",
+          "weight": 0.15,
+          "low": "steps are vague or in the wrong order",
+          "high": "short, numbered or ordered steps the customer can follow right now"
+        },
+        {
+          "name": "Clear, professional writing",
+          "weight": 0.1,
+          "low": "mistakes, text-speak, shouting capitals or an unsuitable tone make the reply hard to follow or look careless",
+          "high": "easy to understand on first reading, with a polite opening and closing that suit the channel and mostly correct spelling and grammar; small slips that do not change the meaning, and plain or non-native phrasing, are not marked down"
+        }
+      ],
+      "ideal_answer": "Hi Lin, I am sorry you are locked out, especially with a bill due today. For your security, I cannot unlock accounts in chat, but you can do it yourself right now:\n\n1. Choose \"Forgot password\" on the login page.\n2. We will send a code to the email or phone number on your account.\n\nIf you would rather pay first, use our \"Quick pay\" page with your bill number. You do not need to log in for that.\n\nIf the code does not arrive, please call our phone line and an agent will check your identity there. Is there anything else I can help with?",
+      "must_include": [
+        "agents cannot unlock accounts in chat, for security",
+        "the Forgot password link sends a code to the email or phone on the account",
+        "Quick pay with the bill number lets her pay today without logging in",
+        "call the phone line if the code does not arrive"
+      ],
+      "must_avoid": [
+        "unlocking the account in chat, or asking for her password or code",
+        "promising to remove a late fee",
+        "suggesting she caused the lock by being careless"
+      ]
+    },
+    "expected_time_s": 360
+  },
+  {
+    "bank_key": "cs.w.wrong-item-sent",
+    "type": "scenario_response",
+    "section": "written_reply",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "customer_service.written_tone",
+    "secondary_skill_codes": [
+      "customer_service.problem_resolution",
+      "customer_service.policy_adherence"
+    ],
+    "prompt": "**Channel:** Email\n\nYou work in customer service for an online clothing shop.\n\n**The customer's message (from Maria):**\n\n> I ordered a black jacket in size L and I got a BLUE one in size M. This was a birthday gift and I need it for Friday. Very disappointing, I have ordered from you many times and never had this problem.\n\n**What you found:** The black jacket in size L is in stock. You have sent it today by express delivery.\n\n**Company policy:**\n\n- If we send the wrong item, send the right one straight away by express delivery (1 to 2 working days) if it is in stock. Do not wait for the wrong item to come back.\n- Email the customer a free return label within 24 hours. The customer has 14 days to return the wrong item.\n\nWrite your reply to the customer. Write 60 to 150 words.",
+    "writing": {
+      "min_words": 60,
+      "max_words": 150,
+      "dimensions": [
+        {
+          "name": "Empathy",
+          "weight": 0.2,
+          "low": "no apology, or ignores that it is a gift",
+          "high": "apologises for the mistake, recognises the gift, and thanks her as a regular customer"
+        },
+        {
+          "name": "Solves or moves the problem forward",
+          "weight": 0.3,
+          "low": "asks her to return the jacket first and then reorder",
+          "high": "confirms the right jacket is already on its way by express delivery"
+        },
+        {
+          "name": "Follows the stated policy",
+          "weight": 0.25,
+          "low": "firmly promises Friday, or asks her to pay for the return",
+          "high": "gives the 1 to 2 working day delivery honestly, the free label within 24 hours and the 14 days to return"
+        },
+        {
+          "name": "Clear next steps",
+          "weight": 0.15,
+          "low": "she does not know what to do with the blue jacket",
+          "high": "tells her clearly what will arrive, what to send back, and how"
+        },
+        {
+          "name": "Clear, professional writing",
+          "weight": 0.1,
+          "low": "mistakes, text-speak, shouting capitals or an unsuitable tone make the reply hard to follow or look careless",
+          "high": "easy to understand on first reading, with a polite opening and closing that suit the channel and mostly correct spelling and grammar; small slips that do not change the meaning, and plain or non-native phrasing, are not marked down"
+        }
+      ],
+      "ideal_answer": "Dear Maria,\n\nI am sorry we sent you the wrong jacket, especially when it is a birthday gift. Thank you for being such a loyal customer, and I am sorry this happened.\n\nI have sent the black jacket in size L today by express delivery. It should reach you in 1 to 2 working days. You do not need to return the blue one first.\n\nWe will email you a free return label within 24 hours. Please send the blue jacket back within 14 days using that label. There is nothing to pay.\n\nKind regards,\nCustomer Service",
+      "must_include": [
+        "the black jacket in size L has been sent today by express delivery",
+        "delivery takes 1 to 2 working days",
+        "a free return label by email within 24 hours",
+        "14 days to return the blue jacket"
+      ],
+      "must_avoid": [
+        "a firm promise that it will arrive by Friday",
+        "asking her to return the wrong jacket before the right one is sent",
+        "asking her to pay for the return"
+      ]
+    },
+    "expected_time_s": 360
+  },
+  {
+    "bank_key": "cs.w.subscription-renewed",
+    "type": "scenario_response",
+    "section": "written_reply",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "customer_service.policy_adherence",
+    "secondary_skill_codes": [
+      "customer_service.written_tone",
+      "customer_service.de_escalation"
+    ],
+    "prompt": "**Channel:** Email\n\nYou work in customer service for a company that sells a fitness app by yearly subscription.\n\n**The customer's message (from Peter):**\n\n> You just took 89.00 from my account for a yearly renewal. I NEVER agreed to this and I got no warning at all. I dont even use the app anymore. This is a scam and I want my money back now.\n\n**What you found:** A reminder email was sent to his email address 30 days before the renewal. The renewal was 3 days ago. The app has not been used since the renewal.\n\n**Company policy:**\n\n- A reminder email is sent 30 days before every renewal.\n- A yearly renewal is fully refunded if the customer asks within 14 days of the renewal and has not used the app since.\n- Refunds reach the card in 5 to 7 working days. After a renewal refund, the subscription ends and no more payments are taken.\n\nWrite your reply to the customer. Write 60 to 150 words.",
+    "writing": {
+      "min_words": 60,
+      "max_words": 150,
+      "dimensions": [
+        {
+          "name": "Empathy",
+          "weight": 0.2,
+          "low": "argues with \"scam\" or ignores the surprise",
+          "high": "stays calm and recognises that an unexpected payment is upsetting"
+        },
+        {
+          "name": "Solves or moves the problem forward",
+          "weight": 0.3,
+          "low": "only explains the reminder, or asks him to wait for a decision",
+          "high": "confirms he qualifies and that the full 89.00 refund has been made"
+        },
+        {
+          "name": "Follows the stated policy",
+          "weight": 0.25,
+          "low": "refuses, or promises the money sooner than the policy allows",
+          "high": "mentions the reminder factually, gives the 5 to 7 working day timeline, and says the subscription has ended"
+        },
+        {
+          "name": "Clear next steps",
+          "weight": 0.15,
+          "low": "he does not know whether he will be charged again",
+          "high": "says clearly when the money arrives and that no more payments will be taken"
+        },
+        {
+          "name": "Clear, professional writing",
+          "weight": 0.1,
+          "low": "mistakes, text-speak, shouting capitals or an unsuitable tone make the reply hard to follow or look careless",
+          "high": "easy to understand on first reading, with a polite opening and closing that suit the channel and mostly correct spelling and grammar; small slips that do not change the meaning, and plain or non-native phrasing, are not marked down"
+        }
+      ],
+      "ideal_answer": "Dear Peter,\n\nI am sorry this payment came as a surprise. I understand why that was upsetting.\n\nOur records show that a reminder was sent to your email address 30 days before the renewal. I am sorry if it did not reach you.\n\nThe good news is that your renewal was only 3 days ago and the app has not been used since, so you qualify for a full refund. I have refunded the 89.00 today, and it will reach your card in 5 to 7 working days.\n\nYour subscription has now ended, and no more payments will be taken.\n\nKind regards,\nCustomer Service",
+      "must_include": [
+        "the reminder email was sent 30 days before the renewal",
+        "he qualifies for a full refund of 89.00",
+        "the money reaches his card in 5 to 7 working days",
+        "the subscription has ended and no more payments will be taken"
+      ],
+      "must_avoid": [
+        "blaming him for not reading the reminder",
+        "repeating or arguing with the word \"scam\"",
+        "promising the money in less than 5 working days"
+      ]
+    },
+    "expected_time_s": 360
+  },
+  {
+    "bank_key": "cs.w.service-outage",
+    "type": "scenario_response",
+    "section": "written_reply",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "customer_service.de_escalation",
+    "secondary_skill_codes": [
+      "customer_service.written_tone",
+      "behavioral.ethics.integrity"
+    ],
+    "prompt": "**Channel:** Chat\n\nYou work in customer service for an internet provider.\n\n**The customer's message:**\n\n> my internet has been down since yesterday morning!!! i work from home and ive lost a whole days pay. when is it going to be fixed??? and im not paying for days i dont get\n\n**What you found:** There is a known outage in the customer's area caused by a damaged cable. Engineers are working on it. The current estimate is that service returns by 6 pm tomorrow.\n\n**Company policy:**\n\n- Give the current estimate, but never promise an exact time.\n- Customers without service for more than 24 hours get an automatic credit on their next bill for each full day without service. The company does not pay for lost earnings.\n- Customers can get text updates about the outage by replying UPDATES.\n\nWrite your reply to the customer. Write 60 to 150 words.",
+    "writing": {
+      "min_words": 60,
+      "max_words": 150,
+      "dimensions": [
+        {
+          "name": "Empathy",
+          "weight": 0.2,
+          "low": "no apology, or treats the lost work as unimportant",
+          "high": "apologises and recognises the impact on working from home, without promising to pay for it"
+        },
+        {
+          "name": "Solves or moves the problem forward",
+          "weight": 0.25,
+          "low": "only says engineers are \"looking into it\"",
+          "high": "explains the cause, the estimate and the automatic credit, and offers text updates"
+        },
+        {
+          "name": "Follows the stated policy",
+          "weight": 0.3,
+          "low": "promises an exact time, or offers to pay for lost earnings",
+          "high": "gives 6 pm tomorrow as an estimate, explains the credit for each full day, and says honestly that lost earnings are not covered"
+        },
+        {
+          "name": "Clear next steps",
+          "weight": 0.15,
+          "low": "the customer does not know how to follow progress",
+          "high": "tells the customer to reply UPDATES and that the credit needs no action"
+        },
+        {
+          "name": "Clear, professional writing",
+          "weight": 0.1,
+          "low": "mistakes, text-speak, shouting capitals or an unsuitable tone make the reply hard to follow or look careless",
+          "high": "easy to understand on first reading, with a polite opening and closing that suit the channel and mostly correct spelling and grammar; small slips that do not change the meaning, and plain or non-native phrasing, are not marked down"
+        }
+      ],
+      "ideal_answer": "Hi, I am really sorry. Being without internet for this long is hard, especially when you work from home.\n\nThere is a damaged cable in your area, and our engineers are working on it now. Our current estimate is that service will be back by 6 pm tomorrow. This could change, so I cannot promise an exact time.\n\nBecause you have been without service for more than 24 hours, a credit for each full day without service will be added to your next bill automatically. You do not need to do anything for this. I am sorry, but we are not able to cover lost earnings.\n\nIf you reply UPDATES, we will text you as soon as anything changes.",
+      "must_include": [
+        "a damaged cable in the area and engineers are working on it",
+        "the estimate of 6 pm tomorrow, given as an estimate and not a promise",
+        "an automatic credit on the next bill for each full day without service",
+        "reply UPDATES for text updates"
+      ],
+      "must_avoid": [
+        "promising an exact time",
+        "offering to pay for lost earnings",
+        "asking the customer to restart the router as if the fault were theirs",
+        "promising that every hour or part day without service will be credited"
+      ]
+    },
+    "expected_time_s": 360
+  },
+  {
+    "bank_key": "cs.w.discount-code-after-purchase",
+    "type": "scenario_response",
+    "section": "written_reply",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "customer_service.policy_adherence",
+    "secondary_skill_codes": [
+      "customer_service.written_tone",
+      "customer_service.problem_resolution"
+    ],
+    "prompt": "**Channel:** Email\n\nYou work in customer service for an online home appliance shop.\n\n**The customer's message (from Grace):**\n\n> Hi, I bought a coffee machine yesterday for 240.00 and today I got your email with a 20% off code (SAVE20). That is 48.00 I could have saved! Please just add the code to my order, it is only one day. Thanks\n\n**What you found:** Her order has not been dispatched yet.\n\n**Company policy:**\n\n- Discount codes cannot be added to an order after it has been placed.\n- Orders can be cancelled for a full refund until they are dispatched. Refunds reach the card in 3 to 5 working days.\n- The code SAVE20 is valid for 14 days.\n- Agents may tell customers that an order which has not been dispatched can be cancelled and placed again with a valid code.\n\nWrite your reply to the customer. Write 60 to 150 words.",
+    "writing": {
+      "min_words": 60,
+      "max_words": 150,
+      "dimensions": [
+        {
+          "name": "Empathy",
+          "weight": 0.15,
+          "low": "cold or suggests she should have waited",
+          "high": "recognises that it is annoying to see a discount the day after buying"
+        },
+        {
+          "name": "Solves or moves the problem forward",
+          "weight": 0.35,
+          "low": "a flat no with nothing else",
+          "high": "explains how she can still save the 48.00: cancel the undispatched order and order again with SAVE20"
+        },
+        {
+          "name": "Follows the stated policy",
+          "weight": 0.25,
+          "low": "adds the code or gives a 48.00 partial refund",
+          "high": "says clearly that codes cannot be added after ordering, and gives the full refund timeline and the 14-day code validity"
+        },
+        {
+          "name": "Clear next steps",
+          "weight": 0.15,
+          "low": "she does not know what to do",
+          "high": "offers to cancel the order for her and tells her what to do next"
+        },
+        {
+          "name": "Clear, professional writing",
+          "weight": 0.1,
+          "low": "mistakes, text-speak, shouting capitals or an unsuitable tone make the reply hard to follow or look careless",
+          "high": "easy to understand on first reading, with a polite opening and closing that suit the channel and mostly correct spelling and grammar; small slips that do not change the meaning, and plain or non-native phrasing, are not marked down"
+        }
+      ],
+      "ideal_answer": "Dear Grace,\n\nThank you for getting in touch. I understand how annoying it is to see a discount the day after you buy.\n\nI am sorry, but we cannot add a discount code to an order that has already been placed. However, there is still a way for you to save the 48.00. Your order has not been dispatched yet, so it can be cancelled for a full refund, and you can then order again with the code SAVE20, which is valid for 14 days. The refund of 240.00 will reach your card in 3 to 5 working days.\n\nIf you would like me to cancel the order for you, just reply to this email.\n\nKind regards,\nCustomer Service",
+      "must_include": [
+        "codes cannot be added after an order is placed",
+        "the order can be cancelled for a full refund because it has not been dispatched",
+        "she can order again with SAVE20, valid for 14 days",
+        "the refund reaches her card in 3 to 5 working days"
+      ],
+      "must_avoid": [
+        "adding the code or giving a 48.00 partial refund",
+        "telling her she should have waited",
+        "a flat no with no alternative"
+      ]
+    },
+    "expected_time_s": 360
+  }
+]

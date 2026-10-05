@@ -13,6 +13,8 @@ const ROLE_LABELS = {
   'swe-mobile': 'Mobile Engineering',
   'swe-qa': 'QA / Test Automation',
   'swe-devops': 'DevOps / Cloud',
+  'general': 'General Workplace',
+  'customer_service': 'Customer Service',
   'pm-consumer': 'Product Management',
   'sales-ae': 'Sales (AE)',
 }
@@ -95,7 +97,11 @@ export default async function ApplicationHubPage({ params }) {
       statusDone: doneAt ? `Completed ${fmt(doneAt)}` : null,
       statusTodo: code.startsWith('swe-')
         ? 'Timed written test: knowledge, a coding task, a code review and work situations (about 1 hour)'
-        : 'Adaptive scenario, coding & MCQ questions',
+        : code === 'customer_service'
+          ? 'Timed test: typing, customer situations, a written reply and accuracy (about 25 minutes)'
+          : code === 'general'
+            ? 'Timed test: work situations, a short email, numbers and attention to detail (about 30 minutes)'
+            : 'Adaptive scenario, coding & MCQ questions',
       href: `/dashboard/assessment?jobId=${job.id}&role=${code}&slug=${slug}`,
     })
   }

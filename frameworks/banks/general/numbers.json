@@ -1,0 +1,1233 @@
+[
+  {
+    "bank_key": "general.n.change-from-twenty",
+    "type": "mcq",
+    "section": "numbers",
+    "format": "numbers",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "workplace.numeracy",
+    "secondary_skill_codes": [],
+    "prompt": "A customer buys a sandwich for $4.75, a drink for $1.80 and a salad for $6.20. They pay with a $20 note. How much change should they get?",
+    "choices": [
+      "$12.75",
+      "$9.05",
+      "$7.25",
+      "$8.25"
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "calc": "Math.round((20 - (4.75 + 1.80 + 6.20)) * 100) / 100",
+    "explanation": "Total = 4.75 + 1.80 + 6.20 = $12.75. Change = 20 - 12.75 = $7.25. Wrong: $12.75 is the total of the items, not the change. Wrong: $9.05 forgets the drink (20 - 4.75 - 6.20). Wrong: $8.25 is a common slip when counting up from 12.75: 12.75 to 13.00 is 25 cents, but 13 to 20 is 7 dollars, not 8.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "general.n.office-order-total",
+    "type": "mcq",
+    "section": "numbers",
+    "format": "numbers",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "workplace.numeracy",
+    "secondary_skill_codes": [],
+    "prompt": "An office orders 3 boxes of paper at $8.40 per box and 2 packs of pens at $5.15 per pack. What is the total cost of the order?",
+    "choices": [
+      "$35.50",
+      "$13.55",
+      "$30.35",
+      "$18.70"
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "calc": "Math.round((3 * 8.40 + 2 * 5.15) * 100) / 100",
+    "explanation": "Paper: 3 x 8.40 = $25.20. Pens: 2 x 5.15 = $10.30. Total: 25.20 + 10.30 = $35.50. Wrong: $13.55 adds one box and one pack only (8.40 + 5.15). Wrong: $30.35 multiplies the paper but forgets to multiply the pens (25.20 + 5.15). Wrong: $18.70 multiplies the pens but not the paper (8.40 + 10.30).",
+    "expected_time_s": 55
+  },
+  {
+    "bank_key": "general.n.jacket-discount-25",
+    "type": "mcq",
+    "section": "numbers",
+    "format": "numbers",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "workplace.numeracy",
+    "secondary_skill_codes": [],
+    "group": "pct-off-price",
+    "prompt": "A jacket normally costs $64. This week it has a 25% discount. What is the sale price?",
+    "choices": [
+      "$16",
+      "$39",
+      "$80",
+      "$48"
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "calc": "64 * (1 - 0.25)",
+    "explanation": "25% of 64 = 64 / 4 = 16, so the sale price is 64 - 16 = $48. Wrong: $16 is the discount, not the sale price. Wrong: $39 takes 25 dollars off instead of 25%. Wrong: $80 adds the discount to the price instead of taking it off.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "general.n.printer-discount-15",
+    "type": "mcq",
+    "section": "numbers",
+    "format": "numbers",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "workplace.numeracy",
+    "secondary_skill_codes": [],
+    "group": "pct-off-price",
+    "prompt": "A printer costs $240. Your company gets a 15% discount on it. How much does the company pay?",
+    "choices": [
+      "$36",
+      "$204",
+      "$225",
+      "$276"
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "calc": "Math.round(240 * 0.85 * 100) / 100",
+    "explanation": "15% of 240 = 2.40 x 15 = $36. The company pays 240 - 36 = $204. Wrong: $36 is the discount, not the price paid. Wrong: $225 takes 15 dollars off instead of 15%. Wrong: $276 adds the discount instead of taking it off.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "general.n.coat-two-discounts",
+    "type": "mcq",
+    "section": "numbers",
+    "format": "numbers",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "workplace.numeracy",
+    "secondary_skill_codes": [],
+    "prompt": "A coat costs $150. The shop takes 20% off. At the till, a further 10% is taken off the reduced price. What does the customer pay?",
+    "choices": [
+      "$105",
+      "$120",
+      "$108",
+      "$135"
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "calc": "Math.round(150 * 0.8 * 0.9 * 100) / 100",
+    "explanation": "After 20% off: 150 - 30 = $120. Then 10% off the reduced price: 120 - 12 = $108. Wrong: $105 takes 30% off the original price in one go, but the second 10% comes off $120, not $150. Wrong: $120 forgets the second discount. Wrong: $135 uses only the 10% discount.",
+    "expected_time_s": 65
+  },
+  {
+    "bank_key": "general.n.kettle-discount-percent",
+    "type": "mcq",
+    "section": "numbers",
+    "format": "numbers",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "workplace.numeracy",
+    "secondary_skill_codes": [],
+    "prompt": "A kettle was $40. It is now on sale for $34. What percentage discount is this?",
+    "choices": [
+      "15%",
+      "6%",
+      "17.6%",
+      "85%"
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "calc": "(40 - 34) / 40 * 100",
+    "explanation": "The discount is 40 - 34 = $6. As a percentage of the original price: 6 / 40 x 100 = 15%. Wrong: 6% treats the dollar amount as a percentage. Wrong: 17.6% divides by the new price (6 / 34, rounded) instead of the original price. Wrong: 85% is the new price as a percentage of the old price, not the discount.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.n.sales-increase-percent",
+    "type": "mcq",
+    "section": "numbers",
+    "format": "numbers",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "workplace.numeracy",
+    "secondary_skill_codes": [],
+    "prompt": "A store sold 500 units last month and 560 units this month. What is the percentage increase?",
+    "choices": [
+      "60%",
+      "10.7%",
+      "112%",
+      "12%"
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "calc": "(560 - 500) / 500 * 100",
+    "explanation": "The increase is 560 - 500 = 60 units. As a percentage of last month: 60 / 500 x 100 = 12%. Wrong: 60% treats the number of units as a percentage. Wrong: 10.7% divides by this month's figure (60 / 560, rounded) instead of last month's. Wrong: 112% is this month as a percentage of last month, not the increase.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.n.gloves-price-rise",
+    "type": "mcq",
+    "section": "numbers",
+    "format": "numbers",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "workplace.numeracy",
+    "secondary_skill_codes": [],
+    "prompt": "A supplier raises the price of a box of gloves by 8%. The old price was $12.50. What is the new price?",
+    "choices": [
+      "$1.00",
+      "$13.50",
+      "$20.50",
+      "$11.50"
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "calc": "Math.round(12.50 * 1.08 * 100) / 100",
+    "explanation": "8% of 12.50 = $1.00, so the new price is 12.50 + 1.00 = $13.50. Wrong: $1.00 is only the increase. Wrong: $20.50 adds 8 dollars instead of 8%. Wrong: $11.50 takes the 8% off instead of adding it.",
+    "expected_time_s": 55
+  },
+  {
+    "bank_key": "general.n.team-hours-decrease",
+    "type": "mcq",
+    "section": "numbers",
+    "format": "numbers",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "workplace.numeracy",
+    "secondary_skill_codes": [],
+    "prompt": "A team worked 1,250 hours in May. In June it worked 10% fewer hours. How many hours did it work in June?",
+    "choices": [
+      "1,240 hours",
+      "1,375 hours",
+      "1,125 hours",
+      "125 hours"
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "calc": "1250 * 0.9",
+    "explanation": "10% of 1,250 = 125. June: 1,250 - 125 = 1,125 hours. Wrong: 1,240 takes away 10 hours instead of 10%. Wrong: 1,375 adds 10% instead of taking it away. Wrong: 125 is the decrease, not the June total.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "general.n.tax-added-20",
+    "type": "mcq",
+    "section": "numbers",
+    "format": "numbers",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "workplace.numeracy",
+    "secondary_skill_codes": [],
+    "prompt": "An item costs $85 before tax. A sales tax of 20% is added to the price. What is the price with tax?",
+    "choices": [
+      "$85",
+      "$17",
+      "$105",
+      "$102"
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "calc": "Math.round(85 * 1.20 * 100) / 100",
+    "explanation": "20% of 85 = 85 / 5 = $17. Price with tax: 85 + 17 = $102. Wrong: $85 forgets to add the tax. Wrong: $17 is only the tax. Wrong: $105 adds 20 dollars instead of 20%.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "general.n.cleaning-bill-tax",
+    "type": "mcq",
+    "section": "numbers",
+    "format": "numbers",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "workplace.numeracy",
+    "secondary_skill_codes": [],
+    "prompt": "A cleaning company charges for 6 hours of work at $18 per hour, plus $24 for materials. Tax of 10% is added to the whole bill. What is the total to pay?",
+    "choices": [
+      "$145.20",
+      "$132.00",
+      "$142.80",
+      "$13.20"
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "calc": "Math.round((6 * 18 + 24) * 1.10 * 100) / 100",
+    "explanation": "Labour: 6 x 18 = $108. Add materials: 108 + 24 = $132. Tax: 10% of 132 = $13.20. Total: 132 + 13.20 = $145.20. Wrong: $132.00 forgets the tax. Wrong: $142.80 adds tax to the labour only (118.80 + 24), but the tax is on the whole bill. Wrong: $13.20 is only the tax.",
+    "expected_time_s": 70
+  },
+  {
+    "bank_key": "general.n.price-before-tax",
+    "type": "mcq",
+    "section": "numbers",
+    "format": "numbers",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "workplace.numeracy",
+    "secondary_skill_codes": [],
+    "prompt": "A receipt shows a total of $60. This total already includes sales tax of 20%. What was the price before tax?",
+    "choices": [
+      "$48",
+      "$50",
+      "$72",
+      "$12"
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "calc": "Math.round(60 / 1.20 * 100) / 100",
+    "explanation": "The total is 120% of the price before tax, so the price before tax is 60 / 1.2 = $50. Check: 50 + 20% of 50 = 50 + 10 = $60. Wrong: $48 takes 20% of the total off (60 - 12), but the tax was 20% of the lower price, not of $60. Wrong: $72 adds the tax a second time. Wrong: $12 is 20% of $60, not a price.",
+    "expected_time_s": 75
+  },
+  {
+    "bank_key": "general.n.battery-unit-price",
+    "type": "mcq",
+    "section": "numbers",
+    "format": "numbers",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "workplace.numeracy",
+    "secondary_skill_codes": [],
+    "prompt": "A shop sells batteries in a pack of 6 for $7.20 and in a pack of 10 for $11.00. What is the lowest price per battery?",
+    "choices": [
+      "$1.20",
+      "$0.10",
+      "$1.10",
+      "$1.15"
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "calc": "Math.min(7.20 / 6, 11.00 / 10)",
+    "explanation": "Pack of 6: 7.20 / 6 = $1.20 per battery. Pack of 10: 11.00 / 10 = $1.10 per battery. The lowest is $1.10. Wrong: $1.20 is the price per battery in the smaller pack. Wrong: $0.10 is the difference between the two unit prices. Wrong: $1.15 is the average of the two unit prices, which no pack gives.",
+    "expected_time_s": 55
+  },
+  {
+    "bank_key": "general.n.cleaner-price-per-litre",
+    "type": "mcq",
+    "section": "numbers",
+    "format": "numbers",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "workplace.numeracy",
+    "secondary_skill_codes": [],
+    "prompt": "A 750 ml bottle of cleaning liquid costs $3.00. (1 litre = 1,000 ml.) What is its price per litre?",
+    "choices": [
+      "$2.25 per litre",
+      "$3.75 per litre",
+      "$0.40 per litre",
+      "$4.00 per litre"
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "calc": "3.00 / 0.75",
+    "explanation": "750 ml is 0.75 litres. 3.00 / 0.75 = $4.00 per litre (or: $1.00 per 250 ml, and 1 litre is 4 x 250 ml). Wrong: $2.25 multiplies 3.00 x 0.75 instead of dividing. Wrong: $3.75 adds 3.00 + 0.75. Wrong: $0.40 is the price per 100 ml, not per litre.",
+    "expected_time_s": 65
+  },
+  {
+    "bank_key": "general.n.care-staff-ratio",
+    "type": "mcq",
+    "section": "numbers",
+    "format": "numbers",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "workplace.numeracy",
+    "secondary_skill_codes": [],
+    "prompt": "A care centre must have at least 1 staff member for every 6 children. 75 children are booked for tomorrow. What is the smallest number of staff needed?",
+    "choices": [
+      "13 staff",
+      "12 staff",
+      "14 staff",
+      "11 staff"
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "calc": "Math.ceil(75 / 6)",
+    "explanation": "75 / 6 = 12.5, and you cannot have half a person, so round up: 13 staff (they can cover up to 78 children). Wrong: 12 staff rounds down; they cover only 72 children, so 3 children have no cover. Wrong: 14 staff is enough, but it is not the smallest number. Wrong: 11 staff cover only 66 children.",
+    "expected_time_s": 55
+  },
+  {
+    "bank_key": "general.n.ratio-split-boxes",
+    "type": "mcq",
+    "section": "numbers",
+    "format": "numbers",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "workplace.numeracy",
+    "secondary_skill_codes": [],
+    "prompt": "Two shops share a delivery of 180 boxes in the ratio 2 : 3 (first shop : second shop). How many boxes does the second shop get?",
+    "choices": [
+      "72 boxes",
+      "108 boxes",
+      "60 boxes",
+      "90 boxes"
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "calc": "180 / (2 + 3) * 3",
+    "explanation": "2 + 3 = 5 parts. One part = 180 / 5 = 36 boxes. The second shop gets 3 parts: 3 x 36 = 108 boxes (the first shop gets 72; 72 + 108 = 180). Wrong: 72 is the first shop's share. Wrong: 60 divides by 3 instead of by the 5 parts. Wrong: 90 is an equal split that ignores the ratio.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.n.pickers-packers-ratio",
+    "type": "mcq",
+    "section": "numbers",
+    "format": "numbers",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "workplace.numeracy",
+    "secondary_skill_codes": [],
+    "prompt": "A warehouse keeps 3 pickers for every 2 packers. Today 18 pickers are working. How many packers are needed to keep the same ratio?",
+    "choices": [
+      "27 packers",
+      "9 packers",
+      "6 packers",
+      "12 packers"
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "calc": "18 / 3 * 2",
+    "explanation": "18 pickers / 3 = 6 groups. Each group needs 2 packers: 6 x 2 = 12 packers. Wrong: 27 turns the ratio upside down (18 / 2 x 3). Wrong: 9 simply halves 18. Wrong: 6 is the number of groups, not the number of packers.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "general.n.paid-hours-with-break",
+    "type": "mcq",
+    "section": "numbers",
+    "format": "numbers",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "workplace.numeracy",
+    "secondary_skill_codes": [],
+    "prompt": "An employee starts work at 07:45 and finishes at 16:15. They take a 30-minute unpaid break. How many paid hours did they work?",
+    "choices": [
+      "8.5 hours",
+      "8.4 hours",
+      "8 hours",
+      "7.5 hours"
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "calc": "(16 + 15 / 60) - (7 + 45 / 60) - 30 / 60",
+    "explanation": "07:45 to 15:45 is 8 hours, and 15:45 to 16:15 is 30 minutes, so they were at work for 8.5 hours. Take off the 30-minute unpaid break: 8 paid hours. Wrong: 8.5 hours forgets the break. Wrong: 8.4 hours treats the clock times as decimal numbers (16.15 - 7.45 = 8.70, then 8.70 - 0.30 for the break = 8.40), but an hour has 60 minutes, not 100. Wrong: 7.5 hours counts only 07:45 to 15:45 (8 hours), misses the last 30 minutes, and then takes off the break.",
+    "expected_time_s": 55
+  },
+  {
+    "bank_key": "general.n.overtime-weekly-pay",
+    "type": "mcq",
+    "section": "numbers",
+    "format": "numbers",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "workplace.numeracy",
+    "secondary_skill_codes": [],
+    "prompt": "An employee earns $14 per hour for the first 40 hours of the week. Any hours above 40 are overtime, paid at 1.5 times the normal rate. Last week they worked 46 hours. What is their total pay for the week?",
+    "choices": [
+      "$686",
+      "$644",
+      "$966",
+      "$653"
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "calc": "40 * 14 + (46 - 40) * 14 * 1.5",
+    "explanation": "Normal pay: 40 x 14 = $560. Overtime rate: 14 x 1.5 = $21. Overtime: 6 hours x 21 = $126. Total: 560 + 126 = $686. Wrong: $644 pays all 46 hours at the normal rate. Wrong: $966 pays all 46 hours at the overtime rate. Wrong: $653 adds only $1.50 to the rate for each overtime hour (6 x 15.50 = 93) instead of multiplying the rate by 1.5.",
+    "expected_time_s": 70
+  },
+  {
+    "bank_key": "general.n.overtime-pay-only",
+    "type": "mcq",
+    "section": "numbers",
+    "format": "numbers",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "workplace.numeracy",
+    "secondary_skill_codes": [],
+    "prompt": "Your contract is 37.5 hours a week. This week you worked 8 hours a day from Monday to Thursday and 9.5 hours on Friday. Hours above 37.5 are overtime, paid at 1.5 times your normal rate of $16 per hour. How much overtime pay do you get this week?",
+    "choices": [
+      "$64",
+      "$96",
+      "$36",
+      "$24"
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "calc": "(8 * 4 + 9.5 - 37.5) * 16 * 1.5",
+    "explanation": "Hours worked: 4 x 8 + 9.5 = 41.5. Overtime: 41.5 - 37.5 = 4 hours. Overtime rate: 16 x 1.5 = $24. Overtime pay: 4 x 24 = $96. Wrong: $64 pays the overtime at the normal rate (4 x 16). Wrong: $36 counts overtime only above 40 hours (1.5 x 24) instead of above 37.5. Wrong: $24 is the pay for one overtime hour only.",
+    "expected_time_s": 70
+  },
+  {
+    "bank_key": "general.n.night-shift-length",
+    "type": "mcq",
+    "section": "numbers",
+    "format": "numbers",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "workplace.numeracy",
+    "secondary_skill_codes": [],
+    "prompt": "A security guard starts a shift at 22:00 and finishes at 06:30 the next morning. How long is the shift?",
+    "choices": [
+      "16.5 hours",
+      "7.5 hours",
+      "9.5 hours",
+      "8.5 hours"
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "calc": "(24 - 22) + 6.5",
+    "explanation": "22:00 to midnight is 2 hours. Midnight to 06:30 is 6.5 hours. Total: 8.5 hours. Wrong: 16.5 hours subtracts the clock times the wrong way (22 - 6 = 16, plus 30 minutes). Wrong: 7.5 hours and 9.5 hours are each one hour out when counting across midnight.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "general.n.table-items-sold",
+    "type": "mcq",
+    "section": "numbers",
+    "format": "numbers",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "workplace.numeracy",
+    "secondary_skill_codes": [
+      "workplace.attention_to_detail"
+    ],
+    "prompt": "The table shows how many items each person sold last week.\n\n```\nName  Mon  Tue  Wed  Thu  Fri\nAna    12    9   15   11   13\nBen     8   14   10   12    9\nChen   11   10   13    9   16\n```\n\nHow many items did Chen sell from Tuesday to Thursday?",
+    "choices": [
+      "35 items",
+      "43 items",
+      "32 items",
+      "59 items"
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "calc": "10 + 13 + 9",
+    "explanation": "Chen: Tuesday 10 + Wednesday 13 + Thursday 9 = 32. Wrong: 35 is Ana's Tuesday to Thursday total (9 + 15 + 11), from the wrong row. Wrong: 43 also counts Chen's Monday (11 + 10 + 13 + 9). Wrong: 59 is Chen's total for the whole week.",
+    "expected_time_s": 55
+  },
+  {
+    "bank_key": "general.n.table-return-rate",
+    "type": "mcq",
+    "section": "numbers",
+    "format": "numbers",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "workplace.numeracy",
+    "secondary_skill_codes": [
+      "workplace.attention_to_detail"
+    ],
+    "prompt": "The table shows online orders and returns for four days.\n\n```\nDay        Orders  Returns\nMonday        120        6\nTuesday        95        4\nWednesday     140       14\nThursday      110        5\n```\n\nWhat percentage of Wednesday's orders were returned?",
+    "choices": [
+      "10%",
+      "14%",
+      "5%",
+      "6.2%"
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "calc": "14 / 140 * 100",
+    "explanation": "Wednesday: 14 returns / 140 orders x 100 = 10%. Wrong: 14% uses the number of returns as the percentage. Wrong: 5% is Monday's rate (6 / 120). Wrong: 6.2% is the rate for all four days together (29 / 465, rounded), not Wednesday.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.n.table-order-to-target",
+    "type": "mcq",
+    "section": "numbers",
+    "format": "numbers",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "workplace.numeracy",
+    "secondary_skill_codes": [
+      "workplace.attention_to_detail"
+    ],
+    "prompt": "You must order enough of each item to bring it up to its target level.\n\n```\nItem    In stock  Target\nGloves        35      60\nMasks         80     100\nAprons        12      40\n```\n\nHow many units do you order in total?",
+    "choices": [
+      "127 units",
+      "73 units",
+      "200 units",
+      "53 units"
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "calc": "(60 - 35) + (100 - 80) + (40 - 12)",
+    "explanation": "Gloves: 60 - 35 = 25. Masks: 100 - 80 = 20. Aprons: 40 - 12 = 28. Total to order: 25 + 20 + 28 = 73. Wrong: 127 is the stock you already have. Wrong: 200 is the total of the targets. Wrong: 53 forgets the masks (25 + 28).",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.n.table-parcel-rates",
+    "type": "mcq",
+    "section": "numbers",
+    "format": "numbers",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "workplace.numeracy",
+    "secondary_skill_codes": [
+      "workplace.attention_to_detail"
+    ],
+    "prompt": "A courier charges by parcel weight:\n\n```\nParcel weight     Price\nup to 2 kg        $4.50\n2.1 kg to 5 kg    $7.00\n5.1 kg to 10 kg  $11.50\n```\n\nYou send three parcels weighing 1.5 kg, 4 kg and 6.2 kg. What is the total delivery cost?",
+    "choices": [
+      "$18.50",
+      "$20.50",
+      "$25.50",
+      "$23.00"
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "calc": "4.50 + 7.00 + 11.50",
+    "explanation": "1.5 kg is up to 2 kg: $4.50. 4 kg is in the 2.1 to 5 kg band: $7.00. 6.2 kg is in the 5.1 to 10 kg band: $11.50. Total: $23.00. Wrong: $18.50 puts the 6.2 kg parcel in the middle band. Wrong: $20.50 puts the 4 kg parcel in the lowest band. Wrong: $25.50 puts the 1.5 kg parcel in the middle band.",
+    "expected_time_s": 65
+  },
+  {
+    "bank_key": "general.n.average-calls",
+    "type": "mcq",
+    "section": "numbers",
+    "format": "numbers",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "workplace.numeracy",
+    "secondary_skill_codes": [],
+    "prompt": "An agent handled 42, 38, 51, 45 and 39 calls on five days. What is the average number of calls per day?",
+    "choices": [
+      "42 calls",
+      "43 calls",
+      "215 calls",
+      "53.75 calls"
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "calc": "(42 + 38 + 51 + 45 + 39) / 5",
+    "explanation": "Total: 42 + 38 + 51 + 45 + 39 = 215. Average: 215 / 5 = 43 calls. Wrong: 42 is the middle value when the numbers are sorted, not the average. Wrong: 215 is the total, not the average. Wrong: 53.75 divides by 4 instead of 5 days.",
+    "expected_time_s": 55
+  },
+  {
+    "bank_key": "general.n.average-after-day-five",
+    "type": "mcq",
+    "section": "numbers",
+    "format": "numbers",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "workplace.numeracy",
+    "secondary_skill_codes": [],
+    "prompt": "Over 4 days, a shop's orders were worth an average of $250 per day. On day 5, orders were worth $400. What is the average per day over all 5 days?",
+    "choices": [
+      "$325",
+      "$350",
+      "$280",
+      "$1,400"
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "calc": "(250 * 4 + 400) / 5",
+    "explanation": "The first 4 days total 4 x 250 = $1,000. Add day 5: 1,000 + 400 = $1,400. Average over 5 days: 1,400 / 5 = $280. Wrong: $325 averages 250 and 400 as if there were only two days. Wrong: $350 divides the total by 4 instead of 5. Wrong: $1,400 is the total, not the average.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.n.weighted-average-price",
+    "type": "mcq",
+    "section": "numbers",
+    "format": "numbers",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "workplace.numeracy",
+    "secondary_skill_codes": [],
+    "prompt": "A shop sold 10 shirts at $15 each and 30 shirts at $25 each. What was the average price per shirt sold?",
+    "choices": [
+      "$22.50",
+      "$20.00",
+      "$17.50",
+      "$25.00"
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "calc": "(10 * 15 + 30 * 25) / (10 + 30)",
+    "explanation": "Total sales: 10 x 15 = $150 plus 30 x 25 = $750, so $900 for 40 shirts. Average: 900 / 40 = $22.50. Wrong: $20.00 averages the two prices without counting how many shirts sold at each. Wrong: $17.50 swaps the quantities (30 at $15 and 10 at $25). Wrong: $25.00 is just the price most shirts sold at.",
+    "expected_time_s": 70
+  },
+  {
+    "bank_key": "general.n.grams-to-kg-rice",
+    "type": "mcq",
+    "section": "numbers",
+    "format": "numbers",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "workplace.numeracy",
+    "secondary_skill_codes": [],
+    "prompt": "A canteen serves 250 g of rice per person. (1 kg = 1,000 g.) How many kg of rice are needed for 36 people?",
+    "choices": [
+      "90 kg",
+      "0.9 kg",
+      "9,000 kg",
+      "9 kg"
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "calc": "250 * 36 / 1000",
+    "explanation": "250 g x 36 = 9,000 g. 9,000 / 1,000 = 9 kg (or: 250 g is a quarter of a kg, and 36 / 4 = 9). Wrong: 90 kg and 0.9 kg each move the decimal point one place. Wrong: 9,000 kg forgets to change grams into kg.",
+    "expected_time_s": 55
+  },
+  {
+    "bank_key": "general.n.miles-to-km",
+    "type": "mcq",
+    "section": "numbers",
+    "format": "numbers",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "workplace.numeracy",
+    "secondary_skill_codes": [],
+    "prompt": "A delivery route is 85 miles long. (1 mile = 1.6 km.) How long is the route in km?",
+    "choices": [
+      "53 km",
+      "136 km",
+      "86.6 km",
+      "1,360 km"
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "calc": "85 * 1.6",
+    "explanation": "85 x 1.6 = 136 km. Wrong: 53 km divides by 1.6 instead of multiplying (85 / 1.6 is about 53). Wrong: 86.6 km adds 1.6 instead of multiplying. Wrong: 1,360 km puts the decimal point in the wrong place.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "general.n.boxes-and-loose-bottles",
+    "type": "mcq",
+    "section": "numbers",
+    "format": "numbers",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "workplace.numeracy",
+    "secondary_skill_codes": [],
+    "prompt": "A box holds 24 bottles. The storeroom has 17 full boxes and 9 loose bottles. How many bottles are there in total?",
+    "choices": [
+      "417 bottles",
+      "408 bottles",
+      "50 bottles",
+      "153 bottles"
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "calc": "17 * 24 + 9",
+    "explanation": "17 boxes x 24 = 408 bottles. Add the 9 loose bottles: 417. Wrong: 408 forgets the loose bottles. Wrong: 50 adds the numbers together (17 + 24 + 9). Wrong: 153 multiplies the boxes by the loose bottles (17 x 9).",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "general.n.stock-end-of-day",
+    "type": "mcq",
+    "section": "numbers",
+    "format": "numbers",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "workplace.numeracy",
+    "secondary_skill_codes": [],
+    "prompt": "At the start of the day there are 145 units of a product in stock. During the day 60 units are delivered and 82 units are sold. Customers also return 7 units, which go back into stock. How many units are in stock at the end of the day?",
+    "choices": [
+      "116 units",
+      "123 units",
+      "130 units",
+      "294 units"
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "calc": "145 + 60 - 82 + 7",
+    "explanation": "145 + 60 delivered = 205. 205 - 82 sold = 123. 123 + 7 returned = 130. Wrong: 116 takes the returns away instead of adding them. Wrong: 123 forgets the returns. Wrong: 294 adds every number, including the units sold.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.n.supplies-budget-left",
+    "type": "mcq",
+    "section": "numbers",
+    "format": "numbers",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "workplace.numeracy",
+    "secondary_skill_codes": [],
+    "prompt": "A team has a monthly budget of $1,500 for supplies. So far this month it has spent $420, $385 and $517.50. How much of the budget is left?",
+    "choices": [
+      "$1,322.50",
+      "$277.50",
+      "$2,822.50",
+      "$177.50"
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "calc": "1500 - (420 + 385 + 517.50)",
+    "explanation": "Spent: 420 + 385 + 517.50 = $1,322.50. Left: 1,500 - 1,322.50 = $177.50. Wrong: $1,322.50 is the amount spent, not the amount left. Wrong: $277.50 is a $100 slip when subtracting. Wrong: $2,822.50 adds the spending to the budget instead of taking it away.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.n.team-lunch-budget",
+    "type": "mcq",
+    "section": "numbers",
+    "format": "numbers",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "workplace.numeracy",
+    "secondary_skill_codes": [],
+    "prompt": "A manager has $900 for a team lunch. The restaurant charges $32 per person, plus a 10% service charge on the bill. What is the largest number of people the budget covers?",
+    "choices": [
+      "28 people",
+      "25 people",
+      "26 people",
+      "21 people"
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "calc": "Math.floor(900 / (32 * 1.1))",
+    "explanation": "With the service charge, each person costs 32 x 1.1 = $35.20. 900 / 35.20 is about 25.6, so 25 people fit (25 x 35.20 = $880; 26 people would cost $915.20, over budget). Wrong: 28 forgets the service charge (900 / 32). Wrong: 26 rounds up and goes over the budget. Wrong: 21 adds $10 per person instead of 10%.",
+    "expected_time_s": 75
+  },
+  {
+    "bank_key": "general.n.orders-over-budget",
+    "type": "multi_select",
+    "section": "numbers",
+    "format": "concept",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "workplace.numeracy",
+    "secondary_skill_codes": [],
+    "prompt": "Each order must stay within a budget of $500, including delivery.\n\n```\nOrder  Details\nA      12 chairs at $38 each, free delivery\nB      45 mugs at $11.50 each, free delivery\nC      3 desks at $149 each, plus $60 delivery\nD      25 lamps at $19.99 each, free delivery\nE      8 shelves at $64 each, free delivery\n```\n\nWhich orders are over budget? Select all that apply.",
+    "choices": [
+      "Order A",
+      "Order B",
+      "Order C",
+      "Order D",
+      "Order E"
+    ],
+    "answer": {
+      "correct": [
+        1,
+        2,
+        4
+      ]
+    },
+    "explanation": "A: 12 x 38 = $456 (within). B: 45 x 11.50 = $517.50 (over). C: 3 x 149 = $447, plus $60 delivery = $507 (over, the delivery counts). D: 25 x 19.99 = $499.75 (within, just). E: 8 x 64 = $512 (over). So B, C and E are over budget. A and D are within it.",
+    "expected_time_s": 75
+  },
+  {
+    "bank_key": "general.n.weekly-hours-limit",
+    "type": "multi_select",
+    "section": "numbers",
+    "format": "concept",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "workplace.numeracy",
+    "secondary_skill_codes": [],
+    "prompt": "Company rule: no one may work more than 48 hours in a week. The table shows the hours each person worked last week.\n\n```\nName   Mon  Tue  Wed  Thu  Fri  Sat\nAsha     9    9    9    9    9    0\nBen     10   10    8   10   10    0\nCarla    8   10   10   10    8    4\nDev     12    0   12   10   12    0\nEli      9    9   10    9    9    5\n```\n\nWho broke the rule? Select all that apply.",
+    "choices": [
+      "Asha",
+      "Ben",
+      "Carla",
+      "Dev",
+      "Eli"
+    ],
+    "answer": {
+      "correct": [
+        2,
+        4
+      ]
+    },
+    "explanation": "Weekly totals: Asha 45, Ben 48, Carla 50, Dev 46, Eli 51. Only totals MORE than 48 break the rule, so Carla and Eli broke it. Ben worked exactly 48 hours, which is allowed. Asha and Dev are under 48.",
+    "expected_time_s": 70
+  },
+  {
+    "bank_key": "general.n.large-pack-cheaper",
+    "type": "multi_select",
+    "section": "numbers",
+    "format": "concept",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "workplace.numeracy",
+    "secondary_skill_codes": [],
+    "prompt": "Each product comes in a small pack and a large pack.\n\n```\nProduct    Small pack    Large pack\nSoap       4 for $3.00   10 for $7.00\nTea bags   20 for $2.40  50 for $6.50\nPens       5 for $2.50   12 for $5.40\nTissues    3 for $4.50   8 for $12.40\nBatteries  4 for $5.00   12 for $15.00\n```\n\nFor which products is the large pack cheaper per item? Select all that apply.",
+    "choices": [
+      "Soap",
+      "Tea bags",
+      "Pens",
+      "Tissues",
+      "Batteries"
+    ],
+    "answer": {
+      "correct": [
+        0,
+        2
+      ]
+    },
+    "explanation": "Price per item (small vs large): Soap $0.75 vs $0.70 (large cheaper). Tea bags $0.12 vs $0.13 (small cheaper). Pens $0.50 vs $0.45 (large cheaper). Tissues $1.50 vs $1.55 (small cheaper). Batteries $1.25 vs $1.25 (the same, so the large pack is not cheaper). Correct: Soap and Pens.",
+    "expected_time_s": 75
+  },
+  {
+    "bank_key": "general.n.stores-reached-90",
+    "type": "multi_select",
+    "section": "numbers",
+    "format": "concept",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "workplace.numeracy",
+    "secondary_skill_codes": [],
+    "prompt": "Each store must reach at least 90% of its sales target.\n\n```\nStore     Target   Actual\nNorth    $20,000  $18,400\nSouth    $15,000  $13,200\nEast     $12,000  $10,800\nWest     $25,000  $22,000\nCentral   $8,000   $7,400\n```\n\nWhich stores reached at least 90% of their target? Select all that apply.",
+    "choices": [
+      "North",
+      "South",
+      "East",
+      "West",
+      "Central"
+    ],
+    "answer": {
+      "correct": [
+        0,
+        2,
+        4
+      ]
+    },
+    "explanation": "Actual as a share of target: North 18,400 / 20,000 = 92% (yes). South 13,200 / 15,000 = 88% (no). East 10,800 / 12,000 = 90% exactly (yes, \"at least 90%\" includes 90%). West 22,000 / 25,000 = 88% (no). Central 7,400 / 8,000 = 92.5% (yes). Correct: North, East and Central.",
+    "expected_time_s": 70
+  },
+  {
+    "bank_key": "general.n.reorder-below-20-percent",
+    "type": "multi_select",
+    "section": "numbers",
+    "format": "concept",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "workplace.numeracy",
+    "secondary_skill_codes": [],
+    "prompt": "An item must be reordered when its stock is below 20% of its maximum stock level.\n\n```\nItem       Maximum  In stock\nToner           40        10\nPaper          500        90\nStaples        120        24\nFolders        250        49\nEnvelopes      800       150\n```\n\nWhich items must be reordered? Select all that apply.",
+    "choices": [
+      "Toner",
+      "Paper",
+      "Staples",
+      "Folders",
+      "Envelopes"
+    ],
+    "answer": {
+      "correct": [
+        1,
+        3,
+        4
+      ]
+    },
+    "explanation": "20% of each maximum: Toner 8 (stock 10, not below). Paper 100 (stock 90, below). Staples 24 (stock 24, exactly 20%, not below). Folders 50 (stock 49, below). Envelopes 160 (stock 150, below). Correct: Paper, Folders and Envelopes.",
+    "expected_time_s": 70
+  },
+  {
+    "bank_key": "general.n.expense-claims-limits",
+    "type": "multi_select",
+    "section": "numbers",
+    "format": "concept",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "workplace.numeracy",
+    "secondary_skill_codes": [],
+    "prompt": "Travel rule: meals up to $25 per day and hotel up to $120 per night, worked out as an average over the trip. The Meals and Hotel columns are totals for each trip.\n\n```\nClaim  Days  Meals  Nights  Hotel\n1         3    $70       2   $230\n2         2    $54       1   $110\n3         4    $96       3   $375\n4         5   $125       4   $460\n5         1    $22       1   $128\n```\n\nWhich claims stay within BOTH limits? Select all that apply.",
+    "choices": [
+      "Claim 1",
+      "Claim 2",
+      "Claim 3",
+      "Claim 4",
+      "Claim 5"
+    ],
+    "answer": {
+      "correct": [
+        0,
+        3
+      ]
+    },
+    "explanation": "Claim 1: meals 70 / 3 = $23.33 a day, hotel 230 / 2 = $115 a night (both within). Claim 2: meals 54 / 2 = $27 a day (over). Claim 3: meals $24 a day is fine, but hotel 375 / 3 = $125 a night (over). Claim 4: meals 125 / 5 = $25 a day (exactly the limit, allowed), hotel 460 / 4 = $115 (within). Claim 5: hotel $128 for one night (over). Correct: Claims 1 and 4.",
+    "expected_time_s": 75
+  }
+]

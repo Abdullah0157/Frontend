@@ -1,0 +1,232 @@
+[
+  {
+    "bank_key": "cs.t.chat-late-delivery",
+    "type": "typing",
+    "section": "typing",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "customer_service.typing",
+    "secondary_skill_codes": [
+      "workplace.attention_to_detail"
+    ],
+    "prompt": "Type the text below as quickly and accurately as you can. You have 2 minutes. The timer starts with your first key press.",
+    "typing": {
+      "passage": "Hi Sam, thank you for waiting. I have checked your order, number 48217, and I can see that it left our warehouse on Monday. The courier has told us that there was a delay at their depot because of bad weather, so your parcel is now expected to arrive on Thursday between 9 am and 1 pm. I am sorry that it is later than we said. I know you were hoping to have it before the weekend. You do not need to do anything right now. You will get a text message from the courier on the morning of delivery with a one-hour time slot. If that time does not suit you, you can use the link in the text to choose another day or ask them to leave the parcel with a neighbour. Because the delivery is more than 3 working days late, I have also refunded your delivery charge of 4.99. You should see this back on your card within 3 to 5 working days, and you will get an email to confirm it. If the parcel has not arrived by Friday evening, please reply to this chat or call us on our free number, and quote the reference DL-3390. We will then open a search with the courier and, if it cannot be found, send you a new one by express delivery at no extra cost. Is there anything else I can help you with today?",
+      "seconds": 120
+    },
+    "expected_time_s": 180
+  },
+  {
+    "bank_key": "cs.t.note-higher-bill",
+    "type": "typing",
+    "section": "typing",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "customer_service.typing",
+    "secondary_skill_codes": [
+      "workplace.attention_to_detail"
+    ],
+    "prompt": "Type the text below as quickly and accurately as you can. You have 2 minutes. The timer starts with your first key press.",
+    "typing": {
+      "passage": "Account note, 14 March. Customer called this morning about a higher bill. She said her bill went up by 9.50 this month and she did not know why. I passed her through security with her date of birth and the last four digits of her card. I checked the account and explained that her discount for the first year ended on 1 March, so she is now paying the normal price. She was not happy and said nobody told her. I checked the letters on the account and found that a reminder was sent by email in late January, but she says she did not see it. I apologised that the change was a surprise. I offered her the two plans that would cost her less. The Basic plan is 28.00 a month but has a lower data limit, and the Saver plan is 35.00 a month on a longer contract. She asked for time to think and said she will call back before the end of the week. I did not make any changes to the account. I added a callback for Friday at 2 pm in case she does not call us first. I also sent her an email with both plans and their prices, so she can compare them at home. The customer was calm by the end of the call and thanked me for the help. No complaint was raised. Next agent: if she calls back, please check which plan she has chosen and confirm the new price before you make the change.",
+      "seconds": 120
+    },
+    "expected_time_s": 180
+  },
+  {
+    "bank_key": "cs.t.policy-returns",
+    "type": "typing",
+    "section": "typing",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "customer_service.typing",
+    "secondary_skill_codes": [
+      "workplace.attention_to_detail"
+    ],
+    "prompt": "Type the text below as quickly and accurately as you can. You have 2 minutes. The timer starts with your first key press.",
+    "typing": {
+      "passage": "Our returns policy is simple. If you change your mind about something you bought from us, you can return it within 30 days of delivery for a full refund. The item must be unused and in its original box, with all the parts and papers that came with it. To start a return, log in to your account, go to My Orders, and choose the item you want to send back. We will email you a free return label within 24 hours. Print the label, stick it on the box, and drop the parcel at any post office or parcel shop. Please keep your receipt until the refund arrives. Once we receive the item, we check it within 2 working days. If everything is in order, we send the refund to the card you paid with. Most banks take 3 to 5 working days to show the money in your account, and you will get an email from us on the day we send it. Some items cannot be returned once they are opened, such as earphones, make-up and food, for health reasons. Items that are faulty are different. If something stops working, you are covered by our 12-month warranty, even after the 30 days have passed. In that case, contact us with your order number and a short photo or video of the problem, and we will repair or replace it free of charge. If you have any questions about a return, our team is happy to help by chat, email or phone, 7 days a week.",
+      "seconds": 120
+    },
+    "expected_time_s": 180
+  },
+  {
+    "bank_key": "cs.t.chat-account-locked",
+    "type": "typing",
+    "section": "typing",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "customer_service.typing",
+    "secondary_skill_codes": [
+      "workplace.attention_to_detail"
+    ],
+    "prompt": "Type the text below as quickly and accurately as you can. You have 2 minutes. The timer starts with your first key press.",
+    "typing": {
+      "passage": "Hello Maria, I am sorry to hear that you cannot get into your account. For your safety, accounts are locked for 30 minutes after 5 wrong passwords in a row. This stops other people from guessing their way in. I can see that your account was locked at 8:40 this morning, so the lock has now ended and you can try again. Before you do, it is a good idea to reset your password, so that you know it is correct. Please open the login page and choose the Forgot password link. We will send a 6-digit code to the email address you gave us when you joined. The code is valid for 15 minutes. Enter it on the page, then choose a new password with at least 8 characters, including one number. Please do not use a password that you use for other websites. If the email does not arrive within 5 minutes, check your spam or junk folder. If it is still not there, reply to this chat and I can send the code to your mobile phone instead, after a quick security check. For your safety, I will never ask you for your password or the code, and nobody from our team will ask for them either. If someone does, please do not share them, and let us know straight away. Once you are logged in, you will find your bills and payments under My Account. Is there anything else I can help you with?",
+      "seconds": 120
+    },
+    "expected_time_s": 180
+  },
+  {
+    "bank_key": "cs.t.note-damaged-delivery",
+    "type": "typing",
+    "section": "typing",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "customer_service.typing",
+    "secondary_skill_codes": [
+      "workplace.attention_to_detail"
+    ],
+    "prompt": "Type the text below as quickly and accurately as you can. You have 2 minutes. The timer starts with your first key press.",
+    "typing": {
+      "passage": "Account note, 22 June. Customer emailed this afternoon with photos of a broken glass table top. The table was delivered yesterday, order 77314. The box was damaged on one corner and the glass is cracked across the middle. Customer says the driver left the box at the door and did not wait for a signature. I checked the delivery record and it shows that the box was left at the front door just before noon, which matches what she said. Our policy is that items damaged in delivery are replaced for free, or refunded in full if she wants. I called her back half an hour later to talk through the options. She asked for a new one, as she still wants the same table. The table is in stock, so I have ordered a new one with express delivery. The new delivery date is Tuesday, between 8 am and 12 pm, and the driver will need a signature this time. I have asked the courier to collect the broken table on the same visit, so she does not need to pack it or take it to the post office. I told her not to touch the broken glass and to keep it in the box. I also sent a complaint to the courier about the box being left with no signature, reference C-5521. The customer was happy with the plan. Next steps: check on Wednesday that the new table arrived safely and that the old one was collected. If not, call the customer back on her mobile.",
+      "seconds": 120
+    },
+    "expected_time_s": 180
+  },
+  {
+    "bank_key": "cs.t.policy-payment-help",
+    "type": "typing",
+    "section": "typing",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "customer_service.typing",
+    "secondary_skill_codes": [
+      "workplace.attention_to_detail"
+    ],
+    "prompt": "Type the text below as quickly and accurately as you can. You have 2 minutes. The timer starts with your first key press.",
+    "typing": {
+      "passage": "We understand that money can be tight sometimes, and we want to help if you are finding it hard to pay your bill. Please contact us as early as you can, before a payment is missed, as there are more options at that stage. When you call, one of our team will ask a few questions about your income and your regular costs. This helps us find a plan that you can really afford. There is no charge for this, and it will not affect your credit score. Most of the 1,500 customers we help each month choose one of 3 options. The first is a payment plan, where you pay what you owe in smaller amounts over 3, 6 or 12 months. The second is a short payment break of up to 2 months, if you are waiting for new work or for money that you are sure is coming. The third is moving to a cheaper plan, which can lower your monthly bill straight away. While you are on a plan with us, we will not add any late fees, and your service will not be stopped as long as you keep to the agreed payments. If your situation changes, just let us know and we will look at the plan again. You can also get free and private advice about money and debt from advice services in your area. Please do not ignore letters from us, even if you cannot pay right now. Talking to us early is always the best first step.",
+      "seconds": 120
+    },
+    "expected_time_s": 180
+  },
+  {
+    "bank_key": "cs.t.chat-plan-change",
+    "type": "typing",
+    "section": "typing",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "customer_service.typing",
+    "secondary_skill_codes": [
+      "workplace.attention_to_detail"
+    ],
+    "prompt": "Type the text below as quickly and accurately as you can. You have 2 minutes. The timer starts with your first key press.",
+    "typing": {
+      "passage": "Hi Tom, thanks for your patience while I checked your account. You are on the Standard plan at 25.00 a month, which includes 10 gigabytes of data, and your contract ends at the end of September. You used more than your data limit in each of the last three months, which is why you paid an extra charge on each of those bills. There are two different options. You can move to the Plus plan now, which costs 30.00 a month and gives you three times as much data. Your monthly bill would go up by 5.00, but based on your recent use, you would no longer pay for extra data, so you would likely save money overall. The change would start from your next monthly bill, and your contract end date would stay the same. Or, you can keep your current plan and add a one-off data pack when you need it. A small data pack costs 4.00 and lasts until the end of the month. You can easily buy it in the mobile app at any time. I have not made any changes yet. Please let me know which option you would like, or if you want some time to think about it. If you choose the Plus plan, I will send you an email with the new price and the date it starts, so you have it in writing. Is there anything else I can check for you while you are here?",
+      "seconds": 120
+    },
+    "expected_time_s": 180
+  },
+  {
+    "bank_key": "cs.t.note-missed-visit",
+    "type": "typing",
+    "section": "typing",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "customer_service.typing",
+    "secondary_skill_codes": [
+      "workplace.attention_to_detail"
+    ],
+    "prompt": "Type the text below as quickly and accurately as you can. You have 2 minutes. The timer starts with your first key press.",
+    "typing": {
+      "passage": "Account note, 5 May. Customer called after lunch, very upset, about a technician visit that did not happen. The visit was booked for yesterday morning, and she took the morning off work to wait at home. Nobody came and nobody called her. I checked the system and found that the visit was cancelled by mistake on 2 May, when another job was moved. I said sorry and explained what had happened. I did not blame the technician team. Under our policy, team leaders can approve a priority visit when we miss an appointment. I asked my team leader, who approved it while the customer was on hold. The new visit is booked for tomorrow, 6 May, between 8 am and 10 am, which is the first slot of the day. The customer asked for a text message the evening before and a call when the technician is 30 minutes away. I added both requests to the job notes. I also told her about our missed visit credit of 20.00, which will be added to her next bill. She said that this was fair and that she would accept the new visit. I logged the missed visit as a complaint, reference MA-1180, so the team can find out why the job was cancelled. Next steps: on 6 May after 12 pm, check that the visit was completed and that the fault was fixed. If not, call the customer on her mobile before the end of the day.",
+      "seconds": 120
+    },
+    "expected_time_s": 180
+  },
+  {
+    "bank_key": "cs.t.policy-security-checks",
+    "type": "typing",
+    "section": "typing",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "customer_service.typing",
+    "secondary_skill_codes": [
+      "workplace.attention_to_detail"
+    ],
+    "prompt": "Type the text below as quickly and accurately as you can. You have 2 minutes. The timer starts with your first key press.",
+    "typing": {
+      "passage": "Why do we ask security questions? We know it can feel slow to answer questions before we can help you, but these checks are there to keep your account safe. Each month, our checks stop more than 2,000 calls from people who pretend to be someone else. When you contact us, we will ask for your full name and two pieces of information from the account, such as your date of birth and the last 4 digits of the card you use to pay. We will never ask for your full 16-digit card number, your password or a code that we have sent to your phone. If someone asks for these, it is not us. We can only discuss an account with the account holder or with someone they have added as an authorised person. This is true even for close family, such as a husband, wife or parent. If you would like someone to be able to help with your account, you can add them in the app under Settings, or call us together and we will set it up in about 5 minutes. If you are not able to manage your account because of illness or age, a family member can apply to act for you with the right legal papers. Our team can explain how this works and send the forms. If you think someone has got into your account, call us straight away on our free number, which is open 24 hours a day. We will lock the account and help you check every recent change.",
+      "seconds": 120
+    },
+    "expected_time_s": 180
+  },
+  {
+    "bank_key": "cs.t.chat-cancellation",
+    "type": "typing",
+    "section": "typing",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "customer_service.typing",
+    "secondary_skill_codes": [
+      "workplace.attention_to_detail"
+    ],
+    "prompt": "Type the text below as quickly and accurately as you can. You have 2 minutes. The timer starts with your first key press.",
+    "typing": {
+      "passage": "Hi Ahmed, I am sorry to hear that you want to leave, but I can help you with that today. I have checked your account, and your contract ended on 31 August, so there is no early exit fee to pay. Your last day of service will be 30 days from today, which is 14 October. You can keep using everything as normal until then. Your final bill will arrive in early November. It will cover your use up to your last day and nothing more. If you have paid for any days after that date, we will send the money back to your card within two weeks. You have one item of our equipment, the home router. Please return it within a month of your last day of service, using the free return bag that we will post to you this week. If the router is not returned, a charge of 50.00 will be added to your final bill, so please keep the receipt from the post office. Before you go, I can tell you that we have a loyalty offer of 20% off your plan for 6 months for customers who stay. If that is not of interest, that is completely fine, and I will go ahead with the cancellation now. You will get an email within the hour with all of these dates and your reference number. Thank you for being with us for the last 4 years. Is there anything else I can help you with?",
+      "seconds": 120
+    },
+    "expected_time_s": 180
+  }
+]

@@ -1,0 +1,1213 @@
+[
+  {
+    "bank_key": "general.d.order-vs-invoice-code",
+    "type": "mcq",
+    "section": "detail",
+    "format": "concept",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "workplace.attention_to_detail",
+    "secondary_skill_codes": [],
+    "prompt": "Compare the order form with the invoice.\n\nOrder form:\n\n```\nCustomer:      Brightway Cafe\nOrder no.:     ORD-58213\nProduct code:  BX-4471\nQuantity:      36\nUnit price:    $2.15\nDelivery:      14/05/2026\n```\n\nInvoice:\n\n```\nCustomer:      Brightway Cafe\nOrder no.:     ORD-58213\nProduct code:  BX-4417\nQuantity:      36\nUnit price:    $2.15\nDelivery:      14/05/2026\n```\n\nWhich field on the invoice does not match the order form?",
+    "choices": [
+      "Order no.",
+      "Product code",
+      "Quantity",
+      "Unit price"
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "explanation": "The product code is BX-4471 on the order but BX-4417 on the invoice (the last two digits are swapped). Wrong: the order number (ORD-58213), quantity (36) and unit price ($2.15) are the same on both.",
+    "expected_time_s": 45
+  },
+  {
+    "bank_key": "general.d.booking-vs-confirmation",
+    "type": "mcq",
+    "section": "detail",
+    "format": "concept",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "workplace.attention_to_detail",
+    "secondary_skill_codes": [],
+    "prompt": "A room booking request and the confirmation email are shown below. Dates are written DD/MM/YYYY.\n\nBooking request:\n\n```\nName:        Priya Natarajan\nRoom:        Meeting Room 3\nDate:        09/07/2026\nStart time:  10:30\nEnd time:    12:00\nPeople:      14\n```\n\nConfirmation:\n\n```\nName:        Priya Natarajan\nRoom:        Meeting Room 3\nDate:        07/09/2026\nStart time:  10:30\nEnd time:    12:00\nPeople:      14\n```\n\nWhich detail on the confirmation is wrong?",
+    "choices": [
+      "Room",
+      "Start time",
+      "People",
+      "Date"
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "explanation": "The request is for 09/07/2026 (9 July), but the confirmation says 07/09/2026 (7 September): the day and month are swapped. Wrong: the room (Meeting Room 3), start time (10:30) and number of people (14) match.",
+    "expected_time_s": 45
+  },
+  {
+    "bank_key": "general.d.address-count-differences",
+    "type": "mcq",
+    "section": "detail",
+    "format": "concept",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "workplace.attention_to_detail",
+    "secondary_skill_codes": [],
+    "prompt": "Compare the delivery address on the order with the address printed on the parcel label.\n\n```\nOrder:  Flat 12B, 47 Riverside Avenue, Northgate, 40521\nLabel:  Flat 12B, 74 Riverside Avenue, Northgate, 40512\n```\n\nHow many differences are there?",
+    "choices": [
+      "No differences",
+      "1 difference",
+      "2 differences",
+      "3 differences"
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "explanation": "Two differences: the house number (47 on the order, 74 on the label) and the postal code (40521 vs 40512). Flat 12B, Riverside Avenue and Northgate are the same. So \"No differences\" and \"1 difference\" miss at least one, and \"3 differences\" counts one that is not there.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "general.d.employee-id-rule",
+    "type": "mcq",
+    "section": "detail",
+    "format": "concept",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "workplace.attention_to_detail",
+    "secondary_skill_codes": [],
+    "prompt": "Employee IDs must have 2 capital letters, then a dash, then 5 digits. Example: KT-47923.\n\nWhich of these IDs breaks the rule?",
+    "choices": [
+      "Mr-36472",
+      "AH-92734",
+      "JK-74296",
+      "PW-63947"
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "explanation": "Mr-36472 has a small \"r\", so it does not start with 2 capital letters. Wrong: AH-92734, JK-74296 and PW-63947 each have 2 capital letters, a dash and 5 digits.",
+    "expected_time_s": 40
+  },
+  {
+    "bank_key": "general.d.invoice-entered-twice",
+    "type": "mcq",
+    "section": "detail",
+    "format": "concept",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "workplace.attention_to_detail",
+    "secondary_skill_codes": [],
+    "prompt": "The finance team must not pay the same invoice twice. Here is this week's payment list.\n\n```\nLine  Supplier        Invoice no.     Amount\n1     Delta Supplies  INV-20419    $1,284.50\n2     Kora Foods      INV-77302      $640.00\n3     Delta Supplies  INV-20491    $1,248.50\n4     Nami Print      INV-55018      $312.75\n5     Kora Foods      INV-77032      $604.00\n6     Nami Print      INV-55018      $312.75\n```\n\nWhich invoice appears twice in the list?",
+    "choices": [
+      "INV-20419 (Delta Supplies)",
+      "INV-77302 (Kora Foods)",
+      "INV-20491 (Delta Supplies)",
+      "INV-55018 (Nami Print)"
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "explanation": "Lines 4 and 6 are the same in every field: Nami Print, INV-55018, $312.75. Wrong: INV-20419 and INV-20491 (Delta Supplies) are different invoice numbers with different amounts ($1,284.50 and $1,248.50). Wrong: INV-77302 and INV-77032 (Kora Foods) are also different numbers with different amounts ($640.00 and $604.00).",
+    "expected_time_s": 55
+  },
+  {
+    "bank_key": "general.d.rest-between-shifts",
+    "type": "mcq",
+    "section": "detail",
+    "format": "concept",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "workplace.attention_to_detail",
+    "secondary_skill_codes": [],
+    "prompt": "Rule: there must be at least 11 hours between the end of one shift and the start of the next shift.\n\n```\nDay  Start  End\nMon  06:00  14:00\nTue  07:00  15:00\nWed  13:00  21:00\nThu  07:00  15:00\nFri  14:00  22:00\n```\n\nBetween which two shifts is the rule broken?",
+    "choices": [
+      "Monday to Tuesday",
+      "Tuesday to Wednesday",
+      "Wednesday to Thursday",
+      "Thursday to Friday"
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "explanation": "Wednesday ends at 21:00 and Thursday starts at 07:00: only 10 hours of rest. Wrong: Monday 14:00 to Tuesday 07:00 is 17 hours. Wrong: Tuesday 15:00 to Wednesday 13:00 is 22 hours. Wrong: Thursday 15:00 to Friday 14:00 is 23 hours.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.d.phone-exact-match",
+    "type": "mcq",
+    "section": "detail",
+    "format": "concept",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "workplace.attention_to_detail",
+    "secondary_skill_codes": [],
+    "group": "exact-match-copy",
+    "prompt": "A customer's phone number on file is:\n\n```\n0301 555 2847\n```\n\nWhich number in the callback list is exactly the same?",
+    "choices": [
+      "0301 555 2487",
+      "0301 555 2847",
+      "0310 555 2847",
+      "0301 553 2847"
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "explanation": "0301 555 2847 matches digit for digit. Wrong: 0301 555 2487 swaps the 8 and the 4 in the last group. Wrong: 0310 555 2847 swaps the 0 and the 1 in the first group. Wrong: 0301 553 2847 has 553 instead of 555 in the middle.",
+    "expected_time_s": 40
+  },
+  {
+    "bank_key": "general.d.email-exact-match",
+    "type": "mcq",
+    "section": "detail",
+    "format": "concept",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "workplace.attention_to_detail",
+    "secondary_skill_codes": [],
+    "group": "exact-match-copy",
+    "prompt": "The customer's email address on file is:\n\n```\nm.rahman.ops@deltasupply.com\n```\n\nWhich address below matches it exactly?",
+    "choices": [
+      "m.rahman.ops@deltasupply.com",
+      "m.rahmen.ops@deltasupply.com",
+      "m.rahman.ops@deltasuply.com",
+      "m.rahman.ops@deltasupply.co"
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "explanation": "m.rahman.ops@deltasupply.com matches letter for letter. Wrong: m.rahmen... has \"e\" instead of \"a\" in the name. Wrong: ...@deltasuply.com is missing one \"p\". Wrong: ...deltasupply.co is missing the \"m\" at the end.",
+    "expected_time_s": 40
+  },
+  {
+    "bank_key": "general.d.date-format-rule",
+    "type": "mcq",
+    "section": "detail",
+    "format": "concept",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "workplace.attention_to_detail",
+    "secondary_skill_codes": [],
+    "prompt": "All dates in the delivery log must be written as DD/MM/YYYY, with two digits for the day and two for the month. Example: 04/03/2026.\n\nWhich entry breaks the rule?",
+    "choices": [
+      "7/10/2026",
+      "12/08/2026",
+      "03/11/2026",
+      "28/02/2026"
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "explanation": "7/10/2026 has only one digit for the day; it should be 07/10/2026. Wrong: 12/08/2026, 03/11/2026 and 28/02/2026 all have two digits for the day, two for the month and four for the year.",
+    "expected_time_s": 40
+  },
+  {
+    "bank_key": "general.d.delivery-note-count-differences",
+    "type": "mcq",
+    "section": "detail",
+    "format": "concept",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "workplace.attention_to_detail",
+    "secondary_skill_codes": [],
+    "prompt": "Compare the supplier's delivery note with the record typed into the stock system.\n\nDelivery note:\n\n```\nSupplier:   Orion Packaging\nItem:       Cardboard box, large\nItem code:  CB-L-2209\nQuantity:   480\nBatch:      B7-0315\nReceived:   22/06/2026\n```\n\nStock system:\n\n```\nSupplier:   Orion Packaging\nItem:       Cardboard box, large\nItem code:  CB-L-2209\nQuantity:   408\nBatch:      B7-0351\nReceived:   26/06/2026\n```\n\nHow many fields are different?",
+    "choices": [
+      "1 field",
+      "2 fields",
+      "3 fields",
+      "4 fields"
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "explanation": "Three fields differ: Quantity (480 vs 408), Batch (B7-0315 vs B7-0351) and Received (22/06/2026 vs 26/06/2026). Supplier, Item and Item code match. \"1 field\" and \"2 fields\" miss differences, and \"4 fields\" counts one that matches.",
+    "expected_time_s": 55
+  },
+  {
+    "bank_key": "general.d.receipt-wrong-charge",
+    "type": "mcq",
+    "section": "detail",
+    "format": "concept",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "workplace.attention_to_detail",
+    "secondary_skill_codes": [],
+    "prompt": "Check the receipt against the price list.\n\nPrice list:\n\n```\nItem           Price\nBread roll     $0.85\nOrange juice   $2.40\nFruit cup      $3.15\nMuffin         $1.95\nCoffee, large  $2.80\n```\n\nReceipt:\n\n```\nItem          Qty  Charged\nBread roll      2    $1.70\nOrange juice    1    $2.40\nFruit cup       1    $3.51\nMuffin          3    $5.85\n```\n\nWhich item was charged incorrectly?",
+    "choices": [
+      "Muffin",
+      "Bread roll",
+      "Orange juice",
+      "Fruit cup"
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "explanation": "One fruit cup costs $3.15, but the receipt charges $3.51 (the digits are swapped). Wrong: 2 bread rolls x $0.85 = $1.70 (correct). Wrong: 1 orange juice = $2.40 (correct). Wrong: 3 muffins x $1.95 = $5.85 (correct).",
+    "expected_time_s": 55
+  },
+  {
+    "bank_key": "general.d.bank-details-changed",
+    "type": "mcq",
+    "section": "detail",
+    "format": "concept",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "workplace.attention_to_detail",
+    "secondary_skill_codes": [],
+    "prompt": "Before paying, you compare a supplier's bank details on file with the details printed on their new invoice.\n\nOn file:\n\n```\nAccount name:    Kestrel Logistics Ltd\nBank:            Union Commercial Bank\nBranch code:     40-21-77\nAccount number:  31926054\n```\n\nOn the invoice:\n\n```\nAccount name:    Kestrel Logistics Ltd\nBank:            Union Commercial Bank\nBranch code:     40-21-77\nAccount number:  31962054\n```\n\nWhich detail is different?",
+    "choices": [
+      "Account name",
+      "Bank",
+      "Branch code",
+      "Account number"
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "explanation": "The account number is 31926054 on file but 31962054 on the invoice (the 2 and the 6 are swapped). This must be checked with the supplier before paying. Wrong: the account name, bank and branch code (40-21-77) are the same on both.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "general.d.booked-not-signed-in",
+    "type": "mcq",
+    "section": "detail",
+    "format": "concept",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "workplace.attention_to_detail",
+    "secondary_skill_codes": [],
+    "prompt": "Eight people were booked on a safety training session. Compare the booking list with the sign-in sheet.\n\nBooking list:\n\n```\nAmara Osei\nBilal Khan\nChen Wei\nDiego Ramos\nElif Kaya\nFarah Haddad\nGrace Mensah\nHiro Tanaka\n```\n\nSign-in sheet:\n\n```\nChen Wei\nAmara Osei\nHiro Tanaka\nDiego Ramos\nFarah Haddad\nBilal Khan\nGrace Mensah\n```\n\nWho was booked but did not sign in?",
+    "choices": [
+      "Bilal Khan",
+      "Elif Kaya",
+      "Grace Mensah",
+      "Diego Ramos"
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "explanation": "The sign-in sheet has 7 names in a different order. Elif Kaya is the only booked person who is not on it. Wrong: Bilal Khan (6th on the sheet), Grace Mensah (7th) and Diego Ramos (4th) all signed in.",
+    "expected_time_s": 55
+  },
+  {
+    "bank_key": "general.d.receipt-number-gap",
+    "type": "mcq",
+    "section": "detail",
+    "format": "concept",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "workplace.attention_to_detail",
+    "secondary_skill_codes": [],
+    "prompt": "Receipt numbers must run in order with no gaps. Here are today's receipts:\n\n```\nR-10476\nR-10477\nR-10478\nR-10480\nR-10481\nR-10482\n```\n\nWhich receipt number is missing?",
+    "choices": [
+      "R-10479",
+      "R-10475",
+      "R-10483",
+      "R-10470"
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "explanation": "The list goes 10476, 10477, 10478 and then jumps to 10480, so R-10479 is missing. Wrong: R-10475 would come before the first receipt and R-10483 after the last one, so neither is a gap. Wrong: R-10470 is outside the list too.",
+    "expected_time_s": 40
+  },
+  {
+    "bank_key": "general.d.line-total-wrong",
+    "type": "mcq",
+    "section": "detail",
+    "format": "concept",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "workplace.attention_to_detail",
+    "secondary_skill_codes": [],
+    "prompt": "Check each line of this invoice. Line total = Qty x Unit price.\n\n```\nLine  Item           Qty  Unit price  Line total\n1     Paper towels    12       $3.25      $39.00\n2     Hand soap        8       $4.10      $32.80\n3     Bin bags        15       $2.60      $38.00\n4     Floor cleaner    6       $7.45      $44.70\n```\n\nWhich line has the wrong line total?",
+    "choices": [
+      "Line 1",
+      "Line 2",
+      "Line 3",
+      "Line 4"
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "explanation": "Line 3: 15 x $2.60 = $39.00, but the invoice shows $38.00. Wrong: line 1 is 12 x 3.25 = $39.00 (correct). Wrong: line 2 is 8 x 4.10 = $32.80 (correct). Wrong: line 4 is 6 x 7.45 = $44.70 (correct).",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.d.instruction-copy-swap",
+    "type": "mcq",
+    "section": "detail",
+    "format": "concept",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "workplace.attention_to_detail",
+    "secondary_skill_codes": [],
+    "prompt": "A colleague copied a delivery instruction onto a new sign.\n\nOriginal:\n\n```\nLeave parcels at the side door, not the front door. Deliveries after 18:00 go to the night desk.\n```\n\nCopy:\n\n```\nLeave parcels at the front door, not the side door. Deliveries after 18:00 go to the night desk.\n```\n\nWhat is different in the copy?",
+    "choices": [
+      "The two doors have been swapped",
+      "The delivery time has changed",
+      "The night desk is not mentioned",
+      "The word \"parcels\" has changed"
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "explanation": "The original says side door (use) and front door (do not use); the copy says the opposite, so drivers would use the wrong door. Wrong: the time is 18:00 in both. Wrong: both mention the night desk. Wrong: both say \"parcels\".",
+    "expected_time_s": 45
+  },
+  {
+    "bank_key": "general.d.room-booking-clash",
+    "type": "mcq",
+    "section": "detail",
+    "format": "concept",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "workplace.attention_to_detail",
+    "secondary_skill_codes": [],
+    "prompt": "Room 2 can hold only one meeting at a time. A meeting may start at the same time as the one before it ends.\n\n```\nBooking  Team      Start  End\nA        Finance   09:00  10:00\nB        Sales     10:00  11:30\nC        HR        11:45  12:30\nD        Support   13:00  14:00\nE        Training  13:45  15:00\n```\n\nWhich two bookings clash?",
+    "choices": [
+      "A and B",
+      "B and C",
+      "C and D",
+      "D and E"
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "explanation": "D runs until 14:00, but E starts at 13:45, so they overlap for 15 minutes. Wrong: A ends at 10:00 exactly when B starts, which the rule allows. Wrong: B ends at 11:30 and C starts at 11:45. Wrong: C ends at 12:30 and D starts at 13:00.",
+    "expected_time_s": 55
+  },
+  {
+    "bank_key": "general.d.alphabetical-wrong-place",
+    "type": "mcq",
+    "section": "detail",
+    "format": "concept",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "workplace.attention_to_detail",
+    "secondary_skill_codes": [],
+    "prompt": "Files must be kept in alphabetical order (A to Z) by family name. The family name is written first. Here is the drawer, from front to back:\n\n```\n1  Abara, N.\n2  Becker, T.\n3  Castillo, R.\n4  Fofana, A.\n5  Dlamini, S.\n6  Eriksen, K.\n7  Gupta, M.\n8  Hassan, L.\n```\n\nOne file is in the wrong place. If you move just that one file, the whole drawer will be in order. Which file is it?",
+    "choices": [
+      "Castillo, R.",
+      "Fofana, A.",
+      "Dlamini, S.",
+      "Eriksen, K."
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "explanation": "Fofana (F) is in front of Dlamini (D) and Eriksen (E); it belongs after Eriksen and before Gupta. Moving only Fofana puts the whole drawer in order. Wrong: moving only Dlamini (in front of Fofana) still leaves Eriksen after Fofana, and moving only Eriksen still leaves Dlamini after Fofana, so neither single move fixes the drawer. Wrong: Castillo (C) is correctly after Becker and before the D, E and F files.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "general.d.stock-count-mismatches",
+    "type": "mcq",
+    "section": "detail",
+    "format": "concept",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "workplace.attention_to_detail",
+    "secondary_skill_codes": [],
+    "prompt": "After a stock count, compare the shelf count with the system count for each item.\n\n```\nItem code  System count  Shelf count\nTL-1042              36           36\nTL-1046              18           17\nTL-1051              50           50\nTL-1058              24           42\nTL-1063              12           12\nTL-1067               9            9\n```\n\nHow many items have a shelf count that does not match the system count?",
+    "choices": [
+      "1 item",
+      "2 items",
+      "3 items",
+      "4 items"
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "explanation": "Two items do not match: TL-1046 (system 18, shelf 17) and TL-1058 (system 24, shelf 42, digits swapped). TL-1042, TL-1051, TL-1063 and TL-1067 match. So 1 item misses one, and 3 or 4 items count matching lines.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "general.d.first-aid-cover",
+    "type": "mcq",
+    "section": "detail",
+    "format": "concept",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "workplace.attention_to_detail",
+    "secondary_skill_codes": [],
+    "prompt": "Rule: every day needs at least 2 people on shift who have a first-aid certificate. These people are marked with *.\n\n```\nDay  On shift\nMon  Ana*, Ben, Chidi*, Dana\nTue  Ben, Chidi*, Eva*, Femi\nWed  Ana*, Dana, Femi, Gita\nThu  Chidi*, Eva*, Gita, Ben\nFri  Ana*, Eva*, Dana\n```\n\nWhich day breaks the rule?",
+    "choices": [
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Friday"
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "explanation": "Wednesday has only one first-aider (Ana*). Wrong: Monday has Ana* and Chidi*. Wrong: Tuesday has Chidi* and Eva*. Wrong: Friday has Ana* and Eva*, which is enough even though only 3 people work that day.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "general.d.exact-duplicate-lines",
+    "type": "mcq",
+    "section": "detail",
+    "format": "concept",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "workplace.attention_to_detail",
+    "secondary_skill_codes": [],
+    "prompt": "The customer list should not contain exact duplicates.\n\n```\nLine  Name         Date of birth  Customer ID\n1     Lina Haddad  14/02/1991     C-30715\n2     Omar Saleh   03/09/1988     C-30751\n3     Lina Haddad  14/02/1991     C-30715\n4     Lena Haddad  14/02/1991     C-30157\n5     Omar Saleh   30/09/1988     C-30761\n```\n\nWhich two lines are exact duplicates (every field the same)?",
+    "choices": [
+      "Lines 1 and 3",
+      "Lines 1 and 4",
+      "Lines 2 and 5",
+      "Lines 3 and 4"
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "explanation": "Lines 1 and 3 are identical: Lina Haddad, 14/02/1991, C-30715. Wrong: line 4 is \"Lena\" with ID C-30157, so it differs from lines 1 and 3. Wrong: lines 2 and 5 share a name but have different dates of birth (03/09 vs 30/09) and IDs (C-30751 vs C-30761).",
+    "expected_time_s": 55
+  },
+  {
+    "bank_key": "general.d.log-date-out-of-order",
+    "type": "mcq",
+    "section": "detail",
+    "format": "concept",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "workplace.attention_to_detail",
+    "secondary_skill_codes": [],
+    "prompt": "The delivery log must list entries from oldest to newest. Dates are written DD/MM/YYYY.\n\n```\nEntry  Date\n1      03/04/2026\n2      08/04/2026\n3      21/04/2026\n4      11/04/2026\n5      15/04/2026\n6      19/04/2026\n7      24/04/2026\n```\n\nOne entry is in the wrong place. If you move just that one entry, the whole log will be in date order. Which entry is it?",
+    "choices": [
+      "Entry 3 (21/04/2026)",
+      "Entry 2 (08/04/2026)",
+      "Entry 4 (11/04/2026)",
+      "Entry 6 (19/04/2026)"
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "explanation": "Entry 3 (21 April) sits between 8 April and 11 April; it belongs between entry 6 (19 April) and entry 7 (24 April). Moving only entry 3 puts the whole log in order. Wrong: entry 4 (11 April) is the first date that is earlier than the one above it, but moving only entry 4 still leaves 21 April before 15 and 19 April. Wrong: entry 2 (8 April) correctly follows 3 April. Wrong: entry 6 (19 April) correctly follows 15 April.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "general.d.product-label-exact",
+    "type": "mcq",
+    "section": "detail",
+    "format": "concept",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "workplace.attention_to_detail",
+    "secondary_skill_codes": [],
+    "group": "exact-match-copy",
+    "prompt": "The product name on the customer's order is:\n\n```\nStainless Steel Water Bottle, 750 ml, Blue\n```\n\nWhich shelf label matches it exactly?",
+    "choices": [
+      "Stainless Steel Water Bottle, 750 ml, Blue",
+      "Stainless Steel Water Bottle, 570 ml, Blue",
+      "Stainless Steel Water Botle, 750 ml, Blue",
+      "Stainless Steel Water Bottle, 750 ml, Black"
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "explanation": "Only \"Stainless Steel Water Bottle, 750 ml, Blue\" matches word for word. Wrong: the 570 ml label has the digits of the size swapped. Wrong: \"Botle\" is missing a \"t\". Wrong: the last label says Black instead of Blue.",
+    "expected_time_s": 45
+  },
+  {
+    "bank_key": "general.d.timesheet-vs-rota",
+    "type": "mcq",
+    "section": "detail",
+    "format": "concept",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "workplace.attention_to_detail",
+    "secondary_skill_codes": [],
+    "prompt": "Compare an employee's timesheet with the rota (the planned work schedule).\n\nRota:\n\n```\nDay  Start  End\nMon  08:00  16:00\nTue  08:00  16:00\nWed  10:00  18:00\nThu  10:00  18:00\nFri  08:00  14:00\n```\n\nTimesheet:\n\n```\nDay  Start  End\nMon  08:00  16:00\nTue  08:00  16:00\nWed  10:00  18:00\nThu  10:00  17:00\nFri  08:00  14:00\n```\n\nOn which day do the times on the timesheet not match the rota?",
+    "choices": [
+      "Monday",
+      "Wednesday",
+      "Thursday",
+      "Friday"
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "explanation": "On Thursday the rota says 10:00 to 18:00, but the timesheet says 10:00 to 17:00. Wrong: Monday (08:00 to 16:00), Wednesday (10:00 to 18:00) and Friday (08:00 to 14:00) are the same on both.",
+    "expected_time_s": 45
+  },
+  {
+    "bank_key": "general.d.count-exact-codes",
+    "type": "mcq",
+    "section": "detail",
+    "format": "concept",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "workplace.attention_to_detail",
+    "secondary_skill_codes": [],
+    "prompt": "How many of the codes below are exactly the same as HT-7394-K?\n\n```\nHT-7394-K\nHT-7349-K\nHT-7394-K\nTH-7394-K\nHT-7394-X\nHT-7394-K\nHT-7934-K\nHT-7394-K\n```",
+    "choices": [
+      "3",
+      "4",
+      "5",
+      "6"
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "explanation": "Lines 1, 3, 6 and 8 are exactly HT-7394-K: 4 codes. The others differ: HT-7349-K (the 9 and the 4 are swapped), TH-7394-K (the letters are swapped), HT-7394-X (X instead of K at the end) and HT-7934-K (the 3 and the 9 are swapped). So 3 misses one, and 5 or 6 count near-misses. No line depends on telling look-alike characters apart.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "general.d.asset-serial-mismatch",
+    "type": "mcq",
+    "section": "detail",
+    "format": "concept",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "workplace.attention_to_detail",
+    "secondary_skill_codes": [],
+    "prompt": "An audit compares the asset register with the laptops found in the office.\n\nAsset register:\n\n```\nLaptop  User        Serial number\nL-01    R. Mendes   5CD1234XQ7\nL-02    S. Ahmed    5CD1239XR2\nL-03    T. Novak    5CD1241XA9\nL-04    U. Okonkwo  5CD1247XB4\n```\n\nFound in the office:\n\n```\nLaptop  User        Serial number\nL-01    R. Mendes   5CD1234XQ7\nL-02    S. Ahmed    5CD1239XR2\nL-03    T. Novak    5CD1241XA9\nL-04    U. Okonkwo  5CD1274XB4\n```\n\nWhich laptop's serial number does not match the register?",
+    "choices": [
+      "L-01 (R. Mendes)",
+      "L-02 (S. Ahmed)",
+      "L-03 (T. Novak)",
+      "L-04 (U. Okonkwo)"
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "explanation": "L-04 is 5CD1247XB4 in the register but 5CD1274XB4 in the office (the 4 and the 7 are swapped). Wrong: L-01 (5CD1234XQ7), L-02 (5CD1239XR2) and L-03 (5CD1241XA9) match exactly.",
+    "expected_time_s": 55
+  },
+  {
+    "bank_key": "general.d.payment-vs-invoice",
+    "type": "mcq",
+    "section": "detail",
+    "format": "concept",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "workplace.attention_to_detail",
+    "secondary_skill_codes": [],
+    "prompt": "Each payment must match its invoice amount exactly.\n\n```\nInvoice   Invoice amount  Payment made\nINV-3301       $1,284.50     $1,284.50\nINV-3302         $916.00       $916.00\nINV-3303       $2,075.40     $2,057.40\nINV-3304         $448.90       $448.90\n```\n\nWhich payment does not match its invoice?",
+    "choices": [
+      "INV-3301",
+      "INV-3302",
+      "INV-3303",
+      "INV-3304"
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "explanation": "INV-3303 is for $2,075.40, but $2,057.40 was paid ($18 short; the 7 and the 5 are swapped). Wrong: INV-3301 ($1,284.50), INV-3302 ($916.00) and INV-3304 ($448.90) were paid exactly.",
+    "expected_time_s": 45
+  },
+  {
+    "bank_key": "general.d.parcel-label-rule",
+    "type": "mcq",
+    "section": "detail",
+    "format": "concept",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "workplace.attention_to_detail",
+    "secondary_skill_codes": [],
+    "prompt": "Each parcel label must have a 5-digit postal code and a 10-digit phone number.\n\n```\nLabel  Postal code  Phone\nA      40521        301 555 2847\nB      73420        312 555 9021\nC      61208        345 555 1176\nD      5519         300 555 4432\n```\n\nWhich label breaks the rule?",
+    "choices": [
+      "Label A",
+      "Label B",
+      "Label C",
+      "Label D"
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "explanation": "Label D has a postal code of only 4 digits (5519). Wrong: labels A (40521), B (73420) and C (61208) all have 5-digit postal codes, and every phone number has 3 + 3 + 4 = 10 digits.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "general.d.leave-limit-day",
+    "type": "mcq",
+    "section": "detail",
+    "format": "concept",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "workplace.attention_to_detail",
+    "secondary_skill_codes": [
+      "behavioral.leadership.people_management"
+    ],
+    "prompt": "Rule: no more than 2 people from the team may be on leave on the same day. Dates are DD/MM, and leave includes the first and the last date.\n\n```\nName    From   To\nAde     10/08  12/08\nBea     11/08  12/08\nCarlos  12/08  14/08\nDina    14/08  15/08\nEmre    08/08  09/08\n```\n\nOn which date does the team break the rule?",
+    "choices": [
+      "10/08",
+      "11/08",
+      "12/08",
+      "14/08"
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "explanation": "On 12/08, Ade (10 to 12), Bea (11 to 12) and Carlos (12 to 14) are all on leave: 3 people. Wrong: on 10/08 only Ade is off. Wrong: on 11/08 Ade and Bea are off (2, allowed). Wrong: on 14/08 Carlos and Dina are off (2, allowed).",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.d.work-order-copy",
+    "type": "mcq",
+    "section": "detail",
+    "format": "concept",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "workplace.attention_to_detail",
+    "secondary_skill_codes": [
+      "behavioral.ethics.safety"
+    ],
+    "prompt": "A cleaning work order was copied by hand for the night team.\n\nOriginal:\n\n```\nTask:     Mix floor cleaner\nProduct:  Clean-X concentrate\nAmount:   50 ml\nWater:    5 litres\nRoom:     Kitchen\n```\n\nCopy:\n\n```\nTask:     Mix floor cleaner\nProduct:  Clean-X concentrate\nAmount:   500 ml\nWater:    5 litres\nRoom:     Kitchen\n```\n\nWhich line of the copy is different from the original?",
+    "choices": [
+      "Product",
+      "Amount",
+      "Water",
+      "Room"
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "explanation": "The original says 50 ml of concentrate; the copy says 500 ml, ten times too much. Wrong: the product (Clean-X concentrate), water (5 litres) and room (Kitchen) are the same in both.",
+    "expected_time_s": 45
+  },
+  {
+    "bank_key": "general.d.order-in-both-lists",
+    "type": "mcq",
+    "section": "detail",
+    "format": "concept",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "workplace.attention_to_detail",
+    "secondary_skill_codes": [],
+    "prompt": "List A shows orders that were paid. List B shows orders that were refunded.\n\n```\nList A (paid)  List B (refunded)\nORD-4471       ORD-4417\nORD-4528       ORD-4582\nORD-4603       ORD-4630\nORD-4719       ORD-4528\nORD-4836       ORD-4863\n```\n\nWhich order number appears in BOTH lists?",
+    "choices": [
+      "ORD-4471",
+      "ORD-4528",
+      "ORD-4603",
+      "ORD-4836"
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "explanation": "ORD-4528 is the 2nd entry in List A and the 4th entry in List B. Wrong: ORD-4471, ORD-4603 and ORD-4836 are only in List A; List B has the look-alikes ORD-4417, ORD-4630 and ORD-4863, which are different numbers.",
+    "expected_time_s": 55
+  },
+  {
+    "bank_key": "general.d.update-changed-wrong-field",
+    "type": "mcq",
+    "section": "detail",
+    "format": "concept",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "workplace.attention_to_detail",
+    "secondary_skill_codes": [],
+    "prompt": "A customer asked to change ONLY their phone number. Compare the record before and after the update.\n\nBefore:\n\n```\nName:         Nadia Marin\nCustomer ID:  C-88214\nPhone:        301 555 7719\nEmail:        n.marin@northmail.com\nAddress:      9 Lake View Road, 30418\n```\n\nAfter:\n\n```\nName:         Nadia Marin\nCustomer ID:  C-88214\nPhone:        301 555 6604\nEmail:        n.marin@northmail.com\nAddress:      9 Lake View Road, 30481\n```\n\nWhich other field was changed by mistake?",
+    "choices": [
+      "Name",
+      "Customer ID",
+      "Email",
+      "Address"
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "explanation": "The postal code in the address changed from 30418 to 30481. The phone number was meant to change, but the address was not. Wrong: the name (Nadia Marin), customer ID (C-88214) and email (n.marin@northmail.com) are unchanged.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "general.d.packing-vs-picking-codes",
+    "type": "multi_select",
+    "section": "detail",
+    "format": "concept",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "workplace.attention_to_detail",
+    "secondary_skill_codes": [],
+    "prompt": "The packing list should match the picking list line by line.\n\n```\nLine  Picking list  Packing list\n1     HB-30417      HB-30417\n2     HB-30552      HB-30525\n3     KT-11809      KT-11809\n4     KT-12096      KT-12096\n5     MX-70334      MX-70343\n6     MX-70418      MX-70418\n```\n\nWhich lines have a different product code on the packing list? Select all that apply.",
+    "choices": [
+      "Line 1",
+      "Line 2",
+      "Line 3",
+      "Line 4",
+      "Line 5",
+      "Line 6"
+    ],
+    "answer": {
+      "correct": [
+        1,
+        4
+      ]
+    },
+    "explanation": "Line 2: HB-30552 vs HB-30525 (last two digits swapped). Line 5: MX-70334 vs MX-70343 (last two digits swapped). Lines 1, 3, 4 and 6 match exactly.",
+    "expected_time_s": 55
+  },
+  {
+    "bank_key": "general.d.course-confirmation-fields",
+    "type": "multi_select",
+    "section": "detail",
+    "format": "concept",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "workplace.attention_to_detail",
+    "secondary_skill_codes": [],
+    "prompt": "Compare the training order with the confirmation sent to the customer.\n\nOrder:\n\n```\nCustomer:  Harbor Dental Clinic\nContact:   Leila Moradi\nCourse:    First Aid at Work\nDate:      16/03/2026\nPlaces:    6\nPrice:     $1,140.00\n```\n\nConfirmation:\n\n```\nCustomer:  Harbor Dental Clinic\nContact:   Leila Morady\nCourse:    First Aid at Work\nDate:      16/03/2026\nPlaces:    7\nPrice:     $1,410.00\n```\n\nWhich fields are different on the confirmation? Select all that apply.",
+    "choices": [
+      "Customer",
+      "Contact",
+      "Course",
+      "Date",
+      "Places",
+      "Price"
+    ],
+    "answer": {
+      "correct": [
+        1,
+        4,
+        5
+      ]
+    },
+    "explanation": "Contact: Moradi vs Morady (one letter). Places: 6 vs 7. Price: $1,140.00 vs $1,410.00 (digits swapped). Customer, Course and Date (16/03/2026) are the same on both.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.d.returns-not-on-sales-list",
+    "type": "multi_select",
+    "section": "detail",
+    "format": "concept",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "workplace.attention_to_detail",
+    "secondary_skill_codes": [],
+    "prompt": "A returned item can be accepted only if its serial number is on the sales list.\n\nSales list:\n\n```\nSN-80412\nSN-80427\nSN-80435\nSN-80449\nSN-80453\nSN-80468\nSN-80471\nSN-80490\n```\n\nWhich returned serial numbers are NOT on the sales list? Select all that apply.",
+    "choices": [
+      "SN-80427",
+      "SN-80445",
+      "SN-80468",
+      "SN-80417",
+      "SN-80490"
+    ],
+    "answer": {
+      "correct": [
+        1,
+        3
+      ]
+    },
+    "explanation": "SN-80445 is not on the list (the list has SN-80435 and SN-80449). SN-80417 is not on the list (the list has SN-80412 and SN-80471). SN-80427, SN-80468 and SN-80490 are all on the sales list.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.d.fridge-temperature-log",
+    "type": "multi_select",
+    "section": "detail",
+    "format": "concept",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "workplace.attention_to_detail",
+    "secondary_skill_codes": [
+      "behavioral.ethics.safety"
+    ],
+    "prompt": "Food safety rule: the fridge must stay between 1 and 5 degrees C. Readings of exactly 1 or exactly 5 are allowed.\n\n```\nTime   Reading (degrees C)\n06:00                  3.5\n09:00                  4.8\n12:00                  5.2\n15:00                  0.8\n18:00                  5.0\n21:00                  5.3\n```\n\nWhich readings break the rule? Select all that apply.",
+    "choices": [
+      "06:00",
+      "09:00",
+      "12:00",
+      "15:00",
+      "18:00",
+      "21:00"
+    ],
+    "answer": {
+      "correct": [
+        2,
+        3,
+        5
+      ]
+    },
+    "explanation": "12:00 (5.2) and 21:00 (5.3) are above 5, and 15:00 (0.8) is below 1. Wrong: 06:00 (3.5) and 09:00 (4.8) are inside the range, and 18:00 (5.0) is exactly 5, which is allowed.",
+    "expected_time_s": 45
+  },
+  {
+    "bank_key": "general.d.missing-manager-approval",
+    "type": "multi_select",
+    "section": "detail",
+    "format": "concept",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "workplace.attention_to_detail",
+    "secondary_skill_codes": [],
+    "prompt": "Rule: any purchase OVER $1,000 needs a manager's approval.\n\n```\nOrder      Amount  Approved by\nPO-711    $980.00  (none)\nPO-712  $1,250.00  K. Abbas\nPO-713  $1,000.00  (none)\nPO-714  $3,400.00  (none)\nPO-715  $1,005.50  (none)\nPO-716    $640.00  K. Abbas\n```\n\nWhich orders are missing a required approval? Select all that apply.",
+    "choices": [
+      "PO-711",
+      "PO-712",
+      "PO-713",
+      "PO-714",
+      "PO-715",
+      "PO-716"
+    ],
+    "answer": {
+      "correct": [
+        3,
+        4
+      ]
+    },
+    "explanation": "PO-714 ($3,400.00) and PO-715 ($1,005.50) are over $1,000 and have no approval. Wrong: PO-713 is exactly $1,000.00, which is not over $1,000, so it needs no approval. Wrong: PO-711 ($980.00) and PO-716 ($640.00) are under the limit, and PO-712 ($1,250.00) is approved by K. Abbas.",
+    "expected_time_s": 55
+  },
+  {
+    "bank_key": "general.d.certificate-name-spelling",
+    "type": "multi_select",
+    "section": "detail",
+    "format": "concept",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "workplace.attention_to_detail",
+    "secondary_skill_codes": [],
+    "prompt": "The training list was typed again to print certificates. Compare the two lists line by line.\n\n```\nLine  Training list      Certificate list\n1     Adebayo Okonkwo    Adebayo Okonkwo\n2     Marisol Gutierrez  Marisol Gutierez\n3     Thanh Nguyen       Thanh Nguyen\n4     Ioana Popescu      Ioana Popescu\n5     Rashid Al-Amin     Rashid Al-Amim\n6     Katarzyna Nowak    Katrzyna Nowak\n```\n\nWhich people's names are spelled differently on the certificate list? Select all that apply.",
+    "choices": [
+      "Adebayo Okonkwo",
+      "Marisol Gutierrez",
+      "Thanh Nguyen",
+      "Ioana Popescu",
+      "Rashid Al-Amin",
+      "Katarzyna Nowak"
+    ],
+    "answer": {
+      "correct": [
+        1,
+        4,
+        5
+      ]
+    },
+    "explanation": "Line 2: Gutierrez vs Gutierez (one \"r\" missing). Line 5: Al-Amin vs Al-Amim (last letter n vs m). Line 6: Katarzyna vs Katrzyna (one \"a\" missing). Lines 1, 3 and 4 match exactly.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.d.locker-code-rule",
+    "type": "multi_select",
+    "section": "detail",
+    "format": "concept",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "workplace.attention_to_detail",
+    "secondary_skill_codes": [],
+    "prompt": "Locker codes must be: 1 capital letter, then 3 digits, then a dash, then 2 capital letters. Example: K274-HM.\n\nWhich codes break the rule? Select all that apply.",
+    "choices": [
+      "C347-MN",
+      "E24-RT",
+      "F396-Pr",
+      "H927-WX",
+      "J462-AK"
+    ],
+    "answer": {
+      "correct": [
+        1,
+        2
+      ]
+    },
+    "explanation": "E24-RT has only 2 digits. F396-Pr ends with a small \"r\", not 2 capital letters. Wrong: C347-MN, H927-WX and J462-AK each have 1 capital letter, 3 digits, a dash and 2 capital letters.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "general.d.rota-rules-check",
+    "type": "multi_select",
+    "section": "detail",
+    "format": "concept",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "workplace.attention_to_detail",
+    "secondary_skill_codes": [
+      "behavioral.leadership.people_management"
+    ],
+    "prompt": "Rota (work schedule) rules: (1) no one works more than 5 days in a week; (2) no one works more than 10 hours in a day. The table shows hours per day (\"-\" means a day off).\n\n```\nName   Mon  Tue  Wed  Thu  Fri  Sat  Sun\nYusuf    8    8    8    8    8    -    -\nLeah    10   10    -   10   10    -    -\nZara     9    -   11    9    9    -    -\nMei      6    6    6    -    6    6    -\nKwame    7    7    7    7    7    7    -\n```\n\nWho breaks a rule? Select all that apply.",
+    "choices": [
+      "Yusuf",
+      "Leah",
+      "Zara",
+      "Mei",
+      "Kwame"
+    ],
+    "answer": {
+      "correct": [
+        2,
+        4
+      ]
+    },
+    "explanation": "Zara works 11 hours on Wednesday (more than 10). Kwame works 6 days (Monday to Saturday). Wrong: Yusuf works 5 days of 8 hours. Wrong: Leah works 10-hour days, which is exactly the limit and allowed, on 4 days. Wrong: Mei works 5 days of 6 hours.",
+    "expected_time_s": 60
+  }
+]

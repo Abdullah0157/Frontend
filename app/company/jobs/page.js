@@ -27,32 +27,50 @@ export default function CompanyJobsPage() {
     { code: 'pm-consumer', label: 'Product Management', available: false },
     { code: 'sales-ae', label: 'Sales (AE)', available: false },
   ]
-  const TRACK_OPTIONS = [
-    { key: 'backend', label: 'Backend', available: true },
-    { key: 'frontend', label: 'Frontend', available: true },
-    { key: 'fullstack', label: 'Full stack', available: true },
-    { key: 'mobile', label: 'Mobile', available: false },
-    { key: 'qa', label: 'QA / Test automation', available: false },
-    { key: 'devops', label: 'DevOps / Cloud', available: false },
+  // Tests by industry. Families not built yet use the General workplace test.
+  const TRACK_GROUPS = [
+    { label: 'Software engineering', tracks: [
+      { key: 'backend', label: 'Backend', available: true },
+      { key: 'frontend', label: 'Frontend', available: true },
+      { key: 'fullstack', label: 'Full stack', available: true },
+      { key: 'mobile', label: 'Mobile', available: false },
+      { key: 'qa', label: 'QA / Test automation', available: false },
+      { key: 'devops', label: 'DevOps / Cloud', available: false },
+    ] },
+    { label: 'Customer service and call centre', tracks: [
+      { key: 'customer_service', label: 'Customer service (calls, chat, email)', available: true },
+      { key: 'telesales', label: 'Telesales', available: false },
+      { key: 'collections', label: 'Collections', available: false },
+    ] },
+    { label: 'Any other job', tracks: [
+      { key: 'general', label: 'General workplace test', available: true },
+    ] },
   ]
-  const LEVEL_OPTIONS = [
+  const SWE_LEVELS = [
     { key: 'L2', label: 'Junior (0-2 years)' },
     { key: 'L3', label: 'Mid (2-5 years)' },
     { key: 'L4', label: 'Senior (5+ years)' },
     { key: 'L5', label: 'Lead' },
   ]
+  const LEVELS_BY_TRACK = {
+    general: [{ key: 'staff', label: 'Staff' }, { key: 'manager', label: 'Manager' }],
+    customer_service: [{ key: 'agent', label: 'Agent' }],
+  }
+  const levelsFor = (track) => LEVELS_BY_TRACK[track] || SWE_LEVELS
+  const isSwe = (track) => !LEVELS_BY_TRACK[track]
   const LANGUAGE_OPTIONS = [
     { key: 'javascript', label: 'JavaScript' },
     { key: 'typescript', label: 'TypeScript' },
     { key: 'python', label: 'Python' },
   ]
-  // Frontend work is JavaScript/TypeScript only; the other tracks also allow Python.
+  // Frontend work is JavaScript/TypeScript only; non-software tests have no coding.
   const TRACK_LANGUAGES = { frontend: ['javascript', 'typescript'] }
-  const languagesFor = (track) => TRACK_LANGUAGES[track] || LANGUAGE_OPTIONS.map((l) => l.key)
+  const languagesFor = (track) => (isSwe(track) ? (TRACK_LANGUAGES[track] || LANGUAGE_OPTIONS.map((l) => l.key)) : [])
   const setTest = (patch) => setForm((f) => {
     const next = { ...f.writtenTest, ...patch }
+    if (!levelsFor(next.track).some((l) => l.key === next.level)) next.level = levelsFor(next.track)[isSwe(next.track) ? 1 : 0].key
     const allowed = languagesFor(next.track)
-    next.languages = next.languages.filter((l) => allowed.includes(l))
+    next.languages = (next.languages || []).filter((l) => allowed.includes(l))
     if (next.languages.length === 0) next.languages = [...allowed]
     return { ...f, writtenTest: next }
   })
@@ -67,7 +85,7 @@ export default function CompanyJobsPage() {
       })
       const s = await res.json()
       if (!res.ok) throw new Error(s.error || 'Could not suggest')
-      setTest({ enabled: true, track: s.track, level: s.level, languages: s.languages })
+      setTest({ enabled: true, track: s.track, level: s.level, languages: s.languages, typingProfile: s.options?.typingProfile || 'voice' })
       setSuggestion(s)
     } catch (e) {
       setError(e.message)
@@ -120,6 +138,7 @@ export default function CompanyJobsPage() {
             level: form.writtenTest.level,
             languages: form.writtenTest.languages,
             disabledSections: form.writtenTest.level === 'L2' && !form.writtenTest.reasoning ? ['reasoning'] : [],
+            options: form.writtenTest.track === 'customer_service' ? { typingProfile: form.writtenTest.typingProfile || 'voice' } : {},
           } : { enabled: false },
         }),
       })
@@ -216,7 +235,7 @@ export default function CompanyJobsPage() {
                     onChange={(e) => setTest({ enabled: e.target.checked })}
                     className="w-4 h-4 accent-indigo-500"
                   />
-                  <span className="text-sm text-slate-700 font-medium flex-1">Software engineering test (knowledge, coding, code review, judgement)</span>
+                  <span className="text-sm text-slate-700 font-medium flex-1">Skills test for this job (every job gets one; pick the closest industry)</span>
                   <button
                     type="button"
                     onClick={suggestTest}
@@ -229,17 +248,31 @@ export default function CompanyJobsPage() {
                 {form.writtenTest.enabled && (
                   <div className="grid md:grid-cols-2 gap-3 mt-4">
                     <label className="grid gap-1 text-xs">
-                      <span className="font-black uppercase tracking-widest text-slate-500">Track</span>
+                      <span className="font-black uppercase tracking-widest text-slate-500">Test</span>
                       <select value={form.writtenTest.track} onChange={(e) => setTest({ track: e.target.value })} className="px-3 py-2 rounded-lg border border-slate-300 bg-white text-sm">
-                        {TRACK_OPTIONS.map((t) => <option key={t.key} value={t.key} disabled={!t.available}>{t.label}{t.available ? '' : ' (coming soon)'}</option>)}
+                        {TRACK_GROUPS.map((g) => (
+                          <optgroup key={g.label} label={g.label}>
+                            {g.tracks.map((t) => <option key={t.key} value={t.key} disabled={!t.available}>{t.label}{t.available ? '' : ' (coming soon)'}</option>)}
+                          </optgroup>
+                        ))}
                       </select>
                     </label>
                     <label className="grid gap-1 text-xs">
                       <span className="font-black uppercase tracking-widest text-slate-500">Level</span>
                       <select value={form.writtenTest.level} onChange={(e) => setTest({ level: e.target.value })} className="px-3 py-2 rounded-lg border border-slate-300 bg-white text-sm">
-                        {LEVEL_OPTIONS.map((l) => <option key={l.key} value={l.key}>{l.label}</option>)}
+                        {levelsFor(form.writtenTest.track).map((l) => <option key={l.key} value={l.key}>{l.label}</option>)}
                       </select>
                     </label>
+                    {form.writtenTest.track === 'customer_service' && (
+                      <label className="md:col-span-2 grid gap-1 text-xs">
+                        <span className="font-black uppercase tracking-widest text-slate-500">Main channel (sets the typing pass mark)</span>
+                        <select value={form.writtenTest.typingProfile || 'voice'} onChange={(e) => setTest({ typingProfile: e.target.value })} className="px-3 py-2 rounded-lg border border-slate-300 bg-white text-sm">
+                          <option value="voice">Phone calls (25 words a minute, 92% accuracy)</option>
+                          <option value="chat">Chat and email (35 words a minute, 95% accuracy)</option>
+                        </select>
+                      </label>
+                    )}
+                    {isSwe(form.writtenTest.track) && (
                     <div className="md:col-span-2 grid gap-1 text-xs">
                       <span className="font-black uppercase tracking-widest text-slate-500">Candidates may code in</span>
                       <div className="flex flex-wrap gap-2">
@@ -258,6 +291,7 @@ export default function CompanyJobsPage() {
                         })}
                       </div>
                     </div>
+                    )}
                     {form.writtenTest.level === 'L2' && (
                       <label className="md:col-span-2 flex items-center gap-2 text-xs text-slate-600">
                         <input type="checkbox" checked={form.writtenTest.reasoning} onChange={(e) => setTest({ reasoning: e.target.checked })} className="accent-indigo-500" />
@@ -265,7 +299,10 @@ export default function CompanyJobsPage() {
                       </label>
                     )}
                     {suggestion && (
-                      <p className="md:col-span-2 text-xs text-slate-500">Suggested because {suggestion.reasons.join('; ')}. Change anything that is not right.</p>
+                      <p className="md:col-span-2 text-xs text-slate-500">
+                        {suggestion.note && <span className="block font-bold text-amber-700 mb-1">{suggestion.note}</span>}
+                        Suggested because {suggestion.reasons.join('; ')}. Change anything that is not right.
+                      </p>
                     )}
                   </div>
                 )}

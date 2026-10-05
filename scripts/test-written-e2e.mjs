@@ -52,7 +52,7 @@ async function call(path, { method = 'GET', body, token } = {}) {
 async function keyFor(sessionId, itemId) {
   const { rows: [s] } = await db.query(`SELECT form FROM assessment_sessions WHERE id = $1`, [sessionId])
   const entry = s.form.sections.flatMap((x) => x.items).find((i) => i.itemId === itemId)
-  const { rows: [it] } = await db.query(`SELECT type, content, scoring_rubric FROM items WHERE id = $1`, [itemId])
+  const { rows: [it] } = await db.query(`SELECT type, content, scoring_rubric, reference_answer FROM items WHERE id = $1`, [itemId])
   return { entry, it }
 }
 
@@ -78,11 +78,18 @@ async function answerFor(strong, sessionId, item, language) {
   }
   if (it.type === 'coding') return { code: strong ? r.reference[lang] : r.wrong[0][lang] }
   if (it.type === 'code_review') return { text: strong ? r.ideal_answer : 'Looks fine to me.' }
+  if (it.type === 'typing') {
+    const words = it.content.passage.split(/\s+/)
+    if (strong) return { typed: words.slice(0, Math.round(words.length * 0.6)).join(' '), elapsedMs: 120000, pasteAttempts: 0, stats: { keystrokes: 900, fastShare: 0.01, meanMs: 160 } }
+    const typo = (w, i) => (i % 3 === 0 ? w.split('').reverse().join('') : w)
+    return { typed: words.slice(0, 15).map(typo).join(' '), elapsedMs: 120000, pasteAttempts: 0, stats: { keystrokes: 90, fastShare: 0, meanMs: 900 } }
+  }
+  if (it.type === 'scenario_response') return { text: strong ? it.reference_answer : 'ok sorry' }
   return { text: strong ? 'A careful, structured answer.' : '' }
 }
 
-async function playThrough({ strong, language, integrityEvents = null, track = 'backend' }) {
-  const start = await call('/api/assessment/start', { method: 'POST', body: { mode: 'written', track, level: 'L3', language } })
+async function playThrough({ strong, language, integrityEvents = null, track = 'backend', level = 'L3', options = {} }) {
+  const start = await call('/api/assessment/start', { method: 'POST', body: { mode: 'written', track, level, language, options } })
   assert.equal(start.status, 200, JSON.stringify(start.data))
   const { sessionId, token } = start.data
   assert.equal(start.data.status, 'section_intro')
@@ -122,6 +129,7 @@ async function playThrough({ strong, language, integrityEvents = null, track = '
   const final = await call(`/api/assessment/${sessionId}`, { token })
   assertNoSecrets(final.data, 'final view')
   const { rows: [report] } = await db.query(`SELECT overall_score, band, sections, skill_map, validation, summary, integrity, followups FROM assessment_reports WHERE session_id = $1`, [sessionId])
+  report.typing = (await db.query(`SELECT ir.ai_evaluation FROM item_responses ir JOIN items i ON i.id = ir.item_id WHERE ir.session_id = $1 AND i.type = 'typing'`, [sessionId])).rows.map((r) => r.ai_evaluation)
   assert.ok(report, 'report written')
   return { sessionId, token, answered, report, final: final.data }
 }
@@ -225,7 +233,10 @@ Wrote unit and integration tests for every service.`]
   return first.sessionId
 }
 
+// E2E_ONLY=nonswe runs just the non-software families (quicker while iterating).
+const ONLY_NONSWE = process.env.E2E_ONLY === 'nonswe'
 try {
+  if (ONLY_NONSWE) { await nonSwe(); console.log('\nE2E PASSED (non-software only)'); process.exit(0) }
   const jobSession = await jobFlow()
   console.log(`  company report preview: ${BASE}/dev/written-report/${jobSession}`)
   const opts = (await call('/api/assessment/start')).data
@@ -243,6 +254,7 @@ try {
     console.log(`${language} weak:   ${line(weak)}  answered ${weak.answered}`)
     assert.ok(strong.report.overall_score > weak.report.overall_score + 4, 'strong candidate clearly beats weak')
     assert.equal(strong.report.sections.find((s) => s.key === 'knowledge').score, 100, 'all knowledge right = 100')
+    assert.ok(strong.report.sections.find((s) => s.key === 'review').score >= 70, 'the ideal code review is marked as good')
     assert.equal(weak.report.sections.find((s) => s.key === 'judgement').score <= 34, true, 'worst judgement options score low')
     assert.ok(strong.final.result?.sections?.length, 'candidate sees section feedback')
     assert.ok(!('score' in (strong.final.result.sections[0] || {})), 'candidate does not see numbers')
@@ -279,6 +291,8 @@ try {
     }
   }
 
+  await nonSwe()
+
   console.log('\nE2E PASSED')
 } catch (e) {
   console.error('\nE2E FAILED:', e.message)
@@ -286,4 +300,33 @@ try {
 } finally {
   await db.end()
   await globalThis._pgPool?.end?.()
+}
+
+async function nonSwe() {
+  // General workplace (Staff, Manager) and Customer service (phone, chat): no code.
+  for (const [track, level, options] of [['general', 'staff', {}], ['general', 'manager', {}], ['customer_service', 'agent', {}], ['customer_service', 'agent', { typingProfile: 'chat' }]]) {
+    const label = `${track}/${level}${options.typingProfile ? `/${options.typingProfile}` : ''}`
+    const strong = await playThrough({ strong: true, language: null, track, level, options })
+    const weak = await playThrough({ strong: false, language: null, track, level, options })
+    const line = (r) => `${r.report.overall_score * 10} (${r.report.band}) ${r.report.sections.map((x) => `${x.key}:${x.score}`).join(' ')}`
+    console.log(`${label} strong: ${line(strong)}`)
+    console.log(`${label} weak:   ${line(weak)}`)
+    assert.ok(strong.report.overall_score > weak.report.overall_score + 4, `${label}: strong clearly beats weak`)
+    // The model answer must be marked as good: catches a marker that silently
+    // drops criteria (found 5 Oct: the 4b model scored only the first one).
+    for (const key of ['written_communication', 'written_reply']) {
+      const sec = strong.report.sections.find((x) => x.key === key)
+      if (sec) assert.ok(sec.score >= 70, `${label}: the model answer to the ${key} task scored only ${sec.score}`)
+    }
+    const { rows: [sess] } = await db.query(`SELECT language, form FROM assessment_sessions WHERE id = $1`, [strong.sessionId])
+    assert.equal(sess.language, null, `${label}: no coding language`)
+    if (track === 'customer_service') {
+      const t = strong.report.typing[0]
+      const want = options.typingProfile === 'chat' ? 35 : 25
+      assert.equal(t.pass_marks.net_wpm, want, `${label}: the right typing pass mark`)
+      assert.equal(t.passed, true, `${label}: a good typist passes`)
+      assert.equal(weak.report.typing[0].passed, false, `${label}: a slow, error-prone typist does not`)
+      console.log(`  typing strong ${t.netWpm} wpm ${t.accuracy}% | weak ${weak.report.typing[0].netWpm} wpm ${weak.report.typing[0].accuracy}%`)
+    }
+  }
 }

@@ -103,3 +103,80 @@ Design: `frameworks/swe-assessment-design.md`.
   - `engineering.tooling.{git,containers}`
   - `engineering.algorithms.data_structures`
   - `engineering.frontend.{components_state,rendering,browser_network,accessibility,css_layout}`
+
+
+## Non-software families (General workplace, Customer service)
+
+Design: `frameworks/assessment-coverage-design.md`.
+
+**Tracks and levels:**
+- `general` with levels `staff` and `manager`.
+- `customer_service` with level `agent`.
+
+An item may carry several tracks when it fits both (for example a numbers item `["general","customer_service"]`).
+
+**Sections and types:**
+
+| Section | Types | Family |
+|---|---|---|
+| `workplace_judgement` | sjt | general |
+| `written_communication` | scenario_response (writing task) | general |
+| `numbers` | mcq, multi_select | general |
+| `detail` | mcq, multi_select | general |
+| `instructions` | mcq, multi_select | general |
+| `typing` | typing | customer_service |
+| `customer_situations` | sjt | customer_service |
+| `written_reply` | scenario_response (writing task) | customer_service |
+| `accuracy` | mcq, multi_select | customer_service |
+
+### `format: "numbers"`: every calculation item MUST carry `calc`
+`calc` is a plain JavaScript arithmetic expression whose result is the keyed answer, for example `"calc": "Math.round(240 * 0.85 * 100) / 100"`. The validator runs it. The keyed option must contain that number, and no other option may contain it.
+
+### Writing tasks (`scenario_response` with a `writing` block)
+```json
+"writing": {
+  "min_words": 60, "max_words": 180,
+  "dimensions": [
+    { "name": "Empathy", "weight": 0.25, "low": "ignores how the customer feels", "high": "acknowledges the problem and the feeling in the first lines" },
+    { "name": "Solves the problem", "weight": 0.35, "low": "...", "high": "..." },
+    { "name": "Follows the stated policy", "weight": 0.2, "low": "...", "high": "..." },
+    { "name": "Clear and correct writing", "weight": 0.2, "low": "...", "high": "..." }
+  ],
+  "ideal_answer": "a model answer at least min_words long",
+  "must_include": ["the facts a good answer must state"],
+  "must_avoid": ["promises the policy forbids, blaming the customer"]
+}
+```
+- 3 to 5 dimensions, with weights that add up to 1.
+- The prompt gives everything the candidate needs: the situation, the customer's message and the policy.
+
+### Typing (`type: "typing"`)
+```json
+"typing": { "passage": "180 to 280 words of realistic customer-service text", "seconds": 120 }
+```
+- Plain keyboard characters only: straight quotes, no curly quotes, no special symbols.
+- No `choices`, `answer` or `explanation`.
+
+### Additional skill codes
+- `workplace.{numeracy,attention_to_detail,reading_comprehension}`
+- `behavioral.ethics.{integrity,safety}`
+- `behavioral.customer.service_orientation`
+- `behavioral.leadership.people_management`
+- `customer_service.{empathy,de_escalation,problem_resolution,policy_adherence,privacy_verification,written_tone,typing}`
+
+The existing `behavioral.*` codes also apply.
+
+## Consistency rules for scoring situational judgement (all families)
+
+Similar behaviour must earn the same points in every family and every file.
+Reviewers apply these rules; a scenario that needs an exception must state why
+in its prompt.
+
+1. **First, low-harm issue with a peer.** A private word scores 3. Going to the supervisor scores 2.
+2. **The private word has already failed, or the issue is serious** (customers harmed, harassment, safety, fraud, or theft beyond small items). Using the proper channel scores 3.
+3. **A hazard.** Making it safe and reporting it now scores 3. Reporting it later scores 2.
+4. **You cannot do everything asked.** Telling whoever sets your priorities, early, scores 3.
+5. **Being asked to break a rule.** Declining and pointing to the right route scores 3. Openly asking for an exception scores 2. Breaking the rule openly scores 1. Hiding or falsifying scores 0.
+6. **Covering up versus self-sacrifice.** Quietly fixing something to hide a problem scores 1. Sacrificing your own time to help scores 2.
+
+**Company rules.** Where the right answer depends on a company rule (gifts, personal contact details, refunds, exceptions), the prompt states the rule, so the answer never depends on local custom.

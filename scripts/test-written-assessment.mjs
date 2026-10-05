@@ -15,7 +15,7 @@ import { resultsMatch, runTests } from '../lib/code-runner.js'
 
 test('every level: weights add up to 100 and minutes match the design', () => {
   const minutes = { L2: 59, L3: 55, L4: 55, L5: 46 }
-  for (const level of Object.keys(LEVELS)) {
+  for (const level of ['L2', 'L3', 'L4', 'L5']) {
     const bp = getBlueprint({ track: 'backend', level })
     const sum = bp.sections.reduce((a, s) => a + s.weight, 0)
     assert.ok(Math.abs(sum - 100) < 0.05, `${level} weights sum to ${sum}`)
@@ -33,7 +33,7 @@ test('only Mid has no reasoning section; unknown track or level is rejected', ()
   assert.ok(!getBlueprint({ track: 'backend', level: 'L3' }).sections.some((s) => s.key === 'reasoning'))
   assert.throws(() => getBlueprint({ track: 'nope', level: 'L3' }))
   assert.throws(() => getBlueprint({ track: 'backend', level: 'L9' }))
-  assert.equal(Object.keys(TRACKS).length, 6)
+  assert.equal(Object.values(TRACKS).filter((t) => t.family === 'swe').length, 6)
 })
 
 // A synthetic bank big enough for a Mid backend form.
@@ -289,7 +289,8 @@ test('suggestion: track, level and languages come from the title and description
   const mob = suggestAssessment({ title: 'iOS Developer' })
   assert.equal(mob.track, 'backend', 'unbuilt tracks fall back to Backend')
   assert.ok(mob.reasons.some((r) => /not ready yet/.test(r)))
-  assert.deepEqual(suggestAssessment({ title: 'Engineer' }).languages.sort(), ['javascript', 'python', 'typescript'])
+  assert.deepEqual(suggestAssessment({ title: 'Software Engineer' }).languages.sort(), ['javascript', 'python', 'typescript'])
+  assert.equal(suggestAssessment({ title: 'Engineer' }).track, 'general', 'a bare "Engineer" is not assumed to be software')
 })
 
 test('job test settings are validated before saving', () => {
@@ -408,4 +409,149 @@ test('seeder change detection covers tags, not just the text', () => {
   assert.notEqual(h(base), h({ ...base, levels: ['L2', 'L3'] }))
   assert.notEqual(h(base), h({ ...base, group: 'g' }))
   assert.equal(h(base), h({ ...base }), 'same item, same hash')
+})
+
+// ── Families beyond software ──────────────────────────────────────────────
+import { FAMILIES, roleFamilyFor, trackFromRoleFamily } from '../lib/assessment-blueprint.js'
+import { typingMetrics, typingScore, trustedElapsedMs } from '../lib/typing.js'
+import { writingScoreFrom } from '../lib/written-scoring.js'
+
+test('22 families are listed; General, Software and Customer service are ready', () => {
+  assert.equal(Object.keys(FAMILIES).length, 23, '22 job families plus General')
+  assert.deepEqual(Object.entries(FAMILIES).filter(([, f]) => f.ready).map(([k]) => k).sort(), ['customer_service', 'general', 'swe'])
+})
+
+test('General and Customer service blueprints: weights 100, design minutes, no code', () => {
+  for (const [track, level, minutes] of [['general', 'staff', 32], ['general', 'manager', 32], ['customer_service', 'agent', 22]]) {
+    const bp = getBlueprint({ track, level })
+    assert.ok(Math.abs(bp.sections.reduce((a, x) => a + x.weight, 0) - 100) < 0.05, `${track}/${level} weights`)
+    assert.equal(bp.totalMinutes, minutes, `${track}/${level} minutes`)
+    assert.equal(bp.usesCode, false)
+  }
+  assert.throws(() => getBlueprint({ track: 'general', level: 'L3' }), /unknown level/)
+  assert.equal(getBlueprint({ track: 'general', level: 'manager' }).sections[0].weight, 40, 'managers: judgement counts most')
+})
+
+test('Customer service: chat roles weight typing higher and carry the chat pass marks', () => {
+  const voice = getBlueprint({ track: 'customer_service', level: 'agent' })
+  const chat = getBlueprint({ track: 'customer_service', level: 'agent', options: { typingProfile: 'chat' } })
+  const w = (bp, k) => bp.sections.find((x) => x.key === k).weight
+  assert.deepEqual([w(voice, 'typing'), w(voice, 'accuracy')], [15, 30])
+  assert.deepEqual([w(chat, 'typing'), w(chat, 'accuracy')], [25, 20])
+  assert.deepEqual(voice.options.typing, { profile: 'voice', netWpm: 25, accuracy: 92 })
+  assert.deepEqual(chat.options.typing, { profile: 'chat', netWpm: 35, accuracy: 95 })
+  const custom = getBlueprint({ track: 'customer_service', level: 'agent', options: { typingProfile: 'chat', typingNetWpm: 40, typingAccuracy: 300 } })
+  assert.deepEqual([custom.options.typing.netWpm, custom.options.typing.accuracy], [40, 95], 'an out-of-range override is ignored')
+})
+
+test('role family codes round-trip for every ready track', () => {
+  for (const t of ['backend', 'frontend', 'fullstack', 'general', 'customer_service']) assert.equal(trackFromRoleFamily(roleFamilyFor(t)), t)
+  assert.equal(roleFamilyFor('backend'), 'swe-backend')
+  assert.equal(roleFamilyFor('general'), 'general')
+  assert.equal(trackFromRoleFamily('nonsense'), null)
+})
+
+test('suggestion covers every industry: ready ones get their test, others get General with a note', () => {
+  const s = (title, description = '') => suggestAssessment({ title, description })
+  assert.deepEqual([s('Customer Support Agent', 'live chat and email').track, s('Customer Support Agent', 'live chat and email').options.typingProfile], ['customer_service', 'chat'])
+  assert.equal(s('Call Centre Agent').options.typingProfile, 'voice')
+  const nurse = s('Registered Nurse')
+  assert.deepEqual([nurse.track, nurse.level, nurse.recognisedFamily], ['general', 'staff', 'healthcare'])
+  assert.match(nurse.note, /Healthcare test is coming/)
+  assert.equal(s('Store Manager').level, 'manager')
+  assert.equal(s('Office Administrator').recognisedFamily, 'admin')
+  assert.equal(s('Zookeeper').recognisedFamily, null)
+  assert.match(s('Zookeeper').note, /No specific industry/)
+  assert.equal(s('Senior Backend Engineer').track, 'backend')
+})
+
+test('settings: non-software tests have no languages; customer service keeps its typing options', () => {
+  const g = normaliseAssessmentConfig({ track: 'general', level: 'manager', languages: ['python'] })
+  assert.deepEqual([g.family, g.level, g.languages], ['general', 'manager', []])
+  assert.throws(() => normaliseAssessmentConfig({ track: 'general', level: 'agent' }), /level/)
+  const cs = normaliseAssessmentConfig({ track: 'customer_service', level: 'agent', options: { typingProfile: 'chat', typingNetWpm: 30 } })
+  assert.deepEqual(cs.options, { typingProfile: 'chat', typingNetWpm: 30 })
+  assert.equal(normaliseAssessmentConfig({ track: 'customer_service', level: 'agent', options: { typingProfile: 'telepathy' } }).options.typingProfile, 'voice')
+  assert.throws(() => normaliseAssessmentConfig({ track: 'telesales', level: 'agent' }), /available/)
+})
+
+test('a test without code draws only language-neutral items', () => {
+  const bank = []
+  let n = 0
+  const add = (extra, count) => { for (let i = 0; i < count; i++) bank.push({ id: `g-${++n}`, tracks: ['general'], levels: ['staff'], language: null, format: 'concept', primary_skill_code: `s.${n % 5}`, content: { choices: ['a', 'b', 'c', 'd'] }, ...extra }) }
+  add({ type: 'sjt' }, 12); add({ type: 'scenario_response', content: { min_words: 60 } }, 2); add({ type: 'mcq' }, 30)
+  add({ type: 'mcq', language: 'python', format: 'code_output' }, 5)
+  const form = drawForm(getBlueprint({ track: 'general', level: 'staff' }), bank, { language: null, seed: 4 })
+  assert.ok(formIsUsable(form))
+  assert.equal(form.language, null)
+  const byId = new Map(bank.map((b) => [b.id, b]))
+  assert.ok(form.sections.flatMap((x) => x.items).every((i) => byId.get(i.itemId).language === null))
+})
+
+// ── Typing ────────────────────────────────────────────────────────────────
+
+const PASSAGE = 'Thank you for contacting us today. I can see that your order was delayed and I am sorry for the trouble. I have arranged a refund of the delivery charge.'
+
+test('typing: perfect, a typo, a skipped word, nothing typed', () => {
+  const perfect = typingMetrics(PASSAGE, PASSAGE, 60000)
+  assert.equal(perfect.errors, 0)
+  assert.equal(perfect.accuracy, 100)
+  assert.equal(perfect.grossWpm, perfect.netWpm)
+  const typo = typingMetrics(PASSAGE, PASSAGE.replace('delayed', 'delaeyd'), 60000)
+  assert.equal(typo.errors, 1)
+  assert.ok(typo.netWpm < perfect.netWpm)
+  const skipped = typingMetrics(PASSAGE, PASSAGE.replace(' that', ''), 60000)
+  assert.equal(skipped.errors, 1, 'one skipped word is one error, not a shift of every later word')
+  const half = typingMetrics(PASSAGE, PASSAGE.split(' ').slice(0, 15).join(' '), 60000)
+  assert.equal(half.errors, 0, 'stopping early is not an error')
+  assert.deepEqual(typingMetrics(PASSAGE, '   ', 60000).words, 0)
+})
+
+test('typing score: full at the pass mark, gentle slope below, accuracy matters', () => {
+  const marks = { netWpm: 35, accuracy: 95 }
+  assert.equal(typingScore({ netWpm: 50, accuracy: 99 }, marks), 1)
+  assert.equal(typingScore({ netWpm: 35, accuracy: 95 }, marks), 1)
+  assert.equal(typingScore({ netWpm: 17.5, accuracy: 95 }, marks), 0.7)
+  assert.equal(typingScore({ netWpm: 40, accuracy: 80 }, marks), 0.6)
+  assert.equal(typingScore({ netWpm: 0, accuracy: 0 }, marks), 0)
+})
+
+test('typing time: a browser claiming a short time is overruled by the server clock', () => {
+  assert.equal(trustedElapsedMs(110000, 150000, 120000), 110000, 'honest: reading time allowed')
+  assert.equal(trustedElapsedMs(10000, 150000, 120000), 60000, 'faked short time is lifted to server time minus reading allowance')
+  assert.equal(trustedElapsedMs(999999, 150000, 120000), 125000, 'capped at the limit')
+  assert.equal(trustedElapsedMs(NaN, 30000, 120000), 120000, 'missing time counts as the full limit')
+})
+
+// ── Writing ───────────────────────────────────────────────────────────────
+
+test('writing score: weighted dimensions, must-avoid penalty, length', () => {
+  const dims = [{ name: 'Empathy', weight: 0.4 }, { name: 'Solves the problem', weight: 0.6 }]
+  const marked = { dimension_scores: [{ name: 'empathy', score: 1 }, { name: 'Solves the problem', score: 0.5 }], must_avoid_present: [false, false] }
+  assert.equal(writingScoreFrom(dims, marked, { words: 100, minWords: 60, maxWords: 150, mustAvoidCount: 2 }).score, 0.7)
+  const promised = writingScoreFrom(dims, { ...marked, must_avoid_present: [true, false] }, { words: 100, minWords: 60, maxWords: 150, mustAvoidCount: 2 })
+  assert.ok(Math.abs(promised.score - 0.63) < 1e-9, 'breaking a must-avoid rule costs 0.07')
+  const short = writingScoreFrom(dims, marked, { words: 30, minWords: 60, maxWords: 150, mustAvoidCount: 2 })
+  assert.ok(Math.abs(short.score - 0.35) < 1e-9, 'half the minimum length halves the score')
+  const junk = writingScoreFrom(dims, { dimension_scores: [{ name: 'Empathy', score: 9 }], must_avoid_present: [true, true, true, true] }, { words: 100, minWords: 60, maxWords: 150, mustAvoidCount: 2 })
+  assert.ok(junk.score >= 0 && junk.score <= 1)
+})
+
+test('integrity: typing paste attempts and robotic key rhythm are noted', () => {
+  const typing = (raw) => [{ type: 'typing', raw_response: raw }]
+  assert.equal(summariseIntegrity([], typing({ pasteAttempts: 0, stats: { fastShare: 0.02, keystrokes: 400 } })).level, 'clear')
+  assert.match(summariseIntegrity([], typing({ pasteAttempts: 3, stats: { fastShare: 0.02, keystrokes: 400 } })).notes[0], /paste into the typing test 3/)
+  assert.match(summariseIntegrity([], typing({ pasteAttempts: 0, stats: { fastShare: 0.8, keystrokes: 400 } })).notes[0], /automated/)
+})
+
+import { markerComplete } from '../lib/written-scoring.js'
+
+test('a marker answer missing any criterion is rejected, never read as zeros', () => {
+  const names = ['Clear purpose', 'Complete facts', 'Next step']
+  assert.equal(markerComplete([{ name: 'Clear purpose', score: 1 }], names), false, 'only the first criterion: incomplete')
+  assert.equal(markerComplete(names.map((n) => ({ name: n.toLowerCase(), score: 0.5 })), names), true, 'names match ignoring case')
+  assert.equal(markerComplete([...names.slice(0, 2).map((n) => ({ name: n, score: 1 })), { name: 'Next step', score: '<0-1>' }], names), false, 'an unfilled template value is not a score')
+  assert.equal(markerComplete([{ id: 'sql_injection', found: 1 }, { id: 'n_plus_one', found: 0 }], ['sql_injection', 'n_plus_one'], 'id'), true)
+  assert.equal(markerComplete([{ id: 'sql_injection', found: 1 }], ['sql_injection', 'n_plus_one'], 'id'), false)
+  assert.equal(markerComplete(null, names), false)
 })

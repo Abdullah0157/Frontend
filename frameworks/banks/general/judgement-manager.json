@@ -1,0 +1,1020 @@
+[
+  {
+    "bank_key": "general.jm.quality-has-dropped",
+    "type": "sjt",
+    "section": "workplace_judgement",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "behavioral.leadership.people_management",
+    "secondary_skill_codes": [
+      "behavioral.communication.listening"
+    ],
+    "prompt": "A team member who used to do good work has made many mistakes this month. Others have started to complain. You do not know the reason. What do you do first?",
+    "choices": [
+      "Raise the mistakes at the next team meeting, so everyone knows what standard is expected from now on.",
+      "Check their work closely yourself for a few weeks, and see whether it improves.",
+      "Meet them privately and share specific examples, since something may have changed for them.",
+      "Give them a formal written warning, so that they understand how serious the mistakes are."
+    ],
+    "answer": {
+      "points": [
+        0,
+        2,
+        3,
+        1
+      ]
+    },
+    "explanation": "Best (3): \"Private conversation with specific examples\". A sudden drop often has a cause (health, family, unclear instructions) that only a private, respectful conversation will find, and specific examples make it fair and clear. \"Check their work more closely\" (2): Protects quality for now, but avoids the conversation, and the person may not even know there is a problem. \"Formal warning first\" (1): Jumps to discipline before finding out why a good worker changed. \"Raise it in a team meeting\" (0): Criticising someone in front of the team is humiliating in almost every culture and damages trust.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.jm.two-members-not-speaking",
+    "type": "sjt",
+    "section": "workplace_judgement",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "behavioral.collaboration.conflict",
+    "secondary_skill_codes": [
+      "behavioral.leadership.people_management"
+    ],
+    "prompt": "Two team members stopped speaking to each other after an argument about sharing work. It is slowing the team down, and others are taking sides. What do you do first?",
+    "choices": [
+      "Talk to each of them privately, then meet them together to agree how the work will be shared.",
+      "Move one of them to another shift, so they no longer need to work together every day.",
+      "Leave them to sort it out, since they are adults and it is a personal matter between the two of them.",
+      "Decide yourself how the work will be shared, and tell both to follow it."
+    ],
+    "answer": {
+      "points": [
+        3,
+        1,
+        0,
+        2
+      ]
+    },
+    "explanation": "Best (3): \"Hear each privately, then agree together\". Each person can speak freely first, and then they agree a fair split themselves, which they are more likely to keep. \"Decide the split yourself\" (2): Ends the work problem quickly, but leaves the bad feeling in place. \"Move one to another shift\" (1): Avoids the conflict, may feel like a punishment to the one moved, and teaches the team that conflict is never solved. \"Leave them to it\" (0): The conflict is already hurting the team's work, so it is the manager's job.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.jm.top-performer-rude",
+    "type": "sjt",
+    "section": "workplace_judgement",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "behavioral.leadership.setting_norms",
+    "secondary_skill_codes": [
+      "behavioral.leadership.people_management"
+    ],
+    "prompt": "One team member gets the best results in the team. Several colleagues say this person is rude to them and ignores their ideas, and a new team member is thinking of leaving. What is the best response?",
+    "choices": [
+      "Ask them to mentor the new team member, hoping that closer work will improve how they treat others.",
+      "Leave it alone for now, as their results help the whole team reach its targets every single month.",
+      "Remind the whole team in a meeting that everyone must be respectful, without naming anyone.",
+      "Talk to them privately with clear examples, since how they treat colleagues matters as much as results."
+    ],
+    "answer": {
+      "points": [
+        1,
+        0,
+        2,
+        3
+      ]
+    },
+    "explanation": "Best (3): \"Private, specific, clear standard\". Behaviour standards apply to everyone, and a private talk with real examples is fair and respectful. \"General reminder to the team\" (2): In some workplaces an indirect reminder is a polite first step, but after several complaints, with someone about to leave, the person needs to hear it directly. They may not see that it is about them, while everyone else knows who it is meant for. \"Make them a mentor\" (1): Gives more influence to the person causing the problem, and may push the new person out faster. \"Leave it alone\" (0): Tells the whole team that results excuse rudeness, and people may leave.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.jm.no-pay-rises-this-year",
+    "type": "sjt",
+    "section": "workplace_judgement",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "behavioral.communication.clarity",
+    "secondary_skill_codes": [
+      "behavioral.leadership.people_management"
+    ],
+    "prompt": "Senior management has decided there will be no pay rises this year. You must tell your team, and you know some were hoping for one. What is the best response?",
+    "choices": [
+      "Tell the team you disagree with the decision, and that senior management does not value their work.",
+      "Tell the team yourself soon, in a meeting where they can hear the reasons and ask questions.",
+      "Send a clear written message so that everyone gets the same facts, and offer to talk.",
+      "Wait until someone asks about it, so you do not lower morale before you really have to."
+    ],
+    "answer": {
+      "points": [
+        0,
+        3,
+        2,
+        1
+      ]
+    },
+    "explanation": "Best (3): \"Soon, in a meeting, with reasons and questions\". Bad news hurts less when it comes early, directly and with an explanation, and taking questions shows respect. A video call works the same way for a team that is not in one place. \"Clear written message\" (2): Honest and quick, but feels cold for news that affects people's lives, and nobody can ask questions straight away. \"Wait until asked\" (1): People hear it through rumours, which is worse for trust. \"Blame senior management\" (0): Damages trust in the company and does not help the team.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.jm.delegate-important-task",
+    "type": "sjt",
+    "section": "workplace_judgement",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "behavioral.leadership.people_management",
+    "secondary_skill_codes": [
+      "behavioral.leadership.mentorship"
+    ],
+    "prompt": "You have too much work. A team member has asked for more responsibility. You could give them an important task they have never done before, though doing it yourself would be faster. What is the best response?",
+    "choices": [
+      "Do it yourself this time, and promise them a similar task to try next month instead.",
+      "Give them the task, explain the result you need, and agree times to check progress together.",
+      "Keep doing it yourself, as important tasks should not be given to someone who has not done them before.",
+      "Give them the task and leave them to it, which shows you trust them to manage it alone."
+    ],
+    "answer": {
+      "points": [
+        2,
+        3,
+        1,
+        1
+      ]
+    },
+    "explanation": "Best (3): \"Delegate with clear goals and check-ins\". Frees your time, grows the team member, and the check-ins catch problems early. \"Do it yourself, promise later\" (2): Safe for now, but you stay overloaded and the promise may not be kept. \"Hand it over with no support\" (1): A first attempt at an important task with no check-ins puts both the task and the person at risk. \"Never delegate important work\" (1): Keeps you overloaded, and people never get the chance to grow.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.jm.three-urgent-requests",
+    "type": "sjt",
+    "section": "workplace_judgement",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "behavioral.leadership.decision_making",
+    "secondary_skill_codes": [
+      "behavioral.problem_solving.decomposition"
+    ],
+    "prompt": "On Monday morning, your own manager, a key customer and a team member each bring you a problem. Each person says theirs is urgent. You cannot deal with all three in the next hour. What do you do first?",
+    "choices": [
+      "Deal with the problems in the order they arrived, so that it is fair to everyone involved.",
+      "Work on all three at once, switching between them whenever someone asks you for an update.",
+      "Deal with the customer's problem first, since customers should always come first, and then the other two.",
+      "Check the impact and deadline of each quickly, decide the order, and tell each person when to expect you."
+    ],
+    "answer": {
+      "points": [
+        1,
+        0,
+        2,
+        3
+      ]
+    },
+    "explanation": "Best (3): \"Check impact and deadline, decide, tell everyone\". A few minutes spent on what is really most urgent leads to the best order, and each person knows when to expect help. \"Customer always first\" (2): Often the right order, but a fixed rule can be wrong: the team member may be unable to do any work, or your manager's problem may have the closest deadline, and nobody is told when to expect you. \"First come, first served\" (1): Fair-sounding, but ignores which problem does the most harm. \"All at once\" (0): Switching constantly means none of the problems is solved quickly.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.jm.family-illness",
+    "type": "sjt",
+    "section": "workplace_judgement",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "behavioral.leadership.people_management",
+    "secondary_skill_codes": [
+      "behavioral.communication.listening"
+    ],
+    "prompt": "A team member tells you privately that a close family member is seriously ill. They are finding it hard to focus, and the team has a busy month ahead. What is the best response?",
+    "choices": [
+      "Thank them, ask what would help, and explain the options, such as leave or flexible hours.",
+      "Say you are sorry, but remind them that everyone must still meet their targets in this busy month.",
+      "Tell the team about the illness, and ask them to be understanding and help cover the work.",
+      "Thank them, tell them to take all the time off they need, and promise you will sort out the work."
+    ],
+    "answer": {
+      "points": [
+        3,
+        1,
+        0,
+        2
+      ]
+    },
+    "explanation": "Best (3): \"Ask what would help and offer real options\". Shows care and gives practical choices within the rules, while the information stays between you. \"Unlimited time off\" (2): Kind, but the promise may go beyond what the company allows or what you can arrange. \"Remind them of targets\" (1): Puts work first at a painful time, and the person is likely to struggle more. \"Tell the team\" (0): Shares private information without permission.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.jm.overtime-to-favourites",
+    "type": "sjt",
+    "section": "workplace_judgement",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "behavioral.leadership.people_management",
+    "secondary_skill_codes": [
+      "behavioral.ethics.integrity"
+    ],
+    "prompt": "Overtime is paid extra, and several team members want it. You realise you have mostly been giving it to the two people you get on with best. What is the best response?",
+    "choices": [
+      "Ask the two people not to talk to the others about how much overtime they have been given lately.",
+      "Give the next few overtime shifts to the people who have had the least so far, so that it evens out.",
+      "Set a clear, fair way of sharing overtime, such as a rota, so that everyone has the same chance.",
+      "Keep the current approach, as those two are reliable and always do the extra work to a high standard."
+    ],
+    "answer": {
+      "points": [
+        0,
+        2,
+        3,
+        1
+      ]
+    },
+    "explanation": "Best (3): \"Fair, open rota\". A clear rule that everyone knows fixes the unfairness and stops it coming back. \"Give the next shifts to others\" (2): Corrects the balance for now, but without a clear rule the same thing can happen again. \"Keep the current approach\" (1): Reliability matters, but extra pay going to favourites is unfair and others will notice. \"Ask them to keep quiet\" (0): Hides an unfair practice.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.jm.customer-complains-about-member",
+    "type": "sjt",
+    "section": "workplace_judgement",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "behavioral.leadership.people_management",
+    "secondary_skill_codes": [
+      "behavioral.customer.service_orientation"
+    ],
+    "prompt": "A customer emails you to say one of your team members was rude to them yesterday. This team member is usually polite with customers. What do you do first?",
+    "choices": [
+      "Tell the customer that this team member is usually very polite, so it was probably a misunderstanding.",
+      "Talk to the team member first, and reply to the customer only when you know the full story of what happened.",
+      "Give the team member a warning at once, so the customer can see that you take complaints seriously.",
+      "Reply that you are looking into it, then hear the team member's side before deciding anything."
+    ],
+    "answer": {
+      "points": [
+        1,
+        2,
+        0,
+        3
+      ]
+    },
+    "explanation": "Best (3): \"Acknowledge, then hear both sides\". The customer knows they have been heard, and the team member gets a fair hearing before any decision. \"Talk to the team member first\" (2): Fair to the team member, but the customer waits with no reply. \"Defend the team member\" (1): Dismisses the customer's experience without checking. \"Instant warning\" (0): Punishes someone before hearing their side.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.jm.team-dislikes-new-shifts",
+    "type": "sjt",
+    "section": "workplace_judgement",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "behavioral.communication.clarity",
+    "secondary_skill_codes": [
+      "behavioral.leadership.people_management"
+    ],
+    "prompt": "Senior management has changed the shift pattern, starting next month. Your team is unhappy, and you also think the change is a mistake. What is the best response?",
+    "choices": [
+      "Tell the team honestly that you agree with them and also think the change is a mistake.",
+      "Explain the change and its reasons, listen to concerns, and pass the main ones to senior management.",
+      "Let the team keep the old pattern quietly, since you agree that it works better for everyone.",
+      "Ask senior management to delay the change, because the team has not yet been asked for its views on it."
+    ],
+    "answer": {
+      "points": [
+        1,
+        3,
+        0,
+        2
+      ]
+    },
+    "explanation": "Best (3): \"Explain, listen, pass concerns up\". You support the decision while making sure the team is heard by the people who can change it. \"Ask for a delay\" (2): Raises the issue through the right channel, but the team has not yet been told why the change was made, and a delay may not be possible. \"Openly agree with the team\" (1): Honest about your view, but it weakens the change and the team's trust in the company without fixing anything. \"Keep the old pattern quietly\" (0): Ignores a company decision behind management's back.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.jm.hire-managers-relative",
+    "type": "sjt",
+    "section": "workplace_judgement",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "behavioral.ethics.integrity",
+    "secondary_skill_codes": [
+      "behavioral.leadership.decision_making"
+    ],
+    "prompt": "You urgently need to fill a role. Company rules say every job must be advertised and candidates interviewed, with no exceptions. Your own manager asks you to hire their relative straight away, without interviews. What is the best response?",
+    "choices": [
+      "Hire the relative for a trial period, and interview other people only if it does not work out.",
+      "Ask HR or a senior colleague for advice before replying, so that you handle your manager's request correctly.",
+      "Explain politely that the rule applies to everyone, and offer to interview the relative quickly.",
+      "Hire the relative straight away, since your manager asked and the role is urgent."
+    ],
+    "answer": {
+      "points": [
+        1,
+        2,
+        3,
+        0
+      ]
+    },
+    "explanation": "Best (3): \"Follow the rule and offer a quick, fair interview\". Respectful to your manager, fair to other candidates, and the relative still gets a real chance. If the manager insists, HR should be told. \"Ask HR first\" (2): Careful, and a safe channel, but the rule is clear and has no exceptions, so asking first only delays a polite, clear answer. \"Trial period\" (1): Still skips the fair process the rules require. \"Hire straight away\" (0): Breaks the hiring rule and is unfair to everyone else who could apply.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.jm.report-full-of-errors",
+    "type": "sjt",
+    "section": "workplace_judgement",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "behavioral.leadership.mentorship",
+    "secondary_skill_codes": [
+      "behavioral.communication.clarity"
+    ],
+    "prompt": "A team member proudly shows you a report they worked hard on. It has several serious errors and must go to a customer tomorrow. What is the best response?",
+    "choices": [
+      "Thank them for the effort, and go through the main errors with them so the report is right by tomorrow.",
+      "Send it back privately with every error marked, and a note saying it is not good enough to send yet.",
+      "Praise the report warmly, then quietly fix the errors yourself before it goes to the customer.",
+      "Send it to the customer as it is, and let them learn from the customer's reaction."
+    ],
+    "answer": {
+      "points": [
+        3,
+        2,
+        1,
+        0
+      ]
+    },
+    "explanation": "Best (3): \"Recognise effort, be honest, fix together\". Honest and kind, so the person learns and the customer gets a correct report. \"Mark errors with a blunt note\" (2): Honest and clear, but cold, and it may discourage someone who tried hard. \"Praise and fix quietly\" (1): The customer is protected, but the person never learns, and the praise is not honest. \"Send it as it is\" (0): The customer gets a wrong report, which harms the business.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.jm.skip-safety-check-for-target",
+    "type": "sjt",
+    "section": "workplace_judgement",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "behavioral.ethics.safety",
+    "secondary_skill_codes": [
+      "behavioral.leadership.decision_making"
+    ],
+    "prompt": "It is the last day of the month, and your team is close to its target. A team member asks if the team can skip a required safety check today to save time. What is the best response?",
+    "choices": [
+      "Say no, help the team where you can, and warn your manager early that the target may be missed.",
+      "Say no, because the check is required, and accept that the team may miss the target this month.",
+      "Allow it for the last few hours only, as long as everyone promises to be extra careful.",
+      "Allow it today, since the target matters a lot and nothing has gone wrong in the past."
+    ],
+    "answer": {
+      "points": [
+        3,
+        2,
+        1,
+        0
+      ]
+    },
+    "explanation": "Best (3): \"Say no, help, warn early\". Safety comes before targets. Helping gives the team the best safe chance of reaching the target, and an early warning lets your manager plan if it is missed. \"Say no and accept a miss\" (2): Keeps people safe, but does nothing to help the team, and your manager may be surprised by a missed target. \"Allow it for a few hours\" (1): A required check is still skipped. \"Allow it today\" (0): Puts people at risk for a number.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.jm.harassment-reported-in-confidence",
+    "type": "sjt",
+    "section": "workplace_judgement",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "behavioral.ethics.integrity",
+    "secondary_skill_codes": [
+      "behavioral.leadership.people_management"
+    ],
+    "prompt": "A team member tells you that a colleague keeps making comments about their appearance, and it makes them uncomfortable. They ask you to keep it secret. What is the best response?",
+    "choices": [
+      "Ask them to write down exactly what happened, so that you have a record, and say you will think about it.",
+      "Suggest they ignore the comments, since the colleague probably means no harm by them.",
+      "Thank them, explain you must act but will tell only those who need to know, and follow the company process.",
+      "Promise to keep it secret, and watch the colleague closely yourself for the next few weeks."
+    ],
+    "answer": {
+      "points": [
+        2,
+        0,
+        3,
+        1
+      ]
+    },
+    "explanation": "Best (3): \"Be honest about what you must do, protect privacy, follow the process\". A manager cannot ignore a harassment report, but can keep it as private as possible and protect the person who spoke up. \"Ask them to write it down\" (2): A useful record, but no clear action or support, and the person is left unsure. \"Promise secrecy\" (1): A promise you should not make, and the comments may go on. \"Suggest ignoring it\" (0): Dismisses a real complaint and lets the harassment continue.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.jm.wrong-schedule-sent",
+    "type": "sjt",
+    "section": "workplace_judgement",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "behavioral.ownership.accountability",
+    "secondary_skill_codes": [
+      "behavioral.communication.clarity"
+    ],
+    "prompt": "You shared next week's work schedule with the team. A team member points out that you gave two people the same day off, and one shift now has nobody on it. What do you do first?",
+    "choices": [
+      "Leave it for now, and find someone to cover the empty shift at the last minute if needed.",
+      "Thank them, correct the schedule, and tell the team that the error was yours.",
+      "Correct the schedule, and send it out again quietly without any comment or explanation.",
+      "Ask one of the two people to give up their day off, since that is the quickest fix."
+    ],
+    "answer": {
+      "points": [
+        0,
+        3,
+        2,
+        1
+      ]
+    },
+    "explanation": "Best (3): \"Thank, fix and own it openly\". Fixes the gap at once and shows the team that mistakes are owned, which encourages them to speak up too. \"Fix it without comment\" (2): The gap is fixed, but people may miss the change and nobody learns why. \"Ask someone to give up their day off\" (1): Makes a team member pay for your error. \"Leave it\" (0): A known gap in the schedule risks an empty shift.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.jm.new-starter-afraid-to-ask",
+    "type": "sjt",
+    "section": "workplace_judgement",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "behavioral.leadership.mentorship",
+    "secondary_skill_codes": [
+      "behavioral.leadership.people_management"
+    ],
+    "prompt": "A new team member has been with you for three weeks. They work hard but still make basic mistakes, and they seem afraid to ask questions. What is the best response?",
+    "choices": [
+      "Tell them clearly that the mistakes must stop now, or they will not pass their trial period at the end.",
+      "Meet them privately, give them a written list of their mistakes so far, and ask them to study it.",
+      "Book them onto a training course as soon as one is available, to build up their basic skills.",
+      "Hold short regular check-ins, say questions are welcome, and pair them with an experienced colleague."
+    ],
+    "answer": {
+      "points": [
+        0,
+        1,
+        2,
+        3
+      ]
+    },
+    "explanation": "Best (3): \"Regular check-ins, permission to ask, a buddy\". Deals with the real problem, fear of asking, and gives daily support. \"Training course\" (2): May help with skills, but not soon, and it does not address their fear of asking. \"Written list of mistakes\" (1): Feels like criticism and does not help them ask. \"Threaten the trial period\" (0): Makes the fear worse.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.jm.pay-rise-no-budget",
+    "type": "sjt",
+    "section": "workplace_judgement",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "behavioral.communication.clarity",
+    "secondary_skill_codes": [
+      "behavioral.leadership.people_management"
+    ],
+    "prompt": "A strong team member asks you for a pay rise. You think they deserve one, but your own manager has said there is no budget for rises this year and no exceptions. What is the best response?",
+    "choices": [
+      "Thank them, and promise them a rise next year, which should keep them motivated in the meantime.",
+      "Ask your own manager again whether an exception is possible, and tell the team member you will come back to them.",
+      "Say you value their work, but there is no budget, so you will agree a date to review it again.",
+      "Suggest they look for another job if pay matters that much, as there is no budget here."
+    ],
+    "answer": {
+      "points": [
+        1,
+        2,
+        3,
+        0
+      ]
+    },
+    "explanation": "Best (3): \"Honest, appreciative, with a clear next step\". The person knows where they stand and that their work is valued. \"Ask again for an exception\" (2): Shows support, but raises hope when you have already been told there are no exceptions. \"Promise next year\" (1): A promise you cannot control may be broken. \"Suggest another job\" (0): Pushes a strong team member out.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.jm.late-due-to-childcare",
+    "type": "sjt",
+    "section": "workplace_judgement",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "behavioral.leadership.people_management",
+    "secondary_skill_codes": [
+      "behavioral.problem_solving.pragmatism"
+    ],
+    "prompt": "A team member has been 15 to 20 minutes late three times this week. When you ask, they say they have new childcare problems. Their late arrival leaves the team short at the start of each shift. What is the best response?",
+    "choices": [
+      "Tell them you understand, and let them arrive late until their childcare is sorted out.",
+      "Say nothing more to them, but quietly take the lost time from their pay each week.",
+      "Give them a formal warning in private, since start times apply to everyone in the team equally.",
+      "Listen, discuss options such as a temporary start time, and agree clearly what happens from next week."
+    ],
+    "answer": {
+      "points": [
+        2,
+        0,
+        1,
+        3
+      ]
+    },
+    "explanation": "Best (3): \"Understand, find options, agree clearly\". Supports the person and protects the team, with a clear agreement both can rely on. \"Let them be late for now\" (2): Kind, but there is no end date, and the team still starts short. \"Formal warning\" (1): Rules matter, but a warning ignores a real problem that could be solved. \"Cut pay without telling them\" (0): Unfair and not transparent.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.jm.asked-to-inflate-results",
+    "type": "sjt",
+    "section": "workplace_judgement",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "behavioral.ethics.integrity",
+    "secondary_skill_codes": [
+      "behavioral.communication.clarity"
+    ],
+    "prompt": "Your manager asks you to report your team's monthly results as higher than they really are, because a review is coming. They say it is only this once. What is the best response?",
+    "choices": [
+      "Make the numbers a little higher, but not as high as your manager asked for.",
+      "Say respectfully that you cannot report wrong numbers, as it would mislead people, and offer a plan.",
+      "Report the real numbers without discussing the request with your manager.",
+      "Ask your manager to put the request in writing before you do anything about it."
+    ],
+    "answer": {
+      "points": [
+        0,
+        3,
+        2,
+        1
+      ]
+    },
+    "explanation": "Best (3): \"Decline respectfully and offer an honest plan\". Stays honest and gives the manager a useful way forward. \"Report the real numbers silently\" (2): Honest, but the manager is surprised and the relationship suffers. \"Ask for it in writing\" (1): May protect you, but it suggests you would report false numbers if asked in writing. \"Inflate a little\" (0): Still false reporting.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.jm.rumours-of-job-cuts",
+    "type": "sjt",
+    "section": "workplace_judgement",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "behavioral.communication.clarity",
+    "secondary_skill_codes": [
+      "behavioral.ethics.integrity"
+    ],
+    "prompt": "There are rumours that your company will cut jobs. Your team asks you directly if their jobs are safe. You have been told in confidence that changes are being discussed, but nothing is decided. What is the best response?",
+    "choices": [
+      "Say nothing is decided yet, that you cannot share everything, and that you will update them soon.",
+      "Ask your own manager what you are allowed to say, and promise the team an update as soon as you know.",
+      "Tell them their jobs are safe, so that they stay calm and keep working well.",
+      "Tell them you have not heard anything about job cuts, which means they should not worry."
+    ],
+    "answer": {
+      "points": [
+        3,
+        2,
+        0,
+        1
+      ]
+    },
+    "explanation": "Best (3): \"Honest within the limits of confidentiality\". Does not lie, keeps the confidence, and promises only what you can deliver. \"Ask what you can say\" (2): Sensible, but the team gets no answer now. \"Say you have heard nothing\" (1): A lie that will damage trust when the truth comes out. \"Say jobs are safe\" (0): A false promise about people's jobs.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.jm.complaint-went-over-your-head",
+    "type": "sjt",
+    "section": "workplace_judgement",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "behavioral.collaboration.conflict",
+    "secondary_skill_codes": [
+      "behavioral.communication.listening"
+    ],
+    "prompt": "You learn that a team member complained to your own manager about how you share out work. They did not raise it with you first. What is the best response?",
+    "choices": [
+      "Say calmly to the team member that, in future, any complaint about you must come to you first.",
+      "Ask the team member for a calm talk, listen to their concern, and check honestly if it is fair.",
+      "Ask your own manager for the details of the complaint before you do anything.",
+      "Give them less interesting work for a while, so they learn to come to you first."
+    ],
+    "answer": {
+      "points": [
+        1,
+        3,
+        2,
+        0
+      ]
+    },
+    "explanation": "Best (3): \"Listen and check honestly\". Deals with the concern itself, not with who they told. \"Get details from your manager first\" (2): Useful, but delays the direct conversation and may look defensive. \"Tell them to come to you first\" (1): Focuses on the route instead of the problem, and may discourage people from raising issues. \"Punish them\" (0): Retaliation is unfair and damages trust in the whole team.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.jm.team-member-suggests-change",
+    "type": "sjt",
+    "section": "workplace_judgement",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "behavioral.leadership.decision_making",
+    "secondary_skill_codes": [
+      "behavioral.problem_solving.pragmatism"
+    ],
+    "prompt": "A team member suggests a new way of doing a routine task. It could save time, but it would change how everyone works, and you are not sure it will work. What is the best response?",
+    "choices": [
+      "Thank them, and agree a small trial with a few volunteers, so the team can see if it works first.",
+      "Thank them, and discuss it at the next team meeting, where everyone can give their view first.",
+      "Say the current way works fine, so there is no real need to change it at the moment.",
+      "Tell the whole team to start using the new way from next week, since it could save time."
+    ],
+    "answer": {
+      "points": [
+        3,
+        2,
+        0,
+        1
+      ]
+    },
+    "explanation": "Best (3): \"Small trial with volunteers\". Tests the idea at low risk, involves the team, values the suggestion, and gives real results before everyone has to change. \"Discuss at the team meeting\" (2): Involves the team, but opinions alone cannot show whether it works. \"Change for everyone at once\" (1): Risky, because a change for everyone is made without testing it. \"Reject it\" (0): Discourages ideas and may miss a real improvement.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.jm.reliable-member-overworking",
+    "type": "sjt",
+    "section": "workplace_judgement",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "behavioral.leadership.people_management",
+    "secondary_skill_codes": [
+      "behavioral.communication.listening"
+    ],
+    "prompt": "One of your most reliable team members has stayed late every day for a month. They have started speaking sharply to colleagues, but they say they are fine. What is the best response?",
+    "choices": [
+      "Leave it, since they say they are fine and the work is still getting done on time.",
+      "Tell them they must leave on time every day from now on, because their health matters more than the work.",
+      "Remind them privately that they must stay polite to colleagues, whatever the pressure they feel.",
+      "Talk privately, look at their workload together, and move some tasks so they can work normal hours."
+    ],
+    "answer": {
+      "points": [
+        0,
+        2,
+        1,
+        3
+      ]
+    },
+    "explanation": "Best (3): \"Look at the workload together and rebalance\". Deals with the cause, not just the signs. \"Order them to leave on time\" (2): Protects their health, but the work still needs to be done somewhere. \"Remind them to be polite\" (1): Treats the sign, not the cause. \"Leave it\" (0): Burnout gets worse and may lead to illness or the person leaving.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.jm.shifts-blame-each-other",
+    "type": "sjt",
+    "section": "workplace_judgement",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "behavioral.collaboration.cross_functional",
+    "secondary_skill_codes": [
+      "behavioral.leadership.setting_norms"
+    ],
+    "prompt": "The morning and evening shifts in your team keep blaming each other for work left unfinished at handover. Customers have started to notice. What is the best response?",
+    "choices": [
+      "Tell both shifts to stop complaining about each other and just finish their own work.",
+      "Find out which shift is mostly at fault, and give the people on that shift a warning.",
+      "Meet people from both shifts, agree a short handover checklist together, and check it is used.",
+      "Write a clear handover checklist yourself, since you know the work, and tell both shifts to use it."
+    ],
+    "answer": {
+      "points": [
+        0,
+        1,
+        3,
+        2
+      ]
+    },
+    "explanation": "Best (3): \"Agree a checklist together and follow up\". Fixes the process rather than the blame, and people follow rules they helped make. \"Write the checklist yourself\" (2): Fixes the process quickly, but without the shifts' input it may miss real problems. \"Find who is at fault\" (1): Increases the blame and does not fix the handover. \"Tell them to stop complaining\" (0): Ignores a problem customers can already see.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.jm.false-safety-record",
+    "type": "sjt",
+    "section": "workplace_judgement",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "behavioral.ethics.safety",
+    "secondary_skill_codes": [
+      "behavioral.ethics.integrity"
+    ],
+    "prompt": "You find that a team member ticked a safety check as done when it was not. When you ask, they say they forgot and then felt embarrassed. What do you do first?",
+    "choices": [
+      "Give them a final warning straight away, so the whole team learns that records must always be true.",
+      "Do the check yourself straight away, and decide later what you want to say to the team member about it.",
+      "Correct the record quietly yourself, so that nobody gets into trouble over one single honest mistake.",
+      "Get the check done now, since safety comes first, then follow the process for the false record."
+    ],
+    "answer": {
+      "points": [
+        1,
+        2,
+        0,
+        3
+      ]
+    },
+    "explanation": "Best (3): \"Make it safe, then address it properly\". Safety first, then a calm, fair response that follows the process. \"Do it yourself, decide later\" (2): Safe, but the false record is not addressed. \"Final warning to make an example\" (1): Too harsh before following the process, and it uses one person to send a message. \"Correct the record quietly\" (0): Hides a safety failure.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.jm.after-big-deadline",
+    "type": "sjt",
+    "section": "workplace_judgement",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "behavioral.leadership.people_management",
+    "secondary_skill_codes": [],
+    "prompt": "Your team worked very hard for two months and met a big deadline. Many people look tired. Next month will be quieter. What is the best response?",
+    "choices": [
+      "Send a thank-you email to the team, and copy in senior management so that they see the effort.",
+      "Say nothing special, as meeting deadlines is part of everyone's job and they are paid for it.",
+      "Thank people for specific efforts, and let them take some time off in the quieter month.",
+      "Set a higher target for next month, since the team has shown what it can really do."
+    ],
+    "answer": {
+      "points": [
+        2,
+        0,
+        3,
+        1
+      ]
+    },
+    "explanation": "Best (3): \"Specific thanks and time to recover\". Recognises the real effort and, within the company's leave rules, lets tired people recover before the next busy period. \"Thank-you email\" (2): Good recognition, but tired people get no time to recover. \"Raise the target\" (1): Exhausts tired people further. \"Say nothing\" (0): People feel their extra effort went unnoticed.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.jm.friend-wants-best-shifts",
+    "type": "sjt",
+    "section": "workplace_judgement",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "behavioral.leadership.setting_norms",
+    "secondary_skill_codes": [
+      "behavioral.leadership.people_management"
+    ],
+    "prompt": "You have just been promoted to lead your former colleagues. A close friend on the team asks you for the best shifts, saying you owe them. What is the best response?",
+    "choices": [
+      "Explain kindly that you must treat everyone the same, so shifts will follow one rule for all.",
+      "Give your friend a few of the good shifts this month, then go back to treating everyone the same.",
+      "Ask the whole team for their shift preferences, and share shifts out using the same rule for everyone.",
+      "Give your friend the best shifts, since they supported you for many years before your promotion."
+    ],
+    "answer": {
+      "points": [
+        3,
+        1,
+        2,
+        0
+      ]
+    },
+    "explanation": "Best (3): \"Kind but clear: same rule for all\". Keeps the friendship honest and the team's trust. \"Ask everyone and use one rule\" (2): Fair, but avoids answering the friend directly, so the request may come back. \"A few good shifts\" (1): Still favouritism, and the team will notice. \"Best shifts to your friend\" (0): Clear favouritism.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.jm.refuses-new-system",
+    "type": "sjt",
+    "section": "workplace_judgement",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "behavioral.leadership.people_management",
+    "secondary_skill_codes": [
+      "behavioral.leadership.setting_norms"
+    ],
+    "prompt": "Your company has a new system for recording work. One experienced team member refuses to use it and keeps using the old way. Their results are still good. What is the best response?",
+    "choices": [
+      "Let them keep the old way, because their results are good and the system matters less.",
+      "Ask privately what worries them, offer help to learn it, and agree a date to start using it.",
+      "Tell the rest of the team that this person is refusing to follow the rules on the new system.",
+      "Remind them in writing that the new system is required, and that you expect them to start using it."
+    ],
+    "answer": {
+      "points": [
+        1,
+        3,
+        0,
+        2
+      ]
+    },
+    "explanation": "Best (3): \"Understand, support, set a clear date\". Deals with the reason for refusing and makes the expectation clear. \"Written reminder\" (2): Clear, but does not find out why they refuse. \"Let them keep the old way\" (1): Unfair to others and leaves records split between two systems. \"Tell the team\" (0): Public shaming.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.jm.quiet-member-in-meetings",
+    "type": "sjt",
+    "section": "workplace_judgement",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "behavioral.leadership.setting_norms",
+    "secondary_skill_codes": [
+      "behavioral.communication.listening"
+    ],
+    "prompt": "In team meetings, two confident people do most of the talking. A quieter team member has good ideas, but shares them only with you in private. What is the best response?",
+    "choices": [
+      "Change how meetings run, for example by asking everyone in turn, so that all views are heard.",
+      "Leave meetings as they are, since the confident people keep things moving quickly.",
+      "Encourage the quiet team member to be more confident and speak up more in meetings.",
+      "Present the quiet team member's ideas in meetings yourself, saying clearly they came from them."
+    ],
+    "answer": {
+      "points": [
+        3,
+        0,
+        1,
+        2
+      ]
+    },
+    "explanation": "Best (3): \"Change how meetings run\". Makes it easy for everyone to contribute, not only this person. \"Present their ideas for them\" (2): Gets the ideas heard and gives credit, but does not change the meetings. \"Tell them to speak up\" (1): Puts the whole burden on the quieter person. \"Leave it\" (0): Good ideas are lost.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.jm.manager-asks-who-to-blame",
+    "type": "sjt",
+    "section": "workplace_judgement",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "behavioral.ownership.accountability",
+    "secondary_skill_codes": [
+      "behavioral.leadership.people_management"
+    ],
+    "prompt": "Your team missed an important target. In a meeting, your own manager asks which team member is to blame. What is the best response?",
+    "choices": [
+      "Ask for a day to look into what happened, so that you can give your manager a fair and accurate answer.",
+      "Explain the real causes as you see them, accept your part as leader, and share a plan to fix them.",
+      "Say the team did everything right and that the target was never realistic in the first place.",
+      "Name the team member who made the biggest mistake, since your manager asked you directly."
+    ],
+    "answer": {
+      "points": [
+        2,
+        3,
+        0,
+        1
+      ]
+    },
+    "explanation": "Best (3): \"Real causes, own your part, a plan\". Takes leadership responsibility and focuses on fixing the problem. \"Ask for a day\" (2): Careful, but you should already know the main causes. \"Name one person\" (1): Blames one person for a team result and damages trust. \"Deny any problem\" (0): Avoids responsibility.",
+    "expected_time_s": 60
+  }
+]

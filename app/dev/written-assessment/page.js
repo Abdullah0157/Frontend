@@ -4,7 +4,11 @@
 import { notFound } from 'next/navigation'
 import WrittenAssessment from '@/components/WrittenAssessment'
 
-export default function DevWrittenAssessment() {
+// ?track=general&level=staff, ?track=customer_service&level=agent&profile=chat
+export default function DevWrittenAssessment({ searchParams }) {
   if (process.env.NODE_ENV === 'production') notFound()
-  return <div className="pt-10"><WrittenAssessment track="backend" level="L3" /></div>
+  const track = searchParams?.track || 'backend'
+  const level = searchParams?.level || 'L3'
+  const options = searchParams?.profile ? { typingProfile: searchParams.profile } : {}
+  return <div className="pt-10"><WrittenAssessment track={track} level={level} options={options} /></div>
 }

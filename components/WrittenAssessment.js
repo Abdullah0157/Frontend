@@ -7,7 +7,71 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 // The server owns the timer, the order and the scoring; this component only
 // shows what /api/assessment/* returns and sends answers back.
 
-const LEVEL_LABELS = { L2: 'Junior', L3: 'Mid', L4: 'Senior', L5: 'Lead' }
+const LEVEL_LABELS = { L2: 'Junior', L3: 'Mid', L4: 'Senior', L5: 'Lead', staff: 'Staff', manager: 'Manager', agent: 'Agent' }
+
+// Typing test: the passage on top, a box below. The 2-minute timer starts at
+// the first key press; pasting is blocked and counted; the gaps between key
+// presses are summarised (very regular sub-15 ms gaps suggest an auto-typer).
+function TypingTask({ item, onDone, disabled, resultRef }) {
+  const [typed, setTyped] = useState('')
+  const [startedAt, setStartedAt] = useState(null)
+  const [left, setLeft] = useState(item.seconds || 120)
+  const keys = useRef({ last: null, intervals: [], pastes: 0 })
+  const doneRef = useRef(false)
+
+  const snapshot = useCallback(() => {
+    const iv = keys.current.intervals
+    const mean = iv.length ? iv.reduce((a, b) => a + b, 0) / iv.length : null
+    return {
+      typed,
+      elapsedMs: startedAt ? Math.min(Date.now() - startedAt, (item.seconds || 120) * 1000) : 0,
+      pasteAttempts: keys.current.pastes,
+      stats: { keystrokes: iv.length + (iv.length ? 1 : 0), fastShare: iv.length ? iv.filter((x) => x < 15).length / iv.length : 0, meanMs: mean },
+    }
+  }, [typed, startedAt, item.seconds])
+  resultRef.current = snapshot
+
+  useEffect(() => {
+    if (!startedAt) return
+    const t = setInterval(() => {
+      const remaining = Math.max(0, (item.seconds || 120) - Math.floor((Date.now() - startedAt) / 1000))
+      setLeft(remaining)
+      if (remaining === 0 && !doneRef.current) { doneRef.current = true; onDone() }
+    }, 250)
+    return () => clearInterval(t)
+  }, [startedAt, item.seconds, onDone])
+
+  return (
+    <div className="mt-6 grid gap-4">
+      <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5 text-slate-800 leading-relaxed select-none" onCopy={(e) => e.preventDefault()}>
+        {item.passage}
+      </div>
+      <div className="flex items-center justify-between text-xs text-slate-500">
+        <span>{startedAt ? 'Keep typing…' : 'The timer starts when you press the first key.'}</span>
+        <span className={`font-mono tabular-nums text-sm px-3 py-1 rounded-full ${left <= 15 ? 'bg-red-50 text-red-600' : 'bg-slate-100 text-slate-700'}`}>{fmt(left)}</span>
+      </div>
+      <textarea
+        rows={8}
+        value={typed}
+        disabled={disabled || left === 0}
+        spellCheck={false}
+        autoCorrect="off"
+        autoCapitalize="off"
+        onPaste={(e) => { e.preventDefault(); keys.current.pastes += 1 }}
+        onDrop={(e) => e.preventDefault()}
+        onKeyDown={() => {
+          const now = performance.now()
+          if (!startedAt) setStartedAt(Date.now())
+          if (keys.current.last != null && keys.current.intervals.length < 5000) keys.current.intervals.push(now - keys.current.last)
+          keys.current.last = now
+        }}
+        onChange={(e) => setTyped(e.target.value)}
+        placeholder="Start typing the text above here…"
+        className="w-full px-5 py-4 rounded-2xl border border-slate-300 bg-white text-slate-900 focus:border-indigo-500 outline-none resize-y"
+      />
+    </div>
+  )
+}
 const STORE_KEY = 'jobstream.written-assessment'
 
 function readStore() {
@@ -151,7 +215,7 @@ function useIntegrity(session, itemId) {
   return flush
 }
 
-export default function WrittenAssessment({ track = 'backend', level = null, jobId = null, allowedLanguages = null, returnTo = null }) {
+export default function WrittenAssessment({ track = 'backend', level = null, jobId = null, allowedLanguages = null, options: testOptions = {}, returnTo = null }) {
   const [options, setOptions] = useState(null)
   const [chosenLevel, setChosenLevel] = useState(level || 'L3')
   const [language, setLanguage] = useState('')
@@ -168,6 +232,7 @@ export default function WrittenAssessment({ track = 'backend', level = null, job
   const [code, setCode] = useState('')
   const [runResult, setRunResult] = useState(null)
   const shownAt = useRef(Date.now())
+  const typingRef = useRef(null)
   const autoSubmitted = useRef(null)
 
   const api = useCallback(async (path, { method = 'GET', body } = {}) => {
@@ -186,7 +251,7 @@ export default function WrittenAssessment({ track = 'backend', level = null, job
 
   // Options + resume after a page reload.
   useEffect(() => {
-    fetch('/api/assessment/start').then((r) => r.json()).then((o) => {
+    fetch(`/api/assessment/start?track=${encodeURIComponent(track)}&level=${encodeURIComponent(level || 'L3')}`).then((r) => r.json()).then((o) => {
       // The track decides which languages make sense (no Python for Frontend),
       // and a job may narrow that further.
       const trackLangs = o.tracks?.find((t) => t.key === track)?.languages
@@ -226,7 +291,7 @@ export default function WrittenAssessment({ track = 'backend', level = null, job
       const data = await fetch('/api/assessment/start', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ mode: 'written', track, level: chosenLevel, language, jobId }),
+        body: JSON.stringify({ mode: 'written', track, level: chosenLevel, language: usesCode ? language : null, jobId, options: testOptions }),
       }).then(async (r) => { const d = await r.json(); if (!r.ok) throw new Error(d.error || 'Could not start'); return d })
       const s = { id: data.sessionId, token: data.token || null, jobId }
       setSession(s); writeStore(s)
@@ -256,6 +321,7 @@ export default function WrittenAssessment({ track = 'backend', level = null, job
     else if (item.type === 'mcq' || item.type === 'sjt') response = { choice }
     else if (item.type === 'multi_select') response = { choices }
     else if (item.type === 'coding') response = { code }
+    else if (item.type === 'typing') response = typingRef.current ? typingRef.current() : {}
     else response = { text }
     setError(''); setBusy(true)
     flushIntegrity()
@@ -294,7 +360,10 @@ export default function WrittenAssessment({ track = 'backend', level = null, job
   }
 
   const item = state?.item
+  const usesCode = options?.preview ? options.preview.usesCode : true
+  const wordCount = text.trim() ? text.trim().split(/\s+/).length : 0
   const canSubmit = item && !busy && (
+    item.type === 'typing' ||
     ((item.type === 'mcq' || item.type === 'sjt') && choice != null) ||
     (item.type === 'multi_select' && choices.length > 0) ||
     (item.type === 'coding' && code.trim()) ||
@@ -303,6 +372,7 @@ export default function WrittenAssessment({ track = 'backend', level = null, job
   const card = 'bg-white border border-slate-200 rounded-[2.5rem] p-6 md:p-12 shadow-xl shadow-indigo-500/5'
   const primary = 'btn-style-9 group uppercase tracking-widest text-xs shadow-2xl !px-10 !py-4 rounded-full font-black disabled:opacity-60 disabled:cursor-not-allowed justify-center'
   const trackLabel = options?.tracks?.find((t) => t.key === track)?.label || track
+  const preview = options?.preview
 
   return (
     <div className="pb-10">
@@ -322,10 +392,12 @@ export default function WrittenAssessment({ track = 'backend', level = null, job
           <div className={card}>
             <div className="grid gap-6">
               <p className="text-slate-600 text-sm leading-relaxed">
-                This assessment has a few timed sections: core knowledge, a coding task, a code review and
-                real work situations. Each section has its own timer, which starts when you press Begin on
-                that section. You cannot go back to a previous question. Use a computer for the coding part.
-                If you need extra time for a disability or health reason, ask the company before you start.
+                {preview
+                  ? `This assessment takes about ${preview.totalMinutes} minutes and has ${preview.sections.length} timed sections: ${preview.sections.map((x) => `${x.label.toLowerCase()} (${x.minutes} min)`).join(', ')}. `
+                  : 'This assessment has a few timed sections. '}
+                Each section has its own timer, which starts when you press Begin on that section. You cannot go
+                back to a previous question.{usesCode ? ' Use a computer for the coding part.' : ''} If you need
+                extra time for a disability or health reason, ask the company before you start.
               </p>
               <p className="text-slate-500 text-xs leading-relaxed">
                 Please work on your own. During the test we note when you leave this page and when text is pasted
@@ -341,14 +413,16 @@ export default function WrittenAssessment({ track = 'backend', level = null, job
                     </select>
                   </label>
                 )}
-                <label className="grid gap-2 text-sm">
-                  <span className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Coding language</span>
-                  <select value={language} onChange={(e) => setLanguage(e.target.value)} className="rounded-xl border border-slate-300 px-4 py-3 bg-white">
-                    {(options?.languages || []).map((l) => <option key={l.key} value={l.key}>{l.label}</option>)}
-                  </select>
-                </label>
+                {usesCode && (
+                  <label className="grid gap-2 text-sm">
+                    <span className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Coding language</span>
+                    <select value={language} onChange={(e) => setLanguage(e.target.value)} className="rounded-xl border border-slate-300 px-4 py-3 bg-white">
+                      {(options?.languages || []).map((l) => <option key={l.key} value={l.key}>{l.label}</option>)}
+                    </select>
+                  </label>
+                )}
               </div>
-              <button type="button" onClick={start} disabled={busy || !language} className={primary}>
+              <button type="button" onClick={start} disabled={busy || !options || (usesCode && !language)} className={primary}>
                 <div className="btn-shimmer"></div><span>{busy ? 'Preparing…' : 'Start assessment'}</span>
               </button>
             </div>
@@ -413,13 +487,24 @@ export default function WrittenAssessment({ track = 'backend', level = null, job
             )}
 
             {(item.type === 'code_review' || item.type === 'scenario_response') && (
-              <textarea
-                rows={10}
-                value={text}
-                onChange={(e) => setText(e.target.value)}
-                placeholder={item.type === 'code_review' ? 'List the problems, most serious first, and how you would fix each…' : 'Your answer…'}
-                className="w-full mt-8 px-5 py-4 rounded-2xl border border-slate-300 bg-white text-slate-900 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none resize-y"
-              />
+              <>
+                <textarea
+                  rows={10}
+                  value={text}
+                  onChange={(e) => setText(e.target.value)}
+                  placeholder={item.type === 'code_review' ? 'List the problems, most serious first, and how you would fix each…' : 'Write your answer here…'}
+                  className="w-full mt-8 px-5 py-4 rounded-2xl border border-slate-300 bg-white text-slate-900 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none resize-y"
+                />
+                {item.minWords && (
+                  <p className={`text-xs mt-2 ${wordCount < item.minWords || wordCount > item.maxWords ? 'text-amber-700' : 'text-slate-500'}`}>
+                    {wordCount} words (aim for {item.minWords} to {item.maxWords})
+                  </p>
+                )}
+              </>
+            )}
+
+            {item.type === 'typing' && (
+              <TypingTask key={item.id} item={item} disabled={busy} resultRef={typingRef} onDone={() => submit()} />
             )}
 
             {item.type === 'coding' && (

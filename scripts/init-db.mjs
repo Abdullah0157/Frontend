@@ -392,7 +392,7 @@ CREATE UNIQUE INDEX IF NOT EXISTS idx_items_bank_key ON items(bank_key) WHERE ba
 CREATE INDEX IF NOT EXISTS idx_items_section ON items(section, status) WHERE section IS NOT NULL;
 ALTER TABLE items DROP CONSTRAINT IF EXISTS items_type_check;
 ALTER TABLE items ADD CONSTRAINT items_type_check CHECK (type IN (
-  'mcq','multi_select','sjt','coding','code_review',
+  'mcq','multi_select','sjt','coding','code_review','typing',
   'scenario_response','voice_response','video_response','system_design'));
 
 ALTER TABLE assessment_sessions ADD COLUMN IF NOT EXISTS track             text;

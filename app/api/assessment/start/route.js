@@ -8,9 +8,11 @@ import { currentUser, errorResponse } from '@/lib/written-api'
 
 export const dynamic = 'force-dynamic'
 
-// GET /api/assessment/start -> the tracks, levels and coding languages on offer.
-export async function GET() {
-  return NextResponse.json(startOptions())
+// GET /api/assessment/start[?track=&level=] -> families, tracks, levels and
+// coding languages on offer, plus a preview of that test's sections.
+export async function GET(req) {
+  const url = new URL(req.url)
+  return NextResponse.json(startOptions({ track: url.searchParams.get('track'), level: url.searchParams.get('level') }))
 }
 
 // Written assessment (sectioned, timed, per-candidate form).
@@ -28,6 +30,7 @@ async function startWritten(req, body) {
       language: body.language,
       jobId: body.jobId || null,
       disabledSections: Array.isArray(body.disabledSections) ? body.disabledSections : [],
+      options: body.options && typeof body.options === 'object' ? body.options : {},
       userAgent: req.headers.get('user-agent'),
     })
     const state = await getState(await loadSession(sessionId))

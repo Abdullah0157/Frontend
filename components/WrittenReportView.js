@@ -51,7 +51,8 @@ export default function WrittenReportView({ data }) {
           <p className="text-[10px] font-black uppercase tracking-[0.4em] text-indigo-600 mb-2">Written assessment report</p>
           <h1 className="text-3xl md:text-4xl font-black text-slate-900">{data.candidate.name}</h1>
           <p className="text-slate-500 text-sm mt-2">
-            Software engineering · {data.test.track} · {LEVEL[data.test.level] || data.test.level} · coded in {data.test.language}
+            {data.test.familyLabel || 'Assessment'} · {data.test.trackLabel || data.test.track} · {data.test.levelLabel || LEVEL[data.test.level] || data.test.level}
+            {data.test.language && ` · coded in ${data.test.language}`}
             {data.test.completedAt && ` · ${new Date(data.test.completedAt).toLocaleDateString('en-GB', { timeZone: 'UTC', day: 'numeric', month: 'short', year: 'numeric' })}`}
           </p>
         </div>
@@ -117,6 +118,39 @@ export default function WrittenReportView({ data }) {
           {weakAll.length > weak.length && <p className="text-xs text-slate-400 mt-2">and {weakAll.length - weak.length} more weak areas</p>}
         </Card>
       </div>
+
+      {(data.typing || []).map((t, i) => (
+        <Card key={`t${i}`} title="Typing test" right={t.passed != null && (
+          <span className={`px-3 py-1 rounded-full border text-xs font-bold ${t.passed ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-amber-50 text-amber-700 border-amber-200'}`}>
+            {t.passed ? 'Passed the pass mark' : 'Below the pass mark'}
+          </span>
+        )}>
+          <div className="grid grid-cols-3 gap-4 text-center">
+            <div><p className="text-3xl font-black text-slate-900">{t.netWpm ?? '—'}</p><p className="text-xs text-slate-500">net words per minute</p></div>
+            <div><p className="text-3xl font-black text-slate-900">{t.accuracy != null ? `${t.accuracy}%` : '—'}</p><p className="text-xs text-slate-500">accuracy</p></div>
+            <div><p className="text-3xl font-black text-slate-900">{t.passMarks ? `${t.passMarks.net_wpm} / ${t.passMarks.accuracy}%` : '—'}</p><p className="text-xs text-slate-500">pass mark</p></div>
+          </div>
+        </Card>
+      ))}
+
+      {(data.writing || []).map((w, i) => (
+        <Card key={`w${i}`} title="Written answer" right={w.score != null && <span className="text-sm font-black text-slate-900">{Math.round(w.score * 100)}%</span>}>
+          <p className="text-sm text-slate-700 mb-3">{w.task}</p>
+          {w.needsHumanReview && <p className="text-xs text-amber-700 mb-3">The two AI markers disagreed. Please read this answer yourself.</p>}
+          {w.markers[0]?.dimensions?.length > 0 && (
+            <div className="grid sm:grid-cols-2 gap-x-6 gap-y-1 mb-3">
+              {w.markers[0].dimensions.map((d) => (
+                <p key={d.name} className="text-xs text-slate-600 flex justify-between"><span>{d.name}</span><span className="font-bold">{Math.round(d.score * 100)}%</span></p>
+              ))}
+            </div>
+          )}
+          {w.markers[0]?.note && <p className="text-sm text-slate-600 mb-3">Marker: {w.markers[0].note}</p>}
+          <details>
+            <summary className="text-xs font-bold text-indigo-600 cursor-pointer">Show their answer{w.words != null ? ` (${w.words} words)` : ''}</summary>
+            <p className="mt-3 text-sm text-slate-700 whitespace-pre-wrap">{w.answer || '(no answer)'}</p>
+          </details>
+        </Card>
+      ))}
 
       {data.coding.map((c, i) => (
         <Card key={i} title="Coding task" right={c.tests && <span className="text-sm font-black text-slate-900">{c.tests.passed} of {c.tests.total} tests passed</span>}>

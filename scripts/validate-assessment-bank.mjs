@@ -56,6 +56,26 @@ for (const it of items.filter((i) => i.format === 'code_output')) {
 }
 rmSync(tmp, { recursive: true, force: true })
 
+// ── numbers: the keyed option must contain the result of `calc` ────────────
+import vm from 'node:vm'
+const numbersIn = (text) => (String(text).replace(/,(?=\d{3})/g, '').match(/-?\d+(\.\d+)?/g) || []).map(Number)
+for (const it of items.filter((i) => i.format === 'numbers' && i.calc)) {
+  let result
+  try {
+    result = Number(vm.runInNewContext(it.calc, Object.create(null), { timeout: 1000 }))
+  } catch (e) {
+    errors.push(`${it.bank_key}: calc does not run (${e.message})`)
+    continue
+  }
+  if (!Number.isFinite(result)) { errors.push(`${it.bank_key}: calc gives ${result}`); continue }
+  const hit = (i) => numbersIn(it.choices[i]).some((n) => Math.abs(n - result) < 0.006)
+  if (!hit(it.answer.correct)) {
+    errors.push(`${it.bank_key}: calc gives ${result}, which is not in the keyed option "${it.choices[it.answer.correct]}"`)
+  }
+  const others = it.choices.map((_, i) => i).filter((i) => i !== it.answer.correct && hit(i))
+  if (others.length) errors.push(`${it.bank_key}: calc result ${result} also appears in option(s) ${others.join(', ')}`)
+}
+
 // ── coding: reference passes everything, wrong solutions are caught ────────
 const codingResults = []
 for (const it of items.filter((i) => i.type === 'coding')) {
