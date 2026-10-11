@@ -70,7 +70,6 @@ export default function Header() {
     { href: '/about', label: 'About', show: true },
     { href: '/blog', label: 'Blog', show: true },
     { href: '/jobs', label: 'Find Jobs', show: isGuest || isCandidate },
-    { href: '/contact', label: 'For Companies', show: isGuest },
     { href: '/company', label: 'Dashboard', show: isCompany },
     { href: '/company/candidates', label: 'Candidates', show: isCompany },
   ]

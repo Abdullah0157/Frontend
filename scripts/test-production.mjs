@@ -78,6 +78,9 @@ test('public pages: no calls to the old hosted backend, honest home page, reset 
   const home = await (await fetch(`${BASE}/`)).text()
   assert.ok(!/hf\.space|glassdoor|Integrated with Global Leaders/i.test(home), 'no old backend or partner claims on the home page')
   assert.match(home, /How JobStream works|How it works/)
+  // Companies are invite-only and reached directly: the public pages never
+  // point visitors (candidates) at company pages.
+  assert.ok(!/For Companies|href="\/contact"|href="\/login\/company"/.test(home), 'no company links on public pages')
   const chatbot = await (await fetch(`${BASE}/chatbot.js`)).text()
   assert.ok(!/hf\.space/.test(chatbot), 'the chat widget uses our own routes')
   const about = await (await fetch(`${BASE}/about`)).text()
