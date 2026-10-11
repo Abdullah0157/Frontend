@@ -29,17 +29,17 @@ export default async function AdminCandidatesPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-ink">Candidates</h1>
-          <p className="text-muted mt-1">Showing {candidates.length} most recently active (max 200).</p>
+          <h1 className="text-3xl font-bold text-slate-900">Candidates</h1>
+          <p className="text-slate-500 mt-1">Showing {candidates.length} most recently active (max 200).</p>
         </div>
       </div>
 
-      <div className="bg-white rounded-2xl border border-line overflow-hidden">
+      <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
         {candidates.length === 0 ? (
-          <p className="p-10 text-center text-muted text-sm">No candidates yet.</p>
+          <p className="p-10 text-center text-slate-500 text-sm">No candidates yet.</p>
         ) : (
           <table className="w-full text-sm">
-            <thead className="bg-slate-50 text-muted text-xs font-bold">
+            <thead className="bg-slate-50 text-slate-500 text-xs font-black uppercase tracking-widest">
               <tr>
                 <th className="text-left px-6 py-3">Name</th>
                 <th className="text-left px-6 py-3">Resume</th>
@@ -52,23 +52,23 @@ export default async function AdminCandidatesPage() {
               {candidates.map((c) => (
                 <tr key={c.user_id} className="hover:bg-slate-50 transition-colors">
                   <td className="px-6 py-4 font-medium">
-                    <Link href={`/admin/candidates/${c.user_id}`} className="text-ink hover:text-brand hover:underline">
+                    <Link href={`/admin/candidates/${c.user_id}`} className="text-slate-900 hover:text-indigo-600 hover:underline">
                       {c.full_name || '(no name)'}
                     </Link>
                   </td>
-                  <td className="px-6 py-4 text-body text-xs">
+                  <td className="px-6 py-4 text-slate-600 text-xs">
                     {c.resume_filename ? (
                       <>
                         {c.resume_filename}
-                        {c.resume_pages && <span className="text-muted ml-2">· {c.resume_pages} pages</span>}
+                        {c.resume_pages && <span className="text-slate-500 ml-2">· {c.resume_pages} pages</span>}
                       </>
                     ) : (
-                      <span className="text-muted">no resume</span>
+                      <span className="text-slate-500">no resume</span>
                     )}
                   </td>
-                  <td className="px-6 py-4 text-right font-mono text-body">{(c.interview_count || 0) + (c.expert_count || 0)}</td>
-                  <td className="px-6 py-4 text-right text-xs text-muted">{new Date(c.created_at).toLocaleDateString()}</td>
-                  <td className="px-6 py-4 text-right text-xs text-muted">{new Date(c.updated_at).toLocaleDateString()}</td>
+                  <td className="px-6 py-4 text-right font-mono text-slate-700">{(c.interview_count || 0) + (c.expert_count || 0)}</td>
+                  <td className="px-6 py-4 text-right text-xs text-slate-500">{new Date(c.created_at).toLocaleDateString()}</td>
+                  <td className="px-6 py-4 text-right text-xs text-slate-500">{new Date(c.updated_at).toLocaleDateString()}</td>
                 </tr>
               ))}
             </tbody>

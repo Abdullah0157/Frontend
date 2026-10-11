@@ -48,7 +48,7 @@ export default function ResumeAnalyzer({ phase = 'idle', onClose, error = '' }) 
 
   return (
     <div className="fixed inset-0 z-[80] flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl border border-line overflow-hidden">
+      <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden">
         {/* Header */}
         <div className="px-7 pt-7 pb-5">
           <div className="flex items-center gap-3">
@@ -58,16 +58,16 @@ export default function ResumeAnalyzer({ phase = 'idle', onClose, error = '' }) 
               </span>
             ) : isDone ? (
               <span className="w-9 h-9 rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center">
-                <svg className="w-5 h-5 text-emerald-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.4}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                <svg className="w-5 h-5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.4}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
               </span>
             ) : (
               <span className="w-9 h-9 rounded-full border-2 border-indigo-200 border-t-indigo-600 animate-spin" />
             )}
             <div>
-              <p className="text-base font-bold text-ink">
+              <p className="text-base font-bold text-slate-900">
                 {isError ? 'Could not read your resume' : isDone ? 'Analysis complete' : 'Analyzing resume…'}
               </p>
-              <p className="text-xs text-muted">
+              <p className="text-xs text-slate-500">
                 {isError ? (error || 'Please try a different file.') : isDone ? 'All set — review the details below.' : 'Extracting the details from your resume.'}
               </p>
             </div>
@@ -77,8 +77,8 @@ export default function ResumeAnalyzer({ phase = 'idle', onClose, error = '' }) 
           {!isError && (
             <div className="mt-5">
               <div className="flex items-center justify-between mb-1.5">
-                <span className="text-xs font-bold text-muted">Progress</span>
-                <span className="text-sm font-bold tabular-nums text-brand">{pct}%</span>
+                <span className="text-[11px] font-bold uppercase tracking-widest text-slate-500">Progress</span>
+                <span className="text-sm font-black tabular-nums text-indigo-600">{pct}%</span>
               </div>
               <div className="h-2 rounded-full bg-slate-100 overflow-hidden">
                 <div
@@ -100,7 +100,9 @@ export default function ResumeAnalyzer({ phase = 'idle', onClose, error = '' }) 
                 return (
                   <li key={label} className="flex items-center gap-3 py-1.5">
                     <span
-                      className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 transition-colors ${ complete ? 'bg-emerald-500' : active ? 'bg-white border-2 border-indigo-300' : 'bg-white border-2 border-line' }`}
+                      className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 transition-colors ${
+                        complete ? 'bg-emerald-500' : active ? 'bg-white border-2 border-indigo-300' : 'bg-white border-2 border-slate-200'
+                      }`}
                     >
                       {complete ? (
                         <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3.2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
@@ -108,7 +110,7 @@ export default function ResumeAnalyzer({ phase = 'idle', onClose, error = '' }) 
                         <span className="w-2.5 h-2.5 rounded-full border-2 border-indigo-400 border-t-transparent animate-spin" />
                       ) : null}
                     </span>
-                    <span className={`text-sm transition-colors ${complete ? 'text-slate-800 font-medium' : active ? 'text-body' : 'text-muted'}`}>
+                    <span className={`text-sm transition-colors ${complete ? 'text-slate-800 font-medium' : active ? 'text-slate-700' : 'text-slate-400'}`}>
                       {label}
                     </span>
                   </li>

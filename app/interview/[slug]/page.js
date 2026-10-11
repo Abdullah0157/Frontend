@@ -36,8 +36,8 @@ export default async function ApplicationHubPage({ params }) {
     return (
       <div className="min-h-screen pt-32 pb-24 px-4">
         <div className="container mx-auto max-w-2xl text-center">
-          <h1 className="text-3xl font-bold text-ink mb-4">Position not found</h1>
-          <p className="text-muted">The link may be invalid or the role may have closed.</p>
+          <h1 className="text-3xl font-black uppercase text-slate-900 mb-4">Position not found</h1>
+          <p className="text-slate-500">The link may be invalid or the role may have closed.</p>
         </div>
       </div>
     )

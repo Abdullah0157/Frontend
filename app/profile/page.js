@@ -23,16 +23,16 @@ function SkillsEditor({ skills = [], onChange }) {
         {skills.map((s) => (
           <span key={s} className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-indigo-50 border border-indigo-200 text-indigo-700 text-xs font-bold">
             {s}
-            <button onClick={() => onChange(skills.filter((x) => x !== s))} className="text-brand hover:text-red-600 transition leading-none">✕</button>
+            <button onClick={() => onChange(skills.filter((x) => x !== s))} className="text-indigo-500 hover:text-red-600 transition leading-none">✕</button>
           </span>
         ))}
-        {skills.length === 0 && <p className="text-muted text-xs italic">No skills yet</p>}
+        {skills.length === 0 && <p className="text-slate-500 text-xs italic">No skills yet</p>}
       </div>
       <div className="flex gap-2">
         <input value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && add()}
           placeholder="Add a skill and press Enter"
-          className="flex-1 px-4 py-2.5 rounded-xl border border-slate-300 bg-white text-ink text-sm focus:border-indigo-500 outline-none transition" />
-        <button onClick={add} className="px-4 py-2.5 rounded-xl bg-brand hover:bg-brand-dark text-white text-xs font-bold transition">+ Add</button>
+          className="flex-1 px-4 py-2.5 rounded-xl border border-slate-300 bg-white text-slate-900 text-sm focus:border-indigo-500 outline-none transition" />
+        <button onClick={add} className="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-black uppercase tracking-widest transition">+ Add</button>
       </div>
     </div>
   )
@@ -51,21 +51,21 @@ function ExperienceCard({ item, onSave, onDelete }) {
   }
 
   if (!editing) return (
-    <div className="bg-slate-50 border border-line rounded-2xl p-5">
+    <div className="bg-slate-50 border border-slate-200 rounded-2xl p-5">
       <div className="flex items-start justify-between gap-3 mb-2">
         <div>
-          <p className="font-bold text-ink">{item.title}</p>
-          <p className="text-brand text-sm">{item.company}{item.location ? ` · ${item.location}` : ''}</p>
-          {item.dates && <p className="text-muted text-xs mt-0.5">{item.dates}</p>}
+          <p className="font-black text-slate-900">{item.title}</p>
+          <p className="text-indigo-600 text-sm">{item.company}{item.location ? ` · ${item.location}` : ''}</p>
+          {item.dates && <p className="text-slate-500 text-xs mt-0.5">{item.dates}</p>}
         </div>
         <div className="flex gap-2 flex-shrink-0">
-          <button onClick={() => setEditing(true)} className="text-xs font-bold px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-body transition">Edit</button>
-          <button onClick={onDelete} className="text-xs font-bold px-3 py-1.5 rounded-lg bg-red-50 hover:bg-red-100 text-red-600 transition">✕</button>
+          <button onClick={() => setEditing(true)} className="text-xs font-black uppercase tracking-widest px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 transition">Edit</button>
+          <button onClick={onDelete} className="text-xs font-black uppercase tracking-widest px-3 py-1.5 rounded-lg bg-red-50 hover:bg-red-100 text-red-600 transition">✕</button>
         </div>
       </div>
       {(item.bullets || []).length > 0 && (
         <ul className="mt-3 space-y-1">
-          {item.bullets.map((b, i) => <li key={i} className="text-body text-sm flex gap-2"><span className="text-brand flex-shrink-0">•</span>{b}</li>)}
+          {item.bullets.map((b, i) => <li key={i} className="text-slate-700 text-sm flex gap-2"><span className="text-indigo-500 flex-shrink-0">•</span>{b}</li>)}
         </ul>
       )}
     </div>
@@ -76,29 +76,29 @@ function ExperienceCard({ item, onSave, onDelete }) {
       <div className="grid grid-cols-2 gap-3">
         {[['title','Job Title'],['company','Company'],['location','Location (optional)'],['dates','Dates (e.g. Jan 2020 – Present)']].map(([k, ph]) => (
           <input key={k} value={draft[k] || ''} onChange={e => setDraft(d => ({...d, [k]: e.target.value}))} placeholder={ph}
-            className="px-3 py-2 rounded-xl border border-slate-300 bg-white text-ink text-sm focus:border-indigo-500 outline-none transition" />
+            className="px-3 py-2 rounded-xl border border-slate-300 bg-white text-slate-900 text-sm focus:border-indigo-500 outline-none transition" />
         ))}
       </div>
       <div>
-        <p className="text-xs font-bold text-muted mb-2">Achievements / Bullets</p>
+        <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-2">Achievements / Bullets</p>
         <ul className="space-y-1 mb-2">
           {(draft.bullets || []).map((b, i) => (
-            <li key={i} className="flex items-center gap-2 text-sm text-body">
-              <span className="text-brand">•</span>
+            <li key={i} className="flex items-center gap-2 text-sm text-slate-700">
+              <span className="text-indigo-500">•</span>
               <span className="flex-1">{b}</span>
-              <button onClick={() => setDraft(d => ({...d, bullets: d.bullets.filter((_, j) => j !== i)}))} className="text-body hover:text-red-600 text-xs">✕</button>
+              <button onClick={() => setDraft(d => ({...d, bullets: d.bullets.filter((_, j) => j !== i)}))} className="text-slate-600 hover:text-red-600 text-xs">✕</button>
             </li>
           ))}
         </ul>
         <div className="flex gap-2">
           <input value={bulletInput} onChange={e => setBulletInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && addBullet()} placeholder="Add achievement and press Enter"
-            className="flex-1 px-3 py-2 rounded-xl border border-slate-300 bg-white text-ink text-sm focus:border-indigo-500 outline-none" />
-          <button onClick={addBullet} className="px-3 py-2 rounded-xl bg-brand text-white text-xs font-bold">+ Add</button>
+            className="flex-1 px-3 py-2 rounded-xl border border-slate-300 bg-white text-slate-900 text-sm focus:border-indigo-500 outline-none" />
+          <button onClick={addBullet} className="px-3 py-2 rounded-xl bg-indigo-600 text-white text-xs font-black">+ Add</button>
         </div>
       </div>
       <div className="flex gap-2 pt-1">
-        <button onClick={() => { onSave(draft); setEditing(false) }} className="px-4 py-2 rounded-xl bg-brand hover:bg-brand-dark text-white text-xs font-bold transition">Save</button>
-        <button onClick={() => { setDraft(item); setEditing(false) }} className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-body text-xs font-bold transition">Cancel</button>
+        <button onClick={() => { onSave(draft); setEditing(false) }} className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-black uppercase tracking-widest transition">Save</button>
+        <button onClick={() => { setDraft(item); setEditing(false) }} className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-black uppercase tracking-widest transition">Cancel</button>
       </div>
     </div>
   )
@@ -108,14 +108,14 @@ function EducationCard({ item, onSave, onDelete }) {
   const [editing, setEditing] = useState(false)
   const [draft, setDraft] = useState(item)
   if (!editing) return (
-    <div className="bg-slate-50 border border-line rounded-2xl p-5 flex items-start justify-between gap-3">
+    <div className="bg-slate-50 border border-slate-200 rounded-2xl p-5 flex items-start justify-between gap-3">
       <div>
-        <p className="font-bold text-ink">{item.degree}</p>
-        <p className="text-brand text-sm">{item.school}</p>
-        {item.year && <p className="text-muted text-xs mt-0.5">{item.year}</p>}
+        <p className="font-black text-slate-900">{item.degree}</p>
+        <p className="text-indigo-600 text-sm">{item.school}</p>
+        {item.year && <p className="text-slate-500 text-xs mt-0.5">{item.year}</p>}
       </div>
       <div className="flex gap-2 flex-shrink-0">
-        <button onClick={() => setEditing(true)} className="text-xs font-bold px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-body transition">Edit</button>
+        <button onClick={() => setEditing(true)} className="text-xs font-black uppercase tracking-widest px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 transition">Edit</button>
         <button onClick={onDelete} className="text-xs px-3 py-1.5 rounded-lg bg-red-50 hover:bg-red-100 text-red-600 transition">✕</button>
       </div>
     </div>
@@ -125,12 +125,12 @@ function EducationCard({ item, onSave, onDelete }) {
       <div className="grid grid-cols-3 gap-3">
         {[['degree','Degree'],['school','School / University'],['year','Year']].map(([k, ph]) => (
           <input key={k} value={draft[k] || ''} onChange={e => setDraft(d => ({...d, [k]: e.target.value}))} placeholder={ph}
-            className="px-3 py-2 rounded-xl border border-slate-300 bg-white text-ink text-sm focus:border-indigo-500 outline-none transition" />
+            className="px-3 py-2 rounded-xl border border-slate-300 bg-white text-slate-900 text-sm focus:border-indigo-500 outline-none transition" />
         ))}
       </div>
       <div className="flex gap-2">
-        <button onClick={() => { onSave(draft); setEditing(false) }} className="px-4 py-2 rounded-xl bg-brand hover:bg-brand-dark text-white text-xs font-bold">Save</button>
-        <button onClick={() => { setDraft(item); setEditing(false) }} className="px-4 py-2 rounded-xl bg-slate-100 text-body text-xs font-bold">Cancel</button>
+        <button onClick={() => { onSave(draft); setEditing(false) }} className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-black uppercase tracking-widest">Save</button>
+        <button onClick={() => { setDraft(item); setEditing(false) }} className="px-4 py-2 rounded-xl bg-slate-100 text-slate-600 text-xs font-black uppercase tracking-widest">Cancel</button>
       </div>
     </div>
   )
@@ -140,14 +140,14 @@ function ProjectCard({ item, onSave, onDelete }) {
   const [editing, setEditing] = useState(false)
   const [draft, setDraft] = useState(item)
   if (!editing) return (
-    <div className="bg-slate-50 border border-line rounded-2xl p-5 flex items-start justify-between gap-3">
+    <div className="bg-slate-50 border border-slate-200 rounded-2xl p-5 flex items-start justify-between gap-3">
       <div className="flex-1">
-        <p className="font-bold text-ink">{item.name}</p>
-        {item.tech && <p className="text-brand text-xs mt-0.5">{item.tech}</p>}
-        {item.description && <p className="text-muted text-sm mt-1 leading-relaxed">{item.description}</p>}
+        <p className="font-black text-slate-900">{item.name}</p>
+        {item.tech && <p className="text-indigo-600 text-xs mt-0.5">{item.tech}</p>}
+        {item.description && <p className="text-slate-500 text-sm mt-1 leading-relaxed">{item.description}</p>}
       </div>
       <div className="flex gap-2 flex-shrink-0">
-        <button onClick={() => setEditing(true)} className="text-xs font-bold px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-body transition">Edit</button>
+        <button onClick={() => setEditing(true)} className="text-xs font-black uppercase tracking-widest px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 transition">Edit</button>
         <button onClick={onDelete} className="text-xs px-3 py-1.5 rounded-lg bg-red-50 hover:bg-red-100 text-red-600 transition">✕</button>
       </div>
     </div>
@@ -155,14 +155,14 @@ function ProjectCard({ item, onSave, onDelete }) {
   return (
     <div className="bg-indigo-50 border border-indigo-200 rounded-2xl p-5 space-y-3">
       <input value={draft.name || ''} onChange={e => setDraft(d => ({...d, name: e.target.value}))} placeholder="Project name"
-        className="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-ink text-sm focus:border-indigo-500 outline-none" />
+        className="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-slate-900 text-sm focus:border-indigo-500 outline-none" />
       <input value={draft.tech || ''} onChange={e => setDraft(d => ({...d, tech: e.target.value}))} placeholder="Tech stack (React, Node.js, PostgreSQL)"
-        className="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-ink text-sm focus:border-indigo-500 outline-none" />
+        className="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-slate-900 text-sm focus:border-indigo-500 outline-none" />
       <textarea value={draft.description || ''} onChange={e => setDraft(d => ({...d, description: e.target.value}))} placeholder="What it does and your role" rows={3}
-        className="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-ink text-sm focus:border-indigo-500 outline-none resize-none" />
+        className="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-slate-900 text-sm focus:border-indigo-500 outline-none resize-none" />
       <div className="flex gap-2">
-        <button onClick={() => { onSave(draft); setEditing(false) }} className="px-4 py-2 rounded-xl bg-brand hover:bg-brand-dark text-white text-xs font-bold">Save</button>
-        <button onClick={() => { setDraft(item); setEditing(false) }} className="px-4 py-2 rounded-xl bg-slate-100 text-body text-xs font-bold">Cancel</button>
+        <button onClick={() => { onSave(draft); setEditing(false) }} className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-black uppercase tracking-widest">Save</button>
+        <button onClick={() => { setDraft(item); setEditing(false) }} className="px-4 py-2 rounded-xl bg-slate-100 text-slate-600 text-xs font-black uppercase tracking-widest">Cancel</button>
       </div>
     </div>
   )
@@ -349,47 +349,47 @@ function ProfileInner() {
     { id: 'certs', label: 'Certificates' },
   ]
 
-  if (loading) return <div className="min-h-screen pt-32 text-center text-muted">Loading…</div>
+  if (loading) return <div className="min-h-screen pt-32 text-center text-slate-500">Loading…</div>
 
   return (
     <div className="min-h-screen pt-32 pb-24 px-4">
       <div className="container mx-auto max-w-3xl">
         {onboarding && (
           <div className="mb-8 p-6 rounded-[2rem] bg-gradient-to-br from-indigo-50 to-blue-50 border border-indigo-200 text-center">
-            <p className="text-xs font-bold text-indigo-300 mb-2">Welcome</p>
-            <h2 className="text-2xl md:text-3xl font-bold text-ink mb-2">Let's set you up</h2>
+            <p className="text-[10px] font-black uppercase tracking-[0.5em] text-indigo-300 mb-2">Welcome</p>
+            <h2 className="text-2xl md:text-3xl font-black text-slate-900 mb-2">Let's set you up</h2>
             {profile?.has_resume ? (
               <div className="mt-3">
-                <p className="text-emerald-700 text-sm mb-4">✓ Resume uploaded — you're all set!</p>
+                <p className="text-emerald-600 text-sm mb-4">✓ Resume uploaded — you're all set!</p>
                 <button
                   onClick={() => { router.push(postOnboardingNext); router.refresh() }}
-                  className="inline-flex items-center gap-2 bg-brand hover:bg-brand-dark text-white font-bold text-xs px-8 py-3 rounded-full transition shadow-lg shadow-indigo-500/20"
+                  className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white font-black uppercase tracking-widest text-xs px-8 py-3 rounded-full transition shadow-lg shadow-indigo-500/20"
                 >
                   Continue to Dashboard →
                 </button>
               </div>
             ) : (
-              <p className="text-body text-sm">Upload your resume to get started. Name and links can be added later.</p>
+              <p className="text-slate-700 text-sm">Upload your resume to get started. Name and links can be added later.</p>
             )}
           </div>
         )}
 
         <div className="mb-10 text-center">
-          <span className="inline-block px-4 py-1.5 rounded-full bg-indigo-50 border border-indigo-200 text-brand font-bold text-xs mb-4">Your Profile</span>
-          <h1 className="text-3xl md:text-5xl font-bold tracking-tight text-ink">
+          <span className="inline-block px-4 py-1.5 rounded-full bg-indigo-50 border border-indigo-200 text-indigo-600 font-black text-[10px] uppercase tracking-[0.4em] mb-4">Your Profile</span>
+          <h1 className="text-3xl md:text-5xl font-black uppercase tracking-tight text-slate-900">
             Hi{profile?.full_name ? `, ${profile.full_name.split(' ')[0]}` : ''}
           </h1>
-          <p className="text-muted mt-3 text-sm">{user?.email}</p>
+          <p className="text-slate-500 mt-3 text-sm">{user?.email}</p>
         </div>
 
         {error && <div className="mb-6 p-4 rounded-2xl border border-red-200 bg-red-50 text-red-600 text-sm">{error}</div>}
-        {success && <div className="mb-6 p-4 rounded-2xl border border-emerald-200 bg-emerald-50 text-emerald-700 text-sm">{success}</div>}
+        {success && <div className="mb-6 p-4 rounded-2xl border border-emerald-200 bg-emerald-50 text-emerald-600 text-sm">{success}</div>}
 
         {/* Tabs */}
         <div className="flex flex-wrap gap-2 mb-8">
           {tabs.map(t => (
             <button key={t.id} onClick={() => setActiveTab(t.id)}
-              className={`px-5 py-2.5 rounded-full text-xs font-bold transition ${activeTab === t.id ? 'bg-brand text-white' : 'bg-white border border-line text-muted hover:text-slate-900'}`}>
+              className={`px-5 py-2.5 rounded-full text-xs font-black uppercase tracking-widest transition ${activeTab === t.id ? 'bg-indigo-600 text-white' : 'bg-white border border-slate-200 text-slate-400 hover:text-slate-900'}`}>
               {t.label}
             </button>
           ))}
@@ -397,21 +397,21 @@ function ProfileInner() {
 
         {/* ── Tab: Personal Info ──────────────────────────────────────── */}
         {activeTab === 'personal' && (
-          <div className="bg-white border border-line rounded-[2.5rem] p-8 shadow-xl shadow-indigo-500/5 space-y-6">
+          <div className="bg-white border border-slate-200 rounded-[2.5rem] p-8 shadow-xl shadow-indigo-500/5 space-y-6">
             <div>
-              <h2 className="text-xs font-bold text-muted mb-4">Display Name</h2>
+              <h2 className="text-xs font-black uppercase tracking-[0.3em] text-slate-500 mb-4">Display Name</h2>
               <div className="flex flex-col md:flex-row gap-3">
                 <input type="text" value={name} onChange={e => setName(e.target.value)} placeholder="Your full name"
-                  className="flex-1 px-5 py-4 rounded-2xl border border-slate-300 bg-white text-ink focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none transition" />
+                  className="flex-1 px-5 py-4 rounded-2xl border border-slate-300 bg-white text-slate-900 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none transition" />
                 <button onClick={() => save({ full_name: name }, 'Name saved.')} disabled={!!saving || !name.trim()}
-                  className="text-xs font-bold px-6 py-4 rounded-full bg-brand hover:bg-brand-dark text-white transition disabled:opacity-60">
+                  className="text-xs font-black uppercase tracking-widest px-6 py-4 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white transition disabled:opacity-60">
                   {saving === 'Name saved.' ? 'Saving…' : 'Save'}
                 </button>
               </div>
             </div>
             <div>
-              <h2 className="text-xs font-bold text-muted mb-2">Email</h2>
-              <p className="text-body px-5 py-4 rounded-2xl border border-line bg-slate-50">{user?.email}</p>
+              <h2 className="text-xs font-black uppercase tracking-[0.3em] text-slate-500 mb-2">Email</h2>
+              <p className="text-slate-700 px-5 py-4 rounded-2xl border border-slate-200 bg-slate-50">{user?.email}</p>
             </div>
           </div>
         )}
@@ -419,59 +419,59 @@ function ProfileInner() {
         {/* ── Tab: Resume & Links ─────────────────────────────────────── */}
         {activeTab === 'resume' && (
           <div className="space-y-6">
-            <div className="bg-white border border-line rounded-[2.5rem] p-8 shadow-xl shadow-indigo-500/5">
+            <div className="bg-white border border-slate-200 rounded-[2.5rem] p-8 shadow-xl shadow-indigo-500/5">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xs font-bold text-muted">Resume (PDF)</h2>
+                <h2 className="text-xs font-black uppercase tracking-[0.3em] text-slate-500">Resume (PDF)</h2>
                 {profile?.has_resume && (
-                  <span className="text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-3 py-1 rounded-full">✓ On file</span>
+                  <span className="text-[10px] font-black uppercase tracking-widest text-emerald-600 bg-emerald-50 border border-emerald-200 px-3 py-1 rounded-full">✓ On file</span>
                 )}
               </div>
               {profile?.has_resume && (
-                <div className="flex items-center gap-3 p-4 rounded-2xl bg-slate-50 border border-line mb-4">
-                  <svg className="w-10 h-10 text-brand flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div className="flex items-center gap-3 p-4 rounded-2xl bg-slate-50 border border-slate-200 mb-4">
+                  <svg className="w-10 h-10 text-indigo-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                   </svg>
                   <div className="flex-1 min-w-0">
-                    <p className="font-bold text-ink truncate">{profile.resume_filename || 'resume.pdf'}</p>
-                    <p className="text-xs text-muted">{profile.resume_pages} pages · {profile.resume_chars?.toLocaleString()} chars</p>
+                    <p className="font-black text-slate-900 truncate">{profile.resume_filename || 'resume.pdf'}</p>
+                    <p className="text-xs text-slate-500">{profile.resume_pages} pages · {profile.resume_chars?.toLocaleString()} chars</p>
                   </div>
                   {!sections && !parsing && (
-                    <button onClick={parseResumeSections} className="text-xs font-bold px-4 py-2 rounded-full bg-brand hover:bg-brand-dark text-white transition flex-shrink-0">
+                    <button onClick={parseResumeSections} className="text-xs font-black uppercase tracking-widest px-4 py-2 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white transition flex-shrink-0">
                       Extract Sections →
                     </button>
                   )}
-                  {parsing && <p className="text-xs text-brand animate-pulse flex-shrink-0">Extracting…</p>}
+                  {parsing && <p className="text-xs text-indigo-600 animate-pulse flex-shrink-0">Extracting…</p>}
                 </div>
               )}
               <label className="block">
-                <span className="text-xs text-muted mb-2 block">{profile?.has_resume ? 'Replace resume:' : 'Upload your resume (PDF):'}</span>
+                <span className="text-xs text-slate-500 mb-2 block">{profile?.has_resume ? 'Replace resume:' : 'Upload your resume (PDF):'}</span>
                 <input ref={fileInputRef} type="file" accept="application/pdf,.pdf" onChange={onUpload} disabled={uploading}
-                  className="block w-full text-sm text-body file:mr-4 file:py-3 file:px-6 file:rounded-full file:border-0 file:text-xs file:font-bold file: file: file:bg-brand file:text-white hover:file:bg-indigo-700 cursor-pointer" />
+                  className="block w-full text-sm text-slate-700 file:mr-4 file:py-3 file:px-6 file:rounded-full file:border-0 file:text-xs file:font-black file:uppercase file:tracking-widest file:bg-indigo-600 file:text-white hover:file:bg-indigo-700 cursor-pointer" />
               </label>
-              {uploading && <p className="text-xs text-muted mt-2 animate-pulse">Parsing PDF…</p>}
+              {uploading && <p className="text-xs text-slate-500 mt-2 animate-pulse">Parsing PDF…</p>}
             </div>
 
-            <div className="bg-white border border-line rounded-[2.5rem] p-8 shadow-xl shadow-indigo-500/5">
-              <h2 className="text-xs font-bold text-muted mb-4">LinkedIn Profile</h2>
+            <div className="bg-white border border-slate-200 rounded-[2.5rem] p-8 shadow-xl shadow-indigo-500/5">
+              <h2 className="text-xs font-black uppercase tracking-[0.3em] text-slate-500 mb-4">LinkedIn Profile</h2>
               <div className="flex flex-col md:flex-row gap-3">
                 <input type="url" value={linkedin} onChange={e => setLinkedin(e.target.value)}
                   placeholder="https://linkedin.com/in/yourname"
-                  className="flex-1 px-5 py-4 rounded-2xl border border-slate-300 bg-white text-ink focus:border-indigo-500 outline-none transition" />
+                  className="flex-1 px-5 py-4 rounded-2xl border border-slate-300 bg-white text-slate-900 focus:border-indigo-500 outline-none transition" />
                 <button onClick={() => save({ linkedin_url: linkedin }, 'LinkedIn saved.')} disabled={!!saving}
-                  className="text-xs font-bold px-6 py-4 rounded-full bg-brand hover:bg-brand-dark text-white transition disabled:opacity-60">
+                  className="text-xs font-black uppercase tracking-widest px-6 py-4 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white transition disabled:opacity-60">
                   {saving === 'LinkedIn saved.' ? 'Saving…' : 'Save'}
                 </button>
               </div>
             </div>
 
-            <div className="bg-white border border-line rounded-[2.5rem] p-8 shadow-xl shadow-indigo-500/5">
-              <h2 className="text-xs font-bold text-muted mb-4">GitHub Profile</h2>
+            <div className="bg-white border border-slate-200 rounded-[2.5rem] p-8 shadow-xl shadow-indigo-500/5">
+              <h2 className="text-xs font-black uppercase tracking-[0.3em] text-slate-500 mb-4">GitHub Profile</h2>
               <div className="flex flex-col md:flex-row gap-3">
                 <input type="url" value={github} onChange={e => setGithub(e.target.value)}
                   placeholder="https://github.com/yourusername"
-                  className="flex-1 px-5 py-4 rounded-2xl border border-slate-300 bg-white text-ink focus:border-indigo-500 outline-none transition" />
+                  className="flex-1 px-5 py-4 rounded-2xl border border-slate-300 bg-white text-slate-900 focus:border-indigo-500 outline-none transition" />
                 <button onClick={() => save({ github_url: github }, 'GitHub saved.')} disabled={!!saving}
-                  className="text-xs font-bold px-6 py-4 rounded-full bg-brand hover:bg-brand-dark text-white transition disabled:opacity-60">
+                  className="text-xs font-black uppercase tracking-widest px-6 py-4 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white transition disabled:opacity-60">
                   {saving === 'GitHub saved.' ? 'Saving…' : 'Save'}
                 </button>
               </div>
@@ -483,44 +483,44 @@ function ProfileInner() {
         {activeTab === 'my-resume' && (
           <div className="space-y-8">
             {!profile?.has_resume ? (
-              <div className="bg-white border border-line rounded-[2.5rem] p-12 text-center shadow-xl shadow-indigo-500/5">
-                <p className="text-muted text-sm mb-4">Upload your resume first to extract sections.</p>
-                <button onClick={() => setActiveTab('resume')} className="inline-flex items-center gap-2 bg-brand hover:bg-brand-dark text-white font-bold text-xs px-8 py-3 rounded-full transition">
+              <div className="bg-white border border-slate-200 rounded-[2.5rem] p-12 text-center shadow-xl shadow-indigo-500/5">
+                <p className="text-slate-500 text-sm mb-4">Upload your resume first to extract sections.</p>
+                <button onClick={() => setActiveTab('resume')} className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white font-black uppercase tracking-widest text-xs px-8 py-3 rounded-full transition">
                   Go to Resume & Links →
                 </button>
               </div>
             ) : !sections && !parsing ? (
-              <div className="bg-white border border-line rounded-[2.5rem] p-12 text-center shadow-xl shadow-indigo-500/5">
-                <p className="text-muted text-sm mb-2">Your resume hasn't been parsed into sections yet.</p>
-                <p className="text-muted text-xs mb-6">Iris (AI) will read your resume and extract experience, education, projects, and skills.</p>
-                <button onClick={parseResumeSections} disabled={parsing} className="inline-flex items-center gap-2 bg-brand hover:bg-brand-dark text-white font-bold text-xs px-8 py-3 rounded-full transition disabled:opacity-60">
+              <div className="bg-white border border-slate-200 rounded-[2.5rem] p-12 text-center shadow-xl shadow-indigo-500/5">
+                <p className="text-slate-500 text-sm mb-2">Your resume hasn't been parsed into sections yet.</p>
+                <p className="text-slate-500 text-xs mb-6">Iris (AI) will read your resume and extract experience, education, projects, and skills.</p>
+                <button onClick={parseResumeSections} disabled={parsing} className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white font-black uppercase tracking-widest text-xs px-8 py-3 rounded-full transition disabled:opacity-60">
                   {parsing ? 'Extracting…' : 'Extract Resume Sections →'}
                 </button>
               </div>
             ) : parsing ? (
-              <div className="bg-white border border-line rounded-[2.5rem] p-12 text-center shadow-xl shadow-indigo-500/5">
+              <div className="bg-white border border-slate-200 rounded-[2.5rem] p-12 text-center shadow-xl shadow-indigo-500/5">
                 <div className="w-10 h-10 rounded-full border-4 border-indigo-500 border-t-transparent animate-spin mx-auto mb-4" />
-                <p className="text-brand font-bold text-xs">Extracting from resume…</p>
+                <p className="text-indigo-600 font-black uppercase tracking-widest text-xs">Extracting from resume…</p>
               </div>
             ) : (
               <>
                 {/* Summary */}
-                <div className="bg-white border border-line rounded-[2.5rem] p-8 shadow-xl shadow-indigo-500/5">
+                <div className="bg-white border border-slate-200 rounded-[2.5rem] p-8 shadow-xl shadow-indigo-500/5">
                   <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-xs font-bold text-muted">Summary</h2>
+                    <h2 className="text-xs font-black uppercase tracking-[0.3em] text-slate-500">Summary</h2>
                   </div>
                   <textarea value={sections?.summary || ''} onChange={e => setSections(s => ({...s, summary: e.target.value}))}
                     rows={4} placeholder="Your professional summary…"
-                    className="w-full px-5 py-4 rounded-2xl border border-slate-300 bg-white text-ink text-sm focus:border-indigo-500 outline-none transition resize-none" />
+                    className="w-full px-5 py-4 rounded-2xl border border-slate-300 bg-white text-slate-900 text-sm focus:border-indigo-500 outline-none transition resize-none" />
                   <button onClick={() => save({ resume_sections: sections }, 'Summary saved.')} disabled={!!saving}
-                    className="mt-3 text-xs font-bold px-6 py-3 rounded-full bg-brand hover:bg-brand-dark text-white transition disabled:opacity-60">
+                    className="mt-3 text-xs font-black uppercase tracking-widest px-6 py-3 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white transition disabled:opacity-60">
                     {saving === 'Summary saved.' ? 'Saving…' : 'Save Summary'}
                   </button>
                 </div>
 
                 {/* Skills */}
-                <div className="bg-white border border-line rounded-[2.5rem] p-8 shadow-xl shadow-indigo-500/5">
-                  <h2 className="text-xs font-bold text-muted mb-5">Skills</h2>
+                <div className="bg-white border border-slate-200 rounded-[2.5rem] p-8 shadow-xl shadow-indigo-500/5">
+                  <h2 className="text-xs font-black uppercase tracking-[0.3em] text-slate-500 mb-5">Skills</h2>
                   <SkillsEditor
                     skills={sections?.skills || []}
                     onChange={(updated) => saveSections({ ...sections, skills: updated })}
@@ -528,10 +528,10 @@ function ProfileInner() {
                 </div>
 
                 {/* Experience */}
-                <div className="bg-white border border-line rounded-[2.5rem] p-8 shadow-xl shadow-indigo-500/5">
+                <div className="bg-white border border-slate-200 rounded-[2.5rem] p-8 shadow-xl shadow-indigo-500/5">
                   <div className="flex items-center justify-between mb-5">
-                    <h2 className="text-xs font-bold text-muted">Experience</h2>
-                    <button onClick={addExperience} className="text-xs font-bold px-4 py-2 rounded-full bg-slate-100 hover:bg-slate-200 text-body border border-line transition">
+                    <h2 className="text-xs font-black uppercase tracking-[0.3em] text-slate-500">Experience</h2>
+                    <button onClick={addExperience} className="text-xs font-black uppercase tracking-widest px-4 py-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 border border-slate-200 transition">
                       + Add Role
                     </button>
                   </div>
@@ -542,16 +542,16 @@ function ProfileInner() {
                         onDelete={() => deleteExperience(exp.id)} />
                     ))}
                     {(sections?.experience || []).length === 0 && (
-                      <p className="text-muted text-sm text-center py-4">No experience added yet.</p>
+                      <p className="text-slate-500 text-sm text-center py-4">No experience added yet.</p>
                     )}
                   </div>
                 </div>
 
                 {/* Education */}
-                <div className="bg-white border border-line rounded-[2.5rem] p-8 shadow-xl shadow-indigo-500/5">
+                <div className="bg-white border border-slate-200 rounded-[2.5rem] p-8 shadow-xl shadow-indigo-500/5">
                   <div className="flex items-center justify-between mb-5">
-                    <h2 className="text-xs font-bold text-muted">Education</h2>
-                    <button onClick={addEducation} className="text-xs font-bold px-4 py-2 rounded-full bg-slate-100 hover:bg-slate-200 text-body border border-line transition">
+                    <h2 className="text-xs font-black uppercase tracking-[0.3em] text-slate-500">Education</h2>
+                    <button onClick={addEducation} className="text-xs font-black uppercase tracking-widest px-4 py-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 border border-slate-200 transition">
                       + Add Education
                     </button>
                   </div>
@@ -562,16 +562,16 @@ function ProfileInner() {
                         onDelete={() => deleteEducation(edu.id)} />
                     ))}
                     {(sections?.education || []).length === 0 && (
-                      <p className="text-muted text-sm text-center py-4">No education added yet.</p>
+                      <p className="text-slate-500 text-sm text-center py-4">No education added yet.</p>
                     )}
                   </div>
                 </div>
 
                 {/* Projects */}
-                <div className="bg-white border border-line rounded-[2.5rem] p-8 shadow-xl shadow-indigo-500/5">
+                <div className="bg-white border border-slate-200 rounded-[2.5rem] p-8 shadow-xl shadow-indigo-500/5">
                   <div className="flex items-center justify-between mb-5">
-                    <h2 className="text-xs font-bold text-muted">Projects</h2>
-                    <button onClick={addProject} className="text-xs font-bold px-4 py-2 rounded-full bg-slate-100 hover:bg-slate-200 text-body border border-line transition">
+                    <h2 className="text-xs font-black uppercase tracking-[0.3em] text-slate-500">Projects</h2>
+                    <button onClick={addProject} className="text-xs font-black uppercase tracking-widest px-4 py-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 border border-slate-200 transition">
                       + Add Project
                     </button>
                   </div>
@@ -582,7 +582,7 @@ function ProfileInner() {
                         onDelete={() => deleteProject(proj.id)} />
                     ))}
                     {(sections?.projects || []).length === 0 && (
-                      <p className="text-muted text-sm text-center py-4">No projects added yet.</p>
+                      <p className="text-slate-500 text-sm text-center py-4">No projects added yet.</p>
                     )}
                   </div>
                 </div>
@@ -590,7 +590,7 @@ function ProfileInner() {
                 {/* Re-parse button */}
                 <div className="text-center">
                   <button onClick={parseResumeSections} disabled={parsing}
-                    className="text-xs font-bold text-muted hover:text-slate-700 transition disabled:opacity-60">
+                    className="text-xs font-black uppercase tracking-widest text-slate-500 hover:text-slate-700 transition disabled:opacity-60">
                     ↺ Re-extract from resume PDF
                   </button>
                 </div>
@@ -605,38 +605,38 @@ function ProfileInner() {
             {certs.length > 0 && (
               <div className="space-y-3">
                 {certs.map((c, i) => (
-                  <div key={i} className="bg-white border border-line rounded-[2rem] p-6 flex items-start justify-between gap-4">
+                  <div key={i} className="bg-white border border-slate-200 rounded-[2rem] p-6 flex items-start justify-between gap-4">
                     <div className="flex-1">
-                      <p className="font-bold text-ink">{c.name}</p>
-                      {c.issuer && <p className="text-xs text-muted mt-0.5">{c.issuer}{c.year ? ` · ${c.year}` : ''}</p>}
+                      <p className="font-black text-slate-900">{c.name}</p>
+                      {c.issuer && <p className="text-xs text-slate-500 mt-0.5">{c.issuer}{c.year ? ` · ${c.year}` : ''}</p>}
                       {c.url && (
                         <a href={c.url} target="_blank" rel="noopener noreferrer"
-                          className="text-xs text-brand hover:text-indigo-800 mt-1 inline-flex items-center gap-1">
+                          className="text-xs text-indigo-600 hover:text-indigo-800 mt-1 inline-flex items-center gap-1">
                           <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
                           View certificate
                         </a>
                       )}
                     </div>
-                    <button onClick={() => deleteCert(i)} className="text-body hover:text-red-600 transition flex-shrink-0">
+                    <button onClick={() => deleteCert(i)} className="text-slate-600 hover:text-red-600 transition flex-shrink-0">
                       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
                     </button>
                   </div>
                 ))}
               </div>
             )}
-            <div className="bg-white border border-line rounded-[2.5rem] p-8 shadow-xl shadow-indigo-500/5">
-              <h2 className="text-xs font-bold text-muted mb-6">Add Certificate</h2>
+            <div className="bg-white border border-slate-200 rounded-[2.5rem] p-8 shadow-xl shadow-indigo-500/5">
+              <h2 className="text-xs font-black uppercase tracking-[0.3em] text-slate-500 mb-6">Add Certificate</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                 {[['Name *','text',newCert.name,'name','AWS Solutions Architect'],['Issuer','text',newCert.issuer,'issuer','Amazon Web Services'],['Year','text',newCert.year,'year','2024'],['URL (optional)','url',newCert.url,'url','https://credential.link']].map(([label, type, val, key, ph]) => (
                   <div key={key}>
-                    <label className="text-xs font-bold text-muted mb-1 block">{label}</label>
+                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-1 block">{label}</label>
                     <input type={type} value={val} onChange={e => setNewCert(p => ({...p, [key]: e.target.value}))} placeholder={ph}
-                      className="w-full px-4 py-3 rounded-2xl border border-slate-300 bg-white text-ink focus:border-indigo-500 outline-none transition text-sm" />
+                      className="w-full px-4 py-3 rounded-2xl border border-slate-300 bg-white text-slate-900 focus:border-indigo-500 outline-none transition text-sm" />
                   </div>
                 ))}
               </div>
               <button onClick={addCert} disabled={!newCert.name.trim() || !!saving}
-                className="text-xs font-bold px-8 py-3 rounded-full bg-brand hover:bg-brand-dark text-white transition disabled:opacity-60">
+                className="text-xs font-black uppercase tracking-widest px-8 py-3 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white transition disabled:opacity-60">
                 + Add Certificate
               </button>
             </div>
@@ -645,11 +645,11 @@ function ProfileInner() {
 
         {/* Bottom nav */}
         <div className="flex flex-col md:flex-row gap-3 items-center justify-between mt-8">
-          <Link href="/dashboard" className="text-xs font-bold text-brand hover:text-indigo-800">
+          <Link href="/dashboard" className="text-xs font-black uppercase tracking-widest text-indigo-600 hover:text-indigo-800">
             ← Dashboard
           </Link>
           <button onClick={logout}
-            className="text-xs font-bold px-5 py-3 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-800 transition">
+            className="text-xs font-black uppercase tracking-widest px-5 py-3 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-800 transition">
             Log out
           </button>
         </div>

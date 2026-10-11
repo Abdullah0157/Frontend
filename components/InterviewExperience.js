@@ -311,45 +311,45 @@ export default function InterviewExperience({
     <div className="min-h-screen pt-32 pb-24 px-4">
       {/* Proctoring overlays */}
       {cameraStream && (
-        <div className="fixed bottom-6 left-6 z-[70] w-40 md:w-52 aspect-video rounded-3xl overflow-hidden shadow-2xl border border-line bg-slate-900">
+        <div className="fixed bottom-6 left-6 z-[70] w-40 md:w-52 aspect-video rounded-3xl overflow-hidden shadow-2xl border border-slate-200 bg-slate-900">
           <video ref={cameraVideoRef} autoPlay muted playsInline className="w-full h-full object-cover" />
           <div className="absolute bottom-2 left-2 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-900/70 backdrop-blur">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="text-xs font-bold text-white">You</span>
+            <span className="text-[10px] font-bold text-white">You</span>
           </div>
         </div>
       )}
       {screenStream && !screenStopped && (
-        <div className="fixed top-20 right-6 z-[70] w-32 md:w-44 aspect-video rounded-2xl overflow-hidden shadow-2xl border border-line bg-slate-900">
+        <div className="fixed top-20 right-6 z-[70] w-32 md:w-44 aspect-video rounded-2xl overflow-hidden shadow-2xl border border-slate-200 bg-slate-900">
           <video ref={screenVideoRef} autoPlay muted playsInline className="w-full h-full object-contain" />
           <div className="absolute bottom-2 left-2 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-900/70 backdrop-blur">
             <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
-            <span className="text-xs font-bold text-white">Screen</span>
+            <span className="text-[10px] font-bold text-white">Screen</span>
           </div>
         </div>
       )}
       {screenStopped && (
-        <div className="fixed top-6 left-1/2 -translate-x-1/2 z-[80] px-5 py-3 rounded-2xl bg-red-600 text-white shadow-2xl text-sm font-bold">
+        <div className="fixed top-6 left-1/2 -translate-x-1/2 z-[80] px-5 py-3 rounded-2xl bg-red-600 text-white shadow-2xl text-sm font-black">
           ⚠ Screen sharing stopped — the company has been notified.
         </div>
       )}
 
       <div className="container mx-auto max-w-3xl">
         <div className="mb-8 text-center">
-          <span className="inline-block px-4 py-1.5 rounded-full bg-indigo-50 border border-indigo-200 text-brand font-bold text-xs mb-4">
+          <span className="inline-block px-4 py-1.5 rounded-full bg-indigo-50 border border-indigo-200 text-indigo-600 font-black text-[10px] uppercase tracking-[0.4em] mb-4">
             Interview with Iris
           </span>
-          <h1 className="text-3xl md:text-5xl font-bold tracking-tight text-ink">
+          <h1 className="text-3xl md:text-5xl font-black tracking-tight uppercase text-slate-900">
             {job ? job.title : 'Your Interview'}
           </h1>
           {job && (
-            <p className="text-brand font-bold text-xs mt-3">
+            <p className="text-indigo-600 font-black uppercase tracking-widest text-xs mt-3">
               {job.role}
             </p>
           )}
-          <p className="text-muted mt-3">
+          <p className="text-slate-500 mt-3">
             {priming
-              ? <span className="text-brand animate-pulse">Reviewing your profile…</span>
+              ? <span className="text-indigo-600 animate-pulse">Reviewing your profile…</span>
               : `A quick ${totalQuestions}-question conversation. Answer honestly — there are no wrong answers.`
             }
           </p>
@@ -364,11 +364,11 @@ export default function InterviewExperience({
         {phase === 'intake' && (
           <form
             onSubmit={startInterview}
-            className="bg-white border border-line rounded-[2.5rem] p-8 md:p-12 shadow-xl shadow-indigo-500/5"
+            className="bg-white border border-slate-200 rounded-[2.5rem] p-8 md:p-12 shadow-xl shadow-indigo-500/5"
           >
             <div className="grid gap-6">
               <label className="block">
-                <span className="text-xs font-bold text-body">
+                <span className="text-xs font-black uppercase tracking-[0.3em] text-slate-700">
                   Your Name
                 </span>
                 <input
@@ -382,7 +382,7 @@ export default function InterviewExperience({
               </label>
               {isJobScoped && (
                 <label className="block">
-                  <span className="text-xs font-bold text-body">
+                  <span className="text-xs font-black uppercase tracking-[0.3em] text-slate-700">
                     Email (optional)
                   </span>
                   <input
@@ -396,7 +396,7 @@ export default function InterviewExperience({
               )}
               {!isJobScoped && (
                 <label className="block">
-                  <span className="text-xs font-bold text-body">
+                  <span className="text-xs font-black uppercase tracking-[0.3em] text-slate-700">
                     Role You're Applying For
                   </span>
                   <input
@@ -410,10 +410,10 @@ export default function InterviewExperience({
                 </label>
               )}
               <label className="block">
-                <span className="text-xs font-bold text-body">
-                  Interview Focus <span className="text-muted font-normal normal-case tracking-normal">(optional)</span>
+                <span className="text-xs font-black uppercase tracking-[0.3em] text-slate-700">
+                  Interview Focus <span className="text-slate-500 font-normal normal-case tracking-normal">(optional)</span>
                 </span>
-                <span className="block text-xs text-muted mt-1 mb-2">
+                <span className="block text-xs text-slate-500 mt-1 mb-2">
                   List 4–8 topics Iris should cover. One per line. She'll probe each across the interview.
                 </span>
                 <textarea
@@ -427,7 +427,7 @@ export default function InterviewExperience({
               <button
                 type="submit"
                 disabled={loading || !candidate.name.trim() || (!isJobScoped && !candidate.role.trim())}
-                className="btn-style-9 group text-xs shadow-2xl !px-12 !py-5 rounded-full font-bold disabled:opacity-60 disabled:cursor-not-allowed"
+                className="btn-style-9 group uppercase tracking-widest text-xs shadow-2xl !px-12 !py-5 rounded-full font-black disabled:opacity-60 disabled:cursor-not-allowed"
               >
                 <div className="btn-shimmer"></div>
                 <span>{loading ? 'Starting…' : 'Start Interview'}</span>
@@ -452,19 +452,19 @@ export default function InterviewExperience({
         )}
 
         {phase === 'report' && (
-          <div className="bg-white border border-line rounded-[2.5rem] p-8 md:p-12 shadow-xl shadow-indigo-500/5">
+          <div className="bg-white border border-slate-200 rounded-[2.5rem] p-8 md:p-12 shadow-xl shadow-indigo-500/5">
             <div className="text-center mb-8">
-              <span className="inline-block px-4 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 font-bold text-xs mb-3">
+              <span className="inline-block px-4 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-600 font-black text-[10px] uppercase tracking-[0.4em] mb-3">
                 Interview Complete
               </span>
-              <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-ink">
+              <h2 className="text-2xl md:text-3xl font-black uppercase tracking-tight text-slate-900">
                 {isJobScoped ? 'Thanks for applying' : 'Screening Report'}
               </h2>
-              <p className="text-muted mt-1 text-sm">
+              <p className="text-slate-500 mt-1 text-sm">
                 {candidate.name}{job ? ` — ${job.title}` : candidate.role ? ` — ${candidate.role}` : ''}
               </p>
               {isJobScoped && savedCandidateId && (
-                <p className="text-emerald-700 text-xs mt-3">
+                <p className="text-emerald-600 text-xs mt-3">
                   ✓ Your submission has been sent to the hiring team.
                 </p>
               )}
@@ -473,13 +473,13 @@ export default function InterviewExperience({
             {report ? (
               <div className="space-y-8">
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="rounded-2xl border border-line p-6 text-center">
-                    <p className="text-xs font-bold text-muted">Score</p>
-                    <p className="text-4xl font-bold text-brand mt-2">{report.score}/10</p>
+                  <div className="rounded-2xl border border-slate-200 p-6 text-center">
+                    <p className="text-xs font-black uppercase tracking-[0.3em] text-slate-500">Score</p>
+                    <p className="text-4xl font-black text-indigo-600 mt-2">{report.score}/10</p>
                   </div>
-                  <div className="rounded-2xl border border-line p-6 text-center">
-                    <p className="text-xs font-bold text-muted">Recommendation</p>
-                    <p className="text-2xl font-bold text-ink mt-2">
+                  <div className="rounded-2xl border border-slate-200 p-6 text-center">
+                    <p className="text-xs font-black uppercase tracking-[0.3em] text-slate-500">Recommendation</p>
+                    <p className="text-2xl font-black text-slate-900 mt-2 uppercase">
                       {String(report.recommendation || '').replace('_', ' ')}
                     </p>
                   </div>
@@ -491,8 +491,8 @@ export default function InterviewExperience({
                   report.validation.invalid_turn_refs > 0 ||
                   report.validation.structural_issues?.length > 0) && (
                   <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4">
-                    <p className="text-xs font-bold text-amber-600 mb-1">Evidence Quality: {report.validation.computed_evidence_quality}</p>
-                    <p className="text-xs text-body leading-relaxed">
+                    <p className="text-xs font-black uppercase tracking-[0.3em] text-amber-600 mb-1">Evidence Quality: {report.validation.computed_evidence_quality}</p>
+                    <p className="text-xs text-slate-700 leading-relaxed">
                       Verification rate: {Math.round((report.validation.direct_quote_verification_rate || 0) * 100)}% ·
                       {report.validation.verified_direct_quotes} verified quotes ·
                       {report.validation.unverified_direct_quotes > 0 && ` ${report.validation.unverified_direct_quotes} unverified ·`}
@@ -503,12 +503,12 @@ export default function InterviewExperience({
                 )}
 
                 <div>
-                  <h3 className="text-xs font-bold text-muted mb-2">Summary</h3>
+                  <h3 className="text-xs font-black uppercase tracking-[0.3em] text-slate-500 mb-2">Summary</h3>
                   <p className="text-slate-800 leading-relaxed">{report.summary}</p>
                 </div>
                 {Array.isArray(report.strengths) && report.strengths.length > 0 && (
                   <div>
-                    <h3 className="text-xs font-bold text-emerald-700 mb-2">Strengths</h3>
+                    <h3 className="text-xs font-black uppercase tracking-[0.3em] text-emerald-600 mb-2">Strengths</h3>
                     <ul className="space-y-3 text-slate-800">
                       {report.strengths.map((s, i) => (
                         <li key={i} className="pl-4 border-l-2 border-emerald-200">
@@ -516,7 +516,7 @@ export default function InterviewExperience({
                             <>
                               <div>{s.claim}</div>
                               {s.evidence && (
-                                <div className="text-xs text-muted mt-1 italic">
+                                <div className="text-xs text-slate-500 mt-1 italic">
                                   Turn {s.evidence.turn} · {s.evidence.quote_type === 'direct' ? 'quote' : 'paraphrase'}: "{s.evidence.quote}"
                                 </div>
                               )}
@@ -529,7 +529,7 @@ export default function InterviewExperience({
                 )}
                 {Array.isArray(report.concerns) && report.concerns.length > 0 && (
                   <div>
-                    <h3 className="text-xs font-bold text-amber-600 mb-2">Concerns</h3>
+                    <h3 className="text-xs font-black uppercase tracking-[0.3em] text-amber-600 mb-2">Concerns</h3>
                     <ul className="space-y-3 text-slate-800">
                       {report.concerns.map((c, i) => (
                         <li key={i} className="pl-4 border-l-2 border-amber-200">
@@ -537,7 +537,7 @@ export default function InterviewExperience({
                             <>
                               <div>{c.claim}</div>
                               {c.evidence && (
-                                <div className="text-xs text-muted mt-1 italic">
+                                <div className="text-xs text-slate-500 mt-1 italic">
                                   Turn {c.evidence.turn} · {c.evidence.quote_type === 'direct' ? 'quote' : 'paraphrase'}: "{c.evidence.quote}"
                                 </div>
                               )}
@@ -549,12 +549,12 @@ export default function InterviewExperience({
                   </div>
                 )}
                 {(report.highlight_moment || report.highlight_quote) && (
-                  <blockquote className="border-l-4 border-indigo-500 pl-4 italic text-body">
+                  <blockquote className="border-l-4 border-indigo-500 pl-4 italic text-slate-700">
                     {typeof report.highlight_moment === 'object' ? (
                       <>
                         "{report.highlight_moment.quote}"
                         {report.highlight_moment.why_notable && (
-                          <div className="text-xs text-muted mt-2 not-italic">
+                          <div className="text-xs text-slate-500 mt-2 not-italic">
                             Turn {report.highlight_moment.turn} — {report.highlight_moment.why_notable}
                           </div>
                         )}
@@ -566,20 +566,20 @@ export default function InterviewExperience({
                 )}
               </div>
             ) : (
-              <p className="text-muted">No structured report was returned. Try again.</p>
+              <p className="text-slate-500">No structured report was returned. Try again.</p>
             )}
 
             <div className="mt-10 flex flex-col sm:flex-row justify-center gap-3">
               {isJobScoped ? (
                 <a
                   href="/jobs"
-                  className="btn-style-9 group text-xs !px-10 !py-5 rounded-full font-bold text-center"
+                  className="btn-style-9 group uppercase tracking-widest text-xs !px-10 !py-5 rounded-full font-black text-center"
                 >
                   <div className="btn-shimmer"></div>
                   <span>Browse more jobs</span>
                 </a>
               ) : (
-                <button onClick={reset} className="btn-style-9 group text-xs !px-10 !py-5 rounded-full font-bold">
+                <button onClick={reset} className="btn-style-9 group uppercase tracking-widest text-xs !px-10 !py-5 rounded-full font-black">
                   <div className="btn-shimmer"></div>
                   <span>New Interview</span>
                 </button>

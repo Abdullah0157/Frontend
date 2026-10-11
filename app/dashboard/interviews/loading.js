@@ -11,7 +11,7 @@ export default function InterviewsLoading() {
       </div>
       <div className="space-y-4">
         {[...Array(5)].map((_, i) => (
-          <div key={i} className="bg-white border border-line rounded-2xl p-6 flex items-center justify-between gap-4">
+          <div key={i} className="bg-white border border-slate-200 rounded-2xl p-6 flex items-center justify-between gap-4">
             <div className="space-y-2 min-w-0 flex-1">
               <Sk className="h-5 w-56" />
               <Sk className="h-3.5 w-40" />

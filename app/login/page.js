@@ -67,13 +67,13 @@ function LoginInner() {
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center gap-2.5 mb-7">
             <Image src="/jobstream-icon.png" alt="" width={36} height={36} className="rounded-xl" priority />
-            <span className="text-lg font-bold tracking-tight text-ink">JobStream</span>
+            <span className="text-lg font-black tracking-tight text-slate-900">JobStream</span>
           </Link>
-          <h1 className="text-[26px] font-bold tracking-tight text-ink">Welcome back</h1>
-          <p className="text-sm text-muted mt-1.5">Sign in to continue to your account.</p>
+          <h1 className="text-[26px] font-bold tracking-tight text-slate-900">Welcome back</h1>
+          <p className="text-sm text-slate-500 mt-1.5">Sign in to continue to your account.</p>
         </div>
 
-        <div className="bg-white border border-line rounded-2xl p-7 shadow-sm">
+        <div className="bg-white border border-slate-200 rounded-2xl p-7 shadow-sm">
           {error && (
             <div className="mb-5 flex gap-2.5 p-3.5 rounded-xl border border-red-200 bg-red-50 text-sm text-red-700">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="shrink-0 mt-px">
@@ -89,10 +89,10 @@ function LoginInner() {
             type="button"
             onClick={signInWithGoogle}
             disabled={googleLoading}
-            className="w-full flex items-center justify-center gap-2.5 px-5 py-3 rounded-xl border border-slate-300 hover:bg-slate-50 active:bg-slate-100 transition text-sm font-semibold text-body disabled:opacity-60 disabled:cursor-not-allowed"
+            className="w-full flex items-center justify-center gap-2.5 px-5 py-3 rounded-xl border border-slate-300 hover:bg-slate-50 active:bg-slate-100 transition text-sm font-semibold text-slate-700 disabled:opacity-60 disabled:cursor-not-allowed"
           >
             {googleLoading ? (
-              <svg className="w-[18px] h-[18px] animate-spin text-muted" fill="none" viewBox="0 0 24 24">
+              <svg className="w-[18px] h-[18px] animate-spin text-slate-500" fill="none" viewBox="0 0 24 24">
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"/>
               </svg>
@@ -108,13 +108,13 @@ function LoginInner() {
           </button>
 
           <div className="relative my-6">
-            <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-line" /></div>
-            <div className="relative flex justify-center"><span className="bg-white px-3 text-xs text-muted">or sign in with email</span></div>
+            <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-slate-200" /></div>
+            <div className="relative flex justify-center"><span className="bg-white px-3 text-xs text-slate-500">or sign in with email</span></div>
           </div>
 
           <form onSubmit={onSubmit} className="space-y-4">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-body mb-1.5">Email</label>
+              <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-1.5">Email</label>
               <input
                 id="email"
                 type="email"
@@ -123,14 +123,14 @@ function LoginInner() {
                 value={form.email}
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
                 placeholder="you@example.com"
-                className="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm text-ink placeholder:text-slate-400 focus:border-brand focus:ring-2 focus:ring-indigo-100 outline-none transition"
+                className="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-900 placeholder:text-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none transition"
               />
             </div>
 
             <div>
               <div className="flex items-baseline justify-between gap-3">
-                <label htmlFor="password" className="block text-sm font-medium text-body mb-1.5">Password</label>
-                <Link href="/forgot-password" className="text-xs font-semibold text-brand hover:text-brand-dark">Forgot password?</Link>
+                <label htmlFor="password" className="block text-sm font-medium text-slate-700 mb-1.5">Password</label>
+                <Link href="/forgot-password" className="text-xs font-semibold text-indigo-600 hover:text-indigo-700">Forgot password?</Link>
               </div>
               <div className="relative">
                 <input
@@ -141,7 +141,7 @@ function LoginInner() {
                   value={form.password}
                   onChange={(e) => setForm({ ...form, password: e.target.value })}
                   placeholder="••••••••"
-                  className="w-full px-4 py-2.5 pr-11 rounded-xl border border-slate-300 text-sm text-ink placeholder:text-slate-400 focus:border-brand focus:ring-2 focus:ring-indigo-100 outline-none transition"
+                  className="w-full px-4 py-2.5 pr-11 rounded-xl border border-slate-300 text-sm text-slate-900 placeholder:text-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none transition"
                 />
                 {/* Typing a password blind on a phone is a real source of failed
                     logins, so let people check what they typed. */}
@@ -149,7 +149,7 @@ function LoginInner() {
                   type="button"
                   onClick={() => setShowPassword((s) => !s)}
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-slate-600 transition"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-600 transition"
                 >
                   {showPassword ? (
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
@@ -174,9 +174,9 @@ function LoginInner() {
           </form>
         </div>
 
-        <p className="text-center text-sm text-muted mt-6">
+        <p className="text-center text-sm text-slate-500 mt-6">
           New here?{' '}
-          <Link href={`/signup${next ? `?next=${encodeURIComponent(next)}` : ''}`} className="font-semibold text-brand hover:text-brand-dark">
+          <Link href={`/signup${next ? `?next=${encodeURIComponent(next)}` : ''}`} className="font-semibold text-indigo-600 hover:text-indigo-700">
             Create an account
           </Link>
         </p>

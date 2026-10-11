@@ -12,8 +12,8 @@ export default async function LiveInterviewPage() {
   return (
     <div className="max-w-4xl mx-auto">
       <div className="mb-8">
-        <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-ink">Live Interview</h1>
-        <p className="text-muted mt-2 max-w-2xl">
+        <h1 className="text-3xl md:text-4xl font-black tracking-tight text-slate-900">Live Interview</h1>
+        <p className="text-slate-500 mt-2 max-w-2xl">
           A real-time voice conversation with Maya, powered by Gemini Live — sub-2-second, full-duplex
           (you can interrupt). Beta pilot.
         </p>

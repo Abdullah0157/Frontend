@@ -112,34 +112,34 @@ export default function SkillProfilePage({ embedded = false }) {
     <div className={embedded ? '' : 'min-h-screen pt-32 pb-24 px-4'}>
       <div className={embedded ? 'max-w-5xl mx-auto' : 'container mx-auto max-w-5xl'}>
         <div className="mb-10">
-          <p className="text-xs font-bold text-brand mb-2">Candidate Profile</p>
-          <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-ink">Skill Profile</h1>
-          <p className="text-muted mt-2 max-w-2xl">
+          <p className="text-xs font-black uppercase tracking-widest text-indigo-600 mb-2">Candidate Profile</p>
+          <h1 className="text-3xl md:text-4xl font-black uppercase tracking-tight text-slate-900">Skill Profile</h1>
+          <p className="text-slate-500 mt-2 max-w-2xl">
             Your persistent skill graph — built up across every assessment and interview you take.
           </p>
         </div>
 
         {loading && (
-          <div className="bg-white border border-line rounded-2xl p-10 text-center shadow-sm">
-            <p className="text-muted">Loading your skill profile…</p>
+          <div className="bg-white border border-slate-200 rounded-2xl p-10 text-center shadow-sm">
+            <p className="text-slate-500">Loading your skill profile…</p>
           </div>
         )}
 
         {!loading && !loggedIn && (
-          <div className="bg-white border border-line rounded-2xl p-10 text-center max-w-xl mx-auto shadow-sm">
+          <div className="bg-white border border-slate-200 rounded-2xl p-10 text-center max-w-xl mx-auto shadow-sm">
             <div className="w-14 h-14 rounded-2xl bg-indigo-50 border border-indigo-200 flex items-center justify-center mx-auto mb-5">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-brand">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-indigo-600">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
                 <circle cx="12" cy="7" r="4" />
               </svg>
             </div>
-            <h2 className="text-xl font-bold text-ink mb-2">Log in to see your skill profile</h2>
-            <p className="text-muted mb-6">
+            <h2 className="text-xl font-black uppercase tracking-widest text-slate-900 mb-2">Log in to see your skill profile</h2>
+            <p className="text-slate-500 mb-6">
               Your skill graph is tied to your candidate account. Log in to view it.
             </p>
             <Link
               href={`/login?next=${encodeURIComponent('/skill-profile')}`}
-              className="inline-block px-6 py-3 rounded-xl bg-brand hover:bg-brand-dark text-white font-bold text-sm transition-colors"
+              className="inline-block px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-black uppercase tracking-widest text-sm transition-colors"
             >
               Log in
             </Link>
@@ -147,19 +147,19 @@ export default function SkillProfilePage({ embedded = false }) {
         )}
 
         {!loading && loggedIn && !error && skills.length === 0 && (
-          <div className="bg-white border border-line rounded-2xl p-10 text-center max-w-xl mx-auto shadow-sm">
+          <div className="bg-white border border-slate-200 rounded-2xl p-10 text-center max-w-xl mx-auto shadow-sm">
             <div className="w-14 h-14 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center justify-center mx-auto mb-5">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-emerald-700">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-emerald-600">
                 <path d="M12 20h9" /><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z" />
               </svg>
             </div>
-            <h2 className="text-xl font-bold text-ink mb-2">No skill data yet</h2>
-            <p className="text-muted mb-6">
+            <h2 className="text-xl font-black uppercase tracking-widest text-slate-900 mb-2">No skill data yet</h2>
+            <p className="text-slate-500 mb-6">
               Take an assessment to start building your skill profile.
             </p>
             <Link
               href="/dashboard/assessment"
-              className="inline-block px-6 py-3 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-sm transition-colors"
+              className="inline-block px-6 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black uppercase tracking-widest text-sm transition-colors"
             >
               Take an assessment
             </Link>
@@ -176,14 +176,14 @@ export default function SkillProfilePage({ embedded = false }) {
           <div className="space-y-10">
             {/* Radar chart for the strongest domain */}
             {topDomain && (
-              <div className="bg-white border border-line rounded-2xl p-6 shadow-sm">
+              <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
                 <div className="flex items-center gap-3 mb-4">
                   <div className={`w-2 h-8 rounded bg-gradient-to-b ${DOMAIN_COLORS[topDomain] || 'from-slate-400 to-slate-600'}`} />
                   <div>
-                    <h2 className="text-lg font-bold text-ink">
+                    <h2 className="text-lg font-black uppercase tracking-widest text-slate-900">
                       {DOMAIN_LABELS[topDomain] || topDomain} at a glance
                     </h2>
-                    <p className="text-xs text-muted">Your strongest domain, plotted skill by skill</p>
+                    <p className="text-xs text-slate-500">Your strongest domain, plotted skill by skill</p>
                   </div>
                 </div>
                 <SkillRadar data={radarData} />
@@ -195,24 +195,24 @@ export default function SkillProfilePage({ embedded = false }) {
               <div key={domain}>
                 <div className="flex items-center gap-3 mb-4">
                   <div className={`w-2 h-8 rounded bg-gradient-to-b ${DOMAIN_COLORS[domain] || 'from-slate-400 to-slate-600'}`} />
-                  <h2 className="text-lg font-bold text-ink">
+                  <h2 className="text-lg font-black uppercase tracking-widest text-slate-900">
                     {DOMAIN_LABELS[domain] || domain}
                   </h2>
-                  <span className="text-xs font-bold text-muted">
+                  <span className="text-xs font-black uppercase tracking-widest text-slate-500">
                     {domainSkills.length} {domainSkills.length === 1 ? 'skill' : 'skills'}
                   </span>
                 </div>
 
-                <div className="bg-white border border-line rounded-2xl divide-y divide-slate-100 shadow-sm">
+                <div className="bg-white border border-slate-200 rounded-2xl divide-y divide-slate-100 shadow-sm">
                   {domainSkills.map((s) => {
                     const pct = thetaToPct(s.theta)
                     const conf = confidenceLabel(s.confidence)
                     return (
                       <div key={s.skill_code} className="p-5 flex flex-col md:flex-row md:items-center gap-3">
                         <div className="md:w-56 shrink-0">
-                          <p className="text-sm font-semibold text-ink">{s.label}</p>
+                          <p className="text-sm font-semibold text-slate-900">{s.label}</p>
                           {s.subdomain && (
-                            <p className="text-xs font-bold text-muted mt-0.5">
+                            <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 mt-0.5">
                               {s.subdomain.replace(/_/g, ' ')}
                             </p>
                           )}
@@ -226,11 +226,11 @@ export default function SkillProfilePage({ embedded = false }) {
                           </div>
                         </div>
                         <div className="flex items-center gap-2 shrink-0">
-                          <span className="text-xs font-mono text-muted w-10 text-right">{pct}%</span>
-                          <span className={`text-xs font-bold tracking-wide px-2 py-1 rounded border ${conf.cls}`}>
+                          <span className="text-xs font-mono text-slate-500 w-10 text-right">{pct}%</span>
+                          <span className={`text-[10px] font-bold uppercase tracking-wide px-2 py-1 rounded border ${conf.cls}`}>
                             {conf.text}
                           </span>
-                          <span className="text-xs font-mono text-muted whitespace-nowrap">
+                          <span className="text-[10px] font-mono text-slate-500 whitespace-nowrap">
                             {s.n_responses ?? 0} {s.n_responses === 1 ? 'response' : 'responses'}
                           </span>
                         </div>
@@ -244,23 +244,23 @@ export default function SkillProfilePage({ embedded = false }) {
             {/* Evidence trail */}
             {evidence.length > 0 && (
               <div>
-                <h2 className="text-lg font-bold text-ink mb-4">Evidence</h2>
+                <h2 className="text-lg font-black uppercase tracking-widest text-slate-900 mb-4">Evidence</h2>
                 <div className="space-y-3">
                   {evidence.slice(0, 8).map((e, i) => (
-                    <div key={i} className="bg-white border border-line rounded-xl p-4 shadow-sm">
+                    <div key={i} className="bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
                       <div className="flex items-center justify-between gap-3 mb-2">
                         <span className="text-sm font-semibold text-slate-800">{e.label || e.skill_code}</span>
                         {e.evidence_type && (
-                          <span className={`text-xs font-bold tracking-wide px-2 py-0.5 rounded border ${EVIDENCE_BADGE.default}`}>
+                          <span className={`text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded border ${EVIDENCE_BADGE.default}`}>
                             {e.evidence_type.replace(/_/g, ' ')}
                           </span>
                         )}
                       </div>
                       {e.quote && (
-                        <p className="text-sm text-muted italic">&ldquo;{e.quote}&rdquo;</p>
+                        <p className="text-sm text-slate-500 italic">&ldquo;{e.quote}&rdquo;</p>
                       )}
                       {e.ai_reasoning && (
-                        <p className="text-xs text-muted mt-2">{e.ai_reasoning}</p>
+                        <p className="text-xs text-slate-500 mt-2">{e.ai_reasoning}</p>
                       )}
                     </div>
                   ))}

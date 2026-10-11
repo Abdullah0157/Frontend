@@ -4,10 +4,10 @@
     // ==========================================
     const CONFIG = {
         bot_name: "JobStream AI",
-        primary_color: "#4338CA", // brand indigo (design option A)
+        primary_color: "#1e1b4b", // Dark Indigo (matches site header)
         bg_color: "#ffffff",
-        text_color: "#0E1116",
-        bubble_bg: "#4338CA",
+        text_color: "#1e293b",
+        bubble_bg: "#1e1b4b",
         bubble_icon_color: "#ffffff"
     };
 

@@ -60,18 +60,18 @@ export default function LiveVoiceExperience({ role = 'Senior Backend Engineer' }
 
   return (
     <div className="max-w-2xl mx-auto">
-      <div className="rounded-2xl border border-line bg-white p-8 shadow-sm">
+      <div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
         <div className="flex items-center gap-4">
-          <span className={`w-14 h-14 rounded-full flex items-center justify-center ${live ? '' : 'border border-line'}`}>
+          <span className={`w-14 h-14 rounded-full flex items-center justify-center ${live ? '' : 'border border-slate-200'}`}>
             <span className={`w-4 h-4 rounded-full ${orb}`} />
           </span>
           <div className="flex-1">
-            <p className="text-lg font-bold text-ink">Live voice interview</p>
-            <p className="text-sm text-muted">{statusLabel} · <span className="text-muted">{role}</span></p>
+            <p className="text-lg font-bold text-slate-900">Live voice interview</p>
+            <p className="text-sm text-slate-500">{statusLabel} · <span className="text-slate-500">{role}</span></p>
           </div>
           {!live ? (
             <button onClick={start}
-              className="px-6 py-3 rounded-xl bg-brand hover:bg-brand-dark text-white text-sm font-semibold transition">
+              className="px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold transition">
               Start
             </button>
           ) : (
@@ -89,7 +89,7 @@ export default function LiveVoiceExperience({ role = 'Senior Backend Engineer' }
         )}
 
         {live && (
-          <p className="mt-5 text-xs text-muted">
+          <p className="mt-5 text-xs text-slate-500">
             Speak naturally — you can interrupt Maya any time and she&apos;ll stop.
           </p>
         )}
@@ -100,8 +100,10 @@ export default function LiveVoiceExperience({ role = 'Senior Backend Engineer' }
         <div className="mt-6 space-y-3">
           {turns.map((t, i) => (
             <div key={i} className={`flex ${t.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-              <div className={`max-w-[85%] px-4 py-2.5 rounded-2xl text-sm leading-relaxed ${ t.role === 'user' ? 'bg-brand text-white' : 'bg-white border border-line text-slate-800' }`}>
-                <span className={`block text-xs font-bold mb-0.5 ${t.role === 'user' ? 'text-indigo-200' : 'text-muted'}`}>
+              <div className={`max-w-[85%] px-4 py-2.5 rounded-2xl text-sm leading-relaxed ${
+                t.role === 'user' ? 'bg-indigo-600 text-white' : 'bg-white border border-slate-200 text-slate-800'
+              }`}>
+                <span className={`block text-[10px] font-bold uppercase tracking-widest mb-0.5 ${t.role === 'user' ? 'text-indigo-200' : 'text-slate-400'}`}>
                   {t.role === 'user' ? 'You' : 'Maya'}
                 </span>
                 {t.text}

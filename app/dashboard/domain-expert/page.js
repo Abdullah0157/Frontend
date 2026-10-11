@@ -26,8 +26,8 @@ export default async function DomainExpertPage() {
   return (
     <div className="max-w-4xl mx-auto">
       <div className="mb-8">
-        <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-ink">Expert Interview</h1>
-        <p className="text-muted mt-2 max-w-2xl">
+        <h1 className="text-3xl md:text-4xl font-black tracking-tight text-slate-900">Expert Interview</h1>
+        <p className="text-slate-500 mt-2 max-w-2xl">
           A ~{interviewLengthLabel} voice interview with Maya. She reads your resume, then explores your real depth in your field —
           starting with an introduction and moving into the specifics of your work.
         </p>

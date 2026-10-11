@@ -35,12 +35,12 @@ export default function WorkspaceTopbar({ email, roleLabel = 'Candidate', homeHr
   }
 
   return (
-    <header className="sticky top-0 z-30 h-16 bg-white/90 backdrop-blur border-b border-line flex items-center justify-between gap-4 px-4 md:px-8 pl-20 md:pl-8">
+    <header className="sticky top-0 z-30 h-16 bg-white/90 backdrop-blur border-b border-slate-200 flex items-center justify-between gap-4 px-4 md:px-8 pl-20 md:pl-8">
       {/* Brand — the icon rail has no wordmark, so this is the only place the
           product name appears once you're signed in. */}
       <Link href={homeHref} aria-label="JobStream home" className="flex items-center gap-2.5 min-w-0">
         <Image src="/jobstream-icon.png" alt="" width={28} height={28} className="rounded-lg shrink-0" />
-        <span className="text-[15px] font-bold tracking-tight text-ink hidden sm:block">JobStream</span>
+        <span className="text-[15px] font-black tracking-tight text-slate-900 hidden sm:block">JobStream</span>
       </Link>
 
       <div className="relative shrink-0" ref={menuRef}>
@@ -50,29 +50,29 @@ export default function WorkspaceTopbar({ email, roleLabel = 'Candidate', homeHr
           aria-haspopup="menu"
           aria-expanded={open}
         >
-          <span className="w-8 h-8 rounded-full bg-brand flex items-center justify-center text-white font-bold text-xs">
+          <span className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-black text-[11px]">
             {initials}
           </span>
           <span className="text-left leading-tight hidden sm:block max-w-[180px]">
-            <span className="block text-sm font-semibold text-ink truncate">{email || 'Account'}</span>
-            <span className="block text-xs text-muted font-medium">{roleLabel}</span>
+            <span className="block text-sm font-semibold text-slate-900 truncate">{email || 'Account'}</span>
+            <span className="block text-[11px] text-slate-500 font-medium">{roleLabel}</span>
           </span>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"
             strokeLinecap="round" strokeLinejoin="round"
-            className={`text-muted transition-transform ${open ? 'rotate-180' : ''}`}>
+            className={`text-slate-400 transition-transform ${open ? 'rotate-180' : ''}`}>
             <path d="M6 9l6 6 6-6" />
           </svg>
         </button>
 
         {open && (
-          <div role="menu" className="absolute right-0 mt-2 w-56 rounded-xl border border-line bg-white shadow-lg py-1.5 z-40">
-            <p className="px-4 py-2 text-xs text-muted border-b border-slate-100 truncate sm:hidden">{email}</p>
+          <div role="menu" className="absolute right-0 mt-2 w-56 rounded-xl border border-slate-200 bg-white shadow-lg py-1.5 z-40">
+            <p className="px-4 py-2 text-[11px] text-slate-500 border-b border-slate-100 truncate sm:hidden">{email}</p>
             <Link href={profileHref} onClick={() => setOpen(false)}
-              className="block px-4 py-2.5 text-sm text-body hover:bg-slate-50">
+              className="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">
               Profile
             </Link>
             <Link href={`${profileHref}?tab=account`} onClick={() => setOpen(false)}
-              className="block px-4 py-2.5 text-sm text-body hover:bg-slate-50">
+              className="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">
               Account settings
             </Link>
             <button onClick={logout}

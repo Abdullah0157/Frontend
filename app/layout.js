@@ -1,6 +1,7 @@
 import './styles/globals.css'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
+import ParticleBackground from '@/components/ParticleBackground'
 import NavProgress from '@/components/NavProgress'
 import Script from 'next/script'
 
@@ -16,11 +17,12 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
-        {/* Geist is self-hosted (see globals.css); preload the main file. */}
-        <link rel="preload" href="/fonts/geist-latin.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
+        {/* Inter is self-hosted (see globals.css); preload the main file. */}
+        <link rel="preload" href="/fonts/inter-latin.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
       </head>
-      <body className="flex flex-col min-h-screen font-sans antialiased text-ink bg-white relative">
+      <body className="flex flex-col min-h-screen font-sans antialiased text-slate-900 bg-white relative">
         <NavProgress />
+        <ParticleBackground />
         <Header />
         <main className="flex-grow relative z-10">
           {children}

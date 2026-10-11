@@ -73,10 +73,10 @@ function SignupInner() {
               <path d="M4 4h16v16H4z" /><path d="M22 6l-10 7L2 6" />
             </svg>
           </span>
-          <p className="text-sm text-body leading-relaxed">
-            We sent a confirmation link to <strong className="text-ink">{form.email}</strong>. Click it to verify your address, then come back and sign in.
+          <p className="text-sm text-slate-600 leading-relaxed">
+            We sent a confirmation link to <strong className="text-slate-900">{form.email}</strong>. Click it to verify your address, then come back and sign in.
           </p>
-          <Link href="/login" className="inline-block mt-6 text-sm font-semibold text-brand hover:text-brand-dark">
+          <Link href="/login" className="inline-block mt-6 text-sm font-semibold text-indigo-600 hover:text-indigo-700">
             Go to sign in
           </Link>
         </div>
@@ -91,7 +91,7 @@ function SignupInner() {
       footer={
         <>
           Already have an account?{' '}
-          <Link href={`/login${next ? `?next=${encodeURIComponent(next)}` : ''}`} className="font-semibold text-brand hover:text-brand-dark">
+          <Link href={`/login${next ? `?next=${encodeURIComponent(next)}` : ''}`} className="font-semibold text-indigo-600 hover:text-indigo-700">
             Sign in
           </Link>
         </>

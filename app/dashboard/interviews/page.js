@@ -26,16 +26,16 @@ export default async function DashboardInterviewsPage() {
     <div className="max-w-6xl mx-auto">
       {/* Header */}
       <div className="flex items-center justify-between gap-4 mb-8">
-        <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-ink">My Interviews</h1>
-        <span className="text-sm text-muted font-medium">
+        <h1 className="text-3xl md:text-4xl font-black tracking-tight text-slate-900">My Interviews</h1>
+        <span className="text-sm text-slate-500 font-medium">
           {interviews.length} completed
         </span>
       </div>
 
       {interviews.length === 0 ? (
         <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50/50 px-6 py-14 text-center">
-          <p className="text-muted mb-3">No interviews yet.</p>
-          <Link href="/dashboard/jobs" className="text-sm font-bold text-brand hover:text-brand-dark underline underline-offset-4">
+          <p className="text-slate-500 mb-3">No interviews yet.</p>
+          <Link href="/dashboard/jobs" className="text-sm font-bold text-indigo-600 hover:text-indigo-700 underline underline-offset-4">
             Find a job to interview for →
           </Link>
         </div>
