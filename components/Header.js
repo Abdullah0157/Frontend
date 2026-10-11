@@ -5,9 +5,10 @@ import Link from 'next/link'
 import { useRouter, usePathname } from 'next/navigation'
 import { getSupabaseBrowser } from '@/lib/supabase/client'
 
+// Site header (design option A). Hidden inside the dashboards and interviews,
+// which have their own chrome.
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [isScrolled, setIsScrolled] = useState(false)
   const [user, setUser] = useState(null)
   const [accountType, setAccountType] = useState('candidate')
   const [authReady, setAuthReady] = useState(false)
@@ -18,11 +19,8 @@ export default function Header() {
     /^\/(jobs|interview)\/.+\/interview$|^\/interview\/.+$/.test(pathname || '') ||
     /^\/(dashboard|company|admin)(\/|$)/.test(pathname || '')
 
-  useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 20)
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+  // Close the phone menu after navigating.
+  useEffect(() => { setIsMenuOpen(false) }, [pathname])
 
   // Pull both auth state and account_type. /api/me handles the role lookup.
   useEffect(() => {
@@ -64,107 +62,78 @@ export default function Header() {
   const isAdmin = user && accountType === 'super_admin'
   const isGuest = !user
 
-  // Build role-specific nav links
   const navLinks = [
-    { href: '/', label: 'Home', show: true },
-    { href: '/about', label: 'About', show: true },
-    { href: '/blog', label: 'Blog', show: true },
-    { href: '/jobs', label: 'Find Jobs', show: isGuest || isCandidate },
+    { href: '/#companies', label: 'For companies', show: isGuest },
+    { href: '/#candidates', label: 'For candidates', show: isGuest },
+    { href: '/jobs', label: 'Find jobs', show: isGuest || isCandidate },
+    { href: '/dashboard', label: 'My dashboard', show: isCandidate },
     { href: '/company', label: 'Dashboard', show: isCompany },
     { href: '/company/candidates', label: 'Candidates', show: isCompany },
-  ]
+    { href: '/admin', label: 'Admin', show: isAdmin },
+    { href: '/blog', label: 'Blog', show: isGuest },
+  ].filter((l) => l.show)
+
+  const linkClass = 'text-[15px] text-body hover:text-ink transition-colors'
+  const primaryBtn = 'inline-flex items-center justify-center rounded-[10px] bg-brand px-4 py-2.5 text-[15px] font-semibold text-white hover:bg-brand-dark transition-colors'
+  const secondaryBtn = 'inline-flex items-center justify-center rounded-[10px] border border-[#CDD2DA] bg-white px-4 py-2.5 text-[15px] font-semibold text-ink hover:bg-surface transition-colors'
 
   return (
-    <header className={`fixed top-0 z-50 transition-all duration-500 w-full ${isScrolled ? 'bg-white/95 shadow-2xl backdrop-blur-md border-b border-slate-200' : 'bg-white/95 backdrop-blur-md border-b border-slate-200'}`}>
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-24">
-          <div className="flex-shrink-0 flex items-center">
-            <Link href="/" className="flex items-center gap-2.5 group">
-              <img src="/jobstream-icon.png" alt="" className="w-11 h-11 object-contain group-hover:scale-110 transition-transform duration-300" />
-              <span className="text-2xl font-black tracking-tighter text-slate-900">Jobstream</span>
-            </Link>
-          </div>
+    <header className="fixed top-0 z-50 w-full border-b border-line bg-white/95 backdrop-blur-md">
+      <div className="mx-auto flex h-16 max-w-[1200px] items-center gap-8 px-6">
+        <Link href="/" className="flex items-center gap-2.5 text-ink">
+          <img src="/jobstream-icon.png" alt="" className="h-8 w-8 object-contain" />
+          <span className="text-[19px] font-bold tracking-tight">JobStream</span>
+        </Link>
 
-          <nav className="hidden md:flex space-x-10 items-center">
-            {navLinks.filter((l) => l.show).map((l) => (
-              <Link key={l.href + l.label} href={l.href} className="nav-link font-black text-xs uppercase tracking-[0.3em] text-slate-700 hover:text-indigo-600 transition-colors">
-                {l.label}
-              </Link>
-            ))}
+        <nav aria-label="Main" className="hidden flex-1 items-center gap-7 md:flex">
+          {navLinks.map((l) => (
+            <Link key={l.href} href={l.href} className={linkClass}>{l.label}</Link>
+          ))}
+        </nav>
 
-            {authReady && (user ? (
-              <div className="flex items-center gap-3 pl-4 border-l border-slate-200">
-                {isAdmin && (
-                  <Link href="/admin" className="text-xs font-black uppercase tracking-widest px-4 py-2 rounded-full bg-red-600 hover:bg-red-500 text-white shadow-lg shadow-red-500/30">
-                    Admin Dashboard
-                  </Link>
-                )}
-                {isCandidate && (
-                  <Link href="/dashboard/profile" className="text-xs font-black uppercase tracking-[0.3em] text-slate-700 hover:text-indigo-600">
-                    Profile
-                  </Link>
-                )}
-                <button onClick={logout} className="text-xs font-black uppercase tracking-widest px-4 py-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300">
-                  Log out
-                </button>
-              </div>
-            ) : (
-              <div className="flex items-center gap-3 pl-4 border-l border-slate-200">
-                <Link href="/login" className="text-xs font-black uppercase tracking-[0.3em] text-slate-700 hover:text-indigo-600">
-                  Log in
-                </Link>
-                <Link href="/signup" className="text-xs font-black uppercase tracking-widest px-4 py-2 rounded-full bg-indigo-600 text-white hover:bg-indigo-500">
-                  Sign up
-                </Link>
-              </div>
-            ))}
-          </nav>
-
-          <div className="md:hidden flex items-center text-slate-700">
-            <button
-              type="button"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
-              aria-expanded={isMenuOpen}
-              className="hover:text-indigo-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded-lg"
-            >
-              <svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                {isMenuOpen ? (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                ) : (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                )}
-              </svg>
-            </button>
-          </div>
+        <div className="ml-auto hidden items-center gap-3 md:flex">
+          {authReady && (user ? (
+            <button type="button" onClick={logout} className={secondaryBtn}>Log out</button>
+          ) : (
+            <>
+              <Link href="/login" className="px-1.5 py-2.5 text-[15px] font-medium text-ink hover:text-brand">Sign in</Link>
+              <Link href="/signup/company" className={primaryBtn}>Post a job</Link>
+            </>
+          ))}
         </div>
+
+        <button
+          type="button"
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
+          aria-expanded={isMenuOpen}
+          className="ml-auto inline-flex h-11 w-11 items-center justify-center rounded-lg text-ink hover:bg-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand md:hidden"
+        >
+          <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            {isMenuOpen ? (
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            ) : (
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            )}
+          </svg>
+        </button>
       </div>
 
       {isMenuOpen && (
-        <div className="md:hidden bg-white/95 py-6 animate-slide-down shadow-2xl backdrop-blur-xl border-b border-slate-200">
-          <div className="container mx-auto px-4 space-y-3">
-            {navLinks.filter((l) => l.show).map((l) => (
-              <Link key={l.href + l.label} href={l.href} className="block text-slate-700 font-black text-xs uppercase tracking-[0.3em] py-3 border-b border-slate-200">
-                {l.label}
-              </Link>
+        <div className="border-t border-line bg-white md:hidden">
+          <nav aria-label="Main" className="mx-auto flex max-w-[1200px] flex-col px-6 py-3">
+            {navLinks.map((l) => (
+              <Link key={l.href} href={l.href} className="border-b border-line py-3.5 text-base text-ink">{l.label}</Link>
             ))}
             {authReady && (user ? (
-              <>
-                {isAdmin && (
-                  <Link href="/admin" className="block bg-red-600 hover:bg-red-500 text-white font-black text-xs uppercase tracking-[0.3em] py-3 px-4 rounded-full text-center">Admin Dashboard</Link>
-                )}
-                {isCandidate && (
-                  <Link href="/dashboard/profile" className="block text-slate-700 font-black text-xs uppercase tracking-[0.3em] py-3 border-b border-slate-200">Profile</Link>
-                )}
-                <button onClick={logout} className="block w-full text-left text-indigo-600 font-black text-xs uppercase tracking-[0.3em] py-3">Log out</button>
-              </>
+              <button type="button" onClick={logout} className={`${secondaryBtn} mt-4`}>Log out</button>
             ) : (
-              <>
-                <Link href="/login" className="block text-slate-700 font-black text-xs uppercase tracking-[0.3em] py-3 border-b border-slate-200">Log in</Link>
-                <Link href="/signup" className="block text-indigo-600 font-black text-xs uppercase tracking-[0.3em] py-3">Sign up</Link>
-              </>
+              <div className="mt-4 flex flex-col gap-3">
+                <Link href="/signup/company" className={primaryBtn}>Post a job</Link>
+                <Link href="/login" className={secondaryBtn}>Sign in</Link>
+              </div>
             ))}
-          </div>
+          </nav>
         </div>
       )}
     </header>
