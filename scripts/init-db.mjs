@@ -450,6 +450,19 @@ ALTER TABLE interview_jobs ADD COLUMN IF NOT EXISTS pay_min integer;
 ALTER TABLE interview_jobs ADD COLUMN IF NOT EXISTS pay_max integer;
 ALTER TABLE interview_jobs ADD COLUMN IF NOT EXISTS pay_currency text DEFAULT 'USD';
 
+-- "Contact us" messages from companies (companies are invite-only).
+CREATE TABLE IF NOT EXISTS company_enquiries (
+  id          bigserial PRIMARY KEY,
+  name        text NOT NULL,
+  company     text NOT NULL,
+  email       text NOT NULL,
+  phone       text,
+  message     text NOT NULL,
+  status      text NOT NULL DEFAULT 'new' CHECK (status IN ('new','contacted','closed')),
+  created_at  timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_company_enquiries_created ON company_enquiries(created_at DESC);
+
 -- Request limits for AI, voice and upload routes (lib/rate-limit.js).
 CREATE TABLE IF NOT EXISTS rate_limits (
   key          text NOT NULL,

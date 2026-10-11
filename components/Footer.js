@@ -39,14 +39,7 @@ export default function Footer() {
             <Link href="/jobs" className="text-xs font-black text-slate-500 hover:text-indigo-600 transition-colors uppercase tracking-[0.2em]">Find Remote Jobs</Link>
             <Link href="/blog" className="text-xs font-black text-slate-500 hover:text-indigo-600 transition-colors uppercase tracking-[0.2em]">Blog</Link>
             <Link href="/privacy" className="text-xs font-black text-slate-500 hover:text-indigo-600 transition-colors uppercase tracking-[0.2em]">Privacy</Link>
-            <a
-              href="https://www.linkedin.com/company/jobstream-opportunity"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-xs font-black text-slate-500 hover:text-indigo-600 transition-colors uppercase tracking-[0.2em]"
-            >
-              Contact Us
-            </a>
+            <Link href="/contact" className="text-xs font-black text-slate-500 hover:text-indigo-600 transition-colors uppercase tracking-[0.2em]">Contact Us</Link>
           </div>
         </div>
 

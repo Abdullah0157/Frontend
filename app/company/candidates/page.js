@@ -16,7 +16,7 @@ export default async function CandidatePoolPage() {
   const { rows: roleRows } = await query(
     `SELECT account_type FROM user_profiles WHERE user_id = $1`, [user.id]
   ).catch(() => ({ rows: [] }))
-  if (roleRows[0]?.account_type !== 'company') redirect('/company')
+  if (!['company', 'super_admin'].includes(roleRows[0]?.account_type)) redirect('/company')
 
   const { rows: candidates } = await query(
     `SELECT

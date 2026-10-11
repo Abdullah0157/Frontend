@@ -93,7 +93,7 @@ function CompanyDashboardInner() {
       .then(async ([sRes, mRes]) => {
         if (sRes.status === 401) { router.push('/login/company'); return }
         if (sRes.status === 403) {
-          setError('This page is for company accounts. Sign up at /signup/company.')
+          setError('This page is for company accounts. To hire with JobStream, contact us at /contact.')
           return
         }
         if (sRes.ok) setData(await sRes.json())

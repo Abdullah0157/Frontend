@@ -12,7 +12,7 @@ export async function GET() {
   if (!user) return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
 
   const { rows: roleRows } = await query(`SELECT account_type FROM user_profiles WHERE user_id = $1`, [user.id])
-  if (roleRows[0]?.account_type !== 'company') {
+  if (!['company', 'super_admin'].includes(roleRows[0]?.account_type)) {
     return NextResponse.json({ error: 'Company access only' }, { status: 403 })
   }
 

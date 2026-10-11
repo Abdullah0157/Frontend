@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { query } from '@/lib/db'
+import AdminCompanyTools from './AdminCompanyTools'
 
 export const dynamic = 'force-dynamic'
 
@@ -32,6 +33,8 @@ export default async function AdminCompaniesPage() {
           <p className="text-slate-500 mt-1">{companies.length} companies on the platform.</p>
         </div>
       </div>
+
+      <AdminCompanyTools />
 
       <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
         {companies.length === 0 ? (

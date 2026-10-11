@@ -6,6 +6,8 @@ const nextConfig = {
       // The site statistics page is for admins (login + super-admin role); the
       // old public copy read from a backend that no longer exists.
       { source: '/analytics', destination: '/admin/analytics', permanent: false },
+      // Company accounts are invite-only; companies ask through the contact page.
+      { source: '/signup/company', destination: '/contact', permanent: false },
     ]
   },
   images: {
