@@ -61,8 +61,8 @@ function CompanyLoginInner() {
       subtitle="Manage your roles, candidates and interviews."
       footer={
         <>
-          New company?{' '}
-          <Link href="/signup/company" className="font-semibold text-indigo-600 hover:text-indigo-700">Create an account</Link>
+          Not a client yet?{' '}
+          <Link href="/contact" className="font-semibold text-indigo-600 hover:text-indigo-700">Contact us</Link>
           <span className="text-slate-300"> · </span>
           <Link href="/login" className="font-semibold text-indigo-600 hover:text-indigo-700">Candidate sign in</Link>
         </>

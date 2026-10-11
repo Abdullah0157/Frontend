@@ -64,6 +64,12 @@ test('routes that cost money or change data refuse visitors who are not logged i
     const res = await fetch(BASE + path, { method, headers: json, body: body ?? undefined, redirect: 'manual' })
     assert.equal(res.status, 401, `${method} ${path} should need a login`)
   }
+  // Companies are invite-only: nobody can make themselves a company, and the
+  // admin routes need an admin.
+  for (const [method, path] of [['PUT', '/api/company-profile'], ['GET', '/api/admin/enquiries'], ['POST', '/api/admin/company-access']]) {
+    const res = await fetch(BASE + path, { method, headers: json, body: method === 'GET' ? undefined : '{"company_name":"X","email":"a@b.c","companyName":"X"}', redirect: 'manual' })
+    assert.equal(res.status, 401, `${method} ${path} should need a login`)
+  }
   const gone = await fetch(`${BASE}/api/jobs/from-external`, { method: 'POST', headers: json, body: '{}' })
   assert.ok([404, 405].includes(gone.status), 'the external-job route is removed')
 })
@@ -85,6 +91,15 @@ test('public pages: no calls to the old hosted backend, honest home page, reset 
   const script = /src="(\/_next\/static\/chunks\/app\/login\/page-[^"]+\.js)"/.exec(login)?.[1]
   if (script) assert.match(await (await fetch(BASE + script)).text(), /Forgot password\?/)
   else assert.match(login, /Forgot password\?/)
+  // Company sign-up is replaced by the contact page; the form checks its input
+  // (these calls never save anything, so they are safe against the live site).
+  const companySignup = await fetch(`${BASE}/signup/company`, { redirect: 'manual' })
+  assert.ok([307, 308].includes(companySignup.status) && /\/contact$/.test(companySignup.headers.get('location') || ''), 'company sign-up goes to the contact page')
+  assert.equal((await fetch(`${BASE}/contact`)).status, 200, '/contact loads')
+  const incomplete = await fetch(`${BASE}/api/contact`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: '{"name":"A"}' })
+  assert.equal(incomplete.status, 400, 'an incomplete contact message is refused')
+  const bot = await fetch(`${BASE}/api/contact`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: '{"website":"spam"}' })
+  assert.equal(bot.status, 200, 'a bot that fills the hidden field is ignored quietly')
   const analytics = await fetch(`${BASE}/analytics`, { redirect: 'manual' })
   assert.ok([307, 308].includes(analytics.status) && /\/admin\/analytics|\/login/.test(analytics.headers.get('location') || ''), 'public stats page moved to admin')
 })

@@ -11,6 +11,7 @@ export default function CompanyJobsPage() {
   const [creating, setCreating] = useState(false)
   const [showForm, setShowForm] = useState(false)
   const EMPTY_FORM = {
+    clientCompany: '',
     title: '', role: '', description: '',
     requiredAssessments: [],
     requiresAiInterview: true,
@@ -129,6 +130,12 @@ export default function CompanyJobsPage() {
   }
 
   useEffect(() => { loadJobs() }, [])
+  // The admin posts jobs for client companies (companies are invite-only).
+  const [isAdmin, setIsAdmin] = useState(false)
+  useEffect(() => {
+    fetch('/api/me', { cache: 'no-store' }).then((r) => (r.ok ? r.json() : null))
+      .then((d) => setIsAdmin(d?.accountType === 'super_admin')).catch(() => {})
+  }, [])
 
   async function createJob(e) {
     e.preventDefault()
@@ -141,6 +148,7 @@ export default function CompanyJobsPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           title: form.title, role: form.role, description: form.description,
+          clientCompany: isAdmin ? form.clientCompany : undefined,
           requiredAssessments: form.requiredAssessments,
           requiresAiInterview: form.requiresAiInterview,
           assessmentConfig: form.writtenTest.enabled ? {
@@ -221,6 +229,19 @@ export default function CompanyJobsPage() {
                 />
               </label>
             </div>
+            {isAdmin && (
+              <label className="block">
+                <span className="text-xs font-black uppercase tracking-[0.3em] text-slate-700">Client company (shown on the job)</span>
+                <input
+                  type="text"
+                  required
+                  value={form.clientCompany}
+                  onChange={(e) => setForm({ ...form, clientCompany: e.target.value })}
+                  placeholder="Northwind Support Ltd"
+                  className="mt-2 w-full px-5 py-3 rounded-xl border border-slate-300 focus:border-indigo-500 outline-none transition"
+                />
+              </label>
+            )}
             <label className="block">
               <span className="text-xs font-black uppercase tracking-[0.3em] text-slate-700">Job Description</span>
               <textarea

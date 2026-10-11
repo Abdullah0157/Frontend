@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { revalidatePath } from 'next/cache'
 import { query } from '@/lib/db'
 import { makeSlug } from '@/lib/slug'
 import { getSupabaseServer } from '@/lib/supabase/server'
@@ -11,10 +12,12 @@ async function requireCompany() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return { error: 'Not authenticated', status: 401 }
   const { rows } = await query(`SELECT account_type FROM user_profiles WHERE user_id = $1`, [user.id])
-  if (rows[0]?.account_type !== 'company') {
+  // Companies are invite-only; the admin can also post jobs for a client.
+  const role = rows[0]?.account_type
+  if (role !== 'company' && role !== 'super_admin') {
     return { error: 'Company access only', status: 403 }
   }
-  return { user }
+  return { user, isAdmin: role === 'super_admin' }
 }
 
 export async function GET() {
@@ -45,7 +48,7 @@ export async function POST(req) {
     const auth = await requireCompany()
     if (auth.error) return NextResponse.json({ error: auth.error }, { status: auth.status })
 
-    const { title, role, description, requiredAssessments, requiresAiInterview, assessmentConfig } = await req.json()
+    const { title, role, description, requiredAssessments, requiresAiInterview, assessmentConfig, clientCompany } = await req.json()
     if (!title?.trim() || !role?.trim() || !description?.trim()) {
       return NextResponse.json({ error: 'title, role, description are required' }, { status: 400 })
     }
@@ -69,11 +72,14 @@ export async function POST(req) {
 
     const slug = makeSlug()
     const { rows } = await query(
-      `INSERT INTO interview_jobs (slug, title, role, description, owner_id, required_assessments, requires_ai_interview, assessment_config)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8::jsonb)
+      `INSERT INTO interview_jobs (slug, title, role, description, owner_id, required_assessments, requires_ai_interview, assessment_config, company)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8::jsonb, $9)
        RETURNING id, slug, title, role, description, required_assessments, requires_ai_interview, assessment_config, created_at`,
-      [slug, title.trim(), role.trim(), description.trim(), auth.user.id, assessments, aiInterview, config ? JSON.stringify(config) : null]
+      [slug, title.trim(), role.trim(), description.trim(), auth.user.id, assessments, aiInterview, config ? JSON.stringify(config) : null,
+        auth.isAdmin && clientCompany ? String(clientCompany).trim().slice(0, 160) || null : null]
     )
+    // The public jobs page is cached for a minute; show the new job right away.
+    revalidatePath('/jobs')
     return NextResponse.json({ job: rows[0] }, { status: 201 })
   } catch (e) {
     console.error(e)

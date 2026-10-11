@@ -15,7 +15,7 @@ export const revalidate = 60
 async function getJobs() {
   try {
     const base = `SELECT j.id, j.slug, j.title, j.role, j.description,
-              COALESCE(cp.company_name, j.company) AS company,
+              COALESCE(NULLIF(j.company, ''), cp.company_name) AS company,
               cp.logo_url AS logo, j.created_at%COLS%
        FROM interview_jobs j
        LEFT JOIN company_profiles cp ON cp.user_id = j.owner_id

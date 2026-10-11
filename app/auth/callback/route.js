@@ -57,35 +57,8 @@ export async function GET(req) {
   try {
     const { data: { user } } = await supabase.auth.getUser()
     if (user) {
-      // 1. Pending company signup → write the company_profile.
-      const pendingRaw = cookieStore.get('pending_company')?.value
-      if (pendingRaw) {
-        try {
-          const data = JSON.parse(decodeURIComponent(pendingRaw))
-          if (data?.company_name) {
-            await query(
-              `INSERT INTO user_profiles (user_id, account_type)
-               VALUES ($1, 'company')
-               ON CONFLICT (user_id) DO UPDATE SET account_type = 'company', updated_at = now()`,
-              [user.id]
-            )
-            await query(
-              `INSERT INTO company_profiles (user_id, company_name, website, industry, description, logo_url, updated_at)
-               VALUES ($1, $2, $3, $4, $5, $6, now())
-               ON CONFLICT (user_id) DO UPDATE SET
-                 company_name = EXCLUDED.company_name,
-                 website = EXCLUDED.website,
-                 industry = EXCLUDED.industry,
-                 description = EXCLUDED.description,
-                 logo_url = EXCLUDED.logo_url,
-                 updated_at = now()`,
-              [user.id, data.company_name, data.website || null, data.industry || null, data.description || null, data.logo_url || null]
-            )
-          }
-        } catch (e) {
-          console.warn('pending_company write failed:', e.message)
-        }
-      }
+      // Company accounts are invite-only (an admin grants them), so the old
+      // "pending_company" cookie is ignored: anyone could set it by hand.
 
       // 2. Look up the account type to decide destination.
       const { rows: profRows } = await query(
