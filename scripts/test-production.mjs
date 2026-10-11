@@ -70,6 +70,10 @@ test('routes that cost money or change data refuse visitors who are not logged i
     const res = await fetch(BASE + path, { method, headers: json, body: method === 'GET' ? undefined : '{"company_name":"X","email":"a@b.c","companyName":"X"}', redirect: 'manual' })
     assert.equal(res.status, 401, `${method} ${path} should need a login`)
   }
+  // Camera photos need the test's own token; the nightly clean-up needs Vercel's secret.
+  const snap = await fetch(`${BASE}/api/assessment/${id}/snapshot`, { method: 'POST', headers: json, body: '{"image":"/9j/"}' })
+  assert.ok([403, 404].includes(snap.status), `photo upload without the test's token is refused (got ${snap.status})`)
+  assert.equal((await fetch(`${BASE}/api/cron/purge`)).status, 401, 'the clean-up job needs the cron secret')
   const gone = await fetch(`${BASE}/api/jobs/from-external`, { method: 'POST', headers: json, body: '{}' })
   assert.ok([404, 405].includes(gone.status), 'the external-job route is removed')
 })

@@ -337,6 +337,14 @@ test('integrity: blocked paste and copy attempts, and answers that appeared with
   assert.equal(summariseIntegrity([], [{ type: 'typing', raw_response: { typed: 'the typing test stores text here' } }]).level, 'clear')
 })
 
+test('integrity: camera turned off during the test', () => {
+  assert.equal(summariseIntegrity([{ kind: 'camera_off' }, { kind: 'camera_back', ms: 3000 }], []).level, 'clear', 'a brief camera blip is not worth a note')
+  const long = summariseIntegrity([{ kind: 'camera_off' }, { kind: 'camera_back', ms: 45000 }], [])
+  assert.equal(long.level, 'review')
+  assert.match(long.notes[0], /camera was off 1 time\(s\), 45 seconds/)
+  assert.equal(summariseIntegrity([1, 2].flatMap(() => [{ kind: 'camera_off' }, { kind: 'camera_back', ms: 2000 }]), []).counts.camera_offs, 2)
+})
+
 test('integrity: leaving full screen', () => {
   const once = summariseIntegrity([{ kind: 'fullscreen_exit' }, { kind: 'fullscreen_back', ms: 3000 }], [])
   assert.equal(once.level, 'clear', 'one quick Esc press is not worth a note')
