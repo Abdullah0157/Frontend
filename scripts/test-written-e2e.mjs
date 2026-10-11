@@ -9,7 +9,10 @@
 // browser; no token = no access; only the current question is accepted; a
 // double submit records one answer; an expired section closes itself.
 
-import { readFileSync } from 'node:fs'
+import { readFileSync, mkdtempSync, rmSync } from 'node:fs'
+import { execFileSync } from 'node:child_process'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
 import assert from 'node:assert/strict'
 import pg from 'pg'
 
@@ -27,11 +30,15 @@ if (!['localhost', '127.0.0.1'].includes(host)) throw new Error('e2e must run ag
 const db = new pg.Pool({ connectionString: process.env.DATABASE_URL, ssl: false })
 
 const FORBIDDEN = ['scoring_rubric', 'answer', 'hidden_tests', 'correct', 'points', 'reference', 'wrong', 'issues', 'ideal_answer', 'explanation']
+// English answer keys and listening scripts. Not checked inside a coding item's
+// visible test data, where a field such as an order's `lines` is ordinary input.
+const FORBIDDEN_OUTSIDE_TESTS = ['lines', 'acceptable', 'must_include']
 function assertNoSecrets(obj, where) {
   const walk = (v, path) => {
     if (v && typeof v === 'object') {
       for (const [k, x] of Object.entries(v)) {
         assert.ok(!FORBIDDEN.includes(k), `${where}: leaked "${k}" at ${path}.${k}`)
+        assert.ok(path.includes('.visibleTests') || !FORBIDDEN_OUTSIDE_TESTS.includes(k), `${where}: leaked "${k}" at ${path}.${k}`)
         walk(x, `${path}.${k}`)
       }
     }
@@ -56,13 +63,34 @@ async function keyFor(sessionId, itemId) {
   return { entry, it }
 }
 
+// Speech made by the Mac's built-in voices (macOS `say`), as 16 kHz WAV.
+function macSpeech(voice, text) {
+  const dir = mkdtempSync(join(tmpdir(), 'e2e-say-'))
+  try {
+    execFileSync('say', ['-v', voice, '-o', join(dir, 'a.aiff'), text])
+    execFileSync('afconvert', ['-f', 'WAVE', '-d', 'LEI16@16000', '-c', '1', join(dir, 'a.aiff'), join(dir, 'a.wav')])
+    const bytes = readFileSync(join(dir, 'a.wav'))
+    return { audio: bytes.toString('base64'), mime: 'audio/wav', durationMs: Math.round(((bytes.length - 44) / 32000) * 1000) }
+  } finally {
+    rmSync(dir, { recursive: true, force: true })
+  }
+}
+
 const shownIndex = (order, original) => (order ? order.indexOf(original) : original)
 
 async function answerFor(strong, sessionId, item, language) {
   const { entry, it } = await keyFor(sessionId, item.id)
   const lang = language === 'python' ? 'python' : 'javascript'
   const r = it.scoring_rubric
-  if (it.type === 'mcq') {
+  if (it.type === 'speaking') {
+    // The "candidate" speaks with the Mac's Indian English voice (Rishi): strong
+    // says the right thing, weak says it does not know. Local and free, so the
+    // test never waits on the online voice service.
+    const say = !strong ? "Sorry, I don't know." : r.mode === 'read_aloud' ? r.text
+      : r.mode === 'repeat' ? r.audio.lines[0].text : r.mode === 'short_answer' ? r.acceptable[0] : r.ideal_answer
+    return { ...macSpeech('Rishi', say), rerecords: 0 }
+  }
+  if (it.type === 'mcq' || it.type === 'listening') {
     const right = shownIndex(entry.order, r.answer.correct)
     return { choice: strong ? right : (right + 1) % item.choices.length }
   }
@@ -77,14 +105,18 @@ async function answerFor(strong, sessionId, item, language) {
     return { choices: strong ? key.map((k) => shownIndex(entry.order, k)) : wrong }
   }
   if (it.type === 'coding') return { code: strong ? r.reference[lang] : r.wrong[0][lang] }
-  if (it.type === 'code_review') return { text: strong ? r.ideal_answer : 'Looks fine to me.' }
+  // Written answers carry the browser's typing count. The strong candidate
+  // "typed" theirs; the weak one's text appeared without typing (a tool), but
+  // it is under the size threshold so it raises no note.
+  const typed = (text) => ({ chars: strong ? text.length : 0, growth: text.length })
+  if (it.type === 'code_review') { const text = strong ? r.ideal_answer : 'Looks fine to me.'; return { text, typed: typed(text) } }
   if (it.type === 'typing') {
     const words = it.content.passage.split(/\s+/)
     if (strong) return { typed: words.slice(0, Math.round(words.length * 0.6)).join(' '), elapsedMs: 120000, pasteAttempts: 0, stats: { keystrokes: 900, fastShare: 0.01, meanMs: 160 } }
     const typo = (w, i) => (i % 3 === 0 ? w.split('').reverse().join('') : w)
     return { typed: words.slice(0, 15).map(typo).join(' '), elapsedMs: 120000, pasteAttempts: 0, stats: { keystrokes: 90, fastShare: 0, meanMs: 900 } }
   }
-  if (it.type === 'scenario_response') return { text: strong ? it.reference_answer : 'ok sorry' }
+  if (it.type === 'scenario_response') { const text = strong ? it.reference_answer : 'ok sorry'; return { text, typed: typed(text) } }
   return { text: strong ? 'A careful, structured answer.' : '' }
 }
 
@@ -233,9 +265,11 @@ Wrote unit and integration tests for every service.`]
   return first.sessionId
 }
 
-// E2E_ONLY=nonswe runs just the non-software families (quicker while iterating).
+// E2E_ONLY=nonswe | english runs just those parts (quicker while iterating).
 const ONLY_NONSWE = process.env.E2E_ONLY === 'nonswe'
+const ONLY_ENGLISH = process.env.E2E_ONLY === 'english'
 try {
+  if (ONLY_ENGLISH) { await englishFlow(); console.log('\nE2E PASSED (English only)'); process.exit(0) }
   if (ONLY_NONSWE) { await nonSwe(); console.log('\nE2E PASSED (non-software only)'); process.exit(0) }
   const jobSession = await jobFlow()
   console.log(`  company report preview: ${BASE}/dev/written-report/${jobSession}`)
@@ -245,7 +279,8 @@ try {
   await securityChecks()
   for (const language of languages.filter((l) => l !== 'typescript')) {
     const events = language === 'javascript'
-      ? [{ kind: 'tab_hidden', ms: 75000 }, { kind: 'paste', chars: 640 }, { kind: 'bogus', ms: 1 }]
+      ? [{ kind: 'tab_hidden', ms: 75000 }, { kind: 'paste_blocked', chars: 640 }, ...[1, 2, 3].map(() => ({ kind: 'copy_blocked', chars: 30 })),
+        { kind: 'fullscreen_exit' }, { kind: 'fullscreen_back', ms: 30000 }, { kind: 'bogus', ms: 1 }]
       : null
     const strong = await playThrough({ strong: true, language, integrityEvents: events && events.filter((e) => e.kind !== 'bogus') })
     const weak = await playThrough({ strong: false, language })
@@ -259,6 +294,15 @@ try {
     assert.ok(strong.final.result?.sections?.length, 'candidate sees section feedback')
     assert.ok(!('score' in (strong.final.result.sections[0] || {})), 'candidate does not see numbers')
     assert.equal(strong.report.integrity.level, events ? 'review' : 'clear', 'integrity notes follow the signals')
+    const { rows: [stored] } = await db.query(
+      `SELECT count(*)::int AS n FROM item_responses WHERE session_id = $1 AND raw_response->'typed'->>'chars' IS NOT NULL`, [strong.sessionId])
+    assert.ok(stored.n >= 1, 'the typing count is stored with written answers')
+    if (events) {
+      const notes = strong.report.integrity.notes.join(' ')
+      assert.match(notes, /paste or drop text from outside the test 1 time\(s\) \(blocked; largest 640/)
+      assert.match(notes, /copy the questions 3 times \(blocked\)/)
+      assert.match(notes, /Left full screen 1 time\(s\), 30 seconds in total/)
+    }
     assert.equal(weak.report.integrity.level, 'clear')
     assert.ok(strong.report.followups.length >= 1, 'follow-up questions written')
     console.log(`  report flags: ${JSON.stringify(strong.report.validation.flags)}; summary: ${strong.report.summary ? 'yes' : 'no'}; integrity: ${strong.report.integrity.level} ${JSON.stringify(strong.report.integrity.notes)}`)
@@ -292,6 +336,7 @@ try {
   }
 
   await nonSwe()
+  await englishFlow()
 
   console.log('\nE2E PASSED')
 } catch (e) {
@@ -327,6 +372,46 @@ async function nonSwe() {
       assert.equal(t.passed, true, `${label}: a good typist passes`)
       assert.equal(weak.report.typing[0].passed, false, `${label}: a slow, error-prone typist does not`)
       console.log(`  typing strong ${t.netWpm} wpm ${t.accuracy}% | weak ${weak.report.typing[0].netWpm} wpm ${weak.report.typing[0].accuracy}%`)
+    }
+  }
+}
+
+// English Screener: listening plays limited, sound check, spoken answers
+// transcribed and marked, CEFR levels and "meets the required level".
+async function englishFlow() {
+  // Play limit and sound check on a fresh session.
+  const start = await call('/api/assessment/start', { method: 'POST', body: { mode: 'written', track: 'english', level: 'screener', options: { requiredLevel: 'B2' } } })
+  assert.equal(start.status, 200, JSON.stringify(start.data))
+  const { sessionId, token } = start.data
+  const hello = macSpeech('Tessa', 'Hello, my name is Ada and I am ready to start the test.')
+  const check = await call(`/api/assessment/${sessionId}/sound-check`, { method: 'POST', token, body: { audio: hello.audio, mime: hello.mime } })
+  assert.equal(check.status, 200, JSON.stringify(check.data))
+  assert.equal(check.data.ok, true, `sound check heard: ${check.data.heard}`)
+  const first = (await call(`/api/assessment/${sessionId}/begin`, { method: 'POST', token })).data
+  assert.equal(first.item.type, 'listening')
+  const play = (n) => fetch(`${BASE}/api/assessment/${sessionId}/audio?itemId=${first.item.id}`, { headers: { 'x-assessment-token': token } })
+  const p1 = await play(); const p2 = await play(); const p3 = await play()
+  assert.deepEqual([p1.status, p2.status, p3.status], [200, 200, 429], 'a listening clip plays twice, no more')
+  assert.equal(p1.headers.get('content-type'), 'audio/mpeg')
+  assert.ok((await p1.arrayBuffer()).byteLength > 5000)
+  assert.equal((await fetch(`${BASE}/api/assessment/${sessionId}/audio?itemId=${first.item.id}`)).status, 403, 'audio needs the token')
+  console.log(`✓ English: sound check heard "${check.data.heard}", listening plays limited to 2`)
+
+  for (const strong of [true, false]) {
+    const r = await playThrough({ strong, language: null, track: 'english', level: 'screener', options: { requiredLevel: 'B2' } })
+    const { rows: [rep] } = await db.query(`SELECT english FROM assessment_reports WHERE session_id = $1`, [r.sessionId])
+    const e = rep.english
+    console.log(`english ${strong ? 'strong' : 'weak  '}: overall ${e.overall} (${e.cefr}) listening ${e.skills.listening?.cefr} speaking ${e.skills.speaking?.cefr} reading ${e.skills.reading?.cefr} | meets B2: ${e.meetsRequired} | ${r.report.sections.map((x) => `${x.key}:${x.score}`).join(' ')}`)
+    if (strong) {
+      assert.equal(e.meetsRequired, 'yes', 'a strong candidate with an Indian accent meets B2')
+      assert.ok(e.skills.speaking.score >= 70, 'accented, correct speech scores well')
+      const { rows: sp } = await db.query(`SELECT ai_evaluation FROM item_responses ir JOIN items i ON i.id = ir.item_id WHERE ir.session_id = $1 AND i.type = 'speaking'`, [r.sessionId])
+      assert.ok(sp.every((x) => x.ai_evaluation.transcript), 'every spoken answer was transcribed')
+      const rep2 = await (await import('../lib/written-assessment.js')).companyReport(r.sessionId)
+      assert.ok(rep2.speaking.length >= 10 && rep2.speaking.every((x) => x.audioId), 'the company report lists every recording')
+      assert.equal(rep2.report.english.cefr, e.cefr)
+    } else {
+      assert.equal(e.meetsRequired, 'no')
     }
   }
 }

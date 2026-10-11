@@ -1,0 +1,1082 @@
+[
+  {
+    "bank_key": "en.rd.kitchen-fridge-friday",
+    "type": "mcq",
+    "section": "reading",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "english.reading",
+    "secondary_skill_codes": [],
+    "cefr": "A2",
+    "prompt": "Read the notice in the staff kitchen.\n\n**Staff kitchen**\n\nPlease wash your own cups and plates. Do not leave them in the sink. The fridge is cleaned every Friday at 4 pm. Any food that is still in the fridge at that time will be thrown away.\n\nWhat happens every Friday afternoon?",
+    "format": "concept",
+    "choices": [
+      "Food left in the fridge is thrown away.",
+      "All the cups and plates are washed.",
+      "The staff kitchen is closed all afternoon.",
+      "New food is put in the fridge."
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "explanation": "Deciding sentences: \"The fridge is cleaned every Friday at 4 pm. Any food that is still in the fridge at that time will be thrown away.\" Staff wash their own cups at any time, the kitchen is not said to close, and nothing is said about new food.",
+    "expected_time_s": 40
+  },
+  {
+    "bank_key": "en.rd.late-tell-team-leader",
+    "type": "mcq",
+    "section": "reading",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "english.reading",
+    "secondary_skill_codes": [],
+    "cefr": "A2",
+    "prompt": "Read the chat message.\n\n**Nadia:** Hi Sam, I'm stuck in traffic and I will be about 20 minutes late. Can you please tell our team leader? I will start my calls at 9:20, not 9:00. Thank you!\n\nWhat does Nadia ask Sam to do?",
+    "format": "concept",
+    "choices": [
+      "Take her calls until she arrives",
+      "Tell the team leader that she is late",
+      "Tell her customers that she is late",
+      "Call her back when the traffic is better"
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "explanation": "Deciding sentence: \"Can you please tell our team leader?\" Nadia will take her own calls from 9:20, the person to tell is the team leader, not her customers, and she does not ask Sam to call her back.",
+    "expected_time_s": 40
+  },
+  {
+    "bank_key": "en.rd.car-park-ticket",
+    "type": "mcq",
+    "section": "reading",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "english.reading",
+    "secondary_skill_codes": [],
+    "cefr": "A2",
+    "prompt": "Read the notice.\n\n**Car park closed**\n\nThe staff car park will be closed this Saturday and Sunday for repairs. Please park in the public car park on King Street. The company will pay for your parking. Keep your ticket and give it to Reception on Monday.\n\nWhat should staff do with their parking ticket?",
+    "format": "concept",
+    "choices": [
+      "Pay for it at the public car park",
+      "Show it at the staff car park",
+      "Give it to Reception on Monday",
+      "Throw it away after the weekend"
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "explanation": "Deciding sentence: \"Keep your ticket and give it to Reception on Monday.\" The company pays, the staff car park is closed, and the ticket must be kept, not thrown away.",
+    "expected_time_s": 40
+  },
+  {
+    "bank_key": "en.rd.chair-wrong-colour",
+    "type": "mcq",
+    "section": "reading",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "english.reading",
+    "secondary_skill_codes": [],
+    "cefr": "A2",
+    "prompt": "Read the email from a customer.\n\nHello,\n\nI ordered two black chairs (order 5521) on 3 June. Yesterday I received one black chair and one white chair. I want to keep the black chair. Please send me another black chair, and I will return the white one.\n\nThank you,\nJi-woo Park\n\nWhat does the customer want?",
+    "format": "concept",
+    "choices": [
+      "A refund for both chairs",
+      "Two more black chairs",
+      "A white chair instead of the black one",
+      "A black chair instead of the white one"
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "explanation": "Deciding sentence: \"Please send me another black chair, and I will return the white one.\" The customer keeps the black chair, so no refund for both and only one more chair is needed.",
+    "expected_time_s": 40
+  },
+  {
+    "bank_key": "en.rd.help-desk-saturday",
+    "type": "mcq",
+    "section": "reading",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "english.reading",
+    "secondary_skill_codes": [],
+    "cefr": "A2",
+    "prompt": "Read the opening hours.\n\n**Help desk opening hours**\n\n- Monday to Friday: 8 am to 8 pm\n- Saturday: 9 am to 1 pm\n- Sunday: closed\n- Public holidays: 10 am to 2 pm\n\nYou can also email us at any time. We reply within one working day.\n\nWhen can customers call the help desk on Saturday?",
+    "format": "concept",
+    "choices": [
+      "From 9 am to 1 pm",
+      "From 8 am to 8 pm",
+      "From 10 am to 2 pm",
+      "They cannot call on Saturday"
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "explanation": "Deciding line: \"Saturday: 9 am to 1 pm\". 8 am to 8 pm is Monday to Friday, 10 am to 2 pm is public holidays, and the help desk is closed on Sunday, not Saturday.",
+    "expected_time_s": 40
+  },
+  {
+    "bank_key": "en.rd.meeting-moved-eleven",
+    "type": "mcq",
+    "section": "reading",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "english.reading",
+    "secondary_skill_codes": [],
+    "cefr": "A2",
+    "prompt": "Read the message from a team leader.\n\n**Team meeting moved**\n\nTomorrow's team meeting will now start at 11:00, not 10:00, because the manager has a call with a client at 10:00. The meeting is still in Room 2. Please bring your call numbers for this week.\n\nWhy has the meeting time changed?",
+    "format": "concept",
+    "choices": [
+      "Room 2 is not free at 10:00.",
+      "The manager has a call at 10:00.",
+      "The team needs more time to get its numbers.",
+      "The meeting has moved to a new room."
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "explanation": "Deciding sentence: \"...because the manager has a call with a client at 10:00.\" The meeting is \"still in Room 2\", and the numbers are only something to bring, not the reason.",
+    "expected_time_s": 40
+  },
+  {
+    "bank_key": "en.rd.visitor-card-return",
+    "type": "mcq",
+    "section": "reading",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "english.reading",
+    "secondary_skill_codes": [],
+    "cefr": "A2",
+    "prompt": "Read the sign at Reception.\n\n**Information for visitors**\n\nAll visitors must sign in at Reception and wear a visitor card at all times. Please give your card back to Reception when you leave. Visitors may not go onto the call floor without a member of staff.\n\nWhat must visitors do when they leave?",
+    "format": "concept",
+    "choices": [
+      "Sign in at Reception",
+      "Find a member of staff to walk with them",
+      "Give their visitor card back",
+      "Wear their visitor card"
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "explanation": "Deciding sentence: \"Please give your card back to Reception when you leave.\" Signing in is done when visitors arrive, a member of staff is needed for the call floor, and the card is worn during the visit.",
+    "expected_time_s": 40
+  },
+  {
+    "bank_key": "en.rd.parcel-neighbour",
+    "type": "mcq",
+    "section": "reading",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "english.reading",
+    "secondary_skill_codes": [],
+    "cefr": "A2",
+    "prompt": "Read the text message.\n\n**HomeStore:** Your parcel is coming today between 1 pm and 3 pm. If you are not at home, the driver will leave it with a neighbour. If you want to choose a different day, reply DAY to this message.\n\nWhat will happen if the customer is not at home?",
+    "format": "concept",
+    "choices": [
+      "The driver will try again on the next working day.",
+      "The parcel will go back to HomeStore.",
+      "HomeStore will send a text to choose a day.",
+      "The driver will leave the parcel with a neighbour."
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "explanation": "Deciding sentence: \"If you are not at home, the driver will leave it with a neighbour.\" The driver does not come back, the parcel does not go back, and choosing a day is something the customer does by replying DAY.",
+    "expected_time_s": 40
+  },
+  {
+    "bank_key": "en.rd.sale-item-exchange",
+    "type": "mcq",
+    "section": "reading",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "english.reading",
+    "secondary_skill_codes": [],
+    "cefr": "B1",
+    "prompt": "Read the returns policy.\n\n**Returns**\n\nYou can return most items within 30 days of delivery for a full refund. Items must be unused and in the original box. Sale items can be exchanged for a different item, but they cannot be refunded. Refunds are paid to the card used for the order within 5 working days.\n\nA customer bought an item in the sale two weeks ago. It is unused, and she wants her money back. What should the agent tell her?",
+    "format": "concept",
+    "choices": [
+      "She can get a full refund to her card.",
+      "She can exchange it, but she cannot get a refund.",
+      "She cannot return it after 14 days.",
+      "She can get a refund because it is unused."
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "explanation": "Deciding sentence: \"Sale items can be exchanged for a different item, but they cannot be refunded.\" Being unused does not change this rule, and the time limit is 30 days, not 14.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "en.rd.password-locked",
+    "type": "mcq",
+    "section": "reading",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "english.reading",
+    "secondary_skill_codes": [],
+    "cefr": "B1",
+    "prompt": "Read the email from the IT team.\n\n**Subject: Password changes**\n\nFrom next Monday, all staff must change their computer password every 60 days. You will receive a reminder email 7 days before your password expires. If you do not change it in time, your account will be locked, and you will need to call the IT help desk on extension 400.\n\nWhat happens if a staff member does not change their password in time?",
+    "format": "concept",
+    "choices": [
+      "They receive a second reminder email.",
+      "The IT help desk changes it for them.",
+      "Their account is locked.",
+      "They must change it every 7 days."
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "explanation": "Deciding sentence: \"If you do not change it in time, your account will be locked.\" Only one reminder is mentioned, and it comes before the password expires. The help desk is called after the lock, and the change is every 60 days.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "en.rd.ticket-check-finance",
+    "type": "mcq",
+    "section": "reading",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "english.reading",
+    "secondary_skill_codes": [],
+    "cefr": "B1",
+    "prompt": "Read the message from a colleague.\n\n**Leila:** Hi Carlos, the customer in ticket 3382 says she has paid, but I can't see the payment in our system. She has sent a photo of her bank receipt. Can you check with the finance team before you reply to her? I'm off tomorrow, so please take over the ticket. Thanks!\n\nWhat does Leila want Carlos to do before he replies to the customer?",
+    "format": "concept",
+    "choices": [
+      "Ask the customer for a photo of her receipt",
+      "Wait until Leila is back at work",
+      "Close the ticket in the system",
+      "Check the payment with the finance team"
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "explanation": "Deciding sentence: \"Can you check with the finance team before you reply to her?\" The customer has already sent the photo, Leila is off so Carlos takes over, and nothing says to close the ticket.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "en.rd.training-places-limited",
+    "type": "mcq",
+    "section": "reading",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "english.reading",
+    "secondary_skill_codes": [],
+    "cefr": "B1",
+    "prompt": "Read the notice.\n\n**New product training**\n\nTraining on the new phone plans will take place on 14 and 15 March. Each session lasts three hours, and you only need to attend one of them. Please add your name to the team sheet by 10 March. There are only 12 places in each session, so please sign up early.\n\nWhy should staff sign up early?",
+    "format": "concept",
+    "choices": [
+      "Each session has a limited number of places.",
+      "The sessions last three hours.",
+      "The team sheet will be removed on 14 March.",
+      "Staff must attend both of the training sessions."
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "explanation": "Deciding sentence: \"There are only 12 places in each session, so please sign up early.\" The length of a session is not the reason, the sign-up date is 10 March, and staff \"only need to attend one\".",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "en.rd.repair-no-show-email",
+    "type": "mcq",
+    "section": "reading",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "english.reading",
+    "secondary_skill_codes": [],
+    "cefr": "B1",
+    "prompt": "Read the email from a customer.\n\nDear Customer Care,\n\nI called on Monday about my broken washing machine. The agent, Joseph, was very helpful and booked a repair for Thursday. However, nobody came on Thursday, and nobody called me. I have now taken two days off work. Please call me today to book a new date.\n\nRegards,\nAnil Mehta\n\nWhy is Mr Mehta writing?",
+    "format": "concept",
+    "choices": [
+      "The agent he spoke to was not helpful.",
+      "The repair person did not come on Thursday.",
+      "His machine broke again after the repair.",
+      "He wants to cancel the repair visit completely."
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "explanation": "Deciding sentence: \"However, nobody came on Thursday, and nobody called me.\" He says Joseph \"was very helpful\", no repair has happened yet, and he asks for \"a new date\", not to cancel.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "en.rd.identity-check-general-info",
+    "type": "mcq",
+    "section": "reading",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "english.reading",
+    "secondary_skill_codes": [],
+    "cefr": "B1",
+    "prompt": "Read the company policy.\n\n**Identity checks on calls**\n\nBefore you discuss any account, ask the caller for their full name, date of birth and the first line of their address. If any of these details do not match our records, do not give any account information. You may still give general information, such as our opening hours or prices.\n\nA caller gives the wrong date of birth. What can the agent still do?",
+    "format": "concept",
+    "choices": [
+      "Tell the caller their account balance",
+      "Change the address on the account",
+      "Tell the caller the opening hours",
+      "Read out the caller's last payment"
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "explanation": "Deciding sentence: \"You may still give general information, such as our opening hours or prices.\" The balance, the address and the last payment are account information, which must not be given when a detail does not match.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "en.rd.urgent-message-supervisor",
+    "type": "mcq",
+    "section": "reading",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "english.reading",
+    "secondary_skill_codes": [],
+    "cefr": "B1",
+    "prompt": "Read the message from a supervisor.\n\n**Supervisor:** Quick reminder for everyone: customers are waiting more than 6 minutes today. Please keep your after-call notes short and finish them within 1 minute. Take your breaks only at your planned times. If you need to leave your desk for something urgent, send me a message first.\n\nWhat should an agent do before leaving the desk for something urgent?",
+    "format": "concept",
+    "choices": [
+      "Finish all their after-call notes",
+      "Wait for their planned break time",
+      "Ask the caller to wait 6 minutes",
+      "Send the supervisor a message"
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "explanation": "Deciding sentence: \"If you need to leave your desk for something urgent, send me a message first.\" Notes and planned breaks are separate reminders, and 6 minutes is today's waiting time for customers.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "en.rd.cleaning-keep-time",
+    "type": "mcq",
+    "section": "reading",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "english.reading",
+    "secondary_skill_codes": [],
+    "cefr": "B1",
+    "prompt": "Read the email from a customer.\n\nHi,\n\nI have a booking for a home cleaning on Friday 9 May at 2 pm (booking CL-208). Could you move it to the morning of the same day? Any time before 12 is fine for me. If there is no morning time free, please keep the booking at the original time.\n\nThanks,\nOksana\n\nWhat should happen if no morning time is free on Friday?",
+    "format": "concept",
+    "choices": [
+      "The booking stays at 2 pm on Friday.",
+      "The booking moves to another day.",
+      "The booking is cancelled.",
+      "The booking moves to the next free time."
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "explanation": "Deciding sentence: \"If there is no morning time free, please keep the booking at the original time.\" The original time is Friday at 2 pm. The customer does not ask to change the day, cancel, or take the next free time.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "en.rd.fire-alarm-test",
+    "type": "mcq",
+    "section": "reading",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "english.reading",
+    "secondary_skill_codes": [],
+    "cefr": "B1",
+    "prompt": "Read the notice.\n\n**Fire alarm test**\n\nThe fire alarm will be tested on Wednesday at 10:30. It will ring for about one minute. During the test, you do not need to leave the building. If the alarm rings at any other time, it is not a test: leave the building by the nearest exit.\n\nWhat should staff do when the alarm rings at 10:30 on Wednesday?",
+    "format": "concept",
+    "choices": [
+      "Leave by the nearest exit",
+      "Stay in the building",
+      "Call Reception to check",
+      "Wait one minute, then leave"
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "explanation": "Deciding sentence: \"During the test, you do not need to leave the building.\" Leaving by the nearest exit is for an alarm \"at any other time\". Calling Reception is never mentioned, and \"about one minute\" is how long the test rings.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "en.rd.premium-plan-notice",
+    "type": "mcq",
+    "section": "reading",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "english.reading",
+    "secondary_skill_codes": [],
+    "cefr": "B1",
+    "prompt": "Read the product information.\n\n**Premium plan**\n\nThe Premium plan costs 25 dollars a month. It includes unlimited calls, 50 GB of data and free calls to 30 countries. There is no fixed contract: customers can cancel at any time by giving 30 days' notice. Customers who move from the Basic plan to Premium keep their phone number.\n\nWhat does a Premium customer need to do to cancel?",
+    "format": "concept",
+    "choices": [
+      "Wait until the contract ends",
+      "Move back to the Basic plan",
+      "Give 30 days' notice",
+      "Pay a cancellation fee"
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "explanation": "Deciding sentence: \"customers can cancel at any time by giving 30 days' notice.\" There is \"no fixed contract\" to wait for, moving to Basic is not part of cancelling, and no fee is mentioned.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "en.rd.saturday-overtime-reply",
+    "type": "mcq",
+    "section": "reading",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "english.reading",
+    "secondary_skill_codes": [],
+    "cefr": "B1",
+    "prompt": "Read the email from a manager.\n\nHi team,\n\nWe need extra help on Saturday 21 June for the summer sale. Anyone who works that day will be paid one and a half times the normal rate. Shifts are 4 hours long, in the morning or the afternoon. If you would like to work, reply to this email by Wednesday and say which shift you want.\n\nThanks,\nGabriela\n\nHow should staff tell Gabriela that they want to work on Saturday?",
+    "format": "concept",
+    "choices": [
+      "Write their name on the team sheet",
+      "Tell their team leader on Saturday",
+      "Call her before the sale starts",
+      "Reply to her email by Wednesday"
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "explanation": "Deciding sentence: \"If you would like to work, reply to this email by Wednesday and say which shift you want.\" No team sheet, team leader or phone call is mentioned.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "en.rd.subscription-already-cancelled",
+    "type": "mcq",
+    "section": "reading",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "english.reading",
+    "secondary_skill_codes": [],
+    "cefr": "B1",
+    "prompt": "Read the chat message from a customer.\n\n**Customer:** Hi, I got an email saying my subscription will renew on 1 July for 120 dollars. But I cancelled it in May, and I still have your email confirming the cancellation. Can you please check and stop the payment?\n\nWhat does the customer say about the subscription?",
+    "format": "concept",
+    "choices": [
+      "It was already cancelled in May.",
+      "The renewal price is too high.",
+      "The renewal date in the email is wrong.",
+      "No cancellation email was sent."
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "explanation": "Deciding sentence: \"But I cancelled it in May, and I still have your email confirming the cancellation.\" The customer does not complain about the price or the date, and says a confirmation email was sent.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "en.rd.lost-keys-office-manager",
+    "type": "mcq",
+    "section": "reading",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "english.reading",
+    "secondary_skill_codes": [],
+    "cefr": "B1",
+    "prompt": "Read the notice.\n\n**Lost property**\n\nItems found in the office are kept at Reception for two weeks. After that, they are given to charity. To collect an item, describe it and show your staff card. Keys and bank cards are kept in a locked safe and must be collected from the office manager.\n\nWhere should a staff member go to collect lost keys?",
+    "format": "concept",
+    "choices": [
+      "To Reception",
+      "To the office manager",
+      "To the security desk",
+      "To the charity shop"
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "explanation": "Deciding sentence: \"Keys and bank cards are kept in a locked safe and must be collected from the office manager.\" Reception keeps other items, and no security desk or charity shop is a place to collect from.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "en.rd.chairs-delayed-do-nothing",
+    "type": "mcq",
+    "section": "reading",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "english.reading",
+    "secondary_skill_codes": [],
+    "cefr": "B1",
+    "prompt": "Read the email to a customer.\n\nDear Mr Haddad,\n\nWe are sorry, but your order of garden chairs has been delayed because of high demand. The new delivery date is 18 August. If you no longer want the chairs, you can cancel the order on our website and get a full refund. If we do not hear from you, we will deliver the chairs on the new date.\n\nWhat will happen if Mr Haddad does nothing?",
+    "format": "concept",
+    "choices": [
+      "The order will be cancelled.",
+      "He will receive a full refund.",
+      "The chairs will arrive on 18 August.",
+      "The company will call him to agree a new date."
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "explanation": "Deciding sentence: \"If we do not hear from you, we will deliver the chairs on the new date.\" The new date is 18 August. Cancelling and the refund only happen if he cancels on the website, and no call is mentioned.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "en.rd.holiday-department-manager",
+    "type": "mcq",
+    "section": "reading",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "english.reading",
+    "secondary_skill_codes": [],
+    "cefr": "B1",
+    "prompt": "Read the company policy.\n\n**Holiday requests**\n\nAsk for holiday at least 4 weeks before the first day you want to take off. Requests for more than 10 working days in a row must be approved by the department manager, not only by your team leader. In December, no more than 2 people from each team can be on holiday at the same time.\n\nWho must approve a request for 12 working days of holiday in a row?",
+    "format": "concept",
+    "choices": [
+      "Only the team leader",
+      "Two people from the team",
+      "The HR team",
+      "The department manager"
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "explanation": "Deciding sentence: \"Requests for more than 10 working days in a row must be approved by the department manager, not only by your team leader.\" 12 days is more than 10. \"2 people\" is the December limit, and HR is not mentioned.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "en.rd.shift-swap-doctor",
+    "type": "mcq",
+    "section": "reading",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "english.reading",
+    "secondary_skill_codes": [],
+    "cefr": "B1",
+    "prompt": "Read the message from a colleague.\n\n**Tariq:** Hi Ifeoma, could you swap shifts with me next Tuesday? I'm on the early shift (7 to 3) and you're on the late shift (12 to 8). I have a doctor's appointment at 9 that morning. If you agree, I'll ask Rahul to update the schedule. Thanks!\n\nWhy does Tariq want to swap shifts?",
+    "format": "concept",
+    "choices": [
+      "He has a doctor's appointment that morning.",
+      "He prefers to work the late shift on Tuesdays.",
+      "Rahul asked him to change shifts.",
+      "Ifeoma wants to start work earlier."
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "explanation": "Deciding sentence: \"I have a doctor's appointment at 9 that morning.\" He does not say he prefers late shifts, Rahul only updates the schedule, and Ifeoma has not agreed yet.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "en.rd.damaged-item-electrical-fault",
+    "type": "mcq",
+    "section": "reading",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "english.reading",
+    "secondary_skill_codes": [],
+    "cefr": "B2",
+    "prompt": "Read the company policy.\n\n**Damaged items**\n\nIf an item arrives damaged, the customer should send us a photo within 7 days of delivery. Agents may then offer a replacement or a full refund, whichever the customer prefers. If the photo is sent after 7 days, agents may only offer a replacement, unless the damage could not have been seen when the item was unpacked, for example an electrical fault. In that case, treat it as if it had been reported in time.\n\nA customer reports an electrical fault 10 days after delivery. The fault only appeared when the item was first used. What can the agent offer?",
+    "format": "concept",
+    "choices": [
+      "A replacement only",
+      "A replacement or a full refund",
+      "A full refund only",
+      "Nothing, because 7 days have passed"
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "explanation": "Deciding sentences: \"...unless the damage could not have been seen when the item was unpacked, for example an electrical fault. In that case, treat it as if it had been reported in time.\" Reported in time means \"a replacement or a full refund\". \"A replacement only\" is the rule for other late reports.",
+    "expected_time_s": 55
+  },
+  {
+    "bank_key": "en.rd.callback-task-notes",
+    "type": "mcq",
+    "section": "reading",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "english.reading",
+    "secondary_skill_codes": [],
+    "cefr": "B2",
+    "prompt": "Read the email to all agents.\n\n**Subject: Change to callbacks**\n\nFrom 1 October, callbacks will no longer be booked in the shared calendar. Instead, create a callback task in the customer record. The task will go automatically to the next free agent at the agreed time. This means the agent who took the first call may not be the one who calls back, so your notes must be complete enough for a colleague to continue without asking the customer to repeat anything.\n\nWhy must notes be more complete from 1 October?",
+    "format": "concept",
+    "choices": [
+      "Customers will be able to read the notes.",
+      "Managers will check the shared calendar.",
+      "Another agent may make the callback.",
+      "Callbacks must be made within one hour."
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "explanation": "Deciding sentence: \"This means the agent who took the first call may not be the one who calls back, so your notes must be complete enough for a colleague to continue.\" Customers reading notes and a one-hour limit are not mentioned, and the shared calendar will no longer be used.",
+    "expected_time_s": 55
+  },
+  {
+    "bank_key": "en.rd.maintenance-write-down",
+    "type": "mcq",
+    "section": "reading",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "english.reading",
+    "secondary_skill_codes": [],
+    "cefr": "B2",
+    "prompt": "Read the notice.\n\n**Planned maintenance: Sunday, 02:00 to 06:00**\n\nDuring this time, the customer website and app will not be available, but phone lines will stay open. Night-shift agents will be able to view accounts but not make changes to them. Write down any changes that customers ask for, and enter them after 06:00. Card payments can still be taken by phone, as they use a separate system.\n\nA customer calls at 03:00 on Sunday to change their address. What should the agent do?",
+    "format": "concept",
+    "choices": [
+      "Change the address in the system straight away",
+      "Ask the customer to change it in the app",
+      "Ask the customer to call back on Monday",
+      "Write the request down and enter it after 06:00"
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "explanation": "Deciding sentence: \"Write down any changes that customers ask for, and enter them after 06:00.\" Agents cannot make changes during maintenance, the app is not available, and the customer does not need to call back.",
+    "expected_time_s": 55
+  },
+  {
+    "bank_key": "en.rd.late-fee-unfair",
+    "type": "mcq",
+    "section": "reading",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "english.reading",
+    "secondary_skill_codes": [],
+    "cefr": "B2",
+    "prompt": "Read the chat message from a customer.\n\n**Customer:** I've been charged a 15 dollar late fee, but I paid on the 28th, which is before the due date on my bill. My bank says the money left my account that same day. I don't mind paying fees when I've made a mistake, but that clearly isn't the case here.\n\nWhat is the customer's main point?",
+    "format": "concept",
+    "choices": [
+      "The fee is unfair because the payment was on time.",
+      "The bank made a mistake with the payment.",
+      "Customers should never have to pay late fees.",
+      "The due date printed on the bill is wrong."
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "explanation": "Deciding sentences: \"I paid on the 28th, which is before the due date on my bill\" and \"I don't mind paying fees when I've made a mistake, but that clearly isn't the case here.\" The bank confirms the payment, the customer accepts fees in general, and does not say the due date is wrong.",
+    "expected_time_s": 55
+  },
+  {
+    "bank_key": "en.rd.escalation-legal-action",
+    "type": "mcq",
+    "section": "reading",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "english.reading",
+    "secondary_skill_codes": [],
+    "cefr": "B2",
+    "prompt": "Read the guide for agents.\n\n**Escalation guide**\n\nTransfer a call to a team leader only if: the customer has asked for a manager twice after you have tried to help; the customer mentions legal action; or the solution needs a refund above your limit. Do not transfer a call just because a customer is angry. In most cases, a calm explanation and a clear next step solve the problem faster than a transfer.\n\nAccording to the guide, which call should be transferred to a team leader?",
+    "format": "concept",
+    "choices": [
+      "A customer is shouting about a late delivery.",
+      "A customer says they will take the company to court.",
+      "A customer asks for a manager for the first time.",
+      "A customer wants a refund that is within your limit."
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "explanation": "Deciding text: transfer if \"the customer mentions legal action\". Taking the company to court is legal action. \"Do not transfer a call just because a customer is angry\", one request is not \"twice\", and a refund within your limit does not need a team leader.",
+    "expected_time_s": 55
+  },
+  {
+    "bank_key": "en.rd.meters-council-permission",
+    "type": "mcq",
+    "section": "reading",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "english.reading",
+    "secondary_skill_codes": [],
+    "cefr": "B2",
+    "prompt": "Read the email from a partner company.\n\nHi Ana,\n\nThanks for sending the list of 40 customers who need new meters. We can fit 25 of them next week. The other 15 are in an area where we need permission from the city council first, which usually takes about three weeks. We'll start on those as soon as permission comes through. Could you let those 15 customers know about the delay?\n\nBest wishes,\nThabo\n\nWhy can't all the meters be fitted next week?",
+    "format": "concept",
+    "choices": [
+      "There are not enough meters for all 40 customers.",
+      "Ana sent the customer list too late.",
+      "Permission is needed for some of the addresses.",
+      "Some customers will not be at home next week."
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "explanation": "Deciding sentence: \"The other 15 are in an area where we need permission from the city council first.\" Thabo never mentions a shortage of meters, a late list or customers being away.",
+    "expected_time_s": 55
+  },
+  {
+    "bank_key": "en.rd.quality-score-product-test",
+    "type": "mcq",
+    "section": "reading",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "english.reading",
+    "secondary_skill_codes": [],
+    "cefr": "B2",
+    "prompt": "Read the notice.\n\n**Changes to call scoring**\n\nFrom next month, calls will be scored on five areas instead of seven. Greeting and closing will be combined into one area called 'call control', and 'product knowledge' will be removed from the call score, because it is now checked in a separate monthly test. The total will still be out of 100, so each area will count for more than before.\n\nWhy is 'product knowledge' being removed from the call score?",
+    "format": "concept",
+    "choices": [
+      "It has become part of 'call control'.",
+      "Most agents already score well in it.",
+      "The total score will be lower than 100.",
+      "It will be checked in a monthly test instead."
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "explanation": "Deciding text: 'product knowledge' \"will be removed from the call score, because it is now checked in a separate monthly test.\" 'Call control' combines greeting and closing, agents' results are not mentioned, and the total \"will still be out of 100\".",
+    "expected_time_s": 55
+  },
+  {
+    "bank_key": "en.rd.price-change-warning",
+    "type": "mcq",
+    "section": "reading",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "english.reading",
+    "secondary_skill_codes": [],
+    "cefr": "B2",
+    "prompt": "Read the email from a customer.\n\nI have been a customer for six years and have never complained before. Last month my bill doubled without warning. When I called, I was told my discount had ended. I accept that, but nobody had told me it was going to end. All I am asking is that, in future, you tell customers before their price changes.\n\nWhat does the customer want?",
+    "format": "concept",
+    "choices": [
+      "To be told before prices change in future",
+      "To get the old discount back for another year",
+      "A refund for last month's bill",
+      "To end the contract"
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "explanation": "Deciding sentence: \"All I am asking is that, in future, you tell customers before their price changes.\" The customer accepts that the discount ended (\"I accept that\") and does not ask for a refund or to leave.",
+    "expected_time_s": 55
+  },
+  {
+    "bank_key": "en.rd.call-recording-card",
+    "type": "mcq",
+    "section": "reading",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "english.reading",
+    "secondary_skill_codes": [],
+    "cefr": "B2",
+    "prompt": "Read the company policy.\n\n**Call recording**\n\nAll calls are recorded for training and quality. If a customer asks for the recording to be stopped, explain that it cannot be stopped during the call, but that they can ask in writing for it to be deleted after 30 days. Card numbers must never be said aloud on a recorded line: transfer the customer to the automated payment line instead.\n\nA customer wants to pay by card during the call. What should the agent do?",
+    "format": "concept",
+    "choices": [
+      "Stop the recording before taking the number",
+      "Transfer the customer to the automated line",
+      "Ask the customer to read the number slowly",
+      "Ask the customer to send the number in writing"
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "explanation": "Deciding sentence: \"Card numbers must never be said aloud on a recorded line: transfer the customer to the automated payment line instead.\" The recording \"cannot be stopped during the call\", reading the number aloud is not allowed, and writing is only for asking to delete a recording.",
+    "expected_time_s": 55
+  },
+  {
+    "bank_key": "en.rd.supervisor-hold-feedback",
+    "type": "mcq",
+    "section": "reading",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "english.reading",
+    "secondary_skill_codes": [],
+    "cefr": "B2",
+    "prompt": "Read the feedback from a supervisor.\n\n**Feedback:** I listened to your call with Mrs Romero. You were polite and your information was correct, so well done on that. However, you put her on hold four times without telling her why, and she sounded more and more annoyed. Next time, tell the customer what you are checking and roughly how long it will take.\n\nWhat does the supervisor want the agent to improve?",
+    "format": "concept",
+    "choices": [
+      "Giving customers correct information",
+      "Being more polite to customers",
+      "Explaining to customers why they are on hold",
+      "Finishing calls more quickly"
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "explanation": "Deciding sentence: \"Next time, tell the customer what you are checking and roughly how long it will take.\" The supervisor praises the agent for being polite and correct, and does not mention call length.",
+    "expected_time_s": 55
+  },
+  {
+    "bank_key": "en.rd.email-target-holding-reply",
+    "type": "mcq",
+    "section": "reading",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "english.reading",
+    "secondary_skill_codes": [],
+    "cefr": "C1",
+    "prompt": "Read the email from a manager.\n\n**Subject: Response times**\n\nSome of you have asked whether the new target of answering emails within 4 hours means that quality matters less. It does not. A quick reply that fails to solve the problem simply produces a second email, which is counted against the original target anyway. If an email genuinely needs more investigation, send a short holding reply within 4 hours explaining what you are doing, and follow up with a full answer once you have it.\n\nAccording to the writer, why does a fast but unhelpful reply not help with the target?",
+    "format": "concept",
+    "choices": [
+      "Managers will check the quality of every reply.",
+      "Customers would rather wait for a complete answer.",
+      "Holding replies are not allowed under the new target.",
+      "It leads to another email that still counts against the target."
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "explanation": "Deciding sentence: \"A quick reply that fails to solve the problem simply produces a second email, which is counted against the original target anyway.\" Manager checks and customer preferences are not mentioned, and the writer recommends holding replies.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "en.rd.goodwill-unclear-fault",
+    "type": "mcq",
+    "section": "reading",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "english.reading",
+    "secondary_skill_codes": [],
+    "cefr": "C1",
+    "prompt": "Read the company policy.\n\n**Goodwill credits**\n\nAgents may offer a goodwill credit where the company has clearly made an error, even if the customer has not asked for one. Credits should not, however, be used simply to end a difficult call where no error has occurred, as this creates the expectation that complaining will be rewarded. Where it is unclear whether the company is at fault, agents should log the case for review rather than make a decision during the call.\n\nA customer is angry about a delay, but it is not yet clear whose fault it was. What should the agent do?",
+    "format": "concept",
+    "choices": [
+      "Log the case so that it can be reviewed",
+      "Offer a small credit to calm the customer",
+      "Tell the customer no credit is possible",
+      "Offer a credit only if the customer asks"
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "explanation": "Deciding sentence: \"Where it is unclear whether the company is at fault, agents should log the case for review rather than make a decision during the call.\" A credit to calm the call is what the policy warns against, refusing any credit is a decision the agent should not make yet, and whether the customer asks is not the test.",
+    "expected_time_s": 60
+  }
+]

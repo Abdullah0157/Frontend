@@ -1,0 +1,482 @@
+[
+  {
+    "bank_key": "en.rp.late-birthday-present",
+    "type": "speaking",
+    "section": "role_play",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "english.speaking",
+    "secondary_skill_codes": [
+      "english.grammar_vocabulary"
+    ],
+    "cefr": "B1",
+    "prompt": "You work for an online shop. The parcel was delayed in your warehouse. You can send it today by express delivery, at no extra cost, so it arrives on Friday. Or you can give a full refund. Listen to the customer, then reply out loud as the agent.",
+    "speaking": {
+      "mode": "role_play",
+      "audio": {
+        "lines": [
+          {
+            "voice": "en-NG-EzinneNeural",
+            "text": "Hello? I ordered a birthday present for my son two weeks ago. It was supposed to arrive yesterday, but it still hasn't come. His birthday is on Saturday. What is going on?"
+          }
+        ]
+      },
+      "ideal_answer": "I'm really sorry that your parcel hasn't arrived, especially with your son's birthday so close. I've checked, and it was delayed in our warehouse. I can send it today by express delivery, at no extra cost, so it will arrive on Friday, before his birthday. If you prefer, I can give you a full refund instead. Which would you like?",
+      "must_include": [
+        "apologises for the delay",
+        "offers express delivery so it arrives on Friday, before the birthday",
+        "offers a full refund as another choice"
+      ],
+      "prep_seconds": 15,
+      "max_seconds": 60
+    },
+    "expected_time_s": 150
+  },
+  {
+    "bank_key": "en.rp.wrong-colour-case",
+    "type": "speaking",
+    "section": "role_play",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "english.speaking",
+    "secondary_skill_codes": [
+      "english.grammar_vocabulary"
+    ],
+    "cefr": "B1",
+    "prompt": "You work for an online shop. You can send the black case by free next-day delivery. The customer does not need to send the pink case back. Listen to the customer, then reply out loud as the agent.",
+    "speaking": {
+      "mode": "role_play",
+      "audio": {
+        "lines": [
+          {
+            "voice": "en-IN-PrabhatNeural",
+            "text": "Hi, I ordered a black phone case, but you sent me a pink one. I need it for my new phone, and I don't want to wait another week. This is really annoying."
+          }
+        ]
+      },
+      "ideal_answer": "I'm sorry we sent you the wrong colour, that's our mistake. I can send you the black case today by next-day delivery, free of charge, so you'll have it tomorrow. You don't need to send the pink case back, so you don't have to go to the post office. Can I just check your delivery address with you?",
+      "must_include": [
+        "apologises for the mistake",
+        "sends the black case by free next-day delivery",
+        "says the pink case does not need to be sent back"
+      ],
+      "prep_seconds": 15,
+      "max_seconds": 60
+    },
+    "expected_time_s": 150
+  },
+  {
+    "bank_key": "en.rp.bill-doubled",
+    "type": "speaking",
+    "section": "role_play",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "english.speaking",
+    "secondary_skill_codes": [
+      "english.grammar_vocabulary"
+    ],
+    "cefr": "B1",
+    "prompt": "You work for a phone company. The bill is higher because the customer's six-month discount ended last month. You can move the customer to a new plan that costs 32 dollars a month with the same calls and data. Listen to the customer, then reply out loud as the agent.",
+    "speaking": {
+      "mode": "role_play",
+      "audio": {
+        "lines": [
+          {
+            "voice": "en-US-GuyNeural",
+            "text": "Hello. My phone bill this month is sixty dollars. It's usually thirty. I haven't done anything different. I think you've made a mistake, and I'm not paying it."
+          }
+        ]
+      },
+      "ideal_answer": "I understand, a bill that's twice as high is a real surprise. I've checked your account, and the bill is higher because your six-month discount ended last month. I'm sorry if that wasn't made clear. The good news is that I can move you to a new plan today for 32 dollars a month, with the same calls and data you have now. Would you like me to do that?",
+      "must_include": [
+        "explains that the discount has ended",
+        "offers the new plan at 32 dollars a month",
+        "stays calm and shows understanding"
+      ],
+      "prep_seconds": 15,
+      "max_seconds": 60
+    },
+    "expected_time_s": 150
+  },
+  {
+    "bank_key": "en.rp.engineer-no-show",
+    "type": "speaking",
+    "section": "role_play",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "english.speaking",
+    "secondary_skill_codes": [
+      "english.grammar_vocabulary"
+    ],
+    "cefr": "B1",
+    "prompt": "You work for an internet company. The engineer's van broke down. You can book a new visit for tomorrow at 8 to 10 am, the first time of the day, and add a 15 dollar credit to the account. Listen to the customer, then reply out loud as the agent.",
+    "speaking": {
+      "mode": "role_play",
+      "audio": {
+        "lines": [
+          {
+            "voice": "en-AU-NatashaNeural",
+            "text": "I waited at home all morning for your engineer, and nobody came. I took the morning off work for this. Nobody even called me. I'm really not happy."
+          }
+        ]
+      },
+      "ideal_answer": "I'm very sorry you waited all morning, and that nobody called you. That should not have happened. The engineer's van broke down, but we should have let you know. I can book the first visit tomorrow, between 8 and 10 in the morning, and I'll add a 15 dollar credit to your account for the trouble. Would tomorrow morning work for you?",
+      "must_include": [
+        "apologises, including for nobody calling",
+        "offers the new visit tomorrow between 8 and 10",
+        "mentions the 15 dollar credit"
+      ],
+      "prep_seconds": 15,
+      "max_seconds": 60
+    },
+    "expected_time_s": 150
+  },
+  {
+    "bank_key": "en.rp.cannot-log-in",
+    "type": "speaking",
+    "section": "role_play",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "english.speaking",
+    "secondary_skill_codes": [
+      "english.grammar_vocabulary"
+    ],
+    "cefr": "B1",
+    "prompt": "You work for an electricity company. You can send a link to the customer's email to make a new password, or you can take the payment over the phone right now. Listen to the customer, then reply out loud as the agent.",
+    "speaking": {
+      "mode": "role_play",
+      "audio": {
+        "lines": [
+          {
+            "voice": "en-PH-RosaNeural",
+            "text": "Hi, sorry, I'm not very good with computers. I'm trying to pay my bill on your website, but it keeps saying my password is wrong. I'm sure it's right. What should I do?"
+          }
+        ]
+      },
+      "ideal_answer": "Please don't worry, this happens to a lot of people, and I can help. There are two easy options. I can send a link to your email so you can make a new password, and then you can pay on the website. Or, if you prefer, I can take the payment with you right now over the phone. Which would be easier for you?",
+      "must_include": [
+        "reassures the customer in a friendly way",
+        "offers to send a link to make a new password",
+        "offers to take the payment over the phone now"
+      ],
+      "prep_seconds": 15,
+      "max_seconds": 60
+    },
+    "expected_time_s": 150
+  },
+  {
+    "bank_key": "en.rp.flight-cancelled-hotel",
+    "type": "speaking",
+    "section": "role_play",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "english.speaking",
+    "secondary_skill_codes": [
+      "english.grammar_vocabulary"
+    ],
+    "cefr": "B1",
+    "prompt": "You work at a hotel booking desk. Because the flight was cancelled, you can move the booking to start tomorrow at no cost. The customer must send you a copy of the cancellation email from the airline. Listen to the customer, then reply out loud as the agent.",
+    "speaking": {
+      "mode": "role_play",
+      "audio": {
+        "lines": [
+          {
+            "voice": "en-SG-WayneNeural",
+            "text": "Hello, I booked a room at your hotel for tonight, but my flight has been cancelled. I can't get there until tomorrow. Will I have to pay for tonight? I really can't afford to lose that money."
+          }
+        ]
+      },
+      "ideal_answer": "I'm sorry to hear about your flight, that's very stressful. Don't worry, you won't need to pay for tonight. Because your flight was cancelled, I can move your booking so it starts tomorrow, at no extra cost. I just need you to send us a copy of the cancellation email from the airline. Once we have it, I'll confirm the new dates by email.",
+      "must_include": [
+        "says the customer will not pay for tonight",
+        "moves the booking to start tomorrow",
+        "asks for a copy of the airline's cancellation email"
+      ],
+      "prep_seconds": 15,
+      "max_seconds": 60
+    },
+    "expected_time_s": 150
+  },
+  {
+    "bank_key": "en.rp.double-payment-rent",
+    "type": "speaking",
+    "section": "role_play",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "english.speaking",
+    "secondary_skill_codes": [
+      "english.grammar_vocabulary"
+    ],
+    "cefr": "B2",
+    "prompt": "You work for a gym. The second payment was a system error. Refunds take 3 to 5 working days, and you cannot make them faster. You can email the customer a letter today confirming the refund, and you can add one free month to the membership. Listen to the customer, then reply out loud as the agent.",
+    "speaking": {
+      "mode": "role_play",
+      "audio": {
+        "lines": [
+          {
+            "voice": "en-GB-RyanNeural",
+            "text": "I've just looked at my bank account, and you've taken the payment twice. That's a hundred and twenty dollars gone, and I've got rent to pay this week. I want it back today, not in five days."
+          }
+        ]
+      },
+      "ideal_answer": "I'm really sorry, you're right, the second payment was a mistake on our side. I've started the refund now. I have to be honest: refunds take three to five working days, and I can't make that faster. What I can do is email you a letter today confirming the refund, which you can show your bank or landlord. I'll also add a free month to your membership for the trouble.",
+      "must_include": [
+        "apologises and confirms the second payment was a mistake",
+        "is honest that the refund takes 3 to 5 working days",
+        "offers the confirmation email today and the free month"
+      ],
+      "prep_seconds": 15,
+      "max_seconds": 60
+    },
+    "expected_time_s": 150
+  },
+  {
+    "bank_key": "en.rp.cancel-moving-abroad",
+    "type": "speaking",
+    "section": "role_play",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "english.speaking",
+    "secondary_skill_codes": [
+      "english.grammar_vocabulary"
+    ],
+    "cefr": "B2",
+    "prompt": "You work for a mobile phone company. The early cancellation fee is not charged if the customer is moving abroad and sends proof, such as a rental contract or a letter from a new employer. Listen to the customer, then reply out loud as the agent.",
+    "speaking": {
+      "mode": "role_play",
+      "audio": {
+        "lines": [
+          {
+            "voice": "en-KE-AsiliaNeural",
+            "text": "I want to cancel my contract. I'm moving abroad next month. Your website says there's a fee of a hundred dollars to cancel early, but that's not fair. I'm not leaving because of you, I'm leaving the country."
+          }
+        ]
+      },
+      "ideal_answer": "Thank you for explaining, and I'm sorry to see you go. You're right that the fee would not be fair in your case. If you're moving abroad, we don't charge the early cancellation fee. You just need to send us proof, for example your new rental contract or a letter from your new employer. As soon as we receive it, I'll cancel the contract with no fee.",
+      "must_include": [
+        "says the fee is not charged for a move abroad",
+        "asks for proof such as a rental contract or employer letter",
+        "explains what happens after the proof arrives"
+      ],
+      "prep_seconds": 15,
+      "max_seconds": 60
+    },
+    "expected_time_s": 150
+  },
+  {
+    "bank_key": "en.rp.cracked-table",
+    "type": "speaking",
+    "section": "role_play",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "english.speaking",
+    "secondary_skill_codes": [
+      "english.grammar_vocabulary"
+    ],
+    "cefr": "B2",
+    "prompt": "You work for a furniture shop. You can collect the damaged table and deliver a new one, but the earliest date is next Tuesday. If the customer prefers to keep the table, you can offer a 10 percent refund. Listen to the customer, then reply out loud as the agent.",
+    "speaking": {
+      "mode": "role_play",
+      "audio": {
+        "lines": [
+          {
+            "voice": "en-ZA-LukeNeural",
+            "text": "The table you delivered yesterday has a big crack in the top. Your driver left before I could check it. I paid four hundred dollars for this. I want someone to come and take it away, and I want a new one this week."
+          }
+        ]
+      },
+      "ideal_answer": "I'm so sorry, a cracked table is not what you should receive, especially after paying that much. We'll collect it and bring you a new one. I have to be honest: the earliest date we can deliver is next Tuesday, not this week. If you'd rather keep this table, I can also refund ten percent of the price. Which option would you prefer?",
+      "must_include": [
+        "apologises for the damage",
+        "offers collection and a new table, honestly giving next Tuesday as the earliest date",
+        "offers the 10 percent refund if the customer keeps the table"
+      ],
+      "prep_seconds": 15,
+      "max_seconds": 60
+    },
+    "expected_time_s": 150
+  },
+  {
+    "bank_key": "en.rp.husband-asks-wife-account",
+    "type": "speaking",
+    "section": "role_play",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "english.speaking",
+    "secondary_skill_codes": [
+      "english.grammar_vocabulary"
+    ],
+    "cefr": "B2",
+    "prompt": "You work for a bank. You can only discuss an account with the account holder. The account holder can call at any time until 10 pm, or add the caller as a trusted person on the account. Listen to the customer, then reply out loud as the agent.",
+    "speaking": {
+      "mode": "role_play",
+      "audio": {
+        "lines": [
+          {
+            "voice": "en-CA-LiamNeural",
+            "text": "Hi, I'm calling about my wife's account. She's at work and can't call. I just need to know when her last payment was made, and change the address to our new house. It'll only take a minute."
+          }
+        ]
+      },
+      "ideal_answer": "Thank you for calling, and I understand you're trying to help. I'm sorry, but to protect your wife's account, I can only discuss it with her. She can call us any time until 10 in the evening, so after work is fine. If you would like to help with her account in future, she can also add you as a trusted person. Then we can speak to you directly.",
+      "must_include": [
+        "politely explains that only the account holder can discuss the account",
+        "says the account holder can call until 10 pm",
+        "mentions adding him as a trusted person"
+      ],
+      "prep_seconds": 15,
+      "max_seconds": 60
+    },
+    "expected_time_s": 150
+  },
+  {
+    "bank_key": "en.rp.outage-video-call",
+    "type": "speaking",
+    "section": "role_play",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "english.speaking",
+    "secondary_skill_codes": [
+      "english.grammar_vocabulary"
+    ],
+    "cefr": "B2",
+    "prompt": "You work for an internet company. There is a fault in the customer's area, and engineers expect to fix it by 4 pm. You can turn on free mobile data on the customer's phone for today, and add a one-day credit to the bill. Listen to the customer, then reply out loud as the agent.",
+    "speaking": {
+      "mode": "role_play",
+      "audio": {
+        "lines": [
+          {
+            "voice": "en-IE-EmilyNeural",
+            "text": "My internet has been down since this morning, and I work from home. I've already restarted the router three times. I've got an important video call in an hour. What am I supposed to do?"
+          }
+        ]
+      },
+      "ideal_answer": "I'm sorry, I know how stressful this is with a call coming up. It's not your router: there's a fault in your area, and our engineers expect to fix it by 4 pm. So you can join your call, I can turn on free mobile data on your phone for today, and you can use your phone's internet. I'll also add a credit to your bill for today.",
+      "must_include": [
+        "explains there is a fault in the area, fixed by about 4 pm",
+        "offers free mobile data today so the customer can join the call",
+        "mentions the credit for today"
+      ],
+      "prep_seconds": 15,
+      "max_seconds": 60
+    },
+    "expected_time_s": 150
+  },
+  {
+    "bank_key": "en.rp.price-letter-confused",
+    "type": "speaking",
+    "section": "role_play",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "english.speaking",
+    "secondary_skill_codes": [
+      "english.grammar_vocabulary"
+    ],
+    "cefr": "B2",
+    "prompt": "You work for an energy company. From next month, the price goes up by 5 dollars a month for all customers. The customer does not need to do anything. If they want, you can move them to a fixed price plan, which stays the same for 12 months. Listen to the customer, then reply out loud as the agent.",
+    "speaking": {
+      "mode": "role_play",
+      "audio": {
+        "lines": [
+          {
+            "voice": "en-IN-NeerjaNeural",
+            "text": "Hello, I got a letter from you saying my price is going up next month, but I don't really understand it. It talks about a new tariff. Do I have to do anything? I don't want to pay more than I need to."
+          }
+        ]
+      },
+      "ideal_answer": "Of course, I'm happy to explain. From next month, the price goes up by five dollars a month for all our customers. You don't need to do anything, and your payments will change automatically. If you'd like more certainty, I can move you to our fixed price plan, which stays the same for the next twelve months. Would you like to hear more about it?",
+      "must_include": [
+        "explains the price rises by 5 dollars a month",
+        "says the customer does not need to do anything",
+        "offers the fixed price plan as an option"
+      ],
+      "prep_seconds": 15,
+      "max_seconds": 60
+    },
+    "expected_time_s": 150
+  }
+]

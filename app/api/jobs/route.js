@@ -62,7 +62,8 @@ export async function POST(req) {
       return NextResponse.json({ error: e.message }, { status: 400 })
     }
     if (config) {
-      assessments = [...assessments.filter((a) => !a.startsWith('swe-')), roleFamilyFor(config.track)]
+      assessments = [...assessments.filter((a) => !a.startsWith('swe-') && a !== 'english'), roleFamilyFor(config.track)]
+      if (config.english) assessments.push('english')
     }
     const aiInterview = requiresAiInterview !== false // default true
 

@@ -180,3 +180,36 @@ in its prompt.
 6. **Covering up versus self-sacrifice.** Quietly fixing something to hide a problem scores 1. Sacrificing your own time to help scores 2.
 
 **Company rules.** Where the right answer depends on a company rule (gifts, personal contact details, refunds, exceptions), the prompt states the rule, so the answer never depends on local custom.
+
+## English test (track `english`, level `screener`)
+
+Design: `frameworks/english-assessment-design.md`.
+
+**Every English item carries `cefr`** (A1 to C2): the level it is written for.
+
+**Voices** come from the `VOICES` list in `lib/assessment-bank.js` (Indian, Nigerian, Filipino, Kenyan, South African, Singaporean, British, Irish, American, Australian and Canadian). Spread them across items. There is no Pakistani voice, so Indian is the closest.
+
+### Listening (`type: "listening"`, section `listening`)
+```json
+"audio": { "lines": [ { "voice": "en-IN-NeerjaNeural", "text": "..." }, { "voice": "en-GB-RyanNeural", "text": "..." } ] },
+"choices": ["...", "...", "...", "..."], "answer": { "correct": 1 }, "explanation": "...", "cefr": "B1"
+```
+- 1 to 6 lines and 25 to 140 words in total.
+- The prompt is the question shown on screen. The script is never shown to the candidate.
+
+### Speaking (`type: "speaking"`)
+`speaking.mode` must match the section:
+
+| Mode | Section | What is given | Rules |
+|---|---|---|---|
+| `read_aloud` | `read_aloud` | `text`, shown on screen | 35 to 80 words |
+| `repeat` | `repeat` | `audio.lines`, one line: the sentence to repeat | 5 to 18 words; played once |
+| `short_answer` | `short_answers` | `audio.lines` (the question) and `acceptable` (answers or key ideas that count as right) | |
+| `role_play` | `role_play` | `audio.lines` (the customer speaking), `ideal_answer` and `must_include` | |
+
+All modes also take `prep_seconds` (0 to 30) and `max_seconds` (5 to 90).
+
+**Plain keyboard characters only.** Skill codes: `english.{listening,speaking,reading,pronunciation_fluency,grammar_vocabulary}`.
+
+### Reading (`type: "mcq"`, section `reading`)
+Short notices, emails and messages, with 4 choices.

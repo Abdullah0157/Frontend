@@ -1,0 +1,302 @@
+[
+  {
+    "bank_key": "en.r.late-order-voicemail",
+    "type": "speaking",
+    "section": "read_aloud",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "english.pronunciation_fluency",
+    "secondary_skill_codes": [],
+    "cefr": "B1",
+    "prompt": "You are leaving a voicemail for a customer whose order is late. Read the text aloud, clearly and at a natural pace, as if you were speaking to the customer.",
+    "speaking": {
+      "mode": "read_aloud",
+      "text": "Hello, this is Sara from Home Deliveries. I am sorry, but your order will arrive one day later than planned. It will now come on Thursday, between nine in the morning and one in the afternoon. You do not need to do anything. If Thursday is not a good day for you, please call us back, and we will find a better time.",
+      "prep_seconds": 15,
+      "max_seconds": 40
+    },
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "en.r.refund-approved",
+    "type": "speaking",
+    "section": "read_aloud",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "english.pronunciation_fluency",
+    "secondary_skill_codes": [],
+    "cefr": "B1",
+    "prompt": "You are explaining a refund to a customer on the phone. Read the text aloud, clearly and at a natural pace, as if you were speaking to the customer.",
+    "speaking": {
+      "mode": "read_aloud",
+      "text": "Thank you for waiting. I have checked your account, and I can see that you returned the shoes on the fourth of March. Your refund of 45 dollars has now been approved. The money will go back to the card you used to pay, and it should arrive within five working days. You will also get an email to confirm this.",
+      "prep_seconds": 15,
+      "max_seconds": 40
+    },
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "en.r.confirm-visit-details",
+    "type": "speaking",
+    "section": "read_aloud",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "english.pronunciation_fluency",
+    "secondary_skill_codes": [],
+    "cefr": "B1",
+    "prompt": "You are checking a customer's details before you book a visit. Read the text aloud, clearly and at a natural pace, as if you were speaking to the customer.",
+    "speaking": {
+      "mode": "read_aloud",
+      "text": "Let me read your details back to make sure they are correct. Your name is David Okafor, and your address is 27 Park Lane. Your phone number ends in 4 8 1 6. The engineer will visit on Tuesday the 12th, between eight and twelve. Is everything correct?",
+      "prep_seconds": 15,
+      "max_seconds": 40
+    },
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "en.r.hold-message",
+    "type": "speaking",
+    "section": "read_aloud",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "english.pronunciation_fluency",
+    "secondary_skill_codes": [],
+    "cefr": "B1",
+    "prompt": "You are recording the message that customers hear while they wait. Read the text aloud, clearly and at a natural pace, as if you were speaking to the customer.",
+    "speaking": {
+      "mode": "read_aloud",
+      "text": "Thank you for calling Green Valley Energy. All of our advisers are busy at the moment, but your call is important to us. Please stay on the line, and the next free adviser will answer. You can also check your bill, send us a meter reading or change your payment date on our website at any time.",
+      "prep_seconds": 15,
+      "max_seconds": 40
+    },
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "en.r.appointment-reminder",
+    "type": "speaking",
+    "section": "read_aloud",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "english.pronunciation_fluency",
+    "secondary_skill_codes": [],
+    "cefr": "B1",
+    "prompt": "You are calling a patient to remind them about an appointment. Read the text aloud, clearly and at a natural pace, as if you were speaking to the customer.",
+    "speaking": {
+      "mode": "read_aloud",
+      "text": "Good morning, this is Lina from the City Health Centre. I am calling to remind you about your appointment with Doctor Rao tomorrow at ten fifteen. Please arrive ten minutes early and bring your health card. If you cannot come, please call us before nine o'clock so that we can give your time to another patient.",
+      "prep_seconds": 15,
+      "max_seconds": 40
+    },
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "en.r.store-holiday-hours",
+    "type": "speaking",
+    "section": "read_aloud",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "english.pronunciation_fluency",
+    "secondary_skill_codes": [],
+    "cefr": "B1",
+    "prompt": "A caller has asked about the store's opening hours. Read the text aloud, clearly and at a natural pace, as if you were speaking to the customer.",
+    "speaking": {
+      "mode": "read_aloud",
+      "text": "Our store is open from nine in the morning to six in the evening, Monday to Saturday. On Sundays we open at eleven and close at four. Next Monday is a public holiday, so the store will be closed all day. Online orders can still be placed, and they will be sent out on Tuesday.",
+      "prep_seconds": 15,
+      "max_seconds": 40
+    },
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "en.r.price-increase-explained",
+    "type": "speaking",
+    "section": "read_aloud",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "english.pronunciation_fluency",
+    "secondary_skill_codes": [],
+    "cefr": "B2",
+    "prompt": "You are explaining a price change to a customer. Read the text aloud, clearly and at a natural pace, as if you were speaking to the customer.",
+    "speaking": {
+      "mode": "read_aloud",
+      "text": "I understand that the change in price is disappointing. From the first of next month, the cost of your plan will increase by three dollars, mainly because of higher network costs. However, you will also receive twice as much data as before. If you would prefer to keep your monthly payment the same, I can move you to a smaller plan today, with no extra charge.",
+      "prep_seconds": 15,
+      "max_seconds": 40
+    },
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "en.r.password-reset-steps",
+    "type": "speaking",
+    "section": "read_aloud",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "english.pronunciation_fluency",
+    "secondary_skill_codes": [],
+    "cefr": "B2",
+    "prompt": "You are guiding a customer through a password reset. Read the text aloud, clearly and at a natural pace, as if you were speaking to the customer.",
+    "speaking": {
+      "mode": "read_aloud",
+      "text": "First, open the login page and select 'Forgotten password'. Enter the email address linked to your account, and we will send you a six-digit code. The code is valid for fifteen minutes, so please use it straight away. Then choose a new password with at least eight characters, including one number. For your security, we will never ask you to share this code with anyone.",
+      "prep_seconds": 15,
+      "max_seconds": 40
+    },
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "en.r.call-summary",
+    "type": "speaking",
+    "section": "read_aloud",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "english.pronunciation_fluency",
+    "secondary_skill_codes": [],
+    "cefr": "B2",
+    "prompt": "You are summarising what you have agreed before you end a call. Read the text aloud, clearly and at a natural pace, as if you were speaking to the customer.",
+    "speaking": {
+      "mode": "read_aloud",
+      "text": "Before we finish, let me summarise what we have agreed. I have cancelled the duplicate payment, and the money should be back in your account within three to five working days. I have also updated your email address, so future bills will go to the correct inbox. If anything else comes up, just reply to the confirmation email, and the team will get back to you.",
+      "prep_seconds": 15,
+      "max_seconds": 40
+    },
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "en.r.complaint-callback",
+    "type": "speaking",
+    "section": "read_aloud",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "english.pronunciation_fluency",
+    "secondary_skill_codes": [],
+    "cefr": "B2",
+    "prompt": "You are calling a customer back about a complaint. Read the text aloud, clearly and at a natural pace, as if you were speaking to the customer.",
+    "speaking": {
+      "mode": "read_aloud",
+      "text": "Hello, this is Ravi from the customer care team, calling about the complaint you made last week. I have looked into it carefully, and you were right: the technician should have phoned you before cancelling the visit. I apologise for the inconvenience. As a gesture of goodwill, we have added a credit of twenty dollars to your account, and I have booked a new visit for Friday morning.",
+      "prep_seconds": 15,
+      "max_seconds": 40
+    },
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "en.r.delivery-options",
+    "type": "speaking",
+    "section": "read_aloud",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "english.pronunciation_fluency",
+    "secondary_skill_codes": [],
+    "cefr": "B2",
+    "prompt": "You are explaining delivery options to a customer. Read the text aloud, clearly and at a natural pace, as if you were speaking to the customer.",
+    "speaking": {
+      "mode": "read_aloud",
+      "text": "There are three delivery options available for this order. Standard delivery is free and usually takes four to six working days. Express delivery costs eight dollars and arrives within two working days. Alternatively, you can collect the order from any of our stores the next day, also free of charge. Which option would suit you best?",
+      "prep_seconds": 15,
+      "max_seconds": 40
+    },
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "en.r.security-questions-intro",
+    "type": "speaking",
+    "section": "read_aloud",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "english.pronunciation_fluency",
+    "secondary_skill_codes": [],
+    "cefr": "B2",
+    "prompt": "You are reading the security message at the start of a call. Read the text aloud, clearly and at a natural pace, as if you were speaking to the customer.",
+    "speaking": {
+      "mode": "read_aloud",
+      "text": "Before I can discuss your account, I need to ask you a few security questions. This is to protect your personal information and to make sure that nobody else can access your details. Please note that this call may be recorded for training and quality purposes. I will never ask you for your full password or for the security code on your card.",
+      "prep_seconds": 15,
+      "max_seconds": 40
+    },
+    "expected_time_s": 60
+  }
+]

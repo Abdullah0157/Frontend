@@ -321,6 +321,35 @@ test('integrity: quiet tests are clear; each signal type raises a note', () => {
   assert.match(summariseIntegrity([], []).disclaimer, /not proof/)
 })
 
+test('integrity: blocked paste and copy attempts, and answers that appeared without typing', () => {
+  const pasted = summariseIntegrity([{ kind: 'paste_blocked', chars: 640 }], [])
+  assert.equal(pasted.level, 'review', 'one blocked paste from outside is worth a note')
+  assert.match(pasted.notes[0], /paste or drop text from outside the test 1 time\(s\) \(blocked; largest 640/)
+  assert.equal(summariseIntegrity([{ kind: 'drop_blocked', chars: 90 }], []).counts.paste_blocked, 1)
+  assert.equal(summariseIntegrity([{ kind: 'copy_blocked', chars: 30 }, { kind: 'copy_blocked', chars: 30 }], []).level, 'clear', 'one or two Ctrl+C presses can be habit')
+  assert.equal(summariseIntegrity([1, 2, 3].map(() => ({ kind: 'copy_blocked', chars: 30 })), []).level, 'review')
+  const answer = (chars, growth) => ({ type: 'scenario_response', raw_response: { text: 'x', typed: { chars, growth } } })
+  const untyped = summariseIntegrity([], [answer(40, 640)])
+  assert.equal(untyped.level, 'review')
+  assert.match(untyped.notes[0], /640 characters appeared but 40 were typed/)
+  assert.equal(summariseIntegrity([], [answer(600, 640)]).level, 'clear', 'typed answers are fine')
+  assert.equal(summariseIntegrity([], [answer(0, 100)]).level, 'clear', 'short answers are below the threshold')
+  assert.equal(summariseIntegrity([], [{ type: 'typing', raw_response: { typed: 'the typing test stores text here' } }]).level, 'clear')
+})
+
+test('integrity: leaving full screen', () => {
+  const once = summariseIntegrity([{ kind: 'fullscreen_exit' }, { kind: 'fullscreen_back', ms: 3000 }], [])
+  assert.equal(once.level, 'clear', 'one quick Esc press is not worth a note')
+  assert.equal(once.counts.fullscreen_exits, 1)
+  const twice = summariseIntegrity([1, 2].flatMap(() => [{ kind: 'fullscreen_exit' }, { kind: 'fullscreen_back', ms: 4000 }]), [])
+  assert.equal(twice.level, 'review')
+  assert.match(twice.notes[0], /Left full screen 2 time\(s\), 8 seconds in total/)
+  assert.equal(summariseIntegrity([{ kind: 'fullscreen_exit' }, { kind: 'fullscreen_back', ms: 45000 }], []).level, 'review', 'a long time out counts')
+  const phone = summariseIntegrity([{ kind: 'fullscreen_unavailable' }], [])
+  assert.equal(phone.level, 'clear', 'a phone without full screen is not a cheating signal')
+  assert.equal(phone.counts.fullscreen_unavailable, true)
+})
+
 // ── Resume versus results ─────────────────────────────────────────────────
 
 test('resume check: invented quotes are dropped; verdicts come from scores only', () => {
@@ -416,9 +445,9 @@ import { FAMILIES, roleFamilyFor, trackFromRoleFamily } from '../lib/assessment-
 import { typingMetrics, typingScore, trustedElapsedMs } from '../lib/typing.js'
 import { writingScoreFrom } from '../lib/written-scoring.js'
 
-test('22 families are listed; General, Software and Customer service are ready', () => {
-  assert.equal(Object.keys(FAMILIES).length, 23, '22 job families plus General')
-  assert.deepEqual(Object.entries(FAMILIES).filter(([, f]) => f.ready).map(([k]) => k).sort(), ['customer_service', 'general', 'swe'])
+test('22 families are listed; General, English, Software and Customer service are ready', () => {
+  assert.equal(Object.keys(FAMILIES).length, 24, '22 job families plus General and English')
+  assert.deepEqual(Object.entries(FAMILIES).filter(([, f]) => f.ready).map(([k]) => k).sort(), ['customer_service', 'english', 'general', 'swe'])
 })
 
 test('General and Customer service blueprints: weights 100, design minutes, no code', () => {
@@ -554,4 +583,94 @@ test('a marker answer missing any criterion is rejected, never read as zeros', (
   assert.equal(markerComplete([{ id: 'sql_injection', found: 1 }, { id: 'n_plus_one', found: 0 }], ['sql_injection', 'n_plus_one'], 'id'), true)
   assert.equal(markerComplete([{ id: 'sql_injection', found: 1 }], ['sql_injection', 'n_plus_one'], 'id'), false)
   assert.equal(markerComplete(null, names), false)
+})
+
+// ── English ───────────────────────────────────────────────────────────────
+import { normWords, wordMatch, speechTiming, fluencyScore, recogniserCheck, readAloudScore, repeatScore, cefrFor, meetsRequired, englishSummary } from '../lib/english-scoring.js'
+
+test('English blueprint: 17 minutes, weights 100, required level defaults to B2', () => {
+  const bp = getBlueprint({ track: 'english', level: 'screener' })
+  assert.equal(bp.totalMinutes, 17)
+  assert.ok(Math.abs(bp.sections.reduce((a, x) => a + x.weight, 0) - 100) < 0.05)
+  assert.deepEqual(bp.options, { english: { requiredLevel: 'B2' } })
+  assert.equal(getBlueprint({ track: 'english', level: 'screener', options: { requiredLevel: 'C1' } }).options.english.requiredLevel, 'C1')
+  assert.equal(getBlueprint({ track: 'english', level: 'screener', options: { requiredLevel: 'Z9' } }).options.english.requiredLevel, 'B2')
+})
+
+test('English as an add-on: customer service suggests it; job settings keep it', () => {
+  const chat = suggestAssessment({ title: 'Live chat support agent' })
+  assert.deepEqual(chat.english, { requiredLevel: 'B1' })
+  assert.deepEqual(suggestAssessment({ title: 'Call centre agent' }).english, { requiredLevel: 'B2' })
+  const cfg = normaliseAssessmentConfig({ track: 'customer_service', level: 'agent', english: { requiredLevel: 'C1' } })
+  assert.deepEqual(cfg.english, { requiredLevel: 'C1' })
+  assert.equal(normaliseAssessmentConfig({ track: 'customer_service', level: 'agent' }).english, null)
+  const own = normaliseAssessmentConfig({ track: 'english', level: 'screener', options: { requiredLevel: 'B1' } })
+  assert.deepEqual([own.options.requiredLevel, own.english], ['B1', null])
+})
+
+test('words are compared without punctuation, case or digit/word differences', () => {
+  assert.deepEqual(normWords("It's 8 o'clock, Thursday!"), ['it', 'is', 'eight', 'oclock', 'thursday'])
+  assert.deepEqual(normWords('Your refund of $45 has been approved'), normWords('Your refund of forty five dollars has been approved'), '$45 = forty five dollars')
+  assert.deepEqual(normWords("I'm sorry, we can't"), normWords('I am sorry, we cannot'))
+  assert.deepEqual(normWords('1,250 items'), normWords('one thousand two hundred and fifty items'))
+  assert.equal(wordMatch('Your order will arrive on Thursday.', 'your order will arrive on thursday'), 1)
+  assert.equal(wordMatch('You have 3 items in your basket.', 'you have three items in your basket'), 1)
+  assert.ok(Math.abs(wordMatch('Your order will arrive on Thursday afternoon.', 'your order arrive on thursday') - (1 - 2 / 7)) < 1e-9)
+  assert.equal(wordMatch('Hello there', ''), 0)
+})
+
+test('fluency uses timing only: pace and long pauses', () => {
+  const steady = speechTiming([{ start: 0, end: 4 }, { start: 4.2, end: 8 }], 'one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen')
+  assert.equal(steady.longPauses, 0)
+  assert.ok(fluencyScore(steady) > 0.6)
+  const halting = speechTiming([{ start: 0, end: 2 }, { start: 5, end: 7 }, { start: 10, end: 12 }], 'one two three four five six')
+  assert.equal(halting.longPauses, 2)
+  assert.ok(fluencyScore(halting) < fluencyScore(steady))
+  assert.equal(fluencyScore(speechTiming([], '')), 0)
+})
+
+test('recogniser check: silence, unsure and fine', () => {
+  assert.equal(recogniserCheck({ text: '', segments: [] }).status, 'no_speech')
+  assert.equal(recogniserCheck({ text: 'um', segments: [{ avg_logprob: -0.3, no_speech_prob: 0.9 }] }).status, 'no_speech')
+  assert.equal(recogniserCheck({ text: 'mumble words here', segments: [{ avg_logprob: -1.4, no_speech_prob: 0.1 }] }).status, 'unsure', 'unsure speech goes to a person, not a low score')
+  assert.equal(recogniserCheck({ text: 'clear speech', segments: [{ avg_logprob: -0.25, no_speech_prob: 0.02 }] }).status, 'ok')
+})
+
+test('read aloud and repeat scores', () => {
+  const text = 'Thank you for waiting. Your refund of twenty dollars will reach your account within five working days.'
+  const good = readAloudScore(text, { text, segments: [{ start: 0.3, end: 5.8 }] })
+  assert.ok(good.match === 1 && good.score > 0.8, JSON.stringify(good))
+  const poor = readAloudScore(text, { text: 'thank you waiting refund account', segments: [{ start: 0, end: 3 }, { start: 6, end: 9 }] })
+  assert.ok(poor.score < good.score - 0.3)
+  assert.equal(repeatScore('Please hold the line for a moment.', { text: 'please hold the line for a moment' }).points, 3)
+  assert.equal(repeatScore('Please hold the line for a moment.', { text: 'hold line' }).points, 1)
+  assert.equal(readAloudScore(text, { text: "Sorry, I don't know.", segments: [{ start: 0, end: 1.2 }] }).score, 0, 'reading nothing smoothly earns nothing')
+  assert.ok(repeatScore('Please hold the line for a moment.', { text: "sorry I don't know" }).score < 0.2)
+})
+
+test('CEFR bands and "meets the required level"', () => {
+  assert.deepEqual([cefrFor(10), cefrFor(25), cefrFor(40), cefrFor(60), cefrFor(80), cefrFor(95)], ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'])
+  assert.equal(meetsRequired(60, 'B2'), 'yes')
+  assert.equal(meetsRequired(52, 'B2'), 'borderline')
+  assert.equal(meetsRequired(40, 'B2'), 'no')
+  const sum = englishSummary([
+    { key: 'listening', weight: 30, score: 80 }, { key: 'read_aloud', weight: 10, score: 70 }, { key: 'repeat', weight: 15, score: 60 },
+    { key: 'short_answers', weight: 10, score: 70 }, { key: 'role_play', weight: 20, score: 50 }, { key: 'reading', weight: 15, score: 90 },
+  ], 'B2')
+  assert.equal(sum.skills.listening.cefr, 'C1')
+  assert.equal(sum.skills.reading.cefr, 'C2')
+  assert.equal(sum.skills.speaking.score, Math.round((70 * 10 + 60 * 15 + 70 * 10 + 50 * 20) / 55))
+  assert.equal(sum.meetsRequired, 'yes')
+  assert.equal(sum.provisional, true)
+  assert.match(sum.note, /Accent is not scored/)
+})
+
+import { shortAnswerExact, inOrderShare } from '../lib/english-scoring.js'
+test('short answers: an accepted answer inside the reply counts; number forms match', () => {
+  assert.equal(shortAnswerExact(['eight', '8 hours'], 'It is open for 8 hours.'), true)
+  assert.equal(shortAnswerExact(['six'], 'Six.'), true)
+  assert.equal(shortAnswerExact(["you're welcome", 'my pleasure'], 'You are welcome!'), true)
+  assert.equal(shortAnswerExact(['six'], 'sixteen'), false, 'whole words only')
+  assert.equal(shortAnswerExact(['monday'], "Sorry, I don't know."), false)
+  assert.equal(inOrderShare('a b c d', 'x a y b c z'), 0.75)
 })

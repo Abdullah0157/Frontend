@@ -119,6 +119,43 @@ export default function WrittenReportView({ data }) {
         </Card>
       </div>
 
+      {r.english && (
+        <Card title="English level" right={r.english.meetsRequired && (
+          <span className={`px-3 py-1 rounded-full border text-xs font-bold ${r.english.meetsRequired === 'yes' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : r.english.meetsRequired === 'borderline' ? 'bg-amber-50 text-amber-700 border-amber-200' : 'bg-red-50 text-red-700 border-red-200'}`}>
+            {r.english.meetsRequired === 'yes' ? `Meets ${r.english.requiredLevel}` : r.english.meetsRequired === 'borderline' ? `Borderline for ${r.english.requiredLevel}` : `Below ${r.english.requiredLevel}`}
+          </span>
+        )}>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
+            <div><p className="text-3xl font-black text-slate-900">{r.english.cefr || '—'}</p><p className="text-xs text-slate-500">overall</p></div>
+            {['listening', 'speaking', 'reading'].map((k) => (
+              <div key={k}><p className="text-2xl font-black text-slate-900">{r.english.skills?.[k]?.cefr || '—'}</p><p className="text-xs text-slate-500">{k}</p></div>
+            ))}
+          </div>
+          <p className="text-xs text-slate-400 mt-4">{r.english.note}</p>
+        </Card>
+      )}
+
+      {(data.speaking || []).length > 0 && (
+        <Card title="Spoken answers">
+          <div className="grid gap-4">
+            {data.speaking.map((sp, i) => (
+              <div key={i} className="border border-slate-200 rounded-xl p-4">
+                <div className="flex flex-wrap justify-between gap-3 mb-2">
+                  <p className="text-sm font-bold text-slate-800">{(sp.mode || '').replace('_', ' ')}: {sp.task}</p>
+                  <span className="text-sm font-black text-slate-900">{sp.score != null ? `${Math.round(sp.score * 100)}%` : 'to review'}</span>
+                </div>
+                {sp.needsHumanReview && <p className="text-xs text-amber-700 mb-2">The speech recogniser was unsure. Please listen and judge this answer yourself.</p>}
+                {sp.audioId && data.sessionId && (
+                  <audio controls preload="none" className="w-full mb-2" src={`/api/company/written-reports/${data.sessionId}/audio/${sp.audioId}`} />
+                )}
+                <p className="text-xs text-slate-500">Transcript: “{sp.transcript || 'no speech'}”</p>
+                {sp.note && <p className="text-xs text-slate-500 mt-1">{sp.note}</p>}
+              </div>
+            ))}
+          </div>
+        </Card>
+      )}
+
       {(data.typing || []).map((t, i) => (
         <Card key={`t${i}`} title="Typing test" right={t.passed != null && (
           <span className={`px-3 py-1 rounded-full border text-xs font-bold ${t.passed ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-amber-50 text-amber-700 border-amber-200'}`}>

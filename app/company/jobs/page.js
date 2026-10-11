@@ -42,6 +42,9 @@ export default function CompanyJobsPage() {
       { key: 'telesales', label: 'Telesales', available: false },
       { key: 'collections', label: 'Collections', available: false },
     ] },
+    { label: 'English language', tracks: [
+      { key: 'english', label: 'English test only (Screener, about 18 min)', available: true },
+    ] },
     { label: 'Any other job', tracks: [
       { key: 'general', label: 'General workplace test', available: true },
     ] },
@@ -55,7 +58,13 @@ export default function CompanyJobsPage() {
   const LEVELS_BY_TRACK = {
     general: [{ key: 'staff', label: 'Staff' }, { key: 'manager', label: 'Manager' }],
     customer_service: [{ key: 'agent', label: 'Agent' }],
+    english: [{ key: 'screener', label: 'Screener' }],
   }
+  const CEFR_OPTIONS = [
+    { key: 'B1', label: 'B1 (chat, email, back office)' },
+    { key: 'B2', label: 'B2 (phone agents)' },
+    { key: 'C1', label: 'C1 (international or premium accounts)' },
+  ]
   const levelsFor = (track) => LEVELS_BY_TRACK[track] || SWE_LEVELS
   const isSwe = (track) => !LEVELS_BY_TRACK[track]
   const LANGUAGE_OPTIONS = [
@@ -85,7 +94,8 @@ export default function CompanyJobsPage() {
       })
       const s = await res.json()
       if (!res.ok) throw new Error(s.error || 'Could not suggest')
-      setTest({ enabled: true, track: s.track, level: s.level, languages: s.languages, typingProfile: s.options?.typingProfile || 'voice' })
+      setTest({ enabled: true, track: s.track, level: s.level, languages: s.languages, typingProfile: s.options?.typingProfile || 'voice',
+        englishAddOn: Boolean(s.english), englishLevel: s.english?.requiredLevel || 'B2' })
       setSuggestion(s)
     } catch (e) {
       setError(e.message)
@@ -138,7 +148,9 @@ export default function CompanyJobsPage() {
             level: form.writtenTest.level,
             languages: form.writtenTest.languages,
             disabledSections: form.writtenTest.level === 'L2' && !form.writtenTest.reasoning ? ['reasoning'] : [],
-            options: form.writtenTest.track === 'customer_service' ? { typingProfile: form.writtenTest.typingProfile || 'voice' } : {},
+            options: form.writtenTest.track === 'customer_service' ? { typingProfile: form.writtenTest.typingProfile || 'voice' }
+              : form.writtenTest.track === 'english' ? { requiredLevel: form.writtenTest.englishLevel || 'B2' } : {},
+            english: form.writtenTest.track !== 'english' && form.writtenTest.englishAddOn ? { requiredLevel: form.writtenTest.englishLevel || 'B2' } : null,
           } : { enabled: false },
         }),
       })
@@ -272,6 +284,22 @@ export default function CompanyJobsPage() {
                         </select>
                       </label>
                     )}
+                    <div className="md:col-span-2 grid sm:grid-cols-2 gap-3 items-end">
+                      {form.writtenTest.track !== 'english' && (
+                        <label className="flex items-center gap-2 text-xs text-slate-600">
+                          <input type="checkbox" checked={Boolean(form.writtenTest.englishAddOn)} onChange={(e) => setTest({ englishAddOn: e.target.checked })} className="accent-indigo-500" />
+                          Also require the English test (speaking, listening, reading; about 18 min)
+                        </label>
+                      )}
+                      {(form.writtenTest.track === 'english' || form.writtenTest.englishAddOn) && (
+                        <label className="grid gap-1 text-xs">
+                          <span className="font-black uppercase tracking-widest text-slate-500">Required English level</span>
+                          <select value={form.writtenTest.englishLevel || 'B2'} onChange={(e) => setTest({ englishLevel: e.target.value })} className="px-3 py-2 rounded-lg border border-slate-300 bg-white text-sm">
+                            {CEFR_OPTIONS.map((c) => <option key={c.key} value={c.key}>{c.label}</option>)}
+                          </select>
+                        </label>
+                      )}
+                    </div>
                     {isSwe(form.writtenTest.track) && (
                     <div className="md:col-span-2 grid gap-1 text-xs">
                       <span className="font-black uppercase tracking-widest text-slate-500">Candidates may code in</span>

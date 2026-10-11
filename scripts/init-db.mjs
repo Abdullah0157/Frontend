@@ -392,7 +392,7 @@ CREATE UNIQUE INDEX IF NOT EXISTS idx_items_bank_key ON items(bank_key) WHERE ba
 CREATE INDEX IF NOT EXISTS idx_items_section ON items(section, status) WHERE section IS NOT NULL;
 ALTER TABLE items DROP CONSTRAINT IF EXISTS items_type_check;
 ALTER TABLE items ADD CONSTRAINT items_type_check CHECK (type IN (
-  'mcq','multi_select','sjt','coding','code_review','typing',
+  'mcq','multi_select','sjt','coding','code_review','typing','listening','speaking',
   'scenario_response','voice_response','video_response','system_design'));
 
 ALTER TABLE assessment_sessions ADD COLUMN IF NOT EXISTS track             text;
@@ -414,6 +414,29 @@ ALTER TABLE interview_jobs ADD COLUMN IF NOT EXISTS assessment_config jsonb;
 ALTER TABLE assessment_reports ADD COLUMN IF NOT EXISTS integrity    jsonb;
 ALTER TABLE assessment_reports ADD COLUMN IF NOT EXISTS resume_check jsonb;
 ALTER TABLE assessment_reports ADD COLUMN IF NOT EXISTS followups    jsonb;
+
+-- English test: candidate recordings (kept 90 days, then deleted by
+-- scripts/purge-assessment-audio.mjs) and a cache of generated prompt audio
+-- (the scripts never go to the browser).
+CREATE TABLE IF NOT EXISTS assessment_audio (
+  id           uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  session_id   uuid NOT NULL REFERENCES assessment_sessions(id) ON DELETE CASCADE,
+  item_id      uuid REFERENCES items(id) ON DELETE SET NULL,
+  kind         text NOT NULL CHECK (kind IN ('answer','sound_check')),
+  mime         text NOT NULL,
+  bytes        bytea NOT NULL,
+  duration_ms  int,
+  created_at   timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_audio_session ON assessment_audio(session_id);
+CREATE INDEX IF NOT EXISTS idx_audio_created ON assessment_audio(created_at);
+CREATE TABLE IF NOT EXISTS item_audio_cache (
+  content_hash text PRIMARY KEY,
+  mime         text NOT NULL,
+  bytes        bytea NOT NULL,
+  created_at   timestamptz NOT NULL DEFAULT now()
+);
+ALTER TABLE assessment_reports ADD COLUMN IF NOT EXISTS english jsonb;
 `
 
 const pool = new Pool({

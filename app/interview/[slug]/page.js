@@ -15,6 +15,7 @@ const ROLE_LABELS = {
   'swe-devops': 'DevOps / Cloud',
   'general': 'General Workplace',
   'customer_service': 'Customer Service',
+  'english': 'English Test',
   'pm-consumer': 'Product Management',
   'sales-ae': 'Sales (AE)',
 }
@@ -99,6 +100,8 @@ export default async function ApplicationHubPage({ params }) {
         ? 'Timed written test: knowledge, a coding task, a code review and work situations (about 1 hour)'
         : code === 'customer_service'
           ? 'Timed test: typing, customer situations, a written reply and accuracy (about 25 minutes)'
+          : code === 'english'
+            ? 'Speaking, listening and reading in English, with a microphone (about 18 minutes)'
           : code === 'general'
             ? 'Timed test: work situations, a short email, numbers and attention to detail (about 30 minutes)'
             : 'Adaptive scenario, coding & MCQ questions',
