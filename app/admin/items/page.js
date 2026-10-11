@@ -40,8 +40,8 @@ export default async function AdminItemsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-ink">Item Bank</h1>
-        <p className="text-muted mt-1">
+        <h1 className="text-3xl font-bold text-slate-900">Item Bank</h1>
+        <p className="text-slate-600 mt-1">
           {items.length} assessment items across {Object.keys(byType).length} types. Every item is a question/task with psychometric parameters (IRT: α discrimination · β difficulty).
         </p>
       </div>
@@ -49,8 +49,8 @@ export default async function AdminItemsPage() {
       {/* Type breakdown */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
         {Object.entries(byType).map(([type, count]) => (
-          <div key={type} className={`rounded-2xl border p-4 ${TYPE_COLORS[type] || 'bg-slate-50 text-body border-line'}`}>
-            <p className="text-xs font-bold">{type.replace(/_/g, ' ')}</p>
+          <div key={type} className={`rounded-2xl border p-4 ${TYPE_COLORS[type] || 'bg-slate-50 text-slate-700 border-slate-200'}`}>
+            <p className="text-xs font-black uppercase tracking-widest">{type.replace(/_/g, ' ')}</p>
             <p className="text-2xl font-bold mt-1">{count}</p>
           </div>
         ))}
@@ -59,23 +59,23 @@ export default async function AdminItemsPage() {
       {/* Items list */}
       <div className="space-y-3">
         {items.map((item) => (
-          <div key={item.id} className="bg-white rounded-2xl border border-line p-5 hover:border-slate-300 transition-colors">
+          <div key={item.id} className="bg-white rounded-2xl border border-slate-200 p-5 hover:border-slate-300 transition-colors">
             <div className="flex items-start justify-between gap-4 mb-3">
               <div className="flex items-center gap-2 flex-wrap">
-                <span className={`text-xs font-bold px-2 py-1 rounded border ${TYPE_COLORS[item.type] || 'bg-slate-50 text-body border-line'}`}>
+                <span className={`text-[10px] font-black uppercase tracking-widest px-2 py-1 rounded border ${TYPE_COLORS[item.type] || 'bg-slate-50 text-slate-700 border-slate-200'}`}>
                   {item.type.replace(/_/g, ' ')}
                 </span>
-                <span className="text-xs font-bold text-muted">
+                <span className="text-[10px] font-black uppercase tracking-widest text-slate-600">
                   · {item.modality}
                 </span>
-                <span className={`text-xs font-bold px-2 py-0.5 rounded ${STATUS_COLORS[item.status]}`}>
+                <span className={`text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded ${STATUS_COLORS[item.status]}`}>
                   {item.status}
                 </span>
-                <span className="text-xs font-mono text-muted truncate max-w-[280px]">
+                <span className="text-[10px] font-mono text-slate-600 truncate max-w-[280px]">
                   {item.primary_skill_code}
                 </span>
               </div>
-              <div className="flex items-center gap-4 text-xs text-muted shrink-0">
+              <div className="flex items-center gap-4 text-xs text-slate-600 shrink-0">
                 <span title="Item Response Theory parameters">
                   <span className="font-mono">α={item.discrimination_alpha?.toFixed(2) ?? '—'}</span>
                   {' · '}
@@ -96,9 +96,9 @@ export default async function AdminItemsPage() {
 
             {item.secondary_skill_codes && item.secondary_skill_codes.length > 0 && (
               <div className="mt-3 flex items-center gap-2 flex-wrap">
-                <span className="text-xs font-bold text-muted">Also measures:</span>
+                <span className="text-[10px] font-black uppercase tracking-widest text-slate-600">Also measures:</span>
                 {item.secondary_skill_codes.map((s) => (
-                  <span key={s} className="text-xs font-mono text-muted bg-slate-100 px-1.5 py-0.5 rounded">{s}</span>
+                  <span key={s} className="text-[10px] font-mono text-slate-600 bg-slate-100 px-1.5 py-0.5 rounded">{s}</span>
                 ))}
               </div>
             )}
@@ -106,7 +106,7 @@ export default async function AdminItemsPage() {
             {item.tags && item.tags.length > 0 && (
               <div className="mt-2 flex items-center gap-2 flex-wrap">
                 {item.tags.map((t) => (
-                  <span key={t} className="text-xs text-brand bg-indigo-50 px-1.5 py-0.5 rounded">#{t}</span>
+                  <span key={t} className="text-[10px] text-indigo-600 bg-indigo-50 px-1.5 py-0.5 rounded">#{t}</span>
                 ))}
               </div>
             )}
@@ -115,8 +115,8 @@ export default async function AdminItemsPage() {
       </div>
 
       {items.length === 0 && (
-        <div className="bg-white rounded-2xl border border-line p-10 text-center">
-          <p className="text-muted text-sm">No items in the bank yet. Run <code className="bg-slate-100 px-2 py-1 rounded text-xs">node scripts/seed-swe-backend.mjs</code> to seed.</p>
+        <div className="bg-white rounded-2xl border border-slate-200 p-10 text-center">
+          <p className="text-slate-600 text-sm">No items in the bank yet. Run <code className="bg-slate-100 px-2 py-1 rounded text-xs">node scripts/seed-swe-backend.mjs</code> to seed.</p>
         </div>
       )}
     </div>

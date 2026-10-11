@@ -12,14 +12,14 @@ function Divider() { return <div className="border-t border-slate-100" /> }
 // ── Shared form controls for the preference tabs ──────────────────────────────
 const FIELD_CLS = 'w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm text-slate-900 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition'
 function Label({ children }) {
-  return <label className="block text-xs font-bold text-muted mb-2">{children}</label>
+  return <label className="block text-xs font-black uppercase tracking-[0.2em] text-slate-500 mb-2">{children}</label>
 }
 function Field({ label, hint, children }) {
   return (
     <div>
       <Label>{label}</Label>
       {children}
-      {hint && <p className="text-xs text-muted mt-1.5">{hint}</p>}
+      {hint && <p className="text-xs text-slate-500 mt-1.5">{hint}</p>}
     </div>
   )
 }
@@ -44,10 +44,10 @@ function Toggle({ label, hint, checked, onChange }) {
   return (
     <label className="flex items-start gap-3 cursor-pointer group">
       <input type="checkbox" checked={!!checked} onChange={e => onChange(e.target.checked)}
-        className="mt-0.5 h-4 w-4 rounded border-slate-300 text-brand focus:ring-indigo-500 cursor-pointer" />
+        className="mt-0.5 h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer" />
       <span className="min-w-0">
         <span className="block text-sm font-medium text-slate-800 group-hover:text-slate-900">{label}</span>
-        {hint && <span className="block text-xs text-muted mt-0.5">{hint}</span>}
+        {hint && <span className="block text-xs text-slate-500 mt-0.5">{hint}</span>}
       </span>
     </label>
   )
@@ -78,16 +78,16 @@ function SkillsEditor({ skills = [], onChange }) {
         {skills.map((s) => (
           <span key={s} className="inline-flex items-center gap-1.5 text-xs font-semibold bg-indigo-50 text-indigo-700 border border-indigo-100 px-3 py-1.5 rounded-full">
             {s}
-            <button onClick={() => onChange(skills.filter((x) => x !== s))} className="text-brand hover:text-red-500 transition">✕</button>
+            <button onClick={() => onChange(skills.filter((x) => x !== s))} className="text-indigo-400 hover:text-red-500 transition">✕</button>
           </span>
         ))}
-        {!skills.length && <p className="text-sm text-muted">No skills yet</p>}
+        {!skills.length && <p className="text-sm text-slate-500">No skills yet</p>}
       </div>
       <div className="flex gap-2">
         <input value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && add()}
           placeholder="Type a skill and press Enter"
-          className="flex-1 rounded-xl border border-slate-300 px-4 py-2.5 text-sm text-ink focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition" />
-        <button onClick={add} className="text-sm font-semibold px-4 py-2.5 border border-line rounded-xl text-body hover:bg-slate-50 transition">Add</button>
+          className="flex-1 rounded-xl border border-slate-300 px-4 py-2.5 text-sm text-slate-900 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition" />
+        <button onClick={add} className="text-sm font-semibold px-4 py-2.5 border border-slate-200 rounded-xl text-slate-700 hover:bg-slate-50 transition">Add</button>
       </div>
     </div>
   )
@@ -162,15 +162,15 @@ function YearRange({ startYear, endYear, onChange, presentLabel = 'Present (curr
     <div>
       <div className="grid grid-cols-2 gap-3">
         <div>
-          <p className="text-xs font-semibold text-muted mb-1">Start year</p>
+          <p className="text-[11px] font-semibold text-slate-500 mb-1">Start year</p>
           <YearSelect value={startYear} onChange={v => onChange({ startYear: v, endYear })} />
         </div>
         <div>
-          <p className="text-xs font-semibold text-muted mb-1">End year</p>
+          <p className="text-[11px] font-semibold text-slate-500 mb-1">End year</p>
           <YearSelect value={present ? '' : endYear} disabled={present} onChange={v => onChange({ startYear, endYear: v })} />
         </div>
       </div>
-      <label className="inline-flex items-center gap-2 mt-2 text-xs text-body cursor-pointer select-none">
+      <label className="inline-flex items-center gap-2 mt-2 text-xs text-slate-600 cursor-pointer select-none">
         <input type="checkbox" checked={present} onChange={e => onChange({ startYear, endYear: e.target.checked ? 'Present' : '' })} className="w-3.5 h-3.5 accent-indigo-600" />
         {presentLabel}
       </label>
@@ -194,18 +194,18 @@ function ExpCard({ item, onSave, onDelete }) {
   const displayLoc = [item.city, item.country].filter(Boolean).join(', ')
   const displayDates = joinDates(item.startYear, item.endYear) || item.dates || ''
   if (!editing) return (
-    <div className="border border-line rounded-xl p-4 hover:border-slate-300 transition">
+    <div className="border border-slate-200 rounded-xl p-4 hover:border-slate-300 transition">
       <div className="flex justify-between gap-3 mb-1">
         <div>
-          <p className="text-sm font-bold text-ink">{item.title || '(no title)'}</p>
-          <p className="text-xs text-muted mt-0.5">{item.company}{displayLoc ? ` · ${displayLoc}` : ''}{displayDates ? ` · ${displayDates}` : ''}</p>
+          <p className="text-sm font-bold text-slate-900">{item.title || '(no title)'}</p>
+          <p className="text-xs text-slate-500 mt-0.5">{item.company}{displayLoc ? ` · ${displayLoc}` : ''}{displayDates ? ` · ${displayDates}` : ''}</p>
         </div>
         <div className="flex gap-1.5 flex-shrink-0">
-          <button onClick={() => setEditing(true)} className="text-xs font-semibold px-2.5 py-1 border border-line rounded-lg text-body hover:bg-slate-50 transition">Edit</button>
+          <button onClick={() => setEditing(true)} className="text-xs font-semibold px-2.5 py-1 border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 transition">Edit</button>
           <button onClick={onDelete} className="text-xs font-semibold px-2.5 py-1 border border-red-100 rounded-lg text-red-500 hover:bg-red-50 transition">✕</button>
         </div>
       </div>
-      {(item.bullets || []).map((b, i) => <p key={i} className="text-xs text-muted mt-1.5 pl-3 before:content-['·'] before:mr-1.5">{b}</p>)}
+      {(item.bullets || []).map((b, i) => <p key={i} className="text-xs text-slate-500 mt-1.5 pl-3 before:content-['·'] before:mr-1.5">{b}</p>)}
     </div>
   )
   return (
@@ -213,7 +213,7 @@ function ExpCard({ item, onSave, onDelete }) {
       <div className="grid grid-cols-2 gap-2">
         {[['title','Role'],['company','Company'],['city','City'],['country','Country']].map(([k,ph]) => (
           <input key={k} value={d[k]||''} onChange={e=>setD(x=>({...x,[k]:e.target.value}))} placeholder={ph}
-            className="rounded-lg border border-slate-300 px-3 py-2 text-sm text-ink focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 bg-white transition" />
+            className="rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 bg-white transition" />
         ))}
       </div>
 
@@ -221,20 +221,20 @@ function ExpCard({ item, onSave, onDelete }) {
 
       <div className="space-y-1.5">
         {(d.bullets||[]).map((b,i)=>(
-          <div key={i} className="flex items-center gap-2 text-xs text-body">
-            <span className="text-muted">·</span><span className="flex-1">{b}</span>
+          <div key={i} className="flex items-center gap-2 text-xs text-slate-600">
+            <span className="text-slate-500">·</span><span className="flex-1">{b}</span>
             <button onClick={()=>setD(x=>({...x,bullets:x.bullets.filter((_,j)=>j!==i)}))} className="text-slate-300 hover:text-red-400 transition">✕</button>
           </div>
         ))}
         <div className="flex gap-1.5 mt-1">
           <input value={bullet} onChange={e=>setBullet(e.target.value)} onKeyDown={e=>e.key==='Enter'&&addBullet()} placeholder="Add bullet point"
             className="flex-1 rounded-lg border border-slate-300 px-3 py-1.5 text-xs focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 bg-white transition" />
-          <button onClick={addBullet} className="text-xs font-semibold px-2.5 py-1 border border-line rounded-lg hover:bg-white transition">+</button>
+          <button onClick={addBullet} className="text-xs font-semibold px-2.5 py-1 border border-slate-200 rounded-lg hover:bg-white transition">+</button>
         </div>
       </div>
       <div className="flex gap-2 pt-1">
         <button onClick={handleSave} className="text-xs font-semibold px-3.5 py-1.5 bg-slate-900 text-white rounded-lg hover:bg-slate-800 transition">Save</button>
-        <button onClick={()=>{setD(item);setEditing(false)}} className="text-xs font-semibold px-3.5 py-1.5 border border-line rounded-lg text-body hover:bg-slate-50 transition">Cancel</button>
+        <button onClick={()=>{setD(item);setEditing(false)}} className="text-xs font-semibold px-3.5 py-1.5 border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 transition">Cancel</button>
       </div>
     </div>
   )
@@ -249,13 +249,13 @@ function EduCard({ item, onSave, onDelete }) {
   }
   const displayYear = joinDates(item.startYear, item.endYear) || item.year || ''
   if (!editing) return (
-    <div className="border border-line rounded-xl p-4 flex justify-between gap-3 hover:border-slate-300 transition">
+    <div className="border border-slate-200 rounded-xl p-4 flex justify-between gap-3 hover:border-slate-300 transition">
       <div>
-        <p className="text-sm font-bold text-ink">{item.degree || '(no degree)'}{item.major ? ` · ${item.major}` : ''}</p>
-        <p className="text-xs text-muted mt-0.5">{item.school}{displayYear ? ` · ${displayYear}` : ''}{item.gpa ? ` · GPA ${item.gpa}` : ''}</p>
+        <p className="text-sm font-bold text-slate-900">{item.degree || '(no degree)'}{item.major ? ` · ${item.major}` : ''}</p>
+        <p className="text-xs text-slate-500 mt-0.5">{item.school}{displayYear ? ` · ${displayYear}` : ''}{item.gpa ? ` · GPA ${item.gpa}` : ''}</p>
       </div>
       <div className="flex gap-1.5 flex-shrink-0">
-        <button onClick={()=>setEditing(true)} className="text-xs font-semibold px-2.5 py-1 border border-line rounded-lg text-body hover:bg-slate-50 transition">Edit</button>
+        <button onClick={()=>setEditing(true)} className="text-xs font-semibold px-2.5 py-1 border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 transition">Edit</button>
         <button onClick={onDelete} className="text-xs font-semibold px-2.5 py-1 border border-red-100 rounded-lg text-red-500 hover:bg-red-50 transition">✕</button>
       </div>
     </div>
@@ -265,13 +265,13 @@ function EduCard({ item, onSave, onDelete }) {
       <div className="grid grid-cols-2 gap-2">
         {[['school','School'],['degree','Degree'],['major','Major'],['gpa','GPA']].map(([k,ph])=>(
           <input key={k} value={d[k]||''} onChange={e=>setD(x=>({...x,[k]:e.target.value}))} placeholder={ph}
-            className="rounded-lg border border-slate-300 px-3 py-2 text-sm text-ink focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 bg-white transition" />
+            className="rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 bg-white transition" />
         ))}
       </div>
       <YearRange startYear={d.startYear} endYear={d.endYear} onChange={v => setD(x => ({ ...x, ...v }))} presentLabel="Currently studying" />
       <div className="flex gap-2">
         <button onClick={handleSave} className="text-xs font-semibold px-3.5 py-1.5 bg-slate-900 text-white rounded-lg hover:bg-slate-800 transition">Save</button>
-        <button onClick={()=>{setD(item);setEditing(false)}} className="text-xs font-semibold px-3.5 py-1.5 border border-line rounded-lg text-body hover:bg-slate-50 transition">Cancel</button>
+        <button onClick={()=>{setD(item);setEditing(false)}} className="text-xs font-semibold px-3.5 py-1.5 border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 transition">Cancel</button>
       </div>
     </div>
   )
@@ -281,14 +281,14 @@ function ProjCard({ item, onSave, onDelete }) {
   const [editing, setEditing] = useState(!item.name)
   const [d, setD] = useState(item)
   if (!editing) return (
-    <div className="border border-line rounded-xl p-4 flex justify-between gap-3 hover:border-slate-300 transition">
+    <div className="border border-slate-200 rounded-xl p-4 flex justify-between gap-3 hover:border-slate-300 transition">
       <div className="flex-1">
-        <p className="text-sm font-bold text-ink">{item.name || '(no name)'}</p>
-        {item.tech && <p className="text-xs text-muted mt-0.5">{item.tech}</p>}
-        {item.description && <p className="text-xs text-body mt-1.5 leading-relaxed">{item.description}</p>}
+        <p className="text-sm font-bold text-slate-900">{item.name || '(no name)'}</p>
+        {item.tech && <p className="text-xs text-slate-500 mt-0.5">{item.tech}</p>}
+        {item.description && <p className="text-xs text-slate-600 mt-1.5 leading-relaxed">{item.description}</p>}
       </div>
       <div className="flex gap-1.5 flex-shrink-0">
-        <button onClick={()=>setEditing(true)} className="text-xs font-semibold px-2.5 py-1 border border-line rounded-lg text-body hover:bg-slate-50 transition">Edit</button>
+        <button onClick={()=>setEditing(true)} className="text-xs font-semibold px-2.5 py-1 border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 transition">Edit</button>
         <button onClick={onDelete} className="text-xs font-semibold px-2.5 py-1 border border-red-100 rounded-lg text-red-500 hover:bg-red-50 transition">✕</button>
       </div>
     </div>
@@ -304,7 +304,7 @@ function ProjCard({ item, onSave, onDelete }) {
         className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 bg-white resize-none transition" />
       <div className="flex gap-2">
         <button onClick={()=>{onSave(d);setEditing(false)}} className="text-xs font-semibold px-3.5 py-1.5 bg-slate-900 text-white rounded-lg hover:bg-slate-800 transition">Save</button>
-        <button onClick={()=>{setD(item);setEditing(false)}} className="text-xs font-semibold px-3.5 py-1.5 border border-line rounded-lg text-body hover:bg-slate-50 transition">Cancel</button>
+        <button onClick={()=>{setD(item);setEditing(false)}} className="text-xs font-semibold px-3.5 py-1.5 border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 transition">Cancel</button>
       </div>
     </div>
   )
@@ -466,7 +466,7 @@ export default function DashboardProfilePage() {
     { id: 'account', label: 'Account' },
   ]
 
-  if (loading) return <div className="max-w-5xl mx-auto pt-10 text-sm text-muted">Loading…</div>
+  if (loading) return <div className="max-w-5xl mx-auto pt-10 text-sm text-slate-500">Loading…</div>
 
   return (
     <div className="max-w-5xl mx-auto">
@@ -475,8 +475,8 @@ export default function DashboardProfilePage() {
 
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-ink">Profile</h1>
-        <p className="text-muted mt-1">{user?.email}</p>
+        <h1 className="text-3xl md:text-4xl font-black tracking-tight text-slate-900">Profile</h1>
+        <p className="text-slate-500 mt-1">{user?.email}</p>
       </div>
 
       {/* Flash message */}
@@ -491,7 +491,9 @@ export default function DashboardProfilePage() {
         <nav className="md:sticky md:top-6 flex md:flex-col gap-0.5 overflow-x-auto pb-2 md:pb-0">
           {tabs.map(t => (
             <button key={t.id} onClick={() => setActiveTab(t.id)}
-              className={`text-left whitespace-nowrap px-4 py-2.5 rounded-xl text-sm font-semibold transition ${ activeTab === t.id ? 'bg-indigo-50 text-indigo-700' : 'text-muted hover:text-slate-800 hover:bg-slate-50' }`}>
+              className={`text-left whitespace-nowrap px-4 py-2.5 rounded-xl text-sm font-semibold transition ${
+                activeTab === t.id ? 'bg-indigo-50 text-indigo-700' : 'text-slate-500 hover:text-slate-800 hover:bg-slate-50'
+              }`}>
               {t.label}
             </button>
           ))}
@@ -500,12 +502,12 @@ export default function DashboardProfilePage() {
         <div className="min-w-0">
       {/* ── Personal Info ─────────────────────────────────────────────── */}
       {activeTab === 'personal' && (
-        <div className="max-w-2xl bg-white border border-line rounded-2xl p-6 space-y-6">
+        <div className="max-w-2xl bg-white border border-slate-200 rounded-2xl p-6 space-y-6">
           <div>
-            <label className="block text-xs font-bold text-muted mb-2">Full name</label>
+            <label className="block text-xs font-black uppercase tracking-[0.2em] text-slate-500 mb-2">Full name</label>
             <div className="flex gap-3">
               <input value={name} onChange={e => setName(e.target.value)} placeholder="Your full name"
-                className="flex-1 rounded-xl border border-slate-300 px-4 py-2.5 text-sm text-ink focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition" />
+                className="flex-1 rounded-xl border border-slate-300 px-4 py-2.5 text-sm text-slate-900 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition" />
               <button onClick={() => save({ full_name: name })} disabled={saving || !name.trim()}
                 className="px-5 py-2.5 text-sm font-semibold bg-slate-900 text-white rounded-xl hover:bg-slate-800 disabled:opacity-50 transition whitespace-nowrap">
                 {saving ? 'Saving…' : 'Save'}
@@ -513,22 +515,22 @@ export default function DashboardProfilePage() {
             </div>
           </div>
           <div>
-            <label className="block text-xs font-bold text-muted mb-2">Email</label>
-            <p className="text-sm text-body border border-line rounded-xl px-4 py-2.5 bg-slate-50">{user?.email}</p>
+            <label className="block text-xs font-black uppercase tracking-[0.2em] text-slate-500 mb-2">Email</label>
+            <p className="text-sm text-slate-700 border border-slate-200 rounded-xl px-4 py-2.5 bg-slate-50">{user?.email}</p>
           </div>
           <div>
-            <label className="block text-xs font-bold text-muted mb-2">Phone</label>
+            <label className="block text-xs font-black uppercase tracking-[0.2em] text-slate-500 mb-2">Phone</label>
             <div className="flex gap-3">
               <input value={pref('personal', 'phone')} onChange={e => setPref('personal', 'phone', e.target.value)}
                 placeholder="+92 300 0000000"
-                className="flex-1 rounded-xl border border-slate-300 px-4 py-2.5 text-sm text-ink focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition" />
+                className="flex-1 rounded-xl border border-slate-300 px-4 py-2.5 text-sm text-slate-900 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition" />
               <button onClick={() => savePrefs('personal')} disabled={saving}
                 className="px-5 py-2.5 text-sm font-semibold bg-slate-900 text-white rounded-xl hover:bg-slate-800 disabled:opacity-50 transition whitespace-nowrap">
                 {saving ? 'Saving…' : 'Save'}
               </button>
             </div>
             {sections?.personal?.phone && (
-              <p className="text-xs text-muted mt-1.5">Read from your resume. Edit it if it&apos;s wrong, then save.</p>
+              <p className="text-xs text-slate-500 mt-1.5">Read from your resume. Edit it if it&apos;s wrong, then save.</p>
             )}
           </div>
         </div>
@@ -538,30 +540,30 @@ export default function DashboardProfilePage() {
       {activeTab === 'resume' && (
         <div className="max-w-3xl space-y-6">
           {/* Resume upload */}
-          <div className="bg-white border border-line rounded-2xl p-6">
+          <div className="bg-white border border-slate-200 rounded-2xl p-6">
             <div className="flex items-center justify-between mb-4">
-              <label className="text-xs font-bold text-muted">Resume (PDF)</label>
-              {profile?.has_resume && <span className="text-xs font-bold text-emerald-700">✓ On file</span>}
+              <label className="text-xs font-black uppercase tracking-[0.2em] text-slate-500">Resume (PDF)</label>
+              {profile?.has_resume && <span className="text-xs font-bold text-emerald-600">✓ On file</span>}
             </div>
             {profile?.has_resume && (
-              <div className="flex items-center gap-3 border border-line rounded-xl px-4 py-3 mb-4 bg-slate-50/60">
-                <svg className="w-8 h-8 text-muted flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <div className="flex items-center gap-3 border border-slate-200 rounded-xl px-4 py-3 mb-4 bg-slate-50/60">
+                <svg className="w-8 h-8 text-slate-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold text-ink truncate">{profile.resume_filename || 'resume.pdf'}</p>
-                  <p className="text-xs text-muted">{profile.resume_pages} pages · {profile.resume_chars?.toLocaleString()} chars</p>
+                  <p className="text-sm font-semibold text-slate-900 truncate">{profile.resume_filename || 'resume.pdf'}</p>
+                  <p className="text-xs text-slate-500">{profile.resume_pages} pages · {profile.resume_chars?.toLocaleString()} chars</p>
                 </div>
               </div>
             )}
             <div className="rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50/50 px-6 py-8 text-center hover:border-indigo-300 transition">
-              <svg className="w-8 h-8 text-muted mx-auto mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="w-8 h-8 text-slate-500 mx-auto mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 16V4m0 0L7 9m5-5l5 5M5 20h14" />
               </svg>
-              <p className="text-sm text-muted mb-3">{profile?.has_resume ? 'Upload a new PDF to replace your resume' : 'Upload your resume as a PDF'}</p>
+              <p className="text-sm text-slate-500 mb-3">{profile?.has_resume ? 'Upload a new PDF to replace your resume' : 'Upload your resume as a PDF'}</p>
               <input ref={fileRef} type="file" accept="application/pdf,.pdf" onChange={onUpload} disabled={uploading} aria-label="Upload your resume (PDF)"
-                className="block w-full text-sm text-muted file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file: file:tracking-wide file:bg-brand file:text-white hover:file:bg-indigo-700 file:cursor-pointer cursor-pointer transition" />
-              {uploading && <p className="text-xs text-brand mt-3 animate-pulse font-semibold">Uploading & reading your PDF…</p>}
+                className="block w-full text-sm text-slate-500 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:uppercase file:tracking-wide file:bg-indigo-600 file:text-white hover:file:bg-indigo-700 file:cursor-pointer cursor-pointer transition" />
+              {uploading && <p className="text-xs text-indigo-600 mt-3 animate-pulse font-semibold">Uploading & reading your PDF…</p>}
             </div>
           </div>
 
@@ -569,35 +571,35 @@ export default function DashboardProfilePage() {
           {profile?.has_resume && (
             <>
               <div className="flex items-center justify-between px-1">
-                <h2 className="text-xl font-bold text-ink">Parsed Resume</h2>
+                <h2 className="text-xl font-bold text-slate-900">Parsed Resume</h2>
                 {sections && !parsing && (
                   <button onClick={parseResumeSections} disabled={parsing}
-                    className="text-xs font-semibold text-muted hover:text-brand disabled:opacity-50 transition">
+                    className="text-xs font-semibold text-slate-500 hover:text-indigo-600 disabled:opacity-50 transition">
                     ↺ Re-parse from PDF
                   </button>
                 )}
               </div>
-              <p className="text-sm text-muted -mt-4 px-1">This is what our AI read from your resume. Review it and edit anything that's off — it powers your interviews.</p>
+              <p className="text-sm text-slate-500 -mt-4 px-1">This is what our AI read from your resume. Review it and edit anything that's off — it powers your interviews.</p>
 
               {parsing ? (
-                <div className="bg-white border border-line rounded-2xl p-6">
-                  <p className="text-sm text-brand animate-pulse font-semibold">Reading your resume…</p>
+                <div className="bg-white border border-slate-200 rounded-2xl p-6">
+                  <p className="text-sm text-indigo-600 animate-pulse font-semibold">Reading your resume…</p>
                 </div>
               ) : !sections ? (
-                <div className="bg-white border border-line rounded-2xl p-6 text-center">
-                  <p className="text-sm text-muted mb-4">We haven't parsed your resume into sections yet.</p>
-                  <button onClick={parseResumeSections} className="text-sm font-semibold px-5 py-2.5 bg-brand text-white rounded-xl hover:bg-brand-dark transition">
+                <div className="bg-white border border-slate-200 rounded-2xl p-6 text-center">
+                  <p className="text-sm text-slate-500 mb-4">We haven't parsed your resume into sections yet.</p>
+                  <button onClick={parseResumeSections} className="text-sm font-semibold px-5 py-2.5 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition">
                     Parse my resume
                   </button>
                 </div>
               ) : (
                 <>
                   {/* Summary */}
-                  <div className="bg-white border border-line rounded-2xl p-6">
-                    <h3 className="text-lg font-bold text-ink mb-4">Summary</h3>
+                  <div className="bg-white border border-slate-200 rounded-2xl p-6">
+                    <h3 className="text-lg font-bold text-slate-900 mb-4">Summary</h3>
                     <textarea value={sections?.summary || ''} onChange={e => setSections(s => ({ ...s, summary: e.target.value }))}
                       rows={4} placeholder="Your professional summary"
-                      className="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm text-ink focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 resize-none transition" />
+                      className="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm text-slate-900 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 resize-none transition" />
                     <button onClick={() => save({ resume_sections: sections })} disabled={saving}
                       className="mt-3 text-sm font-semibold px-5 py-2 bg-slate-900 text-white rounded-xl hover:bg-slate-800 disabled:opacity-50 transition">
                       {saving ? 'Saving…' : 'Save Summary'}
@@ -605,17 +607,17 @@ export default function DashboardProfilePage() {
                   </div>
 
                   {/* Skills */}
-                  <div className="bg-white border border-line rounded-2xl p-6">
-                    <h3 className="text-lg font-bold text-ink mb-4">Skills</h3>
+                  <div className="bg-white border border-slate-200 rounded-2xl p-6">
+                    <h3 className="text-lg font-bold text-slate-900 mb-4">Skills</h3>
                     <SkillsEditor skills={sections?.skills || []} onChange={(v) => saveSections({ ...sections, skills: v })} />
                   </div>
 
                   {/* Experience */}
-                  <div className="bg-white border border-line rounded-2xl p-6">
+                  <div className="bg-white border border-slate-200 rounded-2xl p-6">
                     <div className="flex items-center justify-between mb-4">
-                      <h3 className="text-lg font-bold text-ink">Experience</h3>
+                      <h3 className="text-lg font-bold text-slate-900">Experience</h3>
                       <button onClick={() => saveSections({ ...sections, experience: [...(sections?.experience||[]), { id: uid(), title:'', company:'', location:'', dates:'', bullets:[] }] })}
-                        className="text-xs font-semibold px-3 py-1.5 border border-line rounded-lg text-body hover:bg-slate-50 transition">+ Add</button>
+                        className="text-xs font-semibold px-3 py-1.5 border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 transition">+ Add</button>
                     </div>
                     <div className="space-y-3">
                       {(sections?.experience || []).map(exp => (
@@ -623,16 +625,16 @@ export default function DashboardProfilePage() {
                           onSave={d => saveSections({ ...sections, experience: sections.experience.map(e => e.id===exp.id ? {...d,id:exp.id} : e) })}
                           onDelete={() => saveSections({ ...sections, experience: sections.experience.filter(e => e.id!==exp.id) })} />
                       ))}
-                      {!(sections?.experience?.length) && <p className="text-sm text-muted">No experience found.</p>}
+                      {!(sections?.experience?.length) && <p className="text-sm text-slate-500">No experience found.</p>}
                     </div>
                   </div>
 
                   {/* Education */}
-                  <div className="bg-white border border-line rounded-2xl p-6">
+                  <div className="bg-white border border-slate-200 rounded-2xl p-6">
                     <div className="flex items-center justify-between mb-4">
-                      <h3 className="text-lg font-bold text-ink">Education</h3>
+                      <h3 className="text-lg font-bold text-slate-900">Education</h3>
                       <button onClick={() => saveSections({ ...sections, education: [...(sections?.education||[]), { id: uid(), degree:'', school:'', year:'' }] })}
-                        className="text-xs font-semibold px-3 py-1.5 border border-line rounded-lg text-body hover:bg-slate-50 transition">+ Add</button>
+                        className="text-xs font-semibold px-3 py-1.5 border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 transition">+ Add</button>
                     </div>
                     <div className="space-y-3">
                       {(sections?.education || []).map(edu => (
@@ -640,16 +642,16 @@ export default function DashboardProfilePage() {
                           onSave={d => saveSections({ ...sections, education: sections.education.map(e => e.id===edu.id ? {...d,id:edu.id} : e) })}
                           onDelete={() => saveSections({ ...sections, education: sections.education.filter(e => e.id!==edu.id) })} />
                       ))}
-                      {!(sections?.education?.length) && <p className="text-sm text-muted">No education found.</p>}
+                      {!(sections?.education?.length) && <p className="text-sm text-slate-500">No education found.</p>}
                     </div>
                   </div>
 
                   {/* Projects */}
-                  <div className="bg-white border border-line rounded-2xl p-6">
+                  <div className="bg-white border border-slate-200 rounded-2xl p-6">
                     <div className="flex items-center justify-between mb-4">
-                      <h3 className="text-lg font-bold text-ink">Projects</h3>
+                      <h3 className="text-lg font-bold text-slate-900">Projects</h3>
                       <button onClick={() => saveSections({ ...sections, projects: [...(sections?.projects||[]), { id: uid(), name:'', tech:'', description:'' }] })}
-                        className="text-xs font-semibold px-3 py-1.5 border border-line rounded-lg text-body hover:bg-slate-50 transition">+ Add</button>
+                        className="text-xs font-semibold px-3 py-1.5 border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 transition">+ Add</button>
                     </div>
                     <div className="space-y-3">
                       {(sections?.projects || []).map(proj => (
@@ -657,16 +659,16 @@ export default function DashboardProfilePage() {
                           onSave={d => saveSections({ ...sections, projects: sections.projects.map(p => p.id===proj.id ? {...d,id:proj.id} : p) })}
                           onDelete={() => saveSections({ ...sections, projects: sections.projects.filter(p => p.id!==proj.id) })} />
                       ))}
-                      {!(sections?.projects?.length) && <p className="text-sm text-muted">No projects found.</p>}
+                      {!(sections?.projects?.length) && <p className="text-sm text-slate-500">No projects found.</p>}
                     </div>
                   </div>
 
                   {/* Coding Profiles */}
-                  <div className="bg-white border border-line rounded-2xl p-6">
+                  <div className="bg-white border border-slate-200 rounded-2xl p-6">
                     <div className="flex items-center justify-between mb-4">
-                      <h3 className="text-lg font-bold text-ink">Coding Profiles</h3>
+                      <h3 className="text-lg font-bold text-slate-900">Coding Profiles</h3>
                       <button onClick={() => setSections(s => ({ ...s, coding_profiles: [...(s?.coding_profiles||[]), { id: uid(), platform:'', username:'', url:'' }] }))}
-                        className="text-xs font-semibold px-3 py-1.5 border border-line rounded-lg text-body hover:bg-slate-50 transition">+ Add</button>
+                        className="text-xs font-semibold px-3 py-1.5 border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 transition">+ Add</button>
                     </div>
                     <div className="space-y-2.5">
                       {(sections?.coding_profiles || []).map(cp => (
@@ -681,7 +683,7 @@ export default function DashboardProfilePage() {
                             className="text-slate-300 hover:text-red-500 px-1 transition" aria-label="Remove">✕</button>
                         </div>
                       ))}
-                      {!(sections?.coding_profiles?.length) && <p className="text-sm text-muted">No coding profiles found.</p>}
+                      {!(sections?.coding_profiles?.length) && <p className="text-sm text-slate-500">No coding profiles found.</p>}
                     </div>
                     <button onClick={() => save({ resume_sections: sections })} disabled={saving}
                       className="mt-3 text-sm font-semibold px-5 py-2 bg-slate-900 text-white rounded-xl hover:bg-slate-800 disabled:opacity-50 transition">
@@ -690,11 +692,11 @@ export default function DashboardProfilePage() {
                   </div>
 
                   {/* Links */}
-                  <div className="bg-white border border-line rounded-2xl p-6">
+                  <div className="bg-white border border-slate-200 rounded-2xl p-6">
                     <div className="flex items-center justify-between mb-4">
-                      <h3 className="text-lg font-bold text-ink">Links</h3>
+                      <h3 className="text-lg font-bold text-slate-900">Links</h3>
                       <button onClick={() => setSections(s => ({ ...s, links: [...(s?.links||[]), { id: uid(), label:'', url:'' }] }))}
-                        className="text-xs font-semibold px-3 py-1.5 border border-line rounded-lg text-body hover:bg-slate-50 transition">+ Add</button>
+                        className="text-xs font-semibold px-3 py-1.5 border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 transition">+ Add</button>
                     </div>
                     <div className="space-y-2.5">
                       {(sections?.links || []).map(ln => (
@@ -709,7 +711,7 @@ export default function DashboardProfilePage() {
                             className="text-slate-300 hover:text-red-500 px-1 transition" aria-label="Remove">✕</button>
                         </div>
                       ))}
-                      {!(sections?.links?.length) && <p className="text-sm text-muted">No links found.</p>}
+                      {!(sections?.links?.length) && <p className="text-sm text-slate-500">No links found.</p>}
                     </div>
                     <button onClick={() => save({ resume_sections: sections })} disabled={saving}
                       className="mt-3 text-sm font-semibold px-5 py-2 bg-slate-900 text-white rounded-xl hover:bg-slate-800 disabled:opacity-50 transition">
@@ -718,11 +720,11 @@ export default function DashboardProfilePage() {
                   </div>
 
                   {/* Publications */}
-                  <div className="bg-white border border-line rounded-2xl p-6">
+                  <div className="bg-white border border-slate-200 rounded-2xl p-6">
                     <div className="flex items-center justify-between mb-4">
-                      <h3 className="text-lg font-bold text-ink">Publications</h3>
+                      <h3 className="text-lg font-bold text-slate-900">Publications</h3>
                       <button onClick={() => setSections(s => ({ ...s, publications: [...(s?.publications||[]), { id: uid(), title:'', description:'' }] }))}
-                        className="text-xs font-semibold px-3 py-1.5 border border-line rounded-lg text-body hover:bg-slate-50 transition">+ Add</button>
+                        className="text-xs font-semibold px-3 py-1.5 border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 transition">+ Add</button>
                     </div>
                     <div className="space-y-2.5">
                       {(sections?.publications || []).map(pb => (
@@ -738,17 +740,17 @@ export default function DashboardProfilePage() {
                             className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:border-indigo-500 transition" />
                         </div>
                       ))}
-                      {!(sections?.publications?.length) && <p className="text-sm text-muted">No publications found.</p>}
+                      {!(sections?.publications?.length) && <p className="text-sm text-slate-500">No publications found.</p>}
                     </div>
                     <button onClick={() => save({ resume_sections: sections })} disabled={saving} className="mt-3 text-sm font-semibold px-5 py-2 bg-slate-900 text-white rounded-xl hover:bg-slate-800 disabled:opacity-50 transition">{saving ? 'Saving…' : 'Save Publications'}</button>
                   </div>
 
                   {/* Certifications */}
-                  <div className="bg-white border border-line rounded-2xl p-6">
+                  <div className="bg-white border border-slate-200 rounded-2xl p-6">
                     <div className="flex items-center justify-between mb-4">
-                      <h3 className="text-lg font-bold text-ink">Certifications</h3>
+                      <h3 className="text-lg font-bold text-slate-900">Certifications</h3>
                       <button onClick={() => setSections(s => ({ ...s, certifications: [...(s?.certifications||[]), { id: uid(), name:'', issuer:'', year:'' }] }))}
-                        className="text-xs font-semibold px-3 py-1.5 border border-line rounded-lg text-body hover:bg-slate-50 transition">+ Add</button>
+                        className="text-xs font-semibold px-3 py-1.5 border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 transition">+ Add</button>
                     </div>
                     <div className="space-y-2.5">
                       {(sections?.certifications || []).map(ct => (
@@ -765,17 +767,17 @@ export default function DashboardProfilePage() {
                           <button onClick={() => setSections(s => ({ ...s, certifications: s.certifications.filter(x => x.id!==ct.id) }))} className="text-slate-300 hover:text-red-500 px-1" aria-label="Remove">✕</button>
                         </div>
                       ))}
-                      {!(sections?.certifications?.length) && <p className="text-sm text-muted">No certifications found.</p>}
+                      {!(sections?.certifications?.length) && <p className="text-sm text-slate-500">No certifications found.</p>}
                     </div>
                     <button onClick={() => save({ resume_sections: sections })} disabled={saving} className="mt-3 text-sm font-semibold px-5 py-2 bg-slate-900 text-white rounded-xl hover:bg-slate-800 disabled:opacity-50 transition">{saving ? 'Saving…' : 'Save Certifications'}</button>
                   </div>
 
                   {/* Awards */}
-                  <div className="bg-white border border-line rounded-2xl p-6">
+                  <div className="bg-white border border-slate-200 rounded-2xl p-6">
                     <div className="flex items-center justify-between mb-4">
-                      <h3 className="text-lg font-bold text-ink">Awards</h3>
+                      <h3 className="text-lg font-bold text-slate-900">Awards</h3>
                       <button onClick={() => setSections(s => ({ ...s, awards: [...(s?.awards||[]), { id: uid(), title:'', year:'' }] }))}
-                        className="text-xs font-semibold px-3 py-1.5 border border-line rounded-lg text-body hover:bg-slate-50 transition">+ Add</button>
+                        className="text-xs font-semibold px-3 py-1.5 border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 transition">+ Add</button>
                     </div>
                     <div className="space-y-2.5">
                       {(sections?.awards || []).map(aw => (
@@ -789,20 +791,20 @@ export default function DashboardProfilePage() {
                           <button onClick={() => setSections(s => ({ ...s, awards: s.awards.filter(x => x.id!==aw.id) }))} className="text-slate-300 hover:text-red-500 px-1" aria-label="Remove">✕</button>
                         </div>
                       ))}
-                      {!(sections?.awards?.length) && <p className="text-sm text-muted">No awards found.</p>}
+                      {!(sections?.awards?.length) && <p className="text-sm text-slate-500">No awards found.</p>}
                     </div>
                     <button onClick={() => save({ resume_sections: sections })} disabled={saving} className="mt-3 text-sm font-semibold px-5 py-2 bg-slate-900 text-white rounded-xl hover:bg-slate-800 disabled:opacity-50 transition">{saving ? 'Saving…' : 'Save Awards'}</button>
                   </div>
 
                   {/* Languages */}
-                  <div className="bg-white border border-line rounded-2xl p-6">
-                    <h3 className="text-lg font-bold text-ink mb-4">Languages</h3>
+                  <div className="bg-white border border-slate-200 rounded-2xl p-6">
+                    <h3 className="text-lg font-bold text-slate-900 mb-4">Languages</h3>
                     <SkillsEditor skills={sections?.languages || []} onChange={(v) => saveSections({ ...sections, languages: v })} />
                   </div>
 
                   {/* Hobbies */}
-                  <div className="bg-white border border-line rounded-2xl p-6">
-                    <h3 className="text-lg font-bold text-ink mb-4">Hobbies</h3>
+                  <div className="bg-white border border-slate-200 rounded-2xl p-6">
+                    <h3 className="text-lg font-bold text-slate-900 mb-4">Hobbies</h3>
                     <SkillsEditor skills={sections?.hobbies || []} onChange={(v) => saveSections({ ...sections, hobbies: v })} />
                   </div>
                 </>
@@ -811,32 +813,32 @@ export default function DashboardProfilePage() {
           )}
 
           {/* Links */}
-          <div className="bg-white border border-line rounded-2xl p-6 space-y-6">
+          <div className="bg-white border border-slate-200 rounded-2xl p-6 space-y-6">
             <div>
-              <label className="block text-xs font-bold text-muted mb-2">LinkedIn URL <span className="text-red-500">*</span></label>
+              <label className="block text-xs font-black uppercase tracking-[0.2em] text-slate-500 mb-2">LinkedIn URL <span className="text-red-500">*</span></label>
               <div className="flex gap-3">
                 <input type="url" value={linkedin} disabled={noLinkedin} onChange={e => setLinkedin(e.target.value)} placeholder="https://linkedin.com/in/yourname"
-                  className="flex-1 rounded-xl border border-slate-300 px-4 py-2.5 text-sm text-ink focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 disabled:bg-slate-100 disabled:text-slate-400 transition" />
+                  className="flex-1 rounded-xl border border-slate-300 px-4 py-2.5 text-sm text-slate-900 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 disabled:bg-slate-100 disabled:text-slate-400 transition" />
                 <button onClick={() => save({ linkedin_url: linkedin })} disabled={saving || noLinkedin}
                   className="px-5 py-2.5 text-sm font-semibold bg-slate-900 text-white rounded-xl hover:bg-slate-800 disabled:opacity-50 transition whitespace-nowrap">
                   {saving ? 'Saving…' : 'Save'}
                 </button>
               </div>
-              <p className="text-xs text-muted mt-2">We use this public profile URL for your application.</p>
-              <label className="inline-flex items-center gap-2 mt-3 text-sm text-body cursor-pointer select-none">
+              <p className="text-xs text-slate-500 mt-2">We use this public profile URL for your application.</p>
+              <label className="inline-flex items-center gap-2 mt-3 text-sm text-slate-600 cursor-pointer select-none">
                 <input type="checkbox" checked={noLinkedin} onChange={e => setNoLinkedin(e.target.checked)} className="w-4 h-4 accent-indigo-600" />
                 I don&apos;t have a LinkedIn
               </label>
 
               {/* Verify LinkedIn */}
-              <div className="mt-4 rounded-xl border border-line bg-slate-50 p-4">
+              <div className="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-4">
                 <div className="flex items-center justify-between gap-3 flex-wrap">
                   <div>
-                    <p className="text-sm font-semibold text-slate-800">Verify your LinkedIn account <span className="text-muted font-normal">· Optional</span></p>
-                    <p className="text-xs text-muted mt-0.5">Verified LinkedIn profiles have 6x higher chances of getting an offer.</p>
+                    <p className="text-sm font-semibold text-slate-800">Verify your LinkedIn account <span className="text-slate-500 font-normal">· Optional</span></p>
+                    <p className="text-xs text-slate-500 mt-0.5">Verified LinkedIn profiles have 6x higher chances of getting an offer.</p>
                   </div>
                   <a href={linkedin || 'https://linkedin.com'} target="_blank" rel="noopener noreferrer" aria-disabled={!linkedin || noLinkedin}
-                    className={`px-4 py-2 text-sm font-semibold rounded-xl transition whitespace-nowrap ${linkedin && !noLinkedin ? 'bg-[#0a66c2] text-white hover:bg-[#0954a0]' : 'bg-slate-100 text-muted pointer-events-none'}`}>
+                    className={`px-4 py-2 text-sm font-semibold rounded-xl transition whitespace-nowrap ${linkedin && !noLinkedin ? 'bg-[#0a66c2] text-white hover:bg-[#0954a0]' : 'bg-slate-200 text-slate-400 pointer-events-none'}`}>
                     Verify
                   </a>
                 </div>
@@ -844,10 +846,10 @@ export default function DashboardProfilePage() {
             </div>
             <Divider />
             <div>
-              <label className="block text-xs font-bold text-muted mb-2">GitHub URL</label>
+              <label className="block text-xs font-black uppercase tracking-[0.2em] text-slate-500 mb-2">GitHub URL</label>
               <div className="flex gap-3">
                 <input type="url" value={github} onChange={e => setGithub(e.target.value)} placeholder="https://github.com/yourusername"
-                  className="flex-1 rounded-xl border border-slate-300 px-4 py-2.5 text-sm text-ink focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition" />
+                  className="flex-1 rounded-xl border border-slate-300 px-4 py-2.5 text-sm text-slate-900 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition" />
                 <button onClick={() => save({ github_url: github })} disabled={saving}
                   className="px-5 py-2.5 text-sm font-semibold bg-slate-900 text-white rounded-xl hover:bg-slate-800 disabled:opacity-50 transition whitespace-nowrap">
                   {saving ? 'Saving…' : 'Save'}
@@ -862,13 +864,13 @@ export default function DashboardProfilePage() {
       {activeTab === 'certs' && (
         <div className="max-w-2xl space-y-6">
           {certs.length > 0 && (
-            <div className="bg-white border border-line rounded-2xl divide-y divide-slate-100 overflow-hidden">
+            <div className="bg-white border border-slate-200 rounded-2xl divide-y divide-slate-100 overflow-hidden">
               {certs.map((c, i) => (
                 <div key={i} className="flex items-start justify-between px-5 py-4 gap-3">
                   <div>
-                    <p className="text-sm font-semibold text-ink">{c.name}</p>
-                    {c.issuer && <p className="text-xs text-muted mt-0.5">{c.issuer}{c.year ? ` · ${c.year}` : ''}</p>}
-                    {c.url && <a href={c.url} target="_blank" rel="noopener noreferrer" className="text-xs text-brand hover:text-brand-dark underline underline-offset-2">View</a>}
+                    <p className="text-sm font-semibold text-slate-900">{c.name}</p>
+                    {c.issuer && <p className="text-xs text-slate-500 mt-0.5">{c.issuer}{c.year ? ` · ${c.year}` : ''}</p>}
+                    {c.url && <a href={c.url} target="_blank" rel="noopener noreferrer" className="text-xs text-indigo-600 hover:text-indigo-700 underline underline-offset-2">View</a>}
                   </div>
                   <button onClick={() => { const u = certs.filter((_,j)=>j!==i); setCerts(u); save({ certificates: u }) }}
                     className="text-slate-300 hover:text-red-400 text-sm flex-shrink-0 transition">✕</button>
@@ -877,21 +879,21 @@ export default function DashboardProfilePage() {
             </div>
           )}
 
-          <div className="bg-white border border-line rounded-2xl p-6 space-y-4">
-            <p className="text-xs font-bold text-muted">Add Certificate</p>
+          <div className="bg-white border border-slate-200 rounded-2xl p-6 space-y-4">
+            <p className="text-xs font-black uppercase tracking-[0.2em] text-slate-500">Add Certificate</p>
             <div className="grid grid-cols-2 gap-3">
               {[['Name *','text','name','AWS Solutions Architect'],['Issuer','text','issuer','Amazon Web Services'],['Year','text','year','2024'],['URL','url','url','https://…']].map(([label,type,key,ph])=>(
                 <div key={key}>
-                  <label className="text-xs font-bold text-muted block mb-1.5">{label}</label>
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-slate-500 block mb-1.5">{label}</label>
                   <input type={type} value={newCert[key]} onChange={e=>setNewCert(p=>({...p,[key]:e.target.value}))} placeholder={ph}
-                    className="w-full rounded-xl border border-slate-300 px-3.5 py-2 text-sm text-ink focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition" />
+                    className="w-full rounded-xl border border-slate-300 px-3.5 py-2 text-sm text-slate-900 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition" />
                 </div>
               ))}
             </div>
             <button
               onClick={() => { if (!newCert.name.trim()) return; const u=[...certs,{...newCert,name:newCert.name.trim()}]; setCerts(u); setNewCert({name:'',issuer:'',year:'',url:''}); save({ certificates: u }) }}
               disabled={!newCert.name.trim() || saving}
-              className="text-sm font-semibold px-5 py-2.5 bg-brand text-white rounded-xl hover:bg-brand-dark disabled:opacity-50 transition">
+              className="text-sm font-semibold px-5 py-2.5 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 disabled:opacity-50 transition">
               Add Certificate
             </button>
           </div>
@@ -900,8 +902,8 @@ export default function DashboardProfilePage() {
 
       {/* ── Location & work authorization ─────────────────────────────── */}
       {activeTab === 'location' && (
-        <div className="max-w-2xl bg-white border border-line rounded-2xl p-6 space-y-6">
-          <p className="text-sm text-muted">
+        <div className="max-w-2xl bg-white border border-slate-200 rounded-2xl p-6 space-y-6">
+          <p className="text-sm text-slate-500">
             Where you are and what you&apos;re allowed to work. Companies filter on this, so keep it accurate.
             {(sections?.personal?.city || sections?.personal?.country) && ' We pre-filled what we read from your resume — edit anything that’s off, then save.'}
           </p>
@@ -926,8 +928,8 @@ export default function DashboardProfilePage() {
 
       {/* ── Availability ──────────────────────────────────────────────── */}
       {activeTab === 'availability' && (
-        <div className="max-w-2xl bg-white border border-line rounded-2xl p-6 space-y-6">
-          <p className="text-sm text-muted">When you can start and how much you can take on.</p>
+        <div className="max-w-2xl bg-white border border-slate-200 rounded-2xl p-6 space-y-6">
+          <p className="text-sm text-slate-500">When you can start and how much you can take on.</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             <TextField label="Available from" type="date" value={pref('availability', 'available_from')} onChange={v => setPref('availability', 'available_from', v)} />
             <SelectField label="Notice period" value={pref('availability', 'notice')} onChange={v => setPref('availability', 'notice', v)}
@@ -948,8 +950,8 @@ export default function DashboardProfilePage() {
 
       {/* ── Work preferences ──────────────────────────────────────────── */}
       {activeTab === 'preferences' && (
-        <div className="max-w-2xl bg-white border border-line rounded-2xl p-6 space-y-6">
-          <p className="text-sm text-muted">What kind of work you actually want. We use this to rank the roles you see.</p>
+        <div className="max-w-2xl bg-white border border-slate-200 rounded-2xl p-6 space-y-6">
+          <p className="text-sm text-slate-500">What kind of work you actually want. We use this to rank the roles you see.</p>
           <SelectField label="Work setup" value={pref('preferences', 'setup')} onChange={v => setPref('preferences', 'setup', v)}
             options={['Remote', 'Hybrid', 'On-site', 'No preference']} />
           <TextField label="Roles you want" value={pref('preferences', 'roles')} onChange={v => setPref('preferences', 'roles', v)}
@@ -969,8 +971,8 @@ export default function DashboardProfilePage() {
 
       {/* ── Communications ────────────────────────────────────────────── */}
       {activeTab === 'communications' && (
-        <div className="max-w-2xl bg-white border border-line rounded-2xl p-6 space-y-6">
-          <p className="text-sm text-muted">Choose what we email you about. You&apos;ll always get essential messages about interviews you&apos;ve started.</p>
+        <div className="max-w-2xl bg-white border border-slate-200 rounded-2xl p-6 space-y-6">
+          <p className="text-sm text-slate-500">Choose what we email you about. You&apos;ll always get essential messages about interviews you&apos;ve started.</p>
           <div className="space-y-4">
             <Toggle label="New job matches" hint="Roles that fit your skills and preferences."
               checked={pref('communications', 'job_matches', true)} onChange={v => setPref('communications', 'job_matches', v)} />
@@ -991,44 +993,44 @@ export default function DashboardProfilePage() {
       {/* ── Account ───────────────────────────────────────────────────── */}
       {activeTab === 'account' && (
         <div className="max-w-2xl space-y-6">
-          <div className="bg-white border border-line rounded-2xl p-6 space-y-5">
+          <div className="bg-white border border-slate-200 rounded-2xl p-6 space-y-5">
             <div>
               <Label>Email</Label>
-              <p className="text-sm text-body border border-line rounded-xl px-4 py-2.5 bg-slate-50">{user?.email}</p>
+              <p className="text-sm text-slate-700 border border-slate-200 rounded-xl px-4 py-2.5 bg-slate-50">{user?.email}</p>
             </div>
             <div>
               <Label>Account type</Label>
-              <p className="text-sm text-body border border-line rounded-xl px-4 py-2.5 bg-slate-50 capitalize">
+              <p className="text-sm text-slate-700 border border-slate-200 rounded-xl px-4 py-2.5 bg-slate-50 capitalize">
                 {(profile?.account_type || 'candidate').replace(/_/g, ' ')}
               </p>
             </div>
             <div>
               <Label>Resume on file</Label>
-              <p className="text-sm text-body border border-line rounded-xl px-4 py-2.5 bg-slate-50">
+              <p className="text-sm text-slate-700 border border-slate-200 rounded-xl px-4 py-2.5 bg-slate-50">
                 {profile?.has_resume ? (profile?.resume_filename || 'Yes') : 'None uploaded yet'}
               </p>
             </div>
           </div>
 
-          <div className="bg-white border border-line rounded-2xl p-6">
-            <p className="text-sm font-semibold text-ink mb-1">Sign out</p>
-            <p className="text-xs text-muted mb-4">You&apos;ll be returned to the home page.</p>
+          <div className="bg-white border border-slate-200 rounded-2xl p-6">
+            <p className="text-sm font-semibold text-slate-900 mb-1">Sign out</p>
+            <p className="text-xs text-slate-500 mb-4">You&apos;ll be returned to the home page.</p>
             <button
               onClick={async () => {
                 const supabase = getSupabaseBrowser()
                 await supabase.auth.signOut()
                 router.push('/'); router.refresh()
               }}
-              className="px-5 py-2.5 text-sm font-semibold border border-slate-300 text-body rounded-xl hover:bg-slate-50 transition">
+              className="px-5 py-2.5 text-sm font-semibold border border-slate-300 text-slate-700 rounded-xl hover:bg-slate-50 transition">
               Sign out
             </button>
           </div>
 
           <div className="bg-white border border-red-200 rounded-2xl p-6">
             <p className="text-sm font-semibold text-red-700 mb-1">Delete account</p>
-            <p className="text-xs text-muted">
+            <p className="text-xs text-slate-500">
               Permanently removes your profile, resume and interview history. This can&apos;t be undone, so we handle it manually:
-              email <span className="font-medium text-body">support@jobstream.ai</span> from this address and we&apos;ll confirm before deleting anything.
+              email <span className="font-medium text-slate-700">support@jobstream.ai</span> from this address and we&apos;ll confirm before deleting anything.
             </p>
           </div>
         </div>

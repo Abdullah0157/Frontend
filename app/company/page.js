@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 
 function fitColor(score) {
-  if (score == null) return 'text-muted'
+  if (score == null) return 'text-slate-400'
   if (score >= 80) return 'text-emerald-600'
   if (score >= 60) return 'text-indigo-600'
   if (score >= 40) return 'text-amber-600'
@@ -20,22 +20,22 @@ function StatCard({ label, value, sub, icon, tint = 'indigo' }) {
     red: 'bg-red-50 text-red-600 border-red-200',
   }
   return (
-    <div className="bg-white border border-line rounded-2xl p-6 hover:border-slate-300 transition shadow-sm">
+    <div className="bg-white border border-slate-200 rounded-2xl p-6 hover:border-slate-300 transition shadow-sm">
       <div className="flex items-start justify-between mb-4">
-        <p className="text-xs font-bold text-muted">{label}</p>
+        <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500">{label}</p>
         <div className={`w-10 h-10 rounded-xl flex items-center justify-center border ${tints[tint]}`}>
           {icon}
         </div>
       </div>
-      <p className="text-4xl font-bold text-ink tracking-tight">{value}</p>
-      {sub && <p className="text-xs text-muted mt-2">{sub}</p>}
+      <p className="text-4xl font-black text-slate-900 tracking-tight">{value}</p>
+      {sub && <p className="text-xs text-slate-500 mt-2">{sub}</p>}
     </div>
   )
 }
 
 function Sparkline({ data }) {
   // Simple inline SVG bar chart of last 14 days of candidate activity.
-  if (!data || data.length === 0) return <p className="text-muted text-xs">No activity in the last 30 days.</p>
+  if (!data || data.length === 0) return <p className="text-slate-500 text-xs">No activity in the last 30 days.</p>
   const days = []
   const today = new Date()
   for (let i = 13; i >= 0; i--) {
@@ -57,7 +57,7 @@ function Sparkline({ data }) {
               style={{ height: `${Math.max(h, 4)}%` }}
               title={`${d.day}: ${d.n}`}
             />
-            <span className="text-xs text-muted mt-1 font-mono">
+            <span className="text-[8px] text-slate-500 mt-1 font-mono">
               {new Date(d.day).getDate()}
             </span>
           </div>
@@ -69,10 +69,10 @@ function Sparkline({ data }) {
 
 function DecisionBadge({ decision }) {
   if (decision === 'hire')
-    return <span className="text-xs font-bold px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">Hired</span>
+    return <span className="text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-200">Hired</span>
   if (decision === 'reject')
-    return <span className="text-xs font-bold px-3 py-1 rounded-full bg-red-50 text-red-600 border border-red-200">Rejected</span>
-  return <span className="text-xs font-bold px-3 py-1 rounded-full bg-slate-100 text-body border border-slate-300">Pending</span>
+    return <span className="text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full bg-red-50 text-red-600 border border-red-200">Rejected</span>
+  return <span className="text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full bg-slate-100 text-slate-700 border border-slate-300">Pending</span>
 }
 
 function CompanyDashboardInner() {
@@ -113,14 +113,14 @@ function CompanyDashboardInner() {
       {/* Top header */}
       <div className="flex items-end justify-between mb-10">
         <div>
-          <p className="text-xs font-bold text-brand mb-2">Dashboard</p>
-          <h1 className="text-3xl md:text-4xl font-bold text-ink">
+          <p className="text-[10px] font-black uppercase tracking-[0.4em] text-indigo-600 mb-2">Dashboard</p>
+          <h1 className="text-3xl md:text-4xl font-black text-slate-900">
             Welcome back{companyName ? `, ${companyName}` : ''}
           </h1>
         </div>
         <Link
           href="/company/jobs"
-          className="text-xs font-bold px-5 py-3 rounded-xl bg-brand hover:bg-brand-dark text-white shadow-lg shadow-indigo-500/30 transition"
+          className="text-xs font-black uppercase tracking-widest px-5 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-500/30 transition"
         >
           + Create Job
         </Link>
@@ -128,8 +128,8 @@ function CompanyDashboardInner() {
 
       {onboarding && (
         <div className="mb-8 p-5 rounded-2xl bg-gradient-to-r from-indigo-50 to-blue-50 border border-indigo-200">
-          <p className="text-xs font-bold text-brand mb-1">Welcome 👋</p>
-          <p className="text-ink text-sm">
+          <p className="text-[10px] font-black uppercase tracking-[0.4em] text-indigo-600 mb-1">Welcome 👋</p>
+          <p className="text-slate-900 text-sm">
             Your company is set up. Click "+ Create Job" above to post your first opening.
           </p>
         </div>
@@ -172,11 +172,11 @@ function CompanyDashboardInner() {
       </div>
 
       {/* Activity sparkline */}
-      <div className="bg-white border border-line rounded-2xl p-6 mb-8 shadow-sm">
+      <div className="bg-white border border-slate-200 rounded-2xl p-6 mb-8 shadow-sm">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <p className="text-xs font-bold text-muted mb-1">Activity</p>
-            <h2 className="text-xl font-bold text-ink">Candidates per day (last 14 days)</h2>
+            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-500 mb-1">Activity</p>
+            <h2 className="text-xl font-black text-slate-900">Candidates per day (last 14 days)</h2>
           </div>
         </div>
         <Sparkline data={data.activity} />
@@ -185,25 +185,25 @@ function CompanyDashboardInner() {
       {/* Two-column: Top jobs + Recent candidates */}
       <div className="grid lg:grid-cols-2 gap-6">
         {/* Top jobs */}
-        <div className="bg-white border border-line rounded-2xl p-6 shadow-sm">
+        <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
           <div className="flex items-center justify-between mb-5">
-            <h2 className="text-xs font-bold text-muted">Top Jobs</h2>
-            <Link href="/company/jobs" className="text-xs font-bold text-brand hover:text-indigo-500">View all →</Link>
+            <h2 className="text-xs font-black uppercase tracking-[0.4em] text-slate-500">Top Jobs</h2>
+            <Link href="/company/jobs" className="text-[10px] font-black uppercase tracking-widest text-indigo-600 hover:text-indigo-500">View all →</Link>
           </div>
           {data.topJobs.length === 0 ? (
-            <p className="text-muted text-sm">No jobs yet. <Link href="/company/jobs" className="text-brand underline">Create one.</Link></p>
+            <p className="text-slate-500 text-sm">No jobs yet. <Link href="/company/jobs" className="text-indigo-600 underline">Create one.</Link></p>
           ) : (
             <div className="space-y-3">
               {data.topJobs.map((j, i) => (
                 <Link key={j.id} href={`/company/jobs/${j.id}`} className="flex items-center gap-4 p-3 rounded-xl hover:bg-slate-100 transition">
-                  <span className="text-2xl font-bold text-slate-300 w-8 text-center">{i + 1}</span>
+                  <span className="text-2xl font-black text-slate-300 w-8 text-center">{i + 1}</span>
                   <div className="flex-1 min-w-0">
-                    <p className="font-bold text-ink text-sm truncate">{j.title}</p>
-                    <p className="text-muted text-xs">{j.role}</p>
+                    <p className="font-black text-slate-900 text-sm truncate">{j.title}</p>
+                    <p className="text-slate-500 text-xs">{j.role}</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-xs font-bold text-body">{j.candidate_count} candidates</p>
-                    <p className={`text-xs font-bold ${fitColor(j.top_fit)}`}>
+                    <p className="text-xs font-black text-slate-700">{j.candidate_count} candidates</p>
+                    <p className={`text-[10px] font-black ${fitColor(j.top_fit)}`}>
                       {j.top_fit != null ? `${j.top_fit}% top fit` : 'no interviews'}
                     </p>
                   </div>
@@ -214,27 +214,27 @@ function CompanyDashboardInner() {
         </div>
 
         {/* Recent candidates */}
-        <div className="bg-white border border-line rounded-2xl p-6 shadow-sm">
+        <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
           <div className="flex items-center justify-between mb-5">
-            <h2 className="text-xs font-bold text-muted">Recent Candidates</h2>
-            <Link href="/company/candidates" className="text-xs font-bold text-brand hover:text-indigo-500">View all →</Link>
+            <h2 className="text-xs font-black uppercase tracking-[0.4em] text-slate-500">Recent Candidates</h2>
+            <Link href="/company/candidates" className="text-[10px] font-black uppercase tracking-widest text-indigo-600 hover:text-indigo-500">View all →</Link>
           </div>
           {data.recentCandidates.length === 0 ? (
-            <p className="text-muted text-sm">No candidates yet. Share your job's interview link to start receiving applications.</p>
+            <p className="text-slate-500 text-sm">No candidates yet. Share your job's interview link to start receiving applications.</p>
           ) : (
             <div className="space-y-3">
               {data.recentCandidates.map((c) => (
                 <Link key={c.id} href={`/company/jobs/${c.job_id}`} className="flex items-center gap-4 p-3 rounded-xl hover:bg-slate-100 transition">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-indigo-700 flex items-center justify-center text-white font-bold text-xs">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-indigo-700 flex items-center justify-center text-white font-black text-xs">
                     {(c.name || '?').split(/\s+/).map(s => s[0]).join('').slice(0, 2).toUpperCase()}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="font-bold text-ink text-sm truncate">{c.name || '(no name)'}</p>
-                    <p className="text-muted text-xs truncate">{c.job_title}</p>
+                    <p className="font-black text-slate-900 text-sm truncate">{c.name || '(no name)'}</p>
+                    <p className="text-slate-500 text-xs truncate">{c.job_title}</p>
                   </div>
                   <div className="flex items-center gap-3">
                     {c.job_fit_score != null && (
-                      <p className={`text-sm font-bold ${fitColor(c.job_fit_score)}`}>{c.job_fit_score}%</p>
+                      <p className={`text-sm font-black ${fitColor(c.job_fit_score)}`}>{c.job_fit_score}%</p>
                     )}
                     <DecisionBadge decision={c.decision} />
                   </div>

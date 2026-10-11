@@ -343,25 +343,25 @@ export default function DomainExpertExperience({ userProfile = null }) {
         <div className="rounded-2xl border border-gray-200 bg-white p-10 text-center">
           <div className="w-10 h-10 mx-auto mb-4 rounded-full border-2 border-indigo-200 border-t-indigo-600 animate-spin" />
           <p className="text-sm font-medium text-gray-900">Reading your resume…</p>
-          <p className="text-xs text-muted mt-1">Maya is figuring out your domain and what to explore.</p>
+          <p className="text-xs text-gray-500 mt-1">Maya is figuring out your domain and what to explore.</p>
         </div>
       )}
 
       {phase === 'error_no_resume' && (
         noResume ? (
-          <div className="rounded-2xl border border-line bg-white p-10 text-center max-w-xl mx-auto shadow-sm">
+          <div className="rounded-2xl border border-slate-200 bg-white p-10 text-center max-w-xl mx-auto shadow-sm">
             <div className="w-14 h-14 mx-auto mb-5 rounded-2xl bg-amber-50 border border-amber-200 flex items-center justify-center">
               <svg className="w-7 h-7 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
             </div>
-            <h2 className="text-xl font-bold text-ink mb-1">Upload your resume first</h2>
-            <p className="text-muted mb-6 max-w-sm mx-auto">
+            <h2 className="text-xl font-bold text-slate-900 mb-1">Upload your resume first</h2>
+            <p className="text-slate-500 mb-6 max-w-sm mx-auto">
               Maya builds the interview around your actual experience, so we need your resume on file before you start.
             </p>
             <a
               href="/dashboard/profile?tab=resume"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-brand hover:bg-brand-dark text-white text-sm font-semibold transition-colors"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold transition-colors"
             >
               Upload Resume →
             </a>
@@ -382,15 +382,15 @@ export default function DomainExpertExperience({ userProfile = null }) {
 
       {phase === 'ready' && detected && (
         <div className="rounded-2xl border border-gray-200 bg-white p-8">
-          <p className="text-xs font-semibold text-brand mb-2">Ready to begin</p>
+          <p className="text-xs font-semibold tracking-widest text-indigo-500 uppercase mb-2">Ready to begin</p>
           <h2 className="text-xl font-semibold text-gray-900">
-            A {INTERVIEW_MINUTES}-minute conversation about <span className="text-brand">{detected.domain}</span>
+            A {INTERVIEW_MINUTES}-minute conversation about <span className="text-indigo-600">{detected.domain}</span>
           </h2>
-          {detected.headline && <p className="text-sm text-muted mt-1">{detected.headline}</p>}
+          {detected.headline && <p className="text-sm text-gray-500 mt-1">{detected.headline}</p>}
 
           {detected.focusAreas?.length > 0 && (
             <div className="mt-5">
-              <p className="text-xs font-semibold text-muted mb-2">Maya will explore</p>
+              <p className="text-xs font-semibold tracking-widest text-gray-500 uppercase mb-2">Maya will explore</p>
               <div className="flex flex-wrap gap-2">
                 {detected.focusAreas.map((a, i) => (
                   <span key={i} className="px-3 py-1 rounded-full bg-indigo-50 border border-indigo-200 text-indigo-700 text-xs font-medium">{a}</span>
@@ -400,9 +400,9 @@ export default function DomainExpertExperience({ userProfile = null }) {
           )}
 
           <ul className="mt-6 space-y-2 text-sm text-gray-600">
-            <li className="flex gap-2"><span className="text-brand">1.</span> She'll start by asking you to introduce yourself.</li>
-            <li className="flex gap-2"><span className="text-brand">2.</span> Then she'll dig into the specifics of your real work.</li>
-            <li className="flex gap-2"><span className="text-brand">3.</span> It runs for about {interviewLengthWords} — speak naturally, out loud.</li>
+            <li className="flex gap-2"><span className="text-indigo-500">1.</span> She'll start by asking you to introduce yourself.</li>
+            <li className="flex gap-2"><span className="text-indigo-500">2.</span> Then she'll dig into the specifics of your real work.</li>
+            <li className="flex gap-2"><span className="text-indigo-500">3.</span> It runs for about {interviewLengthWords} — speak naturally, out loud.</li>
           </ul>
 
           <button
@@ -412,7 +412,7 @@ export default function DomainExpertExperience({ userProfile = null }) {
           >
             {loading ? 'Starting…' : 'Start Interview'}
           </button>
-          <p className="mt-3 text-xs text-center text-muted">Voice interview with Maya · Make sure your mic is on</p>
+          <p className="mt-3 text-xs text-center text-gray-500">Voice interview with Maya · Make sure your mic is on</p>
         </div>
       )}
 
@@ -436,9 +436,9 @@ export default function DomainExpertExperience({ userProfile = null }) {
         <div className="space-y-6">
           {/* Header */}
           <div className="text-center pb-6 border-b border-gray-200">
-            <p className="text-xs font-semibold text-muted mb-2">Assessment Complete</p>
+            <p className="text-xs font-semibold tracking-widest text-gray-500 uppercase mb-2">Assessment Complete</p>
             <h2 className="text-2xl font-semibold text-gray-900">{form.name}</h2>
-            <p className="text-base text-muted mt-1">{form.domain}</p>
+            <p className="text-base text-gray-500 mt-1">{form.domain}</p>
           </div>
 
           {/* Verdict — the one thing a reader should take away, stated plainly
@@ -466,8 +466,8 @@ export default function DomainExpertExperience({ userProfile = null }) {
               <div className={`rounded-2xl border ${ring} p-6`}>
                 <div className="flex items-center gap-5">
                   <div className="shrink-0 text-center">
-                    <p className="text-5xl font-bold text-gray-900 leading-none tabular-nums">{report.expertise_score}</p>
-                    <p className="text-xs text-muted mt-1">out of 10</p>
+                    <p className="text-5xl font-black text-gray-900 leading-none tabular-nums">{report.expertise_score}</p>
+                    <p className="text-xs text-gray-500 mt-1">out of 10</p>
                   </div>
                   <div className="min-w-0">
                     <p className={`text-lg font-bold ${text}`}>{band.label}</p>
@@ -477,7 +477,7 @@ export default function DomainExpertExperience({ userProfile = null }) {
                         {report.expertise_level}
                       </span>
                       {conf > 0 && (
-                        <span className="px-2.5 py-1 rounded-full bg-white border border-gray-200 text-xs text-muted">
+                        <span className="px-2.5 py-1 rounded-full bg-white border border-gray-200 text-xs text-gray-500">
                           {conf}% confidence in this result
                         </span>
                       )}
@@ -491,7 +491,7 @@ export default function DomainExpertExperience({ userProfile = null }) {
           {/* Summary */}
           {report.domain_summary && (
             <div>
-              <p className="text-xs font-semibold text-muted mb-2">Summary</p>
+              <p className="text-xs font-semibold tracking-widest text-gray-500 uppercase mb-2">Summary</p>
               <p className="text-sm text-gray-700 leading-relaxed">{report.domain_summary}</p>
             </div>
           )}
@@ -499,7 +499,7 @@ export default function DomainExpertExperience({ userProfile = null }) {
           {/* Domain areas */}
           {report.domain_areas?.length > 0 && (
             <div>
-              <p className="text-xs font-semibold text-muted mb-2">Verified Domain Areas</p>
+              <p className="text-xs font-semibold tracking-widest text-gray-500 uppercase mb-2">Verified Domain Areas</p>
               <div className="flex flex-wrap gap-2">
                 {report.domain_areas.map((a, i) => (
                   <span key={i} className="px-3 py-1 rounded-full bg-indigo-50 border border-indigo-200 text-indigo-700 text-xs font-medium">{a}</span>
@@ -511,7 +511,7 @@ export default function DomainExpertExperience({ userProfile = null }) {
           {/* Unique value */}
           {report.unique_value && (
             <div>
-              <p className="text-xs font-semibold text-muted mb-2">Unique Value</p>
+              <p className="text-xs font-semibold tracking-widest text-gray-500 uppercase mb-2">Unique Value</p>
               <p className="text-sm text-gray-700 leading-relaxed">{report.unique_value}</p>
             </div>
           )}
@@ -519,7 +519,7 @@ export default function DomainExpertExperience({ userProfile = null }) {
           {/* Credibility signals */}
           {report.credibility_signals?.length > 0 && (
             <div>
-              <p className="text-xs font-semibold text-emerald-700 mb-2">Credibility Signals</p>
+              <p className="text-xs font-semibold tracking-widest text-emerald-600 uppercase mb-2">Credibility Signals</p>
               <ul className="space-y-1.5">
                 {report.credibility_signals.map((s, i) => (
                   <li key={i} className="flex gap-2 text-sm text-gray-700">
@@ -536,7 +536,7 @@ export default function DomainExpertExperience({ userProfile = null }) {
               candidate (or a hiring manager) can actually trust and argue with. */}
           {report.internal_scores && (
             <div>
-              <p className="text-xs font-semibold text-muted mb-3">What each score is based on</p>
+              <p className="text-xs font-semibold tracking-widest text-gray-500 uppercase mb-3">What each score is based on</p>
               <div className="space-y-3">
                 {Object.entries(report.internal_scores).map(([key, val]) => {
                   const quote = report.dimension_evidence?.[key]
@@ -547,7 +547,7 @@ export default function DomainExpertExperience({ userProfile = null }) {
                       <div className="flex items-center gap-3">
                         <span className="flex-1 text-sm font-semibold text-gray-800 capitalize">{key.replace(/_/g, ' ')}</span>
                         {conf != null && (
-                          <span className="text-xs text-muted">{Math.round(Number(conf) * 100)}% confidence</span>
+                          <span className="text-[11px] text-gray-500">{Math.round(Number(conf) * 100)}% confidence</span>
                         )}
                         <span className="text-sm font-bold text-gray-900 tabular-nums w-10 text-right">{val}/10</span>
                       </div>
@@ -576,7 +576,7 @@ export default function DomainExpertExperience({ userProfile = null }) {
           {/* Recommended use cases */}
           {report.recommended_use_cases?.length > 0 && (
             <div>
-              <p className="text-xs font-semibold text-muted mb-2">Best Fit For</p>
+              <p className="text-xs font-semibold tracking-widest text-gray-500 uppercase mb-2">Best Fit For</p>
               <ul className="space-y-1">
                 {report.recommended_use_cases.map((u, i) => (
                   <li key={i} className="text-sm text-gray-700">• {u}</li>
@@ -588,7 +588,7 @@ export default function DomainExpertExperience({ userProfile = null }) {
           {/* Knowledge gaps */}
           {report.knowledge_gaps?.length > 0 && (
             <div>
-              <p className="text-xs font-semibold text-amber-600 mb-2">Areas to Develop</p>
+              <p className="text-xs font-semibold tracking-widest text-amber-600 uppercase mb-2">Areas to Develop</p>
               <ul className="space-y-1">
                 {report.knowledge_gaps.map((g, i) => (
                   <li key={i} className="text-sm text-amber-700">• {g}</li>
@@ -607,7 +607,7 @@ export default function DomainExpertExperience({ userProfile = null }) {
 
       {phase === 'report' && !report && (
         <div className="text-center py-10">
-          <p className="text-muted text-sm">No report returned. Please try again.</p>
+          <p className="text-gray-500 text-sm">No report returned. Please try again.</p>
           <button onClick={reset} className="mt-4 px-5 py-2.5 rounded-lg border border-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-50">
             Try Again
           </button>

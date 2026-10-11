@@ -55,22 +55,22 @@ export default function CompanySettingsPage() {
     }
   }
 
-  if (loading) return <div className="px-8 py-10 text-muted">Loading…</div>
+  if (loading) return <div className="px-8 py-10 text-slate-500">Loading…</div>
 
   return (
     <div className="px-8 py-10 max-w-3xl">
       <div className="mb-10">
-        <p className="text-xs font-bold text-brand mb-2">Settings</p>
-        <h1 className="text-3xl md:text-4xl font-bold text-ink">Company profile</h1>
+        <p className="text-[10px] font-black uppercase tracking-[0.4em] text-indigo-600 mb-2">Settings</p>
+        <h1 className="text-3xl md:text-4xl font-black text-slate-900">Company profile</h1>
       </div>
 
       {error && <div className="mb-6 p-4 rounded-2xl border border-red-200 bg-red-50 text-red-600 text-sm">{error}</div>}
-      {success && <div className="mb-6 p-4 rounded-2xl border border-emerald-200 bg-emerald-50 text-emerald-700 text-sm">{success}</div>}
+      {success && <div className="mb-6 p-4 rounded-2xl border border-emerald-200 bg-emerald-50 text-emerald-600 text-sm">{success}</div>}
 
-      <form onSubmit={save} className="bg-white border border-line rounded-2xl p-6 space-y-5 shadow-sm">
+      <form onSubmit={save} className="bg-white border border-slate-200 rounded-2xl p-6 space-y-5 shadow-sm">
         <div className="grid md:grid-cols-2 gap-4">
           <label className="block">
-            <span className="text-xs font-bold text-body">Company Name *</span>
+            <span className="text-xs font-black uppercase tracking-[0.3em] text-slate-700">Company Name *</span>
             <input
               type="text"
               required
@@ -80,7 +80,7 @@ export default function CompanySettingsPage() {
             />
           </label>
           <label className="block">
-            <span className="text-xs font-bold text-body">Industry</span>
+            <span className="text-xs font-black uppercase tracking-[0.3em] text-slate-700">Industry</span>
             <select
               value={form.industry}
               onChange={(e) => setForm({ ...form, industry: e.target.value })}
@@ -91,7 +91,7 @@ export default function CompanySettingsPage() {
           </label>
         </div>
         <label className="block">
-          <span className="text-xs font-bold text-body">Website</span>
+          <span className="text-xs font-black uppercase tracking-[0.3em] text-slate-700">Website</span>
           <input
             type="url"
             value={form.website}
@@ -101,7 +101,7 @@ export default function CompanySettingsPage() {
           />
         </label>
         <label className="block">
-          <span className="text-xs font-bold text-body">Logo URL</span>
+          <span className="text-xs font-black uppercase tracking-[0.3em] text-slate-700">Logo URL</span>
           <input
             type="url"
             value={form.logo_url}
@@ -111,7 +111,7 @@ export default function CompanySettingsPage() {
           />
         </label>
         <label className="block">
-          <span className="text-xs font-bold text-body">Description</span>
+          <span className="text-xs font-black uppercase tracking-[0.3em] text-slate-700">Description</span>
           <textarea
             rows={3}
             value={form.description}
@@ -122,7 +122,7 @@ export default function CompanySettingsPage() {
         <button
           type="submit"
           disabled={saving}
-          className="text-xs font-bold px-6 py-3 rounded-xl bg-brand hover:bg-brand-dark text-white shadow-lg shadow-indigo-500/30 transition disabled:opacity-60 self-start"
+          className="text-xs font-black uppercase tracking-widest px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-500/30 transition disabled:opacity-60 self-start"
         >
           {saving ? 'Saving…' : 'Save'}
         </button>

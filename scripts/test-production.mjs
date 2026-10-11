@@ -71,7 +71,7 @@ test('routes that cost money or change data refuse visitors who are not logged i
 test('public pages: no calls to the old hosted backend, honest home page, reset pages exist', { skip: !BASE && 'set BASE to run' }, async () => {
   const home = await (await fetch(`${BASE}/`)).text()
   assert.ok(!/hf\.space|glassdoor|Integrated with Global Leaders/i.test(home), 'no old backend or partner claims on the home page')
-  assert.match(home, /How it works/)
+  assert.match(home, /How JobStream works|How it works/)
   const chatbot = await (await fetch(`${BASE}/chatbot.js`)).text()
   assert.ok(!/hf\.space/.test(chatbot), 'the chat widget uses our own routes')
   const about = await (await fetch(`${BASE}/about`)).text()
