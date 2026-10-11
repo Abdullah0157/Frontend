@@ -14,9 +14,9 @@ export default async function DashboardLayout({ children }) {
       <DashboardSidebar email={user.email} />
       <div className="md:ml-24 min-h-screen bg-white">
         <WorkspaceTopbar email={user.email} roleLabel="Candidate" homeHref="/dashboard" />
-        <main className="px-4 sm:px-6 md:px-10 lg:px-14 pt-8 pb-10">
+        <div className="px-4 sm:px-6 md:px-10 lg:px-14 pt-8 pb-10">
           {children}
-        </main>
+        </div>
       </div>
     </div>
   )

@@ -216,14 +216,14 @@ export default function AssessmentExperience({
     <div className="pb-10">
       <div className="container mx-auto max-w-3xl">
         <div className="mb-8 text-center">
-          <span className="inline-block px-4 py-1.5 rounded-full bg-indigo-50 border border-indigo-200 text-indigo-600 font-black text-[10px] uppercase tracking-[0.4em] mb-4">
+          <span className="inline-block px-4 py-1.5 rounded-full bg-indigo-50 border border-indigo-200 text-brand font-bold text-xs mb-4">
             Skills Assessment{devMode ? ' · Dev' : ''}
           </span>
-          <h1 className="text-3xl md:text-5xl font-black tracking-tight uppercase text-slate-900">
+          <h1 className="text-3xl md:text-5xl font-bold tracking-tight text-ink">
             {phase === 'complete' ? 'Results' : roleLabel}
           </h1>
           {phase === 'running' && (
-            <p className="text-indigo-600 font-black uppercase tracking-widest text-xs mt-3">
+            <p className="text-brand font-bold text-xs mt-3">
               {seniorityLabel}
             </p>
           )}
@@ -236,22 +236,22 @@ export default function AssessmentExperience({
         )}
 
         {phase === 'intake' && (
-          <div className="bg-white border border-slate-200 rounded-[2.5rem] p-8 md:p-12 shadow-xl shadow-indigo-500/5">
+          <div className="bg-white border border-line rounded-[2.5rem] p-8 md:p-12 shadow-xl shadow-indigo-500/5">
             <div className="grid gap-6">
-              <p className="text-slate-500 text-sm leading-relaxed">
+              <p className="text-muted text-sm leading-relaxed">
                 A short adaptive assessment tailored to this role. Questions get
                 harder or easier based on how you're doing — answer honestly and
                 take your time.
               </p>
 
               <div className="grid grid-cols-2 gap-4">
-                <div className="rounded-2xl border border-slate-200 p-5">
-                  <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Role</p>
-                  <p className="text-slate-900 font-black mt-2 text-sm">{roleLabel}</p>
+                <div className="rounded-2xl border border-line p-5">
+                  <p className="text-xs font-bold text-muted">Role</p>
+                  <p className="text-ink font-bold mt-2 text-sm">{roleLabel}</p>
                 </div>
-                <div className="rounded-2xl border border-slate-200 p-5">
-                  <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Level</p>
-                  <p className="text-slate-900 font-black mt-2 text-sm">{seniorityLabel}</p>
+                <div className="rounded-2xl border border-line p-5">
+                  <p className="text-xs font-bold text-muted">Level</p>
+                  <p className="text-ink font-bold mt-2 text-sm">{seniorityLabel}</p>
                 </div>
               </div>
 
@@ -259,7 +259,7 @@ export default function AssessmentExperience({
                 type="button"
                 onClick={startAssessment}
                 disabled={loading}
-                className="btn-style-9 group uppercase tracking-widest text-xs shadow-2xl !px-12 !py-5 rounded-full font-black disabled:opacity-60 disabled:cursor-not-allowed justify-center"
+                className="btn-style-9 group text-xs shadow-2xl !px-12 !py-5 rounded-full font-bold disabled:opacity-60 disabled:cursor-not-allowed justify-center"
               >
                 <div className="btn-shimmer"></div>
                 <span>{loading ? 'Starting…' : 'Start Assessment'}</span>
@@ -269,20 +269,20 @@ export default function AssessmentExperience({
         )}
 
         {phase === 'running' && item && (
-          <div className="bg-white border border-slate-200 rounded-[2.5rem] p-8 md:p-12 shadow-xl shadow-indigo-500/5">
+          <div className="bg-white border border-line rounded-[2.5rem] p-8 md:p-12 shadow-xl shadow-indigo-500/5">
             <div className="flex items-center justify-between mb-6 text-xs">
-              <span className="font-black uppercase tracking-[0.3em] text-slate-500">
+              <span className="font-bold text-muted">
                 Question {questionNumber}
               </span>
               <div className="flex items-center gap-3">
-                <span className="px-3 py-1 rounded-full bg-slate-100 text-slate-700 font-bold uppercase tracking-widest text-[10px]">
+                <span className="px-3 py-1 rounded-full bg-slate-100 text-body font-bold text-xs">
                   {TYPE_LABELS[item.type] || item.type}
                 </span>
-                <span className="text-slate-400 font-mono tabular-nums">{formatElapsed(elapsedMs)}</span>
+                <span className="text-muted font-mono tabular-nums">{formatElapsed(elapsedMs)}</span>
               </div>
             </div>
 
-            <p className="text-slate-900 text-lg leading-relaxed whitespace-pre-wrap mb-8">
+            <p className="text-ink text-lg leading-relaxed whitespace-pre-wrap mb-8">
               {item.prompt}
             </p>
 
@@ -293,17 +293,11 @@ export default function AssessmentExperience({
                     key={idx}
                     type="button"
                     onClick={() => setSelectedChoice(idx)}
-                    className={`text-left px-5 py-4 rounded-2xl border transition ${
-                      selectedChoice === idx
-                        ? 'border-indigo-500 bg-indigo-50 text-slate-900'
-                        : 'border-slate-300 text-slate-700 hover:border-slate-400'
-                    }`}
+                    className={`text-left px-5 py-4 rounded-2xl border transition ${ selectedChoice === idx ? 'border-indigo-500 bg-indigo-50 text-ink' : 'border-slate-300 text-body hover:border-slate-400' }`}
                   >
                     <span className="flex items-center gap-3">
                       <span
-                        className={`w-5 h-5 rounded-full border-2 flex-shrink-0 flex items-center justify-center ${
-                          selectedChoice === idx ? 'border-indigo-400' : 'border-slate-300'
-                        }`}
+                        className={`w-5 h-5 rounded-full border-2 flex-shrink-0 flex items-center justify-center ${ selectedChoice === idx ? 'border-indigo-400' : 'border-slate-300' }`}
                       >
                         {selectedChoice === idx && <span className="w-2.5 h-2.5 rounded-full bg-indigo-400" />}
                       </span>
@@ -320,7 +314,7 @@ export default function AssessmentExperience({
                 value={textResponse}
                 onChange={(e) => setTextResponse(e.target.value)}
                 placeholder="Walk through your reasoning and approach…"
-                className="w-full px-5 py-4 mb-8 rounded-2xl border border-slate-300 bg-white text-slate-900 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none transition resize-y"
+                className="w-full px-5 py-4 mb-8 rounded-2xl border border-slate-300 bg-white text-ink focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none transition resize-y"
               />
             )}
 
@@ -331,7 +325,7 @@ export default function AssessmentExperience({
                 onChange={(e) => setCodeResponse(e.target.value)}
                 placeholder="// write your solution here"
                 spellCheck={false}
-                className="w-full px-5 py-4 mb-8 rounded-2xl border border-slate-300 bg-white text-slate-900 font-mono text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none transition resize-y"
+                className="w-full px-5 py-4 mb-8 rounded-2xl border border-slate-300 bg-white text-ink font-mono text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none transition resize-y"
               />
             )}
 
@@ -344,7 +338,7 @@ export default function AssessmentExperience({
                 (item.type === 'scenario_response' && !textResponse.trim()) ||
                 (item.type === 'coding' && !codeResponse.trim())
               }
-              className="btn-style-9 group uppercase tracking-widest text-xs shadow-2xl !px-12 !py-5 rounded-full font-black disabled:opacity-60 disabled:cursor-not-allowed justify-center w-full sm:w-auto"
+              className="btn-style-9 group text-xs shadow-2xl !px-12 !py-5 rounded-full font-bold disabled:opacity-60 disabled:cursor-not-allowed justify-center w-full sm:w-auto"
             >
               <div className="btn-shimmer"></div>
               <span>{submitting ? 'Evaluating…' : 'Submit Answer'}</span>
@@ -353,18 +347,18 @@ export default function AssessmentExperience({
         )}
 
         {phase === 'complete' && (
-          <div className="bg-white border border-slate-200 rounded-[2.5rem] p-8 md:p-12 shadow-xl shadow-indigo-500/5">
+          <div className="bg-white border border-line rounded-[2.5rem] p-8 md:p-12 shadow-xl shadow-indigo-500/5">
             <div className="text-center mb-8">
-              <span className="inline-block px-4 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-600 font-black text-[10px] uppercase tracking-[0.4em] mb-3">
+              <span className="inline-block px-4 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 font-bold text-xs mb-3">
                 Assessment Complete
               </span>
-              <h2 className="text-2xl md:text-3xl font-black uppercase tracking-tight text-slate-900">
+              <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-ink">
                 Great work
               </h2>
             </div>
 
             {resultsLoading && (
-              <p className="text-slate-500 text-center animate-pulse">Compiling your results…</p>
+              <p className="text-muted text-center animate-pulse">Compiling your results…</p>
             )}
 
             {resultsError && (
@@ -381,7 +375,7 @@ export default function AssessmentExperience({
               {returnTo ? (
                 <a
                   href={returnTo}
-                  className="btn-style-9 group uppercase tracking-widest text-xs !px-10 !py-5 rounded-full font-black text-center"
+                  className="btn-style-9 group text-xs !px-10 !py-5 rounded-full font-bold text-center"
                 >
                   <div className="btn-shimmer"></div>
                   <span>Back to Application →</span>
@@ -389,7 +383,7 @@ export default function AssessmentExperience({
               ) : (
                 <button
                   onClick={restart}
-                  className="btn-style-9 group uppercase tracking-widest text-xs !px-10 !py-5 rounded-full font-black"
+                  className="btn-style-9 group text-xs !px-10 !py-5 rounded-full font-bold"
                 >
                   <div className="btn-shimmer"></div>
                   <span>Take Another Assessment</span>
@@ -411,15 +405,15 @@ function ResultsSummary({ data }) {
       {report ? (
         <>
           <div className="grid grid-cols-2 gap-4">
-            <div className="rounded-2xl border border-slate-200 p-6 text-center">
-              <p className="text-xs font-black uppercase tracking-[0.3em] text-slate-500">Score</p>
-              <p className="text-4xl font-black text-indigo-600 mt-2">
+            <div className="rounded-2xl border border-line p-6 text-center">
+              <p className="text-xs font-bold text-muted">Score</p>
+              <p className="text-4xl font-bold text-brand mt-2">
                 {report.overall_score != null ? `${report.overall_score}/10` : '—'}
               </p>
             </div>
-            <div className="rounded-2xl border border-slate-200 p-6 text-center">
-              <p className="text-xs font-black uppercase tracking-[0.3em] text-slate-500">Recommendation</p>
-              <p className="text-xl font-black text-slate-900 mt-2 uppercase">
+            <div className="rounded-2xl border border-line p-6 text-center">
+              <p className="text-xs font-bold text-muted">Recommendation</p>
+              <p className="text-xl font-bold text-ink mt-2">
                 {report.recommendation ? String(report.recommendation).replace(/_/g, ' ') : '—'}
               </p>
             </div>
@@ -427,14 +421,14 @@ function ResultsSummary({ data }) {
 
           {report.summary && (
             <div>
-              <h3 className="text-xs font-black uppercase tracking-[0.3em] text-slate-500 mb-2">Summary</h3>
+              <h3 className="text-xs font-bold text-muted mb-2">Summary</h3>
               <p className="text-slate-800 leading-relaxed">{report.summary}</p>
             </div>
           )}
 
           {Array.isArray(report.strengths) && report.strengths.length > 0 && (
             <div>
-              <h3 className="text-xs font-black uppercase tracking-[0.3em] text-emerald-600 mb-2">Strengths</h3>
+              <h3 className="text-xs font-bold text-emerald-700 mb-2">Strengths</h3>
               <ul className="space-y-2 text-slate-800">
                 {report.strengths.map((s, i) => (
                   <li key={i} className="pl-4 border-l-2 border-emerald-200">
@@ -447,7 +441,7 @@ function ResultsSummary({ data }) {
 
           {Array.isArray(report.concerns) && report.concerns.length > 0 && (
             <div>
-              <h3 className="text-xs font-black uppercase tracking-[0.3em] text-amber-600 mb-2">Concerns</h3>
+              <h3 className="text-xs font-bold text-amber-600 mb-2">Concerns</h3>
               <ul className="space-y-2 text-slate-800">
                 {report.concerns.map((c, i) => (
                   <li key={i} className="pl-4 border-l-2 border-amber-200">
@@ -460,8 +454,8 @@ function ResultsSummary({ data }) {
         </>
       ) : (
         <div className="rounded-2xl border border-amber-200 bg-amber-50 p-5 text-center">
-          <p className="text-amber-600 text-xs font-black uppercase tracking-[0.3em] mb-1">Full report pending</p>
-          <p className="text-slate-700 text-sm">
+          <p className="text-amber-600 text-xs font-bold mb-1">Full report pending</p>
+          <p className="text-body text-sm">
             Your responses are recorded — a full narrative report will be available shortly.
             Here's how each question went:
           </p>
@@ -470,17 +464,17 @@ function ResultsSummary({ data }) {
 
       {!report && responses.length > 0 && (
         <div>
-          <h3 className="text-xs font-black uppercase tracking-[0.3em] text-slate-500 mb-3">Responses</h3>
+          <h3 className="text-xs font-bold text-muted mb-3">Responses</h3>
           <div className="grid gap-2">
             {responses.map((r) => (
               <div
                 key={r.id}
-                className="flex items-center justify-between px-4 py-3 rounded-xl border border-slate-200 text-sm"
+                className="flex items-center justify-between px-4 py-3 rounded-xl border border-line text-sm"
               >
-                <span className="text-slate-700 truncate pr-4">
+                <span className="text-body truncate pr-4">
                   {r.seq}. {(r.prompt || '').slice(0, 70)}{(r.prompt || '').length > 70 ? '…' : ''}
                 </span>
-                <span className="text-indigo-600 font-black flex-shrink-0">
+                <span className="text-brand font-bold flex-shrink-0">
                   {r.score != null ? r.score : 'Scored by AI · pending'}
                 </span>
               </div>
@@ -491,15 +485,15 @@ function ResultsSummary({ data }) {
 
       {currentSkillGraph.length > 0 && (
         <div>
-          <h3 className="text-xs font-black uppercase tracking-[0.3em] text-slate-500 mb-3">Skill Graph</h3>
+          <h3 className="text-xs font-bold text-muted mb-3">Skill Graph</h3>
           <div className="grid gap-2">
             {currentSkillGraph.map((s) => (
               <div
                 key={s.skill_code}
-                className="flex items-center justify-between px-4 py-3 rounded-xl border border-slate-200 text-sm"
+                className="flex items-center justify-between px-4 py-3 rounded-xl border border-line text-sm"
               >
                 <span className="text-slate-800 font-bold">{s.skill_code}</span>
-                <span className="text-slate-500">
+                <span className="text-muted">
                   θ {s.theta != null ? Number(s.theta).toFixed(2) : '—'}
                   {' · '}
                   {s.confidence != null ? `${Math.round(Number(s.confidence) <= 1 ? Number(s.confidence) * 100 : Number(s.confidence))}% confidence` : 'confidence pending'}
@@ -511,7 +505,7 @@ function ResultsSummary({ data }) {
       )}
 
       {!report && responses.length === 0 && currentSkillGraph.length === 0 && (
-        <p className="text-slate-500 text-center">No results available yet.</p>
+        <p className="text-muted text-center">No results available yet.</p>
       )}
     </div>
   )

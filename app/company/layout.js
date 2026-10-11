@@ -15,7 +15,7 @@ export default async function CompanyLayout({ children }) {
       <CompanySidebar />
       <div className="md:ml-64 min-h-screen">
         <WorkspaceTopbar profileHref="/company/settings" email={user.email} roleLabel="Company" homeHref="/company" />
-        <main className="px-4 sm:px-6 md:px-8 pt-8 pb-10">{children}</main>
+        <div className="px-4 sm:px-6 md:px-8 pt-8 pb-10">{children}</div>
       </div>
     </div>
   )

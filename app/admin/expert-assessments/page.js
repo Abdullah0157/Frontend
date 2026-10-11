@@ -49,8 +49,8 @@ export default async function AdminExpertAssessmentsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-[28px] font-semibold text-slate-900 tracking-tight">Expert Interviews</h1>
-        <p className="text-slate-500 mt-1.5">
+        <h1 className="text-[28px] font-semibold text-ink tracking-tight">Expert Interviews</h1>
+        <p className="text-muted mt-1.5">
           Every interview Maya ran, with the full transcript and score breakdown. {assessments.length} total.
         </p>
       </div>

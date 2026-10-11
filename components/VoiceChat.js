@@ -621,11 +621,11 @@ export default function VoiceChat({ messages, loading, finishing, streamingQuest
   // ── Render ────────────────────────────────────────────────────────────────────
   if (!supported) {
     return (
-      <div className="fixed inset-0 z-[60] bg-slate-50 text-slate-900 flex items-center justify-center p-8">
+      <div className="fixed inset-0 z-[60] bg-slate-50 text-ink flex items-center justify-center p-8">
         <div className="max-w-md text-center">
-          <h3 className="text-2xl font-black text-red-600 mb-3">Voice not supported</h3>
-          <p className="text-slate-600 text-sm leading-relaxed">
-            Please use the latest <strong className="text-slate-900">Chrome</strong> or <strong className="text-slate-900">Edge</strong> on desktop.
+          <h3 className="text-2xl font-bold text-red-600 mb-3">Voice not supported</h3>
+          <p className="text-body text-sm leading-relaxed">
+            Please use the latest <strong className="text-ink">Chrome</strong> or <strong className="text-ink">Edge</strong> on desktop.
           </p>
         </div>
       </div>
@@ -640,21 +640,21 @@ export default function VoiceChat({ messages, loading, finishing, streamingQuest
   const displayTotal = String(totalQuestions).padStart(2, '0')
 
   return (
-    <div className="fixed inset-0 z-[60] bg-slate-50 text-slate-900 flex flex-col">
+    <div className="fixed inset-0 z-[60] bg-slate-50 text-ink flex flex-col">
       {/* Top bar */}
       <div className="absolute top-0 inset-x-0 z-10 px-8 pt-6 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <img src="/jobstream-icon.png" alt="Jobstream" className="w-8 h-8 object-contain" />
-          <span className="text-sm font-black text-slate-900 tracking-tight">jobstream.</span>
+          <span className="text-sm font-bold text-ink tracking-tight">jobstream.</span>
         </div>
         <div className="flex items-center gap-4">
-          <p className="text-[10px] font-black tracking-[0.4em] text-slate-500">
+          <p className="text-xs font-bold text-muted">
             {headerLabel != null ? headerLabel : `QUESTION ${displayQ} / ${displayTotal}`}
           </p>
           {onEnd && (
             <button
               onClick={onEnd}
-              className="text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full bg-slate-200 hover:bg-slate-300 text-slate-700 transition"
+              className="text-xs font-bold px-3 py-1.5 rounded-full bg-slate-200 hover:bg-slate-300 text-body transition"
             >
               End &amp; get report
             </button>
@@ -677,7 +677,7 @@ export default function VoiceChat({ messages, loading, finishing, streamingQuest
             {/* Question text */}
             <div className="min-h-[4rem]">
               {(streamingQuestion || ttsLoading) ? (
-                <p className="text-slate-400 text-sm tracking-widest uppercase font-black">{aiName} is preparing...</p>
+                <p className="text-muted text-sm font-bold">{aiName} is preparing...</p>
               ) : lastAssistant ? (
                 <p className="font-medium leading-[1.65] text-slate-800 text-base md:text-lg">
                   {(() => {
@@ -690,7 +690,7 @@ export default function VoiceChat({ messages, loading, finishing, streamingQuest
                   })()}
                 </p>
               ) : (
-                <p className="text-slate-400 text-sm tracking-widest uppercase font-black">
+                <p className="text-muted text-sm font-bold">
                   {loading ? 'Preparing your first question...' : 'Get ready...'}
                 </p>
               )}
@@ -700,16 +700,16 @@ export default function VoiceChat({ messages, loading, finishing, streamingQuest
             <div className="mt-6 flex flex-col items-center md:items-start gap-3">
 
               {speaking && (
-                <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white border border-slate-200 shadow-sm">
+                <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white border border-line shadow-sm">
                   <span className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse" />
-                  <span className="text-xs font-bold text-slate-700">{aiName} is speaking...</span>
+                  <span className="text-xs font-bold text-body">{aiName} is speaking...</span>
                 </div>
               )}
 
               {listening && !isTranscribing && (
-                <div className="inline-flex items-center gap-2.5 px-5 py-2.5 rounded-full bg-white border border-slate-200 shadow-sm">
+                <div className="inline-flex items-center gap-2.5 px-5 py-2.5 rounded-full bg-white border border-line shadow-sm">
                   <span className={`w-2 h-2 rounded-full animate-pulse ${silencePrompted ? 'bg-amber-500' : 'bg-red-500'}`} />
-                  <span className="text-xs font-bold text-slate-700">
+                  <span className="text-xs font-bold text-body">
                     {silencePrompted ? "Say 'repeat' to replay..." : 'Listening — speak your answer...'}
                   </span>
                   {!silencePrompted && (
@@ -724,36 +724,36 @@ export default function VoiceChat({ messages, loading, finishing, streamingQuest
               )}
 
               {isTranscribing && (
-                <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white border border-slate-200 shadow-sm">
+                <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white border border-line shadow-sm">
                   <span className="w-2 h-2 rounded-full bg-violet-500 animate-pulse" />
-                  <span className="text-xs font-bold text-slate-700">Understanding your answer...</span>
+                  <span className="text-xs font-bold text-body">Understanding your answer...</span>
                 </div>
               )}
 
               {silencePrompted && (
                 <button onClick={replayQuestion}
-                  className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-white border border-slate-300 hover:border-indigo-400 text-slate-700 hover:text-indigo-600 text-xs font-bold transition shadow-sm">
+                  className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-white border border-slate-300 hover:border-indigo-400 text-body hover:text-brand text-xs font-bold transition shadow-sm">
                   ↻ Repeat question
                 </button>
               )}
 
               {(loading || finishing) && !speaking && !isTranscribing && (
-                <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white border border-slate-200 shadow-sm">
+                <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white border border-line shadow-sm">
                   <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
-                  <span className="text-xs font-bold text-slate-700">{finishing ? 'Generating report...' : 'Thinking...'}</span>
+                  <span className="text-xs font-bold text-body">{finishing ? 'Generating report...' : 'Thinking...'}</span>
                 </div>
               )}
 
               {lastAssistant && spokenIdsRef.current.has(messages.length) && !ttsActive && !speaking && !loading && !finishing && (
                 <button onClick={replayQuestion}
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold transition shadow-lg shadow-indigo-500/20 animate-pulse">
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-brand hover:bg-brand-dark text-white text-xs font-bold transition shadow-lg shadow-indigo-500/20 animate-pulse">
                   ▶ Tap to hear {aiName}
                 </button>
               )}
 
               {lastAssistant && ttsActive && captionWordIdx === Infinity && !speaking && !listening && !loading && !finishing && (
                 <button onClick={replayQuestion}
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-medium transition">
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-100 hover:bg-slate-200 text-body text-xs font-medium transition">
                   ↻ Replay question
                 </button>
               )}
@@ -761,11 +761,11 @@ export default function VoiceChat({ messages, loading, finishing, streamingQuest
 
             {/* Live transcript */}
             {(transcript || interim) && !useTextInput && (
-              <div className="mt-6 p-4 rounded-2xl bg-white border border-slate-200">
-                <p className="text-[10px] font-black tracking-[0.3em] text-indigo-600 mb-2">YOU</p>
-                <p className="text-slate-700 text-sm leading-relaxed">
+              <div className="mt-6 p-4 rounded-2xl bg-white border border-line">
+                <p className="text-xs font-bold text-brand mb-2">YOU</p>
+                <p className="text-body text-sm leading-relaxed">
                   {transcript}
-                  {interim && <span className="text-slate-400"> {interim}</span>}
+                  {interim && <span className="text-muted"> {interim}</span>}
                 </p>
               </div>
             )}
@@ -781,7 +781,7 @@ export default function VoiceChat({ messages, loading, finishing, streamingQuest
                 />
                 <button disabled={!textDraft.trim()}
                   onClick={() => { const a = textDraft.trim(); if (a) { setTextDraft(''); onSubmit(a) } }}
-                  className="mt-2 inline-flex items-center gap-2 px-6 py-3 rounded-full bg-indigo-600 hover:bg-indigo-700 disabled:opacity-40 text-white text-xs font-bold transition shadow-lg shadow-indigo-500/20">
+                  className="mt-2 inline-flex items-center gap-2 px-6 py-3 rounded-full bg-brand hover:bg-brand-dark disabled:opacity-40 text-white text-xs font-bold transition shadow-lg shadow-indigo-500/20">
                   Submit answer →
                 </button>
               </div>
@@ -789,13 +789,13 @@ export default function VoiceChat({ messages, loading, finishing, streamingQuest
 
             {!useTextInput && !loading && !finishing && lastAssistant && !permissionError && (
               <button onClick={() => { stopListening(); setUseTextInput(true) }}
-                className="mt-4 text-[10px] text-slate-400 hover:text-slate-600 underline underline-offset-2">
+                className="mt-4 text-xs text-muted hover:text-slate-600 underline underline-offset-2">
                 Prefer to type?
               </button>
             )}
             {useTextInput && !permissionError && (
               <button onClick={() => { setUseTextInput(false); setTextDraft('') }}
-                className="mt-2 text-[10px] text-slate-400 hover:text-slate-600 underline underline-offset-2">
+                className="mt-2 text-xs text-muted hover:text-slate-600 underline underline-offset-2">
                 Switch back to voice
               </button>
             )}
@@ -827,7 +827,7 @@ function SiriOrb({ state, volumeLevel = 0, aiName = AI_NAME }) {
       <span className={`absolute inset-2 rounded-full ${isSpeaking ? 'animate-siri-spin-a' : ''}`} style={{ background: ring, filter: 'blur(2px)' }} />
       <span className={`absolute inset-3 rounded-full ${isSpeaking ? 'animate-siri-spin-b' : ''} opacity-70`} style={{ background: ring, filter: 'blur(8px)' }} />
       <span className="relative w-24 h-24 md:w-32 md:h-32 rounded-full bg-white shadow-xl flex items-center justify-center">
-        <span className="text-2xl md:text-3xl font-black bg-gradient-to-br from-indigo-500 to-purple-600 bg-clip-text text-transparent tracking-tight">
+        <span className="text-2xl md:text-3xl font-bold bg-gradient-to-br from-indigo-500 to-purple-600 bg-clip-text text-transparent tracking-tight">
           {aiName.toLowerCase()}.
         </span>
       </span>

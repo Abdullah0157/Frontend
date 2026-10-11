@@ -17,6 +17,6 @@ export default function CompanyWrittenReport() {
   }, [sessionId])
 
   if (error) return <div className="px-8 py-10"><p className="text-red-600">{error}</p></div>
-  if (!data) return <div className="px-8 py-10"><p className="text-slate-400">Loading report…</p></div>
+  if (!data) return <div className="px-8 py-10"><p className="text-muted">Loading report…</p></div>
   return <WrittenReportView data={data} />
 }

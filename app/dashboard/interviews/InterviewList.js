@@ -27,7 +27,7 @@ const REC_META = {
 // ─── Inline sub-components ───────────────────────────────────────────────────
 
 const SectionLabel = ({ children }) => (
-  <p className="text-xs font-black uppercase tracking-[0.2em] text-slate-500 mb-2">{children}</p>
+  <p className="text-xs font-bold text-muted mb-2">{children}</p>
 )
 
 const ScoreBar = ({ score, size = 'md' }) => (
@@ -38,7 +38,7 @@ const ScoreBar = ({ score, size = 'md' }) => (
         style={{ width: `${score * 10}%` }}
       />
     </div>
-    <span className="text-xs font-bold text-indigo-600 w-5 text-right">{score}</span>
+    <span className="text-xs font-bold text-brand w-5 text-right">{score}</span>
   </div>
 )
 
@@ -63,11 +63,7 @@ function InterviewCard({ row }) {
 
   return (
     <div
-      className={`group bg-white border rounded-2xl overflow-hidden transition-all ${
-        open
-          ? 'border-indigo-300 shadow-[0_10px_30px_-12px_rgba(79,70,229,0.25)]'
-          : 'border-slate-200 hover:border-indigo-400 hover:shadow-[0_10px_30px_-12px_rgba(79,70,229,0.25)]'
-      }`}
+      className={`group bg-white border rounded-2xl overflow-hidden transition-all ${ open ? 'border-indigo-300 shadow-[0_10px_30px_-12px_rgba(79,70,229,0.25)]' : 'border-line hover:border-indigo-400 hover:shadow-[0_10px_30px_-12px_rgba(79,70,229,0.25)]' }`}
     >
       {/* ── Collapsed header ─────────────────────────────────────────────── */}
       <div
@@ -75,27 +71,27 @@ function InterviewCard({ row }) {
         onClick={() => setOpen((v) => !v)}
       >
         <div className="min-w-0 flex-1">
-          <p className="text-lg font-bold text-slate-900 truncate group-hover:text-indigo-600 transition-colors">
+          <p className="text-lg font-bold text-ink truncate group-hover:text-brand transition-colors">
             {row.job_title || 'Untitled Job'}
           </p>
-          <p className="text-sm text-slate-500 mt-1">
+          <p className="text-sm text-muted mt-1">
             {row.job_role ? `${row.job_role} · ` : ''}{relativeTime(row.created_at)}
           </p>
         </div>
 
         <div className="flex items-center gap-3 flex-shrink-0">
           {report.score != null && (
-            <span className="text-sm font-bold text-indigo-600 whitespace-nowrap">{report.score}/10</span>
+            <span className="text-sm font-bold text-brand whitespace-nowrap">{report.score}/10</span>
           )}
           {recMeta && (
-            <span className={`hidden sm:inline-flex text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full whitespace-nowrap ${recMeta.cls}`}>
+            <span className={`hidden sm:inline-flex text-xs font-bold px-2.5 py-1 rounded-full whitespace-nowrap ${recMeta.cls}`}>
               {recMeta.label}
             </span>
           )}
           <svg
             width="16" height="16" viewBox="0 0 24 24" fill="none"
             stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round"
-            className={`text-slate-400 transition-transform duration-200 flex-shrink-0 ${open ? 'rotate-180' : ''}`}
+            className={`text-muted transition-transform duration-200 flex-shrink-0 ${open ? 'rotate-180' : ''}`}
           >
             <polyline points="6 9 12 15 18 9" />
           </svg>
@@ -108,7 +104,7 @@ function InterviewCard({ row }) {
 
           {/* Recommendation badge (mobile, hidden in header on small screens) */}
           {recMeta && (
-            <span className={`sm:hidden inline-flex text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full ${recMeta.cls}`}>
+            <span className={`sm:hidden inline-flex text-xs font-bold px-2.5 py-1 rounded-full ${recMeta.cls}`}>
               {recMeta.label}
             </span>
           )}
@@ -117,7 +113,7 @@ function InterviewCard({ row }) {
           {report.summary && (
             <div>
               <SectionLabel>Summary</SectionLabel>
-              <p className="text-slate-700 text-sm leading-relaxed">{report.summary}</p>
+              <p className="text-body text-sm leading-relaxed">{report.summary}</p>
             </div>
           )}
 
@@ -126,7 +122,7 @@ function InterviewCard({ row }) {
             <div>
               <SectionLabel>Highlight</SectionLabel>
               <div className="border-l-2 border-indigo-300 bg-indigo-50/40 pl-4 py-3 rounded-r-xl">
-                <p className="text-sm italic text-slate-600">"{report.highlight_quote}"</p>
+                <p className="text-sm italic text-body">"{report.highlight_quote}"</p>
               </div>
             </div>
           )}
@@ -139,7 +135,7 @@ function InterviewCard({ row }) {
                   <SectionLabel>Strengths</SectionLabel>
                   <ul className="space-y-2">
                     {strengths.map((s, i) => (
-                      <li key={i} className="flex items-start gap-2 text-sm text-slate-700">
+                      <li key={i} className="flex items-start gap-2 text-sm text-body">
                         <span className="mt-[3px] flex-shrink-0 w-2 h-2 rounded-full bg-emerald-500" />
                         {s}
                       </li>
@@ -152,7 +148,7 @@ function InterviewCard({ row }) {
                   <SectionLabel>Concerns</SectionLabel>
                   <ul className="space-y-2">
                     {concerns.map((c, i) => (
-                      <li key={i} className="flex items-start gap-2 text-sm text-slate-700">
+                      <li key={i} className="flex items-start gap-2 text-sm text-body">
                         <svg className="mt-[2px] flex-shrink-0 text-amber-500" width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
                           <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
                         </svg>
@@ -176,7 +172,7 @@ function InterviewCard({ row }) {
                   const label = key.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
                   return (
                     <div key={key} className="flex items-center gap-3">
-                      <span className="text-xs text-slate-500 w-28 flex-shrink-0">{label}</span>
+                      <span className="text-xs text-muted w-28 flex-shrink-0">{label}</span>
                       <ScoreBar score={val} />
                     </div>
                   )
@@ -191,13 +187,13 @@ function InterviewCard({ row }) {
               {report.technical_assessment && (
                 <div>
                   <SectionLabel>Technical Assessment</SectionLabel>
-                  <p className="text-sm text-slate-600 leading-relaxed">{report.technical_assessment}</p>
+                  <p className="text-sm text-body leading-relaxed">{report.technical_assessment}</p>
                 </div>
               )}
               {report.behavioral_assessment && (
                 <div>
                   <SectionLabel>Behavioral Assessment</SectionLabel>
-                  <p className="text-sm text-slate-600 leading-relaxed">{report.behavioral_assessment}</p>
+                  <p className="text-sm text-body leading-relaxed">{report.behavioral_assessment}</p>
                 </div>
               )}
             </div>
@@ -208,16 +204,16 @@ function InterviewCard({ row }) {
             <div>
               <SectionLabel>Evaluation Rubric</SectionLabel>
               <div className="hidden sm:grid grid-cols-[1fr_100px_1fr] gap-3 px-2 mb-1">
-                <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wide">Skill</span>
-                <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wide">Score</span>
-                <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wide">Evidence</span>
+                <span className="text-xs font-semibold text-muted tracking-wide">Skill</span>
+                <span className="text-xs font-semibold text-muted tracking-wide">Score</span>
+                <span className="text-xs font-semibold text-muted tracking-wide">Evidence</span>
               </div>
-              <div className="divide-y divide-slate-100 border border-slate-200 rounded-2xl overflow-hidden bg-white">
+              <div className="divide-y divide-slate-100 border border-line rounded-2xl overflow-hidden bg-white">
                 {rubric.map((item, i) => (
                   <div key={i} className="grid grid-cols-1 sm:grid-cols-[1fr_100px_1fr] gap-2 sm:gap-3 px-4 py-3 items-center">
-                    <span className="text-sm font-semibold text-slate-700">{item.skill}</span>
+                    <span className="text-sm font-semibold text-body">{item.skill}</span>
                     <ScoreBar score={item.score} size="sm" />
-                    <span className="text-xs text-slate-500 leading-relaxed">{item.evidence}</span>
+                    <span className="text-xs text-muted leading-relaxed">{item.evidence}</span>
                   </div>
                 ))}
               </div>

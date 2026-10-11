@@ -16,7 +16,7 @@ export default function Header() {
   const pathname = usePathname()
 
   const hideHeader =
-    /^\/(jobs|interview)\/.+\/interview$|^\/interview\/.+$/.test(pathname || '') ||
+    /^\/jobs\/.+\/interview$|^\/interview\/[^/]+\/session/.test(pathname || '') ||
     /^\/(dashboard|company|admin)(\/|$)/.test(pathname || '')
 
   // Close the phone menu after navigating.

@@ -29,15 +29,15 @@ const CATEGORICAL = [COLORS.indigo, COLORS.emerald, COLORS.amber, COLORS.pink, C
 function ChartTooltip({ active, payload, label }) {
   if (!active || !payload?.length) return null
   return (
-    <div className="bg-white border border-slate-200 rounded-lg shadow-xl px-3 py-2 text-xs">
+    <div className="bg-white border border-line rounded-lg shadow-xl px-3 py-2 text-xs">
       {label !== undefined && (
-        <div className="font-semibold text-slate-900 mb-1">{label}</div>
+        <div className="font-semibold text-ink mb-1">{label}</div>
       )}
       {payload.map((entry, i) => (
         <div key={i} className="flex items-center gap-2">
           <span className="inline-block w-2.5 h-2.5 rounded-sm" style={{ backgroundColor: entry.color || entry.payload?.fill }} />
-          <span className="text-slate-600">{entry.name}:</span>
-          <span className="font-mono font-semibold text-slate-900">{entry.value}</span>
+          <span className="text-body">{entry.name}:</span>
+          <span className="font-mono font-semibold text-ink">{entry.value}</span>
         </div>
       ))}
     </div>
@@ -103,8 +103,8 @@ export function DecisionsDonut({ data }) {
         </PieChart>
       </ResponsiveContainer>
       <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none pb-8">
-        <div className="text-2xl font-bold text-slate-900">{total}</div>
-        <div className="text-[10px] font-black uppercase tracking-widest text-slate-500">Total</div>
+        <div className="text-2xl font-bold text-ink">{total}</div>
+        <div className="text-xs font-bold text-muted">Total</div>
       </div>
     </div>
   )
@@ -161,8 +161,8 @@ export function UsersDonut({ data }) {
         </PieChart>
       </ResponsiveContainer>
       <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none pb-8">
-        <div className="text-2xl font-bold text-slate-900">{total}</div>
-        <div className="text-[10px] font-black uppercase tracking-widest text-slate-500">Users</div>
+        <div className="text-2xl font-bold text-ink">{total}</div>
+        <div className="text-xs font-bold text-muted">Users</div>
       </div>
     </div>
   )

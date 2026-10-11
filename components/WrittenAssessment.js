@@ -90,10 +90,10 @@ function PlayButton({ audio, label = 'Play' }) {
   return (
     <div className="flex items-center gap-3">
       <button type="button" onClick={audio.play} disabled={audio.playing || audio.left <= 0}
-        className="px-5 py-3 rounded-full bg-indigo-600 text-white text-xs font-black uppercase tracking-widest disabled:opacity-50">
+        className="px-5 py-3 rounded-full bg-brand text-white text-xs font-bold disabled:opacity-50">
         {audio.playing ? 'Playing…' : `▶ ${label}`}
       </button>
-      <span className="text-xs text-slate-500">{audio.left > 0 ? `${audio.left} play${audio.left === 1 ? '' : 's'} left` : 'No plays left'}</span>
+      <span className="text-xs text-muted">{audio.left > 0 ? `${audio.left} play${audio.left === 1 ? '' : 's'} left` : 'No plays left'}</span>
       {audio.error && <span className="text-xs text-amber-700">{audio.error}</span>}
     </div>
   )
@@ -125,12 +125,12 @@ function SoundCheck({ session, onPassed }) {
     })()
   }, [recorder.result]) // eslint-disable-line react-hooks/exhaustive-deps
   return (
-    <div className="rounded-2xl border border-slate-200 p-5 mb-6 grid gap-3">
+    <div className="rounded-2xl border border-line p-5 mb-6 grid gap-3">
       <p className="text-sm font-bold text-slate-800">Microphone check</p>
-      <p className="text-sm text-slate-600">Press the button and say: <em>"Hello, my name is … and I am ready to start the test."</em></p>
+      <p className="text-sm text-body">Press the button and say: <em>"Hello, my name is … and I am ready to start the test."</em></p>
       <div className="flex items-center gap-3">
         <button type="button" disabled={recorder.recording || busy} onClick={() => recorder.start(6).catch(() => setStatus({ ok: false, heard: '', denied: true }))}
-          className="px-5 py-3 rounded-full border border-slate-300 text-xs font-black uppercase tracking-widest text-slate-700 disabled:opacity-50">
+          className="px-5 py-3 rounded-full border border-slate-300 text-xs font-bold text-body disabled:opacity-50">
           {recorder.recording ? `Recording… ${recorder.left}s` : busy ? 'Checking…' : '🎙 Test my microphone'}
         </button>
       </div>
@@ -169,15 +169,15 @@ function SpeakingTask({ item, session, onReady }) {
 
   return (
     <div className="mt-6 grid gap-4">
-      {item.text && <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5 text-slate-800 text-lg leading-relaxed">{item.text}</div>}
+      {item.text && <div className="rounded-2xl border border-line bg-slate-50 p-5 text-slate-800 text-lg leading-relaxed">{item.text}</div>}
       {phase === 'listen' && (
         <PlayButton audio={{ ...audio, play: async () => { if (await audio.play()) setPhase('prep') } }} label="Play" />
       )}
-      {phase === 'prep' && <p className="text-sm text-slate-600">Get ready… recording starts in <b>{prepLeft}s</b></p>}
+      {phase === 'prep' && <p className="text-sm text-body">Get ready… recording starts in <b>{prepLeft}s</b></p>}
       {phase === 'record' && recorder.recording && (
         <div className="flex items-center gap-3">
           <span className="inline-flex items-center gap-2 text-sm font-bold text-red-600"><span className="w-2.5 h-2.5 rounded-full bg-red-600 animate-pulse" /> Recording… {recorder.left}s</span>
-          <button type="button" onClick={recorder.stop} className="px-4 py-2 rounded-full border border-slate-300 text-xs font-black uppercase tracking-widest">Stop</button>
+          <button type="button" onClick={recorder.stop} className="px-4 py-2 rounded-full border border-slate-300 text-xs font-bold">Stop</button>
         </div>
       )}
       {recorder.result && !recorder.recording && (
@@ -185,7 +185,7 @@ function SpeakingTask({ item, session, onReady }) {
           <span className="text-emerald-700">✓ Recorded {Math.round(recorder.result.durationMs / 1000)}s</span>
           {rerecords < 1 && (
             <button type="button" onClick={() => { setRerecords((n) => n + 1); recorder.reset(); onReady(null); startRecording() }}
-              className="text-xs font-bold uppercase tracking-widest text-slate-500 hover:text-slate-700">Re-record (once)</button>
+              className="text-xs font-bold text-muted hover:text-slate-700">Re-record (once)</button>
           )}
         </div>
       )}
@@ -228,12 +228,12 @@ function TypingTask({ item, onDone, disabled, resultRef }) {
 
   return (
     <div className="mt-6 grid gap-4">
-      <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5 text-slate-800 leading-relaxed select-none" onCopy={(e) => e.preventDefault()}>
+      <div className="rounded-2xl border border-line bg-slate-50 p-5 text-slate-800 leading-relaxed select-none" onCopy={(e) => e.preventDefault()}>
         {item.passage}
       </div>
-      <div className="flex items-center justify-between text-xs text-slate-500">
+      <div className="flex items-center justify-between text-xs text-muted">
         <span>{startedAt ? 'Keep typing…' : 'The timer starts when you press the first key.'}</span>
-        <span className={`font-mono tabular-nums text-sm px-3 py-1 rounded-full ${left <= 15 ? 'bg-red-50 text-red-600' : 'bg-slate-100 text-slate-700'}`}>{fmt(left)}</span>
+        <span className={`font-mono tabular-nums text-sm px-3 py-1 rounded-full ${left <= 15 ? 'bg-red-50 text-red-600' : 'bg-slate-100 text-body'}`}>{fmt(left)}</span>
       </div>
       <textarea
         rows={8}
@@ -252,7 +252,7 @@ function TypingTask({ item, onDone, disabled, resultRef }) {
         }}
         onChange={(e) => setTyped(e.target.value)}
         placeholder="Start typing the text above here…"
-        className="w-full px-5 py-4 rounded-2xl border border-slate-300 bg-white text-slate-900 focus:border-indigo-500 outline-none resize-y"
+        className="w-full px-5 py-4 rounded-2xl border border-slate-300 bg-white text-ink focus:border-indigo-500 outline-none resize-y"
       />
     </div>
   )
@@ -304,13 +304,13 @@ function TextBlock({ text }) {
     const lines = block.split('\n')
     if (lines.every((l) => /^\s*[-*] /.test(l))) {
       return (
-        <ul key={i} className="list-disc pl-6 space-y-1 text-slate-900 text-base md:text-lg leading-relaxed">
+        <ul key={i} className="list-disc pl-6 space-y-1 text-ink text-base md:text-lg leading-relaxed">
           {lines.map((l, k) => <li key={k}><Inline text={l.replace(/^\s*[-*] /, '')} /></li>)}
         </ul>
       )
     }
     return (
-      <p key={i} className="text-slate-900 text-base md:text-lg leading-relaxed whitespace-pre-wrap">
+      <p key={i} className="text-ink text-base md:text-lg leading-relaxed whitespace-pre-wrap">
         {lines.map((l, k) => (
           <span key={k}>
             {/^\s*[-*] /.test(l) ? <>• <Inline text={l.replace(/^\s*[-*] /, '')} /></> : <Inline text={l} />}
@@ -703,10 +703,10 @@ export default function WrittenAssessment({ track = 'backend', level = null, job
     <div className="pb-10">
       <div className="container mx-auto max-w-3xl px-4">
         <div className="mb-8 text-center">
-          <span className="inline-block px-4 py-1.5 rounded-full bg-indigo-50 border border-indigo-200 text-indigo-600 font-black text-[10px] uppercase tracking-[0.4em] mb-4">
+          <span className="inline-block px-4 py-1.5 rounded-full bg-indigo-50 border border-indigo-200 text-brand font-bold text-xs mb-4">
             Written Assessment
           </span>
-          <h1 className="text-3xl md:text-5xl font-black tracking-tight uppercase text-slate-900">
+          <h1 className="text-3xl md:text-5xl font-bold tracking-tight text-ink">
             {trackLabel} · {LEVEL_LABELS[chosenLevel] || chosenLevel}
           </h1>
         </div>
@@ -715,8 +715,8 @@ export default function WrittenAssessment({ track = 'backend', level = null, job
         {fullscreen.blocked && (
           <div className="fixed inset-0 z-[60] bg-white flex items-center justify-center p-6">
             <div className="max-w-md text-center">
-              <h2 className="text-2xl md:text-3xl font-black text-slate-900 mb-4">Return to full screen</h2>
-              <p className="text-slate-600 mb-8">
+              <h2 className="text-2xl md:text-3xl font-bold text-ink mb-4">Return to full screen</h2>
+              <p className="text-body mb-8">
                 The test runs in full screen. The question is hidden until you return, and the timer keeps running.
                 Leaving full screen is noted for the hiring team.
               </p>
@@ -735,7 +735,7 @@ export default function WrittenAssessment({ track = 'backend', level = null, job
         {!session && (
           <div className={card}>
             <div className="grid gap-6">
-              <p className="text-slate-600 text-sm leading-relaxed">
+              <p className="text-body text-sm leading-relaxed">
                 {preview
                   ? `This assessment takes about ${preview.totalMinutes} minutes and has ${preview.sections.length} timed sections: ${preview.sections.map((x) => `${x.label.toLowerCase()} (${x.minutes} min)`).join(', ')}. `
                   : 'This assessment has a few timed sections. '}
@@ -744,14 +744,14 @@ export default function WrittenAssessment({ track = 'backend', level = null, job
                 extra time for a disability or health reason, ask the company before you start.
               </p>
               {track === 'english' && (
-                <p className="text-slate-600 text-sm leading-relaxed">
+                <p className="text-body text-sm leading-relaxed">
                   You will need a microphone and a quiet place. Some answers are spoken and recorded. Your accent is
                   not scored, only whether you are easy to understand. Recordings are shared with the hiring team and
                   deleted after 90 days. By starting you agree to being recorded. If you cannot use a microphone, ask
                   the company for the written version.
                 </p>
               )}
-              <p className="text-slate-500 text-xs leading-relaxed">
+              <p className="text-muted text-xs leading-relaxed">
                 Please work on your own. The test runs in full screen. Copying the questions and pasting text from
                 outside the test are turned off (you can still copy and paste within your own answer). We note when
                 you leave full screen or this page, or try to paste, and share these notes with the hiring team. They
@@ -760,7 +760,7 @@ export default function WrittenAssessment({ track = 'backend', level = null, job
               <div className="grid sm:grid-cols-2 gap-4">
                 {!level && (
                   <label className="grid gap-2 text-sm">
-                    <span className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Level</span>
+                    <span className="text-xs font-bold text-muted">Level</span>
                     <select value={chosenLevel} onChange={(e) => setChosenLevel(e.target.value)} className="rounded-xl border border-slate-300 px-4 py-3 bg-white">
                       {(options?.levels || []).map((l) => <option key={l.key} value={l.key}>{l.label}</option>)}
                     </select>
@@ -768,7 +768,7 @@ export default function WrittenAssessment({ track = 'backend', level = null, job
                 )}
                 {usesCode && (
                   <label className="grid gap-2 text-sm">
-                    <span className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Coding language</span>
+                    <span className="text-xs font-bold text-muted">Coding language</span>
                     <select value={language} onChange={(e) => setLanguage(e.target.value)} className="rounded-xl border border-slate-300 px-4 py-3 bg-white">
                       {(options?.languages || []).map((l) => <option key={l.key} value={l.key}>{l.label}</option>)}
                     </select>
@@ -784,11 +784,11 @@ export default function WrittenAssessment({ track = 'backend', level = null, job
 
         {state?.status === 'section_intro' && (
           <div className={card}>
-            <p className="text-xs font-black uppercase tracking-[0.3em] text-slate-400 mb-3">
+            <p className="text-xs font-bold text-muted mb-3">
               Section {state.sectionIndex + 1} of {state.sections.length}
             </p>
-            <h2 className="text-2xl md:text-3xl font-black text-slate-900 mb-4">{state.section.label}</h2>
-            <p className="text-slate-600 mb-8">
+            <h2 className="text-2xl md:text-3xl font-bold text-ink mb-4">{state.section.label}</h2>
+            <p className="text-body mb-8">
               {state.section.count} {state.section.count === 1 ? 'question' : 'questions'} · {state.section.minutes} minutes.
               The timer starts when you press Begin.
             </p>
@@ -804,11 +804,11 @@ export default function WrittenAssessment({ track = 'backend', level = null, job
         {state?.status === 'in_progress' && item && (
           <div className={card}>
             <div className="flex items-center justify-between mb-6 text-xs gap-3">
-              <span className="font-black uppercase tracking-[0.2em] text-slate-500">
+              <span className="font-bold text-muted">
                 {state.section.label} · {state.itemIndex + 1} of {state.section.count}
               </span>
               {left != null && (
-                <span className={`font-mono tabular-nums text-sm px-3 py-1 rounded-full ${left <= 120 ? 'bg-red-50 text-red-600' : 'bg-slate-100 text-slate-700'}`}>
+                <span className={`font-mono tabular-nums text-sm px-3 py-1 rounded-full ${left <= 120 ? 'bg-red-50 text-red-600' : 'bg-slate-100 text-body'}`}>
                   {fmt(left)}
                 </span>
               )}
@@ -832,7 +832,7 @@ export default function WrittenAssessment({ track = 'backend', level = null, job
                       key={idx}
                       type="button"
                       onClick={() => multi ? setChoices((cs) => cs.includes(idx) ? cs.filter((x) => x !== idx) : [...cs, idx]) : setChoice(idx)}
-                      className={`text-left px-5 py-4 rounded-2xl border transition ${on ? 'border-indigo-500 bg-indigo-50 text-slate-900' : 'border-slate-300 text-slate-700 hover:border-slate-400'}`}
+                      className={`text-left px-5 py-4 rounded-2xl border transition ${on ? 'border-indigo-500 bg-indigo-50 text-ink' : 'border-slate-300 text-body hover:border-slate-400'}`}
                     >
                       <span className="flex items-start gap-3">
                         <span className={`mt-0.5 w-5 h-5 ${multi ? 'rounded-md' : 'rounded-full'} border-2 flex-shrink-0 flex items-center justify-center ${on ? 'border-indigo-500 bg-indigo-500' : 'border-slate-300'}`}>
@@ -853,10 +853,10 @@ export default function WrittenAssessment({ track = 'backend', level = null, job
                   value={text}
                   onChange={(e) => setText(e.target.value)}
                   placeholder={item.type === 'code_review' ? 'List the problems, most serious first, and how you would fix each…' : 'Write your answer here…'}
-                  className="w-full mt-8 px-5 py-4 rounded-2xl border border-slate-300 bg-white text-slate-900 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none resize-y"
+                  className="w-full mt-8 px-5 py-4 rounded-2xl border border-slate-300 bg-white text-ink focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none resize-y"
                 />
                 {item.minWords && (
-                  <p className={`text-xs mt-2 ${wordCount < item.minWords || wordCount > item.maxWords ? 'text-amber-700' : 'text-slate-500'}`}>
+                  <p className={`text-xs mt-2 ${wordCount < item.minWords || wordCount > item.maxWords ? 'text-amber-700' : 'text-muted'}`}>
                     {wordCount} words (aim for {item.minWords} to {item.maxWords})
                   </p>
                 )}
@@ -886,21 +886,21 @@ export default function WrittenAssessment({ track = 'backend', level = null, job
                   className="w-full px-5 py-4 rounded-2xl border border-slate-300 bg-slate-950 text-slate-100 font-mono text-sm leading-relaxed focus:border-indigo-500 outline-none resize-y"
                 />
                 <div className="flex flex-wrap items-center gap-3">
-                  <button type="button" onClick={runExamples} disabled={busy || !code.trim()} className="px-5 py-3 rounded-full border border-slate-300 text-xs font-black uppercase tracking-widest text-slate-700 hover:border-slate-400 disabled:opacity-50">
+                  <button type="button" onClick={runExamples} disabled={busy || !code.trim()} className="px-5 py-3 rounded-full border border-slate-300 text-xs font-bold text-body hover:border-slate-400 disabled:opacity-50">
                     Run examples
                   </button>
-                  <span className="text-xs text-slate-500">
+                  <span className="text-xs text-muted">
                     Runs the {item.visibleTests?.length || 0} examples only. Your answer is also checked against hidden tests.
                   </span>
                 </div>
                 {runResult && (
-                  <div className="rounded-2xl border border-slate-200 p-4 text-sm grid gap-3">
+                  <div className="rounded-2xl border border-line p-4 text-sm grid gap-3">
                     {runResult.error && <p className="text-amber-700">{runResult.error}</p>}
                     {(runResult.results || []).map((r, i) => (
                       <div key={i} className="grid gap-1">
                         <p className={`font-bold ${r.passed ? 'text-emerald-600' : 'text-red-600'}`}>{r.passed ? '✓' : '✗'} {r.name}</p>
                         {!r.passed && (
-                          <p className="font-mono text-xs text-slate-600 whitespace-pre-wrap">
+                          <p className="font-mono text-xs text-body whitespace-pre-wrap">
                             {r.error ? r.error : `expected ${JSON.stringify(r.expected)}\n     got ${JSON.stringify(r.actual)}`}
                           </p>
                         )}
@@ -916,7 +916,7 @@ export default function WrittenAssessment({ track = 'backend', level = null, job
               <button type="button" onClick={() => submit()} disabled={!canSubmit} className={primary}>
                 <div className="btn-shimmer"></div><span>{busy ? 'Saving…' : 'Submit answer'}</span>
               </button>
-              <button type="button" onClick={() => submit({ skip: true })} disabled={busy} className="text-xs font-bold uppercase tracking-widest text-slate-400 hover:text-slate-600">
+              <button type="button" onClick={() => submit({ skip: true })} disabled={busy} className="text-xs font-bold text-muted hover:text-slate-600">
                 Skip question
               </button>
             </div>
@@ -926,18 +926,18 @@ export default function WrittenAssessment({ track = 'backend', level = null, job
         {state?.status === 'completed' && (
           <div className={card}>
             <div className="text-center mb-8">
-              <span className="inline-block px-4 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-600 font-black text-[10px] uppercase tracking-[0.4em] mb-3">
+              <span className="inline-block px-4 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 font-bold text-xs mb-3">
                 Assessment complete
               </span>
-              <h2 className="text-2xl md:text-3xl font-black text-slate-900">Thank you</h2>
-              <p className="text-slate-500 mt-3 text-sm">Your answers have been submitted to the hiring team.</p>
+              <h2 className="text-2xl md:text-3xl font-bold text-ink">Thank you</h2>
+              <p className="text-muted mt-3 text-sm">Your answers have been submitted to the hiring team.</p>
             </div>
             {result?.sections?.length > 0 && (
               <div className="grid gap-3">
                 {result.sections.map((s) => (
-                  <div key={s.label} className="flex items-center justify-between rounded-2xl border border-slate-200 px-5 py-4 text-sm">
+                  <div key={s.label} className="flex items-center justify-between rounded-2xl border border-line px-5 py-4 text-sm">
                     <span className="font-bold text-slate-800">{s.label}</span>
-                    <span className="text-slate-500">{s.feedback}</span>
+                    <span className="text-muted">{s.feedback}</span>
                   </div>
                 ))}
               </div>

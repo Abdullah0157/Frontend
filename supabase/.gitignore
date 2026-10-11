@@ -1,0 +1,3 @@
+# Local QA stack (supabase CLI) runtime files
+.temp/
+.branches/

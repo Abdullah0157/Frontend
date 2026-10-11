@@ -438,6 +438,18 @@ CREATE TABLE IF NOT EXISTS item_audio_cache (
 );
 ALTER TABLE assessment_reports ADD COLUMN IF NOT EXISTS english jsonb;
 
+-- Columns the app uses that were only ever added by hand or by side scripts
+-- on the live database. A fresh database (e.g. a new server) needs them.
+ALTER TABLE user_profiles ADD COLUMN IF NOT EXISTS linkedin_url text;
+ALTER TABLE user_profiles ADD COLUMN IF NOT EXISTS github_url text;
+ALTER TABLE user_profiles ADD COLUMN IF NOT EXISTS certificates jsonb;
+ALTER TABLE user_profiles ADD COLUMN IF NOT EXISTS resume_sections jsonb;
+ALTER TABLE user_profiles ADD COLUMN IF NOT EXISTS profile_prefs jsonb;
+ALTER TABLE interview_jobs ADD COLUMN IF NOT EXISTS pay_type text;
+ALTER TABLE interview_jobs ADD COLUMN IF NOT EXISTS pay_min integer;
+ALTER TABLE interview_jobs ADD COLUMN IF NOT EXISTS pay_max integer;
+ALTER TABLE interview_jobs ADD COLUMN IF NOT EXISTS pay_currency text DEFAULT 'USD';
+
 -- Request limits for AI, voice and upload routes (lib/rate-limit.js).
 CREATE TABLE IF NOT EXISTS rate_limits (
   key          text NOT NULL,

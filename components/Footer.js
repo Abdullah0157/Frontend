@@ -13,7 +13,7 @@ export default function Footer() {
   // immersive interview/assessment screens — same rule as the header.
   const hideFooter =
     /^\/(dashboard|company|admin)(\/|$)/.test(pathname) ||
-    /^\/(jobs|interview)\/.+\/interview$|^\/interview\/.+$/.test(pathname) ||
+    /^\/jobs\/.+\/interview$|^\/interview\/[^/]+\/session/.test(pathname) ||
     /^\/assessment(\/|$)/.test(pathname) ||
     /^\/dev\//.test(pathname)
 

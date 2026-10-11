@@ -65,14 +65,14 @@ function StatCard({ label, value, sub, tint = 'indigo' }) {
     red: 'from-red-500 to-red-600',
   }
   return (
-    <div className="group bg-white rounded-2xl border border-slate-200 p-5 hover:border-slate-300 hover:shadow-lg transition-all h-32 flex flex-col justify-between">
+    <div className="group bg-white rounded-2xl border border-line p-5 hover:border-slate-300 hover:shadow-lg transition-all h-32 flex flex-col justify-between">
       <div className="flex items-start justify-between">
-        <p className="text-xs font-black uppercase tracking-widest text-slate-500">{label}</p>
+        <p className="text-xs font-bold text-muted">{label}</p>
         <div className={`w-2 h-2 rounded-full bg-gradient-to-br ${tints[tint]} opacity-70 group-hover:opacity-100 transition-opacity`} />
       </div>
       <div>
-        <p className="text-3xl font-bold text-slate-900 leading-none">{value}</p>
-        <p className="text-xs text-slate-500 mt-1.5 min-h-[16px]">{sub || ' '}</p>
+        <p className="text-3xl font-bold text-ink leading-none">{value}</p>
+        <p className="text-xs text-muted mt-1.5 min-h-[16px]">{sub || ' '}</p>
       </div>
     </div>
   )
@@ -80,10 +80,10 @@ function StatCard({ label, value, sub, tint = 'indigo' }) {
 
 function ChartCard({ title, subtitle, children, className = '' }) {
   return (
-    <div className={`bg-white rounded-2xl border border-slate-200 p-6 ${className}`}>
+    <div className={`bg-white rounded-2xl border border-line p-6 ${className}`}>
       <div className="mb-4">
-        <h3 className="text-sm font-black uppercase tracking-widest text-slate-700">{title}</h3>
-        {subtitle && <p className="text-xs text-slate-500 mt-1">{subtitle}</p>}
+        <h3 className="text-sm font-bold text-body">{title}</h3>
+        {subtitle && <p className="text-xs text-muted mt-1">{subtitle}</p>}
       </div>
       {children}
     </div>
@@ -102,13 +102,13 @@ export default async function AdminAnalyticsPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-slate-900">Platform Analytics</h1>
-        <p className="text-slate-500 mt-1">Growth, decisions, and scoring across every interview. Hover charts for exact numbers.</p>
+        <h1 className="text-3xl font-bold text-ink">Platform Analytics</h1>
+        <p className="text-muted mt-1">Growth, decisions, and scoring across every interview. Hover charts for exact numbers.</p>
       </div>
 
       {/* Growth stats — last 7 days */}
       <div>
-        <h2 className="text-xs font-black uppercase tracking-widest text-slate-500 mb-3">Growth · Last 7 Days</h2>
+        <h2 className="text-xs font-bold text-muted mb-3">Growth · Last 7 Days</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           <StatCard label="New Companies" value={growth.new_companies_7d ?? 0} sub="signed up this week" tint="emerald" />
           <StatCard label="New Candidates" value={growth.new_candidates_7d ?? 0} sub="signed up this week" tint="indigo" />
@@ -148,7 +148,7 @@ export default async function AdminAnalyticsPage() {
                 <div key={i} className="group">
                   <div className="flex justify-between items-center mb-1">
                     <span className="text-sm font-medium text-slate-800 truncate max-w-[70%]">{c.name}</span>
-                    <span className="text-sm font-mono font-semibold text-slate-900">{c.count}</span>
+                    <span className="text-sm font-mono font-semibold text-ink">{c.count}</span>
                   </div>
                   <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
                     <div

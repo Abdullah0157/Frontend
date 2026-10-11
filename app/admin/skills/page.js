@@ -47,8 +47,8 @@ export default async function AdminSkillsPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-slate-900">Skill Taxonomy</h1>
-        <p className="text-slate-500 mt-1">
+        <h1 className="text-3xl font-bold text-ink">Skill Taxonomy</h1>
+        <p className="text-muted mt-1">
           {totalSkills} specific skills across {Object.keys(grouped).length} areas. Every candidate gets a running ability score for each skill, which carries over across all their interviews.
         </p>
       </div>
@@ -58,28 +58,26 @@ export default async function AdminSkillsPage() {
           <div key={domain}>
             <div className="flex items-center gap-3 mb-4">
               <div className={`w-2 h-8 rounded bg-gradient-to-b ${DOMAIN_COLORS[domain] || 'from-slate-400 to-slate-600'}`} />
-              <h2 className="text-xl font-bold text-slate-900">{DOMAIN_LABELS[domain] || domain}</h2>
-              <span className="text-xs font-black uppercase tracking-widest text-slate-400">
+              <h2 className="text-xl font-bold text-ink">{DOMAIN_LABELS[domain] || domain}</h2>
+              <span className="text-xs font-bold text-muted">
                 {Object.values(subdomains).reduce((s, arr) => s + arr.length, 0)} skills
               </span>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {Object.entries(subdomains).map(([subdomain, skills]) => (
-                <div key={subdomain} className="bg-white rounded-2xl border border-slate-200 p-5">
-                  <p className="text-xs font-black uppercase tracking-widest text-slate-500 mb-3 capitalize">
+                <div key={subdomain} className="bg-white rounded-2xl border border-line p-5">
+                  <p className="text-xs font-bold text-muted mb-3 capitalize">
                     {subdomain === '_' ? '—' : subdomain.replace(/_/g, ' ')}
                   </p>
                   <div className="space-y-2">
                     {skills.map((s) => (
                       <div key={s.code} className="flex items-start justify-between gap-3">
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium text-slate-900 truncate">{s.label}</p>
-                          <p className="text-[10px] font-mono text-slate-400 truncate">{s.code}</p>
+                          <p className="text-sm font-medium text-ink truncate">{s.label}</p>
+                          <p className="text-xs font-mono text-muted truncate">{s.code}</p>
                         </div>
-                        <span className={`text-xs font-bold px-2 py-0.5 rounded shrink-0 ${
-                          s.item_count > 0 ? 'bg-emerald-50 text-emerald-700' : 'bg-slate-100 text-slate-400'
-                        }`}>
+                        <span className={`text-xs font-bold px-2 py-0.5 rounded shrink-0 ${ s.item_count > 0 ? 'bg-emerald-50 text-emerald-700' : 'bg-slate-100 text-muted' }`}>
                           {s.item_count} {s.item_count === 1 ? 'question' : 'questions'}
                         </span>
                       </div>
