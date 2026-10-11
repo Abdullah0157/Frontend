@@ -14,9 +14,13 @@ export default function Header() {
   const router = useRouter()
   const pathname = usePathname()
 
+  // Hidden in the dashboards and the live interview (they have their own
+  // chrome), and on the sign-in style pages, which show their own logo: there
+  // the fixed bar covered that logo on laptop-height screens.
   const hideHeader =
     /^\/jobs\/.+\/interview$|^\/interview\/[^/]+\/session/.test(pathname || '') ||
-    /^\/(dashboard|company|admin)(\/|$)/.test(pathname || '')
+    /^\/(dashboard|company|admin)(\/|$)/.test(pathname || '') ||
+    /^\/(login|signup|forgot-password|reset-password|contact)(\/|$)/.test(pathname || '')
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20)
