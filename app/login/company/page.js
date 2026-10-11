@@ -92,6 +92,7 @@ function CompanyLoginInner() {
           onChange={(e) => setForm({ ...form, password: e.target.value })}
           show={showPassword}
           onToggle={() => setShowPassword((s) => !s)}
+          action={<Link href="/forgot-password" className="text-xs font-semibold text-indigo-600 hover:text-indigo-700">Forgot password?</Link>}
         />
         <button type="submit" disabled={loading} className={authPrimaryBtn}>
           {loading ? 'Signing in…' : 'Sign in'}

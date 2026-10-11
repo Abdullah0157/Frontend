@@ -114,6 +114,10 @@ export async function GET(req) {
     console.warn('role routing check failed (allowing through):', e.message)
   }
 
+  // A password reset link always lands on the new-password page, whatever the
+  // account type or onboarding state.
+  if (next === '/reset-password') finalNext = '/reset-password'
+
   // Point the (cookie-carrying) response at the final destination.
   res.headers.set('location', new URL(finalNext, url.origin).toString())
   res.cookies.delete('auth_next')

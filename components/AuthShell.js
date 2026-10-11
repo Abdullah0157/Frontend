@@ -65,10 +65,14 @@ export function GoogleButton({ loading, onClick, label = 'Continue with Google' 
 
 // Password field with a visibility toggle — typing a password blind on a phone
 // is a real cause of failed sign-ins.
-export function PasswordField({ id = 'password', label = 'Password', value, onChange, show, onToggle, autoComplete = 'current-password', placeholder = '••••••••', hint }) {
+// action: an optional link shown at the right of the label (e.g. "Forgot password?").
+export function PasswordField({ id = 'password', label = 'Password', value, onChange, show, onToggle, autoComplete = 'current-password', placeholder = '••••••••', hint, action }) {
   return (
     <div>
-      <label htmlFor={id} className={authLabel}>{label}</label>
+      <div className="flex items-baseline justify-between gap-3">
+        <label htmlFor={id} className={authLabel}>{label}</label>
+        {action}
+      </div>
       <div className="relative">
         <input
           id={id}

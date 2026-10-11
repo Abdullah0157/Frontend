@@ -22,17 +22,6 @@ export default function Globe() {
           }}
         ></div>
 
-        {/* Cloud Layer (Parallax Effect for 3D depth) */}
-        <div 
-          className="absolute inset-0 w-[200%] h-full animate-rotate-clouds pointer-events-none opacity-40 mix-blend-screen"
-          style={{
-            backgroundImage: `url('https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Earth_Cloud_Map.jpg/2048px-Earth_Cloud_Map.jpg')`,
-            backgroundSize: '50% 100%',
-            backgroundRepeat: 'repeat-x',
-            filter: 'brightness(1.5)'
-          }}
-        ></div>
-        
         {/* Realistic 3D Lighting & Lens Effect */}
         <div className="absolute inset-0 bg-gradient-to-tr from-black/60 via-transparent to-white/20 z-10 pointer-events-none"></div>
         
@@ -48,15 +37,8 @@ export default function Globe() {
           from { transform: translateX(0); }
           to { transform: translateX(-50%); }
         }
-        @keyframes rotate-clouds {
-          from { transform: translateX(0); }
-          to { transform: translateX(-50%); }
-        }
         .animate-rotate-slow {
           animation: rotate-slow 50s linear infinite;
-        }
-        .animate-rotate-clouds {
-          animation: rotate-clouds 35s linear infinite;
         }
       `}</style>
     </div>

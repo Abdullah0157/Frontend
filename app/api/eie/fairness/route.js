@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { apiUser, ROLES } from '@/lib/roles'
 import { biasAuditSummary, adverseImpact, differentialItemFunctioning } from '@/lib/fairness'
 
 export const dynamic = 'force-dynamic'
@@ -10,6 +11,9 @@ export const runtime = 'nodejs'
 //   { decisions: [{ band, group }], selectionRows?: [{group, selected}],
 //     difRows?: [{group, ability_band, score}], focal?, reference? }
 export async function POST(req) {
+  // Internal engine tool: super admins only (no page in the app calls it).
+  const { response: denied } = await apiUser(ROLES.SUPER_ADMIN)
+  if (denied) return denied
   const body = await req.json().catch(() => ({}))
   const out = {}
   if (Array.isArray(body.decisions)) out.audit = biasAuditSummary({ decisions: body.decisions })

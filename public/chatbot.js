@@ -364,7 +364,7 @@
             formData.append('file', file);
             let matches = [];
             try {
-                const response = await fetch(`https://abd217391-jobstream-backend.hf.space/api/match-resume`, {
+                const response = await fetch(`/api/match-resume`, {
                     method: 'POST', body: formData,
                 });
                 const data = await response.json();
@@ -396,7 +396,7 @@
                 .join('\n');
 
             typing.style.display = 'flex';
-            const aiResponse = await fetch(`https://abd217391-jobstream-backend.hf.space/api/chat`, {
+            const aiResponse = await fetch(`/api/chat`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -437,7 +437,7 @@
         chatHistory.push({ role: "user", parts: [{ text: text }] });
 
         try {
-            const response = await fetch(`https://abd217391-jobstream-backend.hf.space/api/chat`, {
+            const response = await fetch(`/api/chat`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({

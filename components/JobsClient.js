@@ -129,7 +129,7 @@ export default function JobsClient({ initialJobs }) {
     formData.append('file', file)
 
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/match-resume`, formData, {
+      const response = await axios.post('/api/match-resume', formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       })
       setJobs(response.data)

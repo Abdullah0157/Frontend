@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { apiUser, ROLES } from '@/lib/roles'
 import { query } from '@/lib/db'
 
 export const dynamic = 'force-dynamic'
@@ -16,17 +17,23 @@ const DDL = `CREATE TABLE IF NOT EXISTS eie_outcomes (
   created_at timestamptz DEFAULT now()
 )`
 
+// Created once per server process, not on every request.
+let tableReady = null
+
 // POST /api/eie/outcome
 // Ingest a real hire outcome and snapshot the prediction it's evaluating.
 // Body: { assessmentId, success: bool, outcome_type?, outcome_value? }
 // This is the flywheel: outcomes flow back → Phase 6 calibration uses them.
 export async function POST(req) {
+  // Internal engine tool: super admins only (no page in the app calls it).
+  const { response: denied } = await apiUser(ROLES.SUPER_ADMIN)
+  if (denied) return denied
   const { assessmentId, success, outcome_type = 'hire_success', outcome_value = null } = await req.json().catch(() => ({}))
   if (assessmentId == null || typeof success !== 'boolean') {
     return NextResponse.json({ error: 'assessmentId and boolean success required' }, { status: 400 })
   }
   try {
-    await query(DDL)
+    await (tableReady ??= query(DDL).catch((e) => { tableReady = null; throw e }))
     const { rows } = await query(`SELECT report FROM expert_assessments WHERE id = $1`, [assessmentId])
     if (!rows.length) return NextResponse.json({ error: 'assessment not found' }, { status: 404 })
     const eie = rows[0].report?.eie

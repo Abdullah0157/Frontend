@@ -1,4 +1,6 @@
 import { NextResponse } from 'next/server'
+import { apiUser } from '@/lib/roles'
+import { limitOrNull } from '@/lib/rate-limit'
 import { scoreTranscript } from '@/lib/eie-rate'
 import { buildStrategy, planFromProfile, extractResumeHooks } from '@/lib/interview-planner'
 
@@ -11,6 +13,12 @@ export const runtime = 'nodejs'
 // The belief loop: score the transcript-so-far → belief + critic verdict + next
 // target + decision + ready-to-conclude. See INTERVIEWER_ENGINE.md §10.
 export async function POST(req) {
+  // Logged-in users only, with an hourly limit per user (interview planning uses free
+  // AI or voice quota that one person must not be able to use up).
+  const { user: caller, response: denied } = await apiUser()
+  if (denied) return denied
+  const limited = await limitOrNull(req, [{ bucket: 'interview-plan', limit: 200, windowSec: 3600, userId: caller.id }])
+  if (limited) return limited
   const { role = 'the role', seniority = '', messages = [], resumeText = '', prev = null, turnsSpent = {} } =
     await req.json().catch(() => ({}))
 

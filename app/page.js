@@ -71,7 +71,8 @@ export default function LandingPage() {
           </div>
         </div>
 
-        <div className="absolute top-[12%] right-[-15%] translate-y-[-50%] w-[85vh] h-[85vh] max-w-[900px] max-h-[900px] animate-fade-in pointer-events-none z-10">
+        {/* Large screens only: on phones it sat on top of the headline, and hiding it also skips its image download. */}
+        <div className="hidden lg:block absolute top-[12%] right-[-15%] translate-y-[-50%] w-[85vh] h-[85vh] max-w-[900px] max-h-[900px] animate-fade-in pointer-events-none z-10">
           <div className="absolute inset-0 bg-indigo-100/20 blur-[120px] rounded-full"></div>
           <Globe />
         </div>
@@ -143,31 +144,24 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* SECTION 3: STATS & PARTNERS */}
-      <section className="py-32 z-10 bg-slate-50">
+      {/* SECTION 3: HOW IT WORKS (replaced a "partners" logo strip: JobStream
+          has no integrations with the companies it showed). */}
+      <section className="py-24 z-10 bg-slate-50">
         <div className="container mx-auto px-4">
-          <div className="relative">
-            <p className="text-center text-slate-500 font-black uppercase tracking-[0.4em] text-[10px] mb-12">Integrated with Global Leaders</p>
-            <div className="relative overflow-hidden w-full max-w-5xl mx-auto flex items-center h-24 mask-marquee">
-              <div className="animate-marquee flex items-center gap-24 whitespace-nowrap">
-                {[...Array(4)].map((_, i) => (
-                  <div key={i} className="flex gap-32 items-center opacity-40 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-300">
-                    <span className="text-3xl font-bold tracking-tight text-slate-900 flex items-center">
-                      <svg className="w-8 h-8 mr-2 text-indigo-600" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" /></svg>
-                      mercor
-                    </span>
-                    <span className="text-4xl font-black tracking-tighter text-slate-900">micro1</span>
-                    <span className="text-3xl font-black tracking-tighter text-slate-900 flex items-center">
-                      <svg className="w-8 h-8 mr-2 text-[#0077B5]" viewBox="0 0 448 512" fill="currentColor"><path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z"/></svg>
-                      linkedin
-                    </span>
-                    <span className="text-3xl font-black tracking-tighter text-slate-900">glassdoor</span>
-                    <span className="text-3xl font-black tracking-tighter text-slate-900">indeed</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
+          <h2 className="text-center text-3xl md:text-4xl font-bold tracking-tight text-slate-900 mb-12">How JobStream works</h2>
+          <ol className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            {[
+              { title: 'A company posts a job', text: 'Every job gets a skills test matched to the role, from software to customer service and English.' },
+              { title: 'Candidates show what they can do', text: 'They take the test and a short AI interview with Iris, from any computer.' },
+              { title: 'The company gets the evidence', text: 'A scored report with strengths, concerns, recordings and follow-up questions, so hiring decisions rest on proof.' },
+            ].map((step, i) => (
+              <li key={step.title} className="bg-white border border-slate-200 rounded-2xl p-8 shadow-sm">
+                <span className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-indigo-600 text-white text-sm font-bold mb-5">{i + 1}</span>
+                <h3 className="text-lg font-semibold text-slate-900 mb-2">{step.title}</h3>
+                <p className="text-slate-600 text-sm leading-relaxed">{step.text}</p>
+              </li>
+            ))}
+          </ol>
         </div>
       </section>
 

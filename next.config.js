@@ -4,9 +4,6 @@ const nextConfig = {
   images: {
     domains: ['images.unsplash.com', 'logo.clearbit.com'], // For mock images
   },
-  env: {
-    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
-  },
   experimental: {
     serverComponentsExternalPackages: ['pdf-parse', 'pdfjs-dist', 'msedge-tts', 'ws', 'bufferutil', 'utf-8-validate',
       // Code sandbox for written assessments: loads a .wasm file at runtime.

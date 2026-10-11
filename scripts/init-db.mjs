@@ -437,6 +437,28 @@ CREATE TABLE IF NOT EXISTS item_audio_cache (
   created_at   timestamptz NOT NULL DEFAULT now()
 );
 ALTER TABLE assessment_reports ADD COLUMN IF NOT EXISTS english jsonb;
+
+-- Request limits for AI, voice and upload routes (lib/rate-limit.js).
+CREATE TABLE IF NOT EXISTS rate_limits (
+  key          text NOT NULL,
+  window_start timestamptz NOT NULL,
+  count        int NOT NULL DEFAULT 1,
+  PRIMARY KEY (key, window_start)
+);
+CREATE INDEX IF NOT EXISTS idx_rate_limits_window ON rate_limits(window_start);
+
+-- Hire outcomes for the evaluation engine (was created inside the API route).
+CREATE TABLE IF NOT EXISTS eie_outcomes (
+  id bigserial PRIMARY KEY,
+  assessment_id bigint,
+  predicted_p numeric,
+  composite_theta numeric,
+  competency_thetas jsonb,
+  success boolean,
+  outcome_type text,
+  outcome_value numeric,
+  created_at timestamptz DEFAULT now()
+);
 `
 
 const pool = new Pool({

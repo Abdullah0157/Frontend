@@ -1,4 +1,6 @@
 import { synthesize } from '@/lib/edge-tts'
+import { apiUser } from '@/lib/roles'
+import { limitOrNull } from '@/lib/rate-limit'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -20,6 +22,12 @@ const MAX_TEXT = 4000
 // Uses our own Edge TTS client (lib/edge-tts.js): the msedge-tts package's
 // connection started being refused by the service in October 2026.
 export async function POST(req) {
+  // Logged-in users only, with an hourly limit per user (voice uses free
+  // AI or voice quota that one person must not be able to use up).
+  const { user: caller, response: denied } = await apiUser()
+  if (denied) return denied
+  const limited = await limitOrNull(req, [{ bucket: 'tts', limit: 600, windowSec: 3600, userId: caller.id }])
+  if (limited) return limited
   try {
     const { text, voice } = await req.json()
     if (!text || typeof text !== 'string') {
