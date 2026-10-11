@@ -29,16 +29,16 @@ export default async function AdminInterviewsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-slate-900">Interviews</h1>
-        <p className="text-slate-500 mt-1">Every interview across every company. Showing latest 200.</p>
+        <h1 className="text-3xl font-bold text-ink">Interviews</h1>
+        <p className="text-muted mt-1">Every interview across every company. Showing latest 200.</p>
       </div>
 
-      <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
+      <div className="bg-white rounded-2xl border border-line overflow-hidden">
         {interviews.length === 0 ? (
-          <p className="p-10 text-center text-slate-500 text-sm">No interviews yet.</p>
+          <p className="p-10 text-center text-muted text-sm">No interviews yet.</p>
         ) : (
           <table className="w-full text-sm">
-            <thead className="bg-slate-50 text-slate-500 text-xs font-black uppercase tracking-widest">
+            <thead className="bg-slate-50 text-muted text-xs font-bold">
               <tr>
                 <th className="text-left px-6 py-3">Candidate</th>
                 <th className="text-left px-6 py-3">Role</th>
@@ -53,25 +53,21 @@ export default async function AdminInterviewsPage() {
               {interviews.map((i) => (
                 <tr key={i.id} className="hover:bg-slate-50 transition-colors">
                   <td className="px-6 py-4">
-                    <div className="font-medium text-slate-900">{i.name}</div>
-                    {i.email && <div className="text-xs text-slate-500">{i.email}</div>}
+                    <div className="font-medium text-ink">{i.name}</div>
+                    {i.email && <div className="text-xs text-muted">{i.email}</div>}
                   </td>
-                  <td className="px-6 py-4 text-slate-700">{i.job_title || i.job_role || '—'}</td>
-                  <td className="px-6 py-4 text-slate-600">{i.company_name || '—'}</td>
-                  <td className="px-6 py-4 text-right font-mono text-slate-700">
+                  <td className="px-6 py-4 text-body">{i.job_title || i.job_role || '—'}</td>
+                  <td className="px-6 py-4 text-body">{i.company_name || '—'}</td>
+                  <td className="px-6 py-4 text-right font-mono text-body">
                     {i.job_fit_score != null ? `${i.job_fit_score}/10` : '—'}
                   </td>
-                  <td className="px-6 py-4 text-right text-xs text-slate-600 font-mono">{formatDuration(i.duration_seconds)}</td>
+                  <td className="px-6 py-4 text-right text-xs text-body font-mono">{formatDuration(i.duration_seconds)}</td>
                   <td className="px-6 py-4 text-right">
-                    <span className={`text-xs font-bold uppercase tracking-widest px-2 py-1 rounded ${
-                      i.decision === 'accepted' ? 'bg-emerald-50 text-emerald-700' :
-                      i.decision === 'rejected' ? 'bg-red-50 text-red-700' :
-                      'bg-slate-100 text-slate-600'
-                    }`}>
+                    <span className={`text-xs font-bold px-2 py-1 rounded ${ i.decision === 'accepted' ? 'bg-emerald-50 text-emerald-700' : i.decision === 'rejected' ? 'bg-red-50 text-red-700' : 'bg-slate-100 text-body' }`}>
                       {i.decision || 'pending'}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-right text-xs text-slate-500">{new Date(i.created_at).toLocaleDateString()}</td>
+                  <td className="px-6 py-4 text-right text-xs text-muted">{new Date(i.created_at).toLocaleDateString()}</td>
                 </tr>
               ))}
             </tbody>

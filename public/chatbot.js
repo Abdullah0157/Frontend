@@ -4,10 +4,10 @@
     // ==========================================
     const CONFIG = {
         bot_name: "JobStream AI",
-        primary_color: "#1e1b4b", // Dark Indigo (matches site header)
+        primary_color: "#4338CA", // brand indigo (design option A)
         bg_color: "#ffffff",
-        text_color: "#1e293b",
-        bubble_bg: "#1e1b4b",
+        text_color: "#0E1116",
+        bubble_bg: "#4338CA",
         bubble_icon_color: "#ffffff"
     };
 
@@ -28,6 +28,8 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
+            border: none;
+            padding: 0;
             box-shadow: 0 10px 25px rgba(79, 70, 229, 0.4);
             z-index: 9999;
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -257,9 +259,13 @@
     // ==========================================
     // DOM ELEMENTS
     // ==========================================
-    const bubble = document.createElement('div');
+    // A real button: reachable with the keyboard and announced by screen readers.
+    const bubble = document.createElement('button');
+    bubble.type = 'button';
     bubble.id = 'ag-chat-bubble';
-    bubble.innerHTML = `<svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>`;
+    bubble.setAttribute('aria-label', 'Open the JobStream assistant');
+    bubble.setAttribute('aria-expanded', 'false');
+    bubble.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>`;
 
     const chatWindow = document.createElement('div');
     chatWindow.id = 'ag-chat-window';
@@ -303,7 +309,11 @@
 
     const resumeUpload = document.getElementById('ag-resume-upload');
 
-    bubble.onclick = () => chatWindow.classList.toggle('open');
+    bubble.onclick = () => {
+        const open = chatWindow.classList.toggle('open');
+        bubble.setAttribute('aria-expanded', String(open));
+        bubble.setAttribute('aria-label', open ? 'Close the JobStream assistant' : 'Open the JobStream assistant');
+    };
 
     // Is there a signed-in session? /api/profile is same-origin and cookie-based,
     // so it answers this without exposing anything: 200 = signed in, 401 = not.
@@ -364,7 +374,7 @@
             formData.append('file', file);
             let matches = [];
             try {
-                const response = await fetch(`https://abd217391-jobstream-backend.hf.space/api/match-resume`, {
+                const response = await fetch(`/api/match-resume`, {
                     method: 'POST', body: formData,
                 });
                 const data = await response.json();
@@ -396,7 +406,7 @@
                 .join('\n');
 
             typing.style.display = 'flex';
-            const aiResponse = await fetch(`https://abd217391-jobstream-backend.hf.space/api/chat`, {
+            const aiResponse = await fetch(`/api/chat`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -437,7 +447,7 @@
         chatHistory.push({ role: "user", parts: [{ text: text }] });
 
         try {
-            const response = await fetch(`https://abd217391-jobstream-backend.hf.space/api/chat`, {
+            const response = await fetch(`/api/chat`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({

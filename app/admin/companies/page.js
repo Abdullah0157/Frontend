@@ -28,17 +28,17 @@ export default async function AdminCompaniesPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">Companies</h1>
-          <p className="text-slate-500 mt-1">{companies.length} companies on the platform.</p>
+          <h1 className="text-3xl font-bold text-ink">Companies</h1>
+          <p className="text-muted mt-1">{companies.length} companies on the platform.</p>
         </div>
       </div>
 
-      <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
+      <div className="bg-white rounded-2xl border border-line overflow-hidden">
         {companies.length === 0 ? (
-          <p className="p-10 text-center text-slate-500 text-sm">No companies yet.</p>
+          <p className="p-10 text-center text-muted text-sm">No companies yet.</p>
         ) : (
           <table className="w-full text-sm">
-            <thead className="bg-slate-50 text-slate-500 text-xs font-black uppercase tracking-widest">
+            <thead className="bg-slate-50 text-muted text-xs font-bold">
               <tr>
                 <th className="text-left px-6 py-3">Company</th>
                 <th className="text-left px-6 py-3">Industry</th>
@@ -51,13 +51,13 @@ export default async function AdminCompaniesPage() {
               {companies.map((c) => (
                 <tr key={c.user_id} className="hover:bg-slate-50 transition-colors">
                   <td className="px-6 py-4">
-                    <div className="font-medium text-slate-900">{c.company_name}</div>
-                    {c.website && <a href={c.website} className="text-xs text-indigo-600 hover:underline" target="_blank" rel="noreferrer">{c.website}</a>}
+                    <div className="font-medium text-ink">{c.company_name}</div>
+                    {c.website && <a href={c.website} className="text-xs text-brand hover:underline" target="_blank" rel="noreferrer">{c.website}</a>}
                   </td>
-                  <td className="px-6 py-4 text-slate-600">{c.industry || '—'}</td>
-                  <td className="px-6 py-4 text-right font-mono text-slate-700">{c.job_count}</td>
-                  <td className="px-6 py-4 text-right font-mono text-slate-700">{c.candidate_count}</td>
-                  <td className="px-6 py-4 text-right text-xs text-slate-500">{new Date(c.created_at).toLocaleDateString()}</td>
+                  <td className="px-6 py-4 text-body">{c.industry || '—'}</td>
+                  <td className="px-6 py-4 text-right font-mono text-body">{c.job_count}</td>
+                  <td className="px-6 py-4 text-right font-mono text-body">{c.candidate_count}</td>
+                  <td className="px-6 py-4 text-right text-xs text-muted">{new Date(c.created_at).toLocaleDateString()}</td>
                 </tr>
               ))}
             </tbody>

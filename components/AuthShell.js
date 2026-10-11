@@ -11,15 +11,15 @@ import Image from 'next/image'
 // shell in one place means a change lands everywhere and they can't diverge again.
 
 export const authInput =
-  'w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-900 placeholder:text-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none transition'
+  'w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm text-ink placeholder:text-slate-400 focus:border-brand focus:ring-2 focus:ring-indigo-100 outline-none transition'
 
-export const authLabel = 'block text-sm font-medium text-slate-700 mb-1.5'
+export const authLabel = 'block text-sm font-medium text-body mb-1.5'
 
 export const authPrimaryBtn =
   'w-full px-5 py-3 rounded-xl bg-slate-900 text-white text-sm font-semibold hover:bg-slate-800 active:bg-slate-950 transition disabled:opacity-60 disabled:cursor-not-allowed'
 
 export const authSecondaryBtn =
-  'w-full flex items-center justify-center gap-2.5 px-5 py-3 rounded-xl border border-slate-300 hover:bg-slate-50 active:bg-slate-100 transition text-sm font-semibold text-slate-700 disabled:opacity-60 disabled:cursor-not-allowed'
+  'w-full flex items-center justify-center gap-2.5 px-5 py-3 rounded-xl border border-slate-300 hover:bg-slate-50 active:bg-slate-100 transition text-sm font-semibold text-body disabled:opacity-60 disabled:cursor-not-allowed'
 
 export function AuthError({ children }) {
   if (!children) return null
@@ -36,8 +36,8 @@ export function AuthError({ children }) {
 export function AuthDivider({ label = 'or' }) {
   return (
     <div className="relative my-6">
-      <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-slate-200" /></div>
-      <div className="relative flex justify-center"><span className="bg-white px-3 text-xs text-slate-400">{label}</span></div>
+      <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-line" /></div>
+      <div className="relative flex justify-center"><span className="bg-white px-3 text-xs text-muted">{label}</span></div>
     </div>
   )
 }
@@ -46,7 +46,7 @@ export function GoogleButton({ loading, onClick, label = 'Continue with Google' 
   return (
     <button type="button" onClick={onClick} disabled={loading} className={authSecondaryBtn}>
       {loading ? (
-        <svg className="w-[18px] h-[18px] animate-spin text-slate-400" fill="none" viewBox="0 0 24 24">
+        <svg className="w-[18px] h-[18px] animate-spin text-muted" fill="none" viewBox="0 0 24 24">
           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
           <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
         </svg>
@@ -65,10 +65,14 @@ export function GoogleButton({ loading, onClick, label = 'Continue with Google' 
 
 // Password field with a visibility toggle — typing a password blind on a phone
 // is a real cause of failed sign-ins.
-export function PasswordField({ id = 'password', label = 'Password', value, onChange, show, onToggle, autoComplete = 'current-password', placeholder = '••••••••', hint }) {
+// action: an optional link shown at the right of the label (e.g. "Forgot password?").
+export function PasswordField({ id = 'password', label = 'Password', value, onChange, show, onToggle, autoComplete = 'current-password', placeholder = '••••••••', hint, action }) {
   return (
     <div>
-      <label htmlFor={id} className={authLabel}>{label}</label>
+      <div className="flex items-baseline justify-between gap-3">
+        <label htmlFor={id} className={authLabel}>{label}</label>
+        {action}
+      </div>
       <div className="relative">
         <input
           id={id}
@@ -84,7 +88,7 @@ export function PasswordField({ id = 'password', label = 'Password', value, onCh
           type="button"
           onClick={onToggle}
           aria-label={show ? 'Hide password' : 'Show password'}
-          className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition"
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-slate-600 transition"
         >
           {show ? (
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
@@ -97,7 +101,7 @@ export function PasswordField({ id = 'password', label = 'Password', value, onCh
           )}
         </button>
       </div>
-      {hint && <p className="text-xs text-slate-400 mt-1.5">{hint}</p>}
+      {hint && <p className="text-xs text-muted mt-1.5">{hint}</p>}
     </div>
   )
 }
@@ -109,15 +113,15 @@ export default function AuthShell({ title, subtitle, children, footer }) {
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center gap-2.5 mb-7">
             <Image src="/jobstream-icon.png" alt="" width={36} height={36} className="rounded-xl" priority />
-            <span className="text-lg font-black tracking-tight text-slate-900">JobStream</span>
+            <span className="text-lg font-bold tracking-tight text-ink">JobStream</span>
           </Link>
-          <h1 className="text-[26px] font-bold tracking-tight text-slate-900">{title}</h1>
-          {subtitle && <p className="text-sm text-slate-500 mt-1.5">{subtitle}</p>}
+          <h1 className="text-[26px] font-bold tracking-tight text-ink">{title}</h1>
+          {subtitle && <p className="text-sm text-muted mt-1.5">{subtitle}</p>}
         </div>
 
-        <div className="bg-white border border-slate-200 rounded-2xl p-7 shadow-sm">{children}</div>
+        <div className="bg-white border border-line rounded-2xl p-7 shadow-sm">{children}</div>
 
-        {footer && <p className="text-center text-sm text-slate-500 mt-6">{footer}</p>}
+        {footer && <p className="text-center text-sm text-muted mt-6">{footer}</p>}
       </div>
     </div>
   )

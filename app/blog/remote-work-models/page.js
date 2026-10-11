@@ -8,25 +8,25 @@ export default function RemoteModelsArticle() {
       {/* ARTICLE HERO */}
       <header className="container mx-auto px-4 max-w-5xl mb-16 text-center">
         <div className="flex items-center justify-center gap-4 mb-8">
-          <span className="text-[10px] font-black text-indigo-600 uppercase tracking-[0.4em] font-sans">Industry Trends</span>
-          <span className="text-slate-700 font-sans text-xs">•</span>
-          <span className="text-[10px] font-black text-slate-500 uppercase tracking-[0.4em] font-sans">May 2026</span>
-          <span className="text-slate-700 font-sans text-xs">•</span>
-          <span className="text-[10px] font-black text-slate-500 uppercase tracking-[0.4em] font-sans">2 min read</span>
+          <span className="text-xs font-bold text-brand font-sans">Industry Trends</span>
+          <span className="text-body font-sans text-xs">•</span>
+          <span className="text-xs font-bold text-muted font-sans">May 2026</span>
+          <span className="text-body font-sans text-xs">•</span>
+          <span className="text-xs font-bold text-muted font-sans">2 min read</span>
         </div>
 
-        <h1 className="text-5xl md:text-7xl font-black text-slate-900 mb-8 leading-tight tracking-tighter">
+        <h1 className="text-5xl md:text-7xl font-bold text-ink mb-8 leading-tight tracking-tight">
           Micro-Jobs vs Freelance <br /> vs Full-Time
         </h1>
 
-        <p className="text-xl md:text-2xl text-slate-500 leading-relaxed font-sans max-w-2xl mx-auto font-medium">
+        <p className="text-xl md:text-2xl text-muted leading-relaxed font-sans max-w-2xl mx-auto font-medium">
           Not all remote work is the same. Before jumping in, you need to understand the three main models and pick the one that fits your life.
         </p>
       </header>
 
       {/* HERO IMAGE */}
       <div className="container mx-auto px-4 max-w-5xl mb-24">
-        <div className="aspect-[21/9] rounded-[4rem] overflow-hidden relative shadow-2xl border border-slate-200">
+        <div className="aspect-[21/9] rounded-[4rem] overflow-hidden relative shadow-2xl border border-line">
           <img
             src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=1600&q=80"
             alt="Team collaborating around a desk with laptops and notes"
@@ -44,34 +44,34 @@ export default function RemoteModelsArticle() {
             {/* MICRO-JOBS */}
             <section className="group">
               <div className="flex items-center gap-6 mb-6">
-                <span className="w-12 h-12 rounded-2xl bg-indigo-600 text-white flex items-center justify-center font-black text-xl shadow-lg shadow-indigo-200 font-sans flex-shrink-0">1</span>
-                <h2 className="text-2xl md:text-3xl font-black text-slate-900 m-0 uppercase tracking-tight font-sans">MICRO JOBS (BEST FOR BEGINNERS)</h2>
+                <span className="w-12 h-12 rounded-2xl bg-brand text-white flex items-center justify-center font-bold text-xl shadow-lg shadow-indigo-200 font-sans flex-shrink-0">1</span>
+                <h2 className="text-2xl md:text-3xl font-bold text-ink m-0 tracking-tight font-sans">MICRO JOBS (BEST FOR BEGINNERS)</h2>
               </div>
-              <p className="text-lg leading-relaxed text-slate-700 font-medium mb-8">
+              <p className="text-lg leading-relaxed text-body font-medium mb-8">
                 Micro jobs are small, quick tasks that pay $25–$150 each. Think writing a product description, designing a logo, or editing a short video.
               </p>
-              <div className="bg-slate-50 p-8 rounded-3xl border border-slate-200 mb-8">
-                <h4 className="text-sm font-black text-slate-900 uppercase tracking-widest mb-6 font-sans">Perfect if you:</h4>
+              <div className="bg-slate-50 p-8 rounded-3xl border border-line mb-8">
+                <h3 className="text-sm font-bold text-ink mb-6 font-sans">Perfect if you:</h3>
                 <ul className="space-y-4 list-none p-0">
-                  <li className="flex items-start gap-3 text-slate-700 font-medium font-sans">
+                  <li className="flex items-start gap-3 text-body font-medium font-sans">
                     <span className="w-1.5 h-1.5 bg-indigo-500 rounded-full mt-2.5 flex-shrink-0"></span>
                     Are just starting out
                   </li>
-                  <li className="flex items-start gap-3 text-slate-700 font-medium font-sans">
+                  <li className="flex items-start gap-3 text-body font-medium font-sans">
                     <span className="w-1.5 h-1.5 bg-indigo-500 rounded-full mt-2.5 flex-shrink-0"></span>
                     Want to build reviews fast
                   </li>
-                  <li className="flex items-start gap-3 text-slate-700 font-medium font-sans">
+                  <li className="flex items-start gap-3 text-body font-medium font-sans">
                     <span className="w-1.5 h-1.5 bg-indigo-500 rounded-full mt-2.5 flex-shrink-0"></span>
                     Need flexible, no-commitment work
                   </li>
-                  <li className="flex items-start gap-3 text-slate-700 font-medium font-sans">
+                  <li className="flex items-start gap-3 text-body font-medium font-sans">
                     <span className="w-1.5 h-1.5 bg-indigo-500 rounded-full mt-2.5 flex-shrink-0"></span>
                     Want to test your skills before going bigger
                   </li>
                 </ul>
               </div>
-              <p className="text-sm font-bold text-indigo-900 uppercase tracking-widest font-sans flex items-center gap-2">
+              <p className="text-sm font-bold text-indigo-900 font-sans flex items-center gap-2">
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
                 Downside: Income is unpredictable. You're always hunting for the next task.
               </p>
@@ -80,34 +80,34 @@ export default function RemoteModelsArticle() {
             {/* FREELANCE */}
             <section className="group">
               <div className="flex items-center gap-6 mb-6">
-                <span className="w-12 h-12 rounded-2xl bg-slate-900 text-white flex items-center justify-center font-black text-xl shadow-lg shadow-slate-200 font-sans flex-shrink-0">2</span>
-                <h2 className="text-2xl md:text-3xl font-black text-slate-900 m-0 uppercase tracking-tight font-sans">FREELANCE PROJECTS (BEST FOR GROWTH)</h2>
+                <span className="w-12 h-12 rounded-2xl bg-slate-900 text-white flex items-center justify-center font-bold text-xl shadow-lg shadow-slate-200 font-sans flex-shrink-0">2</span>
+                <h2 className="text-2xl md:text-3xl font-bold text-ink m-0 tracking-tight font-sans">FREELANCE PROJECTS (BEST FOR GROWTH)</h2>
               </div>
-              <p className="text-lg leading-relaxed text-slate-700 font-medium mb-8">
+              <p className="text-lg leading-relaxed text-body font-medium mb-8">
                 Freelancing means bigger projects, longer timelines, and stronger client relationships. Projects typically range from $500 to $10,000+.
               </p>
-              <div className="bg-slate-50 p-8 rounded-3xl border border-slate-200 mb-8">
-                <h4 className="text-sm font-black text-slate-900 uppercase tracking-widest mb-6 font-sans">Perfect if you:</h4>
+              <div className="bg-slate-50 p-8 rounded-3xl border border-line mb-8">
+                <h3 className="text-sm font-bold text-ink mb-6 font-sans">Perfect if you:</h3>
                 <ul className="space-y-4 list-none p-0">
-                  <li className="flex items-start gap-3 text-slate-700 font-medium font-sans">
+                  <li className="flex items-start gap-3 text-body font-medium font-sans">
                     <span className="w-1.5 h-1.5 bg-indigo-500 rounded-full mt-2.5 flex-shrink-0"></span>
                     Have a solid skill set
                   </li>
-                  <li className="flex items-start gap-3 text-slate-700 font-medium font-sans">
+                  <li className="flex items-start gap-3 text-body font-medium font-sans">
                     <span className="w-1.5 h-1.5 bg-indigo-500 rounded-full mt-2.5 flex-shrink-0"></span>
                     Want higher, project-based income
                   </li>
-                  <li className="flex items-start gap-3 text-slate-700 font-medium font-sans">
+                  <li className="flex items-start gap-3 text-body font-medium font-sans">
                     <span className="w-1.5 h-1.5 bg-indigo-500 rounded-full mt-2.5 flex-shrink-0"></span>
                     Enjoy working with multiple clients
                   </li>
-                  <li className="flex items-start gap-3 text-slate-700 font-medium font-sans">
+                  <li className="flex items-start gap-3 text-body font-medium font-sans">
                     <span className="w-1.5 h-1.5 bg-indigo-500 rounded-full mt-2.5 flex-shrink-0"></span>
                     Prefer variety over routine
                   </li>
                 </ul>
               </div>
-              <p className="text-sm font-bold text-indigo-900 uppercase tracking-widest font-sans flex items-center gap-2">
+              <p className="text-sm font-bold text-indigo-900 font-sans flex items-center gap-2">
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
                 Downside: Requires client management, invoicing, and self-discipline.
               </p>
@@ -116,34 +116,34 @@ export default function RemoteModelsArticle() {
             {/* FULL-TIME */}
             <section className="group">
               <div className="flex items-center gap-6 mb-6">
-                <span className="w-12 h-12 rounded-2xl bg-indigo-600 text-white flex items-center justify-center font-black text-xl shadow-lg shadow-indigo-200 font-sans flex-shrink-0">3</span>
-                <h2 className="text-2xl md:text-3xl font-black text-slate-900 m-0 uppercase tracking-tight font-sans">FULL TIME REMOTE (BEST FOR STABILITY)</h2>
+                <span className="w-12 h-12 rounded-2xl bg-brand text-white flex items-center justify-center font-bold text-xl shadow-lg shadow-indigo-200 font-sans flex-shrink-0">3</span>
+                <h2 className="text-2xl md:text-3xl font-bold text-ink m-0 tracking-tight font-sans">FULL TIME REMOTE (BEST FOR STABILITY)</h2>
               </div>
-              <p className="text-lg leading-relaxed text-slate-700 font-medium mb-8">
+              <p className="text-lg leading-relaxed text-body font-medium mb-8">
                 A full time remote job gives you a steady salary, benefits, and one company to focus on.
               </p>
-              <div className="bg-slate-50 p-8 rounded-3xl border border-slate-200 mb-8">
-                <h4 className="text-sm font-black text-slate-900 uppercase tracking-widest mb-6 font-sans">Perfect if you:</h4>
+              <div className="bg-slate-50 p-8 rounded-3xl border border-line mb-8">
+                <h3 className="text-sm font-bold text-ink mb-6 font-sans">Perfect if you:</h3>
                 <ul className="space-y-4 list-none p-0">
-                  <li className="flex items-start gap-3 text-slate-700 font-medium font-sans">
+                  <li className="flex items-start gap-3 text-body font-medium font-sans">
                     <span className="w-1.5 h-1.5 bg-indigo-500 rounded-full mt-2.5 flex-shrink-0"></span>
                     Want income security
                   </li>
-                  <li className="flex items-start gap-3 text-slate-700 font-medium font-sans">
+                  <li className="flex items-start gap-3 text-body font-medium font-sans">
                     <span className="w-1.5 h-1.5 bg-indigo-500 rounded-full mt-2.5 flex-shrink-0"></span>
                     Prefer a structured schedule
                   </li>
-                  <li className="flex items-start gap-3 text-slate-700 font-medium font-sans">
+                  <li className="flex items-start gap-3 text-body font-medium font-sans">
                     <span className="w-1.5 h-1.5 bg-indigo-500 rounded-full mt-2.5 flex-shrink-0"></span>
                     Value health benefits and paid leave
                   </li>
-                  <li className="flex items-start gap-3 text-slate-700 font-medium font-sans">
+                  <li className="flex items-start gap-3 text-body font-medium font-sans">
                     <span className="w-1.5 h-1.5 bg-indigo-500 rounded-full mt-2.5 flex-shrink-0"></span>
                     Like growing within one team
                   </li>
                 </ul>
               </div>
-              <p className="text-sm font-bold text-indigo-900 uppercase tracking-widest font-sans flex items-center gap-2">
+              <p className="text-sm font-bold text-indigo-900 font-sans flex items-center gap-2">
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
                 Downside: Less flexibility, income is capped.
               </p>
@@ -151,39 +151,39 @@ export default function RemoteModelsArticle() {
 
             {/* COMPARISON TABLE */}
             <section className="py-20">
-              <h2 className="text-2xl font-black text-slate-900 mb-12 uppercase tracking-tight text-center font-sans">WHICH SHOULD YOU CHOOSE?</h2>
-              <div className="overflow-x-auto">
+              <h2 className="text-2xl font-bold text-ink mb-12 tracking-tight text-center font-sans">WHICH SHOULD YOU CHOOSE?</h2>
+              <div className="overflow-x-auto" tabIndex={0} role="region" aria-label="Comparison table (scrolls sideways)">
                 <table className="w-full border-collapse font-sans">
                   <thead>
                     <tr className="bg-gradient-to-r from-blue-600 via-indigo-900 to-slate-900 text-white">
-                      <th className="p-6 text-left text-[10px] font-black uppercase tracking-widest">Model</th>
-                      <th className="p-6 text-left text-[10px] font-black uppercase tracking-widest">Income</th>
-                      <th className="p-6 text-left text-[10px] font-black uppercase tracking-widest">Flexibility</th>
-                      <th className="p-6 text-left text-[10px] font-black uppercase tracking-widest">Benefits</th>
-                      <th className="p-6 text-left text-[10px] font-black uppercase tracking-widest">Best For</th>
+                      <th className="p-6 text-left text-xs font-bold">Model</th>
+                      <th className="p-6 text-left text-xs font-bold">Income</th>
+                      <th className="p-6 text-left text-xs font-bold">Flexibility</th>
+                      <th className="p-6 text-left text-xs font-bold">Benefits</th>
+                      <th className="p-6 text-left text-xs font-bold">Best For</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr className="border-b border-slate-200 hover:bg-slate-50 transition-colors">
-                      <td className="p-6 font-black text-slate-900 text-sm">Micro-Jobs</td>
-                      <td className="p-6 text-slate-700 text-sm">Variable</td>
-                      <td className="p-6 text-slate-700 text-sm font-black">High</td>
-                      <td className="p-6 text-slate-500 text-sm">None</td>
-                      <td className="p-6 text-slate-700 text-sm">Beginners</td>
+                    <tr className="border-b border-line hover:bg-slate-50 transition-colors">
+                      <td className="p-6 font-bold text-ink text-sm">Micro-Jobs</td>
+                      <td className="p-6 text-body text-sm">Variable</td>
+                      <td className="p-6 text-body text-sm font-bold">High</td>
+                      <td className="p-6 text-muted text-sm">None</td>
+                      <td className="p-6 text-body text-sm">Beginners</td>
                     </tr>
-                    <tr className="border-b border-slate-200 hover:bg-slate-50 transition-colors">
-                      <td className="p-6 font-black text-slate-900 text-sm">Freelance</td>
-                      <td className="p-6 text-slate-700 text-sm">Variable</td>
-                      <td className="p-6 text-slate-700 text-sm font-black">High</td>
-                      <td className="p-6 text-slate-500 text-sm">None</td>
-                      <td className="p-6 text-slate-700 text-sm">Intermediate</td>
+                    <tr className="border-b border-line hover:bg-slate-50 transition-colors">
+                      <td className="p-6 font-bold text-ink text-sm">Freelance</td>
+                      <td className="p-6 text-body text-sm">Variable</td>
+                      <td className="p-6 text-body text-sm font-bold">High</td>
+                      <td className="p-6 text-muted text-sm">None</td>
+                      <td className="p-6 text-body text-sm">Intermediate</td>
                     </tr>
-                    <tr className="border-b border-slate-200 hover:bg-slate-50 transition-colors">
-                      <td className="p-6 font-black text-slate-900 text-sm">Full-Time</td>
-                      <td className="p-6 text-indigo-600 text-sm font-black">Stable</td>
-                      <td className="p-6 text-slate-700 text-sm">Medium</td>
-                      <td className="p-6 text-indigo-600 text-sm font-black">Yes</td>
-                      <td className="p-6 text-slate-700 text-sm">All levels</td>
+                    <tr className="border-b border-line hover:bg-slate-50 transition-colors">
+                      <td className="p-6 font-bold text-ink text-sm">Full-Time</td>
+                      <td className="p-6 text-brand text-sm font-bold">Stable</td>
+                      <td className="p-6 text-body text-sm">Medium</td>
+                      <td className="p-6 text-brand text-sm font-bold">Yes</td>
+                      <td className="p-6 text-body text-sm">All levels</td>
                     </tr>
                   </tbody>
                 </table>
@@ -191,14 +191,14 @@ export default function RemoteModelsArticle() {
             </section>
           </div>
 
-          <div className="mt-24 pt-12 border-t border-slate-200">
-            <p className="text-xl leading-relaxed text-slate-900 font-bold mb-12">
+          <div className="mt-24 pt-12 border-t border-line">
+            <p className="text-xl leading-relaxed text-ink font-bold mb-12">
               Start with micro-jobs → grow into freelance → settle into full-time if stability is your goal. Or freelance forever if freedom is your priority. There's no wrong answer, only what works for you.
             </p>
 
             <div className="bg-indigo-50 p-12 rounded-[3rem] border border-indigo-200 text-center">
-              <h3 className="text-2xl font-black text-indigo-900 mb-6 font-sans uppercase tracking-widest">Ready to find your first remote opportunity?</h3>
-              <Link href="/jobs" className="btn-style-9 !bg-indigo-600 !text-white hover:!bg-indigo-700 mx-auto group uppercase tracking-widest text-sm shadow-2xl">
+              <h3 className="text-2xl font-bold text-indigo-900 mb-6 font-sans">Ready to find your first remote opportunity?</h3>
+              <Link href="/jobs" className="btn-style-9 !bg-brand !text-white hover:!bg-indigo-700 mx-auto group text-sm shadow-2xl">
                 <div className="btn-shimmer"></div>
                 <span>Browse jobs on JobStream today</span>
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -211,9 +211,9 @@ export default function RemoteModelsArticle() {
       </article>
 
       {/* FOOTER INFO */}
-      <footer className="container mx-auto px-4 max-w-3xl mt-20 pt-10 border-t border-slate-200 flex justify-between items-center opacity-40">
-        <span className="text-[10px] font-black uppercase tracking-widest font-sans">JobStream | Industry Trends</span>
-        <span className="text-[10px] font-black uppercase tracking-widest font-sans">May 2026</span>
+      <footer className="container mx-auto px-4 max-w-3xl mt-20 pt-10 border-t border-line flex justify-between items-center">
+        <span className="text-xs font-bold font-sans">JobStream | Industry Trends</span>
+        <span className="text-xs font-bold font-sans">May 2026</span>
       </footer>
     </div>
   )

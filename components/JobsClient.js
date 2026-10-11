@@ -129,7 +129,7 @@ export default function JobsClient({ initialJobs }) {
     formData.append('file', file)
 
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/match-resume`, formData, {
+      const response = await axios.post('/api/match-resume', formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       })
       setJobs(response.data)
@@ -145,12 +145,9 @@ export default function JobsClient({ initialJobs }) {
   }
 
   const handleSearch = ({ query }) => {
-    const filtered = allJobs.filter(job => {
-      const matchesQuery = job.title.toLowerCase().includes(query.toLowerCase()) || 
-                          job.company.toLowerCase().includes(query.toLowerCase()) ||
-                          job.tags.some(tag => tag.toLowerCase().includes(query.toLowerCase()))
-      return matchesQuery
-    })
+    const q = query.trim().toLowerCase()
+    const filtered = allJobs.filter((job) => !q || [job.title, job.company, job.role, job.description, ...(job.tags || [])]
+      .some((field) => String(field || '').toLowerCase().includes(q)))
     setJobs(filtered)
     setCurrentPage(1)
   }
@@ -185,110 +182,96 @@ export default function JobsClient({ initialJobs }) {
   }
 
   return (
-    <div className="bg-transparent min-h-screen pt-28 pb-20">
-      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="flex items-center justify-between gap-4 mb-6">
-          <h1 className="text-3xl md:text-4xl font-black tracking-tight text-slate-900">Apply to Jobs</h1>
-          <span className="text-sm text-slate-400 font-medium">{allJobs.length} open role{allJobs.length !== 1 ? 's' : ''}</span>
-        </div>
-
-        {/* Search */}
-        <div className="mb-8 max-w-2xl">
-          <SearchBar onSearch={handleSearch} />
-        </div>
-
-        <div className="flex flex-col">
-
-            {rankedByResume && (
-              <div className="mb-8 p-5 rounded-2xl bg-gradient-to-r from-indigo-50 to-blue-50 border border-indigo-200 flex items-center justify-between gap-4">
-                <div>
-                  <p className="text-[10px] font-black uppercase tracking-[0.4em] text-indigo-600 mb-1">Personalized for you</p>
-                  <p className="text-slate-900 text-sm">
-                    These jobs are ranked by how well they match your resume. Top matches first.
-                  </p>
-                </div>
-                <a href="/profile" className="text-xs font-black uppercase tracking-widest px-4 py-2 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white border border-indigo-600 whitespace-nowrap">
-                  Update Resume
-                </a>
-              </div>
-            )}
-            {isMatching ? (
-              <LoadingState message="Analyzing Resume" />
-            ) : loading ? (
-              <div className="flex flex-col items-center justify-center py-32 gap-6">
-                <div className="w-12 h-12 rounded-full border-4 border-indigo-600 border-t-transparent animate-spin" />
-                <p className="text-slate-500 text-xs font-black uppercase tracking-[0.3em]">Loading Jobs…</p>
-              </div>
-            ) : jobs.length > 0 ? (
-              <>
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
-                  {currentJobs.map(job => (
-                    <JobCard key={job.id} job={job} />
-                  ))}
-                </div>
-
-                {/* Pagination Controls */}
-                {totalPages > 1 && (
-                  <div className="mt-20 flex justify-center items-center gap-4">
-                    <button
-                      onClick={() => paginate(Math.max(1, currentPage - 1))}
-                      disabled={currentPage === 1}
-                      className="w-14 h-14 rounded-2xl bg-white shadow-lg border border-slate-200 text-indigo-600 font-bold flex items-center justify-center hover:bg-indigo-50 hover:border-indigo-200 disabled:opacity-30 disabled:cursor-not-allowed transition-all transform active:scale-95"
-                    >
-                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M15 19l-7-7 7-7" />
-                      </svg>
-                    </button>
-                    
-                    <div className="flex items-center gap-2">
-                      {Array.from({ length: totalPages }, (_, i) => {
-                        const page = i + 1;
-                        // Show limited pagination numbers
-                        if (totalPages > 7) {
-                          if (page !== 1 && page !== totalPages && Math.abs(page - currentPage) > 1) {
-                            if (page === 2 || page === totalPages - 1) {
-                               return <span key={i} className="px-2 text-slate-400 font-black tracking-widest">...</span>
-                            }
-                            return null;
-                          }
-                        }
-
-                        return (
-                          <button
-                            key={page}
-                            onClick={() => paginate(page)}
-                            className={`w-14 h-14 rounded-2xl font-black text-sm flex items-center justify-center transition-all shadow-md border ${
-                              currentPage === page
-                                ? 'bg-indigo-600 border-indigo-600 text-white shadow-indigo-500/40 ring-4 ring-indigo-500/10'
-                                : 'bg-white border-slate-200 text-slate-500 hover:bg-slate-50 hover:border-indigo-200 hover:text-indigo-600'
-                            }`}
-                          >
-                            {page}
-                          </button>
-                        )
-                      })}
-                    </div>
-
-                    <button
-                      onClick={() => paginate(Math.min(totalPages, currentPage + 1))}
-                      disabled={currentPage === totalPages}
-                      className="w-14 h-14 rounded-2xl bg-white shadow-lg border border-slate-200 text-indigo-600 font-bold flex items-center justify-center hover:bg-indigo-50 hover:border-indigo-200 disabled:opacity-30 disabled:cursor-not-allowed transition-all transform active:scale-95"
-                    >
-                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M9 5l7 7-7 7" />
-                      </svg>
-                    </button>
-                  </div>
-                )}
-              </>
-            ) : (
-              <div className="bg-slate-50 rounded-[3rem] p-20 text-center border border-dashed border-slate-300 shadow-sm">
-                <h3 className="text-2xl font-black text-slate-900 mb-3 uppercase">Nothing Found</h3>
-              </div>
-            )}
+    <div className="min-h-screen bg-white pb-20 pt-16 text-ink">
+      <div className="border-b border-line bg-surface">
+        <div className="mx-auto max-w-[1200px] px-6 py-12">
+          <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <h1 className="text-[32px] font-bold tracking-[-0.02em] md:text-[40px]">Find jobs</h1>
+              <p className="mt-1 text-body">Apply by taking a short skills test and an AI interview. It is free.</p>
+            </div>
+            <span className="text-sm text-muted">{allJobs.length} open role{allJobs.length !== 1 ? 's' : ''}</span>
+          </div>
+          <div className="max-w-2xl">
+            <SearchBar onSearch={handleSearch} />
           </div>
         </div>
       </div>
+
+      <div className="mx-auto max-w-[1200px] px-6 pt-10">
+        {rankedByResume && (
+          <div className="mb-8 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-[#C7CBF5] bg-brand-soft p-5">
+            <div>
+              <p className="mb-1 text-sm font-semibold text-brand-dark">Personalised for you</p>
+              <p className="text-sm text-body">These jobs are ranked by how well they match your resume, best first.</p>
+            </div>
+            <a href="/profile" className="whitespace-nowrap rounded-[10px] bg-brand px-4 py-2.5 text-sm font-semibold text-white hover:bg-brand-dark">Update resume</a>
+          </div>
+        )}
+        {isMatching ? (
+          <LoadingState message="Reading your resume" />
+        ) : loading ? (
+          <div className="flex flex-col items-center justify-center gap-4 py-32" role="status">
+            <div className="h-10 w-10 animate-spin rounded-full border-4 border-brand border-t-transparent" />
+            <p className="text-sm text-muted">Loading jobs…</p>
+          </div>
+        ) : jobs.length > 0 ? (
+          <>
+            <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
+              {currentJobs.map((job) => (
+                <JobCard key={job.id} job={job} />
+              ))}
+            </div>
+
+            {totalPages > 1 && (
+              <nav aria-label="Pages" className="mt-14 flex items-center justify-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => paginate(Math.max(1, currentPage - 1))}
+                  disabled={currentPage === 1}
+                  aria-label="Previous page"
+                  className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-line bg-white text-ink hover:bg-surface disabled:cursor-not-allowed disabled:opacity-40"
+                >
+                  <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
+                </button>
+                {Array.from({ length: totalPages }, (_, i) => {
+                  const page = i + 1
+                  if (totalPages > 7 && page !== 1 && page !== totalPages && Math.abs(page - currentPage) > 1) {
+                    return page === 2 || page === totalPages - 1 ? <span key={page} className="px-1 text-muted">…</span> : null
+                  }
+                  return (
+                    <button
+                      key={page}
+                      type="button"
+                      onClick={() => paginate(page)}
+                      aria-current={currentPage === page ? 'page' : undefined}
+                      className={`inline-flex h-11 min-w-[44px] items-center justify-center rounded-xl border px-3 text-sm font-semibold ${
+                        currentPage === page ? 'border-brand bg-brand text-white' : 'border-line bg-white text-body hover:bg-surface'
+                      }`}
+                    >
+                      {page}
+                    </button>
+                  )
+                })}
+                <button
+                  type="button"
+                  onClick={() => paginate(Math.min(totalPages, currentPage + 1))}
+                  disabled={currentPage === totalPages}
+                  aria-label="Next page"
+                  className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-line bg-white text-ink hover:bg-surface disabled:cursor-not-allowed disabled:opacity-40"
+                >
+                  <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+                </button>
+              </nav>
+            )}
+          </>
+        ) : (
+          <div className="rounded-2xl border border-dashed border-[#CDD2DA] bg-surface px-6 py-16 text-center">
+            <h2 className="mb-2 text-xl font-semibold">No jobs match that search</h2>
+            <p className="text-body">Try a different word, or clear the search to see every open role.</p>
+          </div>
+        )}
+      </div>
+    </div>
   )
 }

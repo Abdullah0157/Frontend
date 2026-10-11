@@ -3,7 +3,7 @@ import { formatPay } from '@/lib/pay'
 import { query } from '@/lib/db'
 
 export const metadata = {
-  title: 'Find Jobs | JobStream AI',
+  title: 'Find jobs',
   description: 'Browse the latest remote and full-time tech jobs matched by AI.',
 }
 

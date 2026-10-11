@@ -1,127 +1,56 @@
-'use client'
-
 import Link from 'next/link'
+
+export const metadata = { title: 'About' }
+
+// About page (design option A). Replaced copy that claimed "85k+" and "12k+"
+// results JobStream does not have: everything here is true today.
+const BELIEFS = [
+  { title: 'Show, do not tell', text: 'A CV says what someone has done. A short, fair test shows what they can do now. Both matter; we add the second.' },
+  { title: 'People decide', text: 'Scores help hiring teams focus. JobStream never rejects anyone on its own, and every number comes with the evidence behind it.' },
+  { title: 'Fair to everyone', text: 'Everyone for a job is tested the same way. Accent is never scored, and candidates get one fair attempt per job.' },
+]
 
 export default function AboutPage() {
   return (
-    <div className="bg-transparent min-h-screen pt-32 pb-24">
-      {/* SECTION 1: OUR STORY (Refined) */}
-      <section className="relative py-24 z-10 text-center">
-        <div className="container mx-auto px-4">
-          <span className="text-blue-600 font-black text-xs uppercase tracking-[0.5em] mb-6 block animate-fade-in">Established 2026</span>
-          <h1 className="text-4xl md:text-6xl font-black text-slate-900 mb-12 tracking-tighter leading-tight uppercase animate-fade-in">
-            A Story of <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">
-              Agentic Discovery
-            </span>
-          </h1>
-          <div className="max-w-3xl mx-auto space-y-8 text-slate-500 text-lg md:text-xl leading-relaxed font-medium animate-fade-in">
-            <p>
-              JobStream was born from a single realization: the traditional hiring process is static, uninspired, and slow. In a world moving at the speed of thought, we needed a platform that could keep up.
-            </p>
-            <p>
-              We built an agentic ecosystem—a place where talent isn't just found, it's discovered through vision. Our journey started in a small studio and has now evolved into a global network of elite creators and visionary companies.
-            </p>
-          </div>
-        </div>
+    <div className="bg-white pt-16 text-ink">
+      <section className="mx-auto max-w-[760px] px-6 pb-16 pt-16 md:pt-24">
+        <p className="mb-4 text-sm font-semibold text-brand">About JobStream</p>
+        <h1 className="mb-6 text-[40px] font-bold leading-[1.06] tracking-[-0.03em] md:text-[52px]">Hiring should rest on evidence.</h1>
+        <p className="mb-4 text-lg text-body">
+          Most hiring still starts with a pile of CVs and a guess. Good people get missed because their CV is plain, and confident CVs get
+          interviews they cannot back up.
+        </p>
+        <p className="text-lg text-body">
+          JobStream gives every applicant the same short skills test for the job and a brief AI interview, then gives the company a report
+          that shows what each person can actually do. It saves hiring teams time, and it gives candidates a fair way to be seen.
+        </p>
       </section>
 
-      {/* SECTION 2: THE SUCCESS EQUATION (Simplified 3D) */}
-      <section className="py-32 z-10 bg-gradient-to-br from-slate-50 to-blue-50 rounded-[5rem] mx-4 md:mx-10 border border-slate-200 shadow-2xl backdrop-blur-sm">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-24">
-            <span className="text-blue-600 font-black text-[10px] uppercase tracking-[0.5em] mb-6 block">Our Impact</span>
-            <h2 className="text-3xl md:text-5xl font-black text-slate-900 mb-6 tracking-tighter uppercase leading-none">The Liftoff <br/> Equation</h2>
-            <p className="text-slate-500 font-medium max-w-xl mx-auto">Visualizing the journey from first discovery to successful placement.</p>
-          </div>
-
-          <div className="flex flex-col md:flex-row justify-center items-center gap-20 perspective-1000">
-            {/* 3D Pillar: APPLIED */}
-            <div className="group relative flex flex-col items-center">
-              <div
-                className="w-32 bg-slate-100 border border-slate-300 rounded-2xl relative preserve-3d transition-all duration-700 group-hover:rotate-y-12 group-hover:-rotate-x-12 shadow-xl"
-                style={{ height: '300px' }}
-              >
-                {/* Glow Core */}
-                <div className="absolute inset-x-4 bottom-0 bg-blue-500/10 rounded-t-xl transition-all duration-1000 h-[85%] group-hover:h-[90%]"></div>
-                {/* 3D Label */}
-                <div className="absolute -top-12 left-0 right-0 text-center font-black text-blue-600 text-3xl animate-pulse">85k+</div>
-              </div>
-              <p className="mt-8 text-slate-900 font-black text-xs uppercase tracking-[0.3em]">Applications</p>
-            </div>
-
-            {/* The "Bridge" Animation */}
-            <div className="hidden md:flex items-center">
-              <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full animate-pulse shadow-[0_0_20px_rgba(59,130,246,0.5)]"></div>
-            </div>
-
-            {/* 3D Pillar: HIRED */}
-            <div className="group relative flex flex-col items-center">
-              <div
-                className="w-32 bg-indigo-600 rounded-2xl relative preserve-3d transition-all duration-700 group-hover:rotate-y-12 group-hover:-rotate-x-12 shadow-[0_40px_80px_-15px_rgba(79,70,229,0.4)]"
-                style={{ height: '300px' }}
-              >
-                {/* Shimmer Effect */}
-                <div className="btn-shimmer rounded-2xl opacity-30"></div>
-                {/* Success Core */}
-                <div className="absolute inset-x-4 bottom-0 bg-slate-900/20 rounded-t-xl transition-all duration-1000 h-[40%] group-hover:h-[45%]"></div>
-                {/* 3D Label */}
-                <div className="absolute -top-12 left-0 right-0 text-center font-black text-white text-3xl drop-shadow-xl">12k+</div>
-              </div>
-              <p className="mt-8 text-slate-900 font-black text-xs uppercase tracking-[0.3em]">Hired</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* SECTION 3: TESTIMONIALS (Glassmorphism) */}
-      <section className="py-40 z-10">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-24">
-            <h2 className="text-3xl md:text-5xl font-black text-slate-900 mb-6 tracking-tighter uppercase">What the Galaxy Says</h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-            {[
-              { name: 'Sarah Chen', role: 'Design Lead @ Sphere', text: 'JobStream completely changed how I look for roles. The discovery process is actually fun and beautiful.' },
-              { name: 'Marcus Thorne', role: 'CEO @ Flux', text: 'We found our entire core engineering team through this platform. The quality of talent is unmatched.' },
-              { name: 'Aria Blue', role: 'Creator @ Origin', text: 'The agentic matching is spooky good. I didn’t even know these opportunities existed until now.' }
-            ].map((t, i) => (
-              <div key={i} className="bg-white border border-slate-200 p-12 rounded-[3rem] shadow-sm transition-all hover:shadow-2xl hover:shadow-blue-500/10 hover:-translate-y-3 group relative overflow-hidden">
-                <div className="absolute -top-10 -right-10 w-32 h-32 bg-blue-500/5 rounded-full group-hover:scale-150 transition-transform duration-700"></div>
-                <p className="text-slate-700 font-medium italic mb-10 text-lg leading-relaxed">"{t.text}"</p>
-                <div>
-                  <p className="text-slate-900 font-black uppercase tracking-widest text-sm">{t.name}</p>
-                  <p className="text-blue-600 font-bold text-[10px] uppercase tracking-[0.3em]">{t.role}</p>
-                </div>
+      <section className="border-y border-line bg-surface">
+        <div className="mx-auto max-w-[1200px] px-6 py-20">
+          <h2 className="mb-10 text-[32px] font-bold tracking-[-0.02em] md:text-[38px]">What we believe</h2>
+          <div className="flex flex-wrap gap-5">
+            {BELIEFS.map((b) => (
+              <div key={b.title} className="flex-[1_1_300px] rounded-2xl border border-line bg-white p-7">
+                <h3 className="mb-2 text-xl font-semibold">{b.title}</h3>
+                <p className="text-body">{b.text}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* SECTION 4: FINAL CTA */}
-      <section className="py-24 z-10 text-center">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl md:text-5xl font-black text-slate-900 mb-12 tracking-tighter uppercase">Write your own Story</h2>
-          <div className="flex justify-center">
-            <Link href="/jobs" className="btn-style-9 group uppercase tracking-widest text-sm">
-              <div className="btn-shimmer"></div>
-              <span>GET STARTED</span>
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-              </svg>
-            </Link>
-          </div>
+      <section className="mx-auto max-w-[760px] px-6 py-20">
+        <h2 className="mb-4 text-[28px] font-bold tracking-[-0.02em] md:text-[32px]">Where we are today</h2>
+        <p className="mb-8 text-lg text-body">
+          JobStream is new. Tests are ready for software developers, customer service agents, English level and general workplace skills,
+          with more fields on the way. We are working with our first companies and would like to hear from yours.
+        </p>
+        <div className="flex flex-wrap gap-3">
+          <Link href="/signup/company" className="inline-flex items-center justify-center rounded-xl bg-brand px-6 py-3.5 font-semibold text-white hover:bg-brand-dark transition-colors">Post a job</Link>
+          <a href="https://www.linkedin.com/company/jobstream-opportunity" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center rounded-xl border border-[#CDD2DA] bg-white px-6 py-3.5 font-semibold text-ink hover:bg-surface transition-colors">Contact us</a>
         </div>
       </section>
-
-      <style jsx>{`
-        .perspective-1000 { perspective: 1000px; }
-        .preserve-3d { transform-style: preserve-3d; }
-        .rotate-x-45 { transform: rotateX(45deg); }
-        .rotate-z-45 { transform: rotateZ(45deg); }
-      `}</style>
     </div>
   )
 }

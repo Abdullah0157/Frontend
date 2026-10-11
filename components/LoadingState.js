@@ -15,10 +15,10 @@ export default function LoadingState({ message = "Scanning Network" }) {
       
       {/* Dynamic Text with Shimmer */}
       <div className="mt-12 text-center">
-        <h3 className="text-xl font-black text-slate-900 uppercase tracking-[0.3em] animate-pulse">
+        <h3 className="text-xl font-bold text-ink animate-pulse">
           {message}
         </h3>
-        <p className="text-indigo-600/70 text-[10px] font-bold uppercase tracking-widest mt-2">
+        <p className="text-brand/70 text-xs font-bold mt-2">
           {message === "Analyzing Resume" ? "Our AI is matching your skills..." : "Fetching 1000+ global opportunities..."}
         </p>
       </div>

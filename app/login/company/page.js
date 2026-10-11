@@ -62,9 +62,9 @@ function CompanyLoginInner() {
       footer={
         <>
           New company?{' '}
-          <Link href="/signup/company" className="font-semibold text-indigo-600 hover:text-indigo-700">Create an account</Link>
+          <Link href="/signup/company" className="font-semibold text-brand hover:text-brand-dark">Create an account</Link>
           <span className="text-slate-300"> · </span>
-          <Link href="/login" className="font-semibold text-indigo-600 hover:text-indigo-700">Candidate sign in</Link>
+          <Link href="/login" className="font-semibold text-brand hover:text-brand-dark">Candidate sign in</Link>
         </>
       }
     >
@@ -92,6 +92,7 @@ function CompanyLoginInner() {
           onChange={(e) => setForm({ ...form, password: e.target.value })}
           show={showPassword}
           onToggle={() => setShowPassword((s) => !s)}
+          action={<Link href="/forgot-password" className="text-xs font-semibold text-brand hover:text-brand-dark">Forgot password?</Link>}
         />
         <button type="submit" disabled={loading} className={authPrimaryBtn}>
           {loading ? 'Signing in…' : 'Sign in'}
@@ -103,7 +104,7 @@ function CompanyLoginInner() {
 
 export default function CompanyLoginPage() {
   return (
-    <Suspense>
+    <Suspense fallback={<div className="min-h-screen" aria-busy="true" />}>
       <CompanyLoginInner />
     </Suspense>
   )

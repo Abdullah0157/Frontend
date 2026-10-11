@@ -106,15 +106,13 @@ export default function AdminSidebar({ email }) {
       <MobileMenuButton open={open} onToggle={() => setOpen((o) => !o)} />
       <MobileBackdrop open={open} onClose={() => setOpen(false)} />
       <aside
-        className={`fixed top-0 left-0 z-[60] h-screen w-24 bg-white border-r border-slate-200/80 flex flex-col items-center transform transition-transform duration-300 md:translate-x-0 ${
-          open ? 'translate-x-0' : '-translate-x-full'
-        }`}
+        className={`fixed top-0 left-0 z-[60] h-screen w-24 bg-white border-r border-line/80 flex flex-col items-center transform transition-transform duration-300 md:translate-x-0 ${ open ? 'translate-x-0' : '-translate-x-full' }`}
       >
         {/* Brand lives in the topbar; this just aligns the first nav item. */}
         <div className="h-4 flex-shrink-0" />
 
         {/* Nav */}
-        <nav className="flex-1 w-full px-2 py-3 space-y-1 overflow-y-auto">
+        <nav aria-label="Admin" className="flex-1 w-full px-2 py-3 space-y-1 overflow-y-auto">
           {NAV.map((item) => {
             const active = isActive(item.href)
             return (
@@ -124,13 +122,11 @@ export default function AdminSidebar({ email }) {
                 className="flex flex-col items-center gap-1.5 py-2.5 rounded-2xl group"
               >
                 <span
-                  className={`w-12 h-9 rounded-xl flex items-center justify-center transition-colors ${
-                    active ? 'bg-indigo-50 text-indigo-600' : 'text-slate-400 group-hover:text-slate-700 group-hover:bg-slate-50'
-                  }`}
+                  className={`w-12 h-9 rounded-xl flex items-center justify-center transition-colors ${ active ? 'bg-indigo-50 text-brand' : 'text-muted group-hover:text-slate-700 group-hover:bg-slate-50' }`}
                 >
                   {item.icon}
                 </span>
-                <span className={`text-[11px] font-semibold leading-none text-center ${active ? 'text-indigo-600' : 'text-slate-500 group-hover:text-slate-700'}`}>
+                <span className={`text-xs font-semibold leading-none text-center ${active ? 'text-brand' : 'text-muted group-hover:text-slate-700'}`}>
                   {item.label}
                 </span>
               </Link>

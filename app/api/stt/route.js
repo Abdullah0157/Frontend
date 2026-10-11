@@ -1,6 +1,14 @@
 import { NextResponse } from 'next/server'
+import { apiUser } from '@/lib/roles'
+import { limitOrNull } from '@/lib/rate-limit'
 
 export async function POST(req) {
+  // Logged-in users only, with an hourly limit per user (speech to text uses free
+  // AI or voice quota that one person must not be able to use up).
+  const { user: caller, response: denied } = await apiUser()
+  if (denied) return denied
+  const limited = await limitOrNull(req, [{ bucket: 'stt', limit: 400, windowSec: 3600, userId: caller.id }])
+  if (limited) return limited
   try {
     const key = process.env.GROQ_API_KEY
     if (!key) return NextResponse.json({ error: 'No GROQ_API_KEY' }, { status: 500 })

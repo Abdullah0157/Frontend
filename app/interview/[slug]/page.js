@@ -8,6 +8,14 @@ export const dynamic = 'force-dynamic'
 
 const ROLE_LABELS = {
   'swe-backend': 'Backend Engineering',
+  'swe-frontend': 'Frontend Engineering',
+  'swe-fullstack': 'Full Stack Engineering',
+  'swe-mobile': 'Mobile Engineering',
+  'swe-qa': 'QA / Test Automation',
+  'swe-devops': 'DevOps / Cloud',
+  'general': 'General Workplace',
+  'customer_service': 'Customer Service',
+  'english': 'English Test',
   'pm-consumer': 'Product Management',
   'sales-ae': 'Sales (AE)',
 }
@@ -28,8 +36,8 @@ export default async function ApplicationHubPage({ params }) {
     return (
       <div className="min-h-screen pt-32 pb-24 px-4">
         <div className="container mx-auto max-w-2xl text-center">
-          <h1 className="text-3xl font-black uppercase text-slate-900 mb-4">Position not found</h1>
-          <p className="text-slate-500">The link may be invalid or the role may have closed.</p>
+          <h1 className="text-3xl font-bold text-ink mb-4">Position not found</h1>
+          <p className="text-muted">The link may be invalid or the role may have closed.</p>
         </div>
       </div>
     )
@@ -88,7 +96,15 @@ export default async function ApplicationHubPage({ params }) {
       key: `assess-${code}`, label: `Skills Assessment · ${ROLE_LABELS[code] || code}`, kind: 'assessment',
       done: !!doneAt,
       statusDone: doneAt ? `Completed ${fmt(doneAt)}` : null,
-      statusTodo: 'Adaptive scenario, coding & MCQ questions',
+      statusTodo: code.startsWith('swe-')
+        ? 'Timed written test: knowledge, a coding task, a code review and work situations (about 1 hour)'
+        : code === 'customer_service'
+          ? 'Timed test: typing, customer situations, a written reply and accuracy (about 25 minutes)'
+          : code === 'english'
+            ? 'Speaking, listening and reading in English, with a microphone (about 18 minutes)'
+          : code === 'general'
+            ? 'Timed test: work situations, a short email, numbers and attention to detail (about 30 minutes)'
+            : 'Adaptive scenario, coding & MCQ questions',
       href: `/dashboard/assessment?jobId=${job.id}&role=${code}&slug=${slug}`,
     })
   }

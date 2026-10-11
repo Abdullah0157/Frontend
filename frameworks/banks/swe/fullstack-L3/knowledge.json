@@ -1,0 +1,438 @@
+[
+  {
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "secondary_skill_codes": [
+      "engineering.system_design.trade_offs"
+    ],
+    "bank_key": "swe.fullstack.k.web-and-mobile-auth",
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.security.auth",
+    "prompt": "One API serves both your browser single-page app and your native iOS and Android apps. How should each kind of client keep the user signed in?",
+    "explanation": "Correct: in the browser, an HttpOnly cookie keeps the session out of reach of any injected script, and because the browser sends it automatically it needs CSRF protection (SameSite plus a token or Origin check). A native app has no shared browser cookie jar and no other sites sending requests in its name; the operating system's keychain or keystore is the safe place for its token, which it sends as a bearer header. Wrong (localStorage or a plain file for both): any script on the page can read localStorage, and a plain file can be copied from backups or rooted devices; one code path is not worth that. Wrong (store the password): the most valuable secret sits on the device and crosses the network constantly, and access cannot be revoked without changing the password. Wrong (localStorage on web, cookie on mobile): it swaps the strengths around; the web token is exposed to scripts, and a phone does not make cookies safer than its secure storage.",
+    "expected_time_s": 55,
+    "choices": [
+      "Web and mobile: a long-lived token in `localStorage` or a plain app file, so there is one code path",
+      "Web: an HttpOnly session cookie with CSRF protection; mobile: a token kept in the OS secure storage",
+      "Web and mobile: save the password on the device and send it with each request, so nothing expires",
+      "Web: a token in `localStorage`; mobile: a session cookie, as phones protect cookies better than browsers"
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "group": "token-storage"
+  },
+  {
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "fullstack"
+    ],
+    "levels": [
+      "L3",
+      "L4"
+    ],
+    "language": null,
+    "secondary_skill_codes": [
+      "engineering.concurrency.fundamentals"
+    ],
+    "bank_key": "swe.fullstack.k.refresh-token-single-flight",
+    "difficulty": "hard",
+    "primary_skill_code": "engineering.security.auth",
+    "prompt": "Access tokens expire after 15 minutes. Refresh tokens are rotated: each use of `/auth/refresh` returns a new refresh token and makes the old one invalid. When a user comes back to an idle tab, the page sends five API calls at once; all five get `401`, each one calls `/auth/refresh`, and the user is often signed out. What is the best fix in the client?",
+    "explanation": "Correct: the first refresh succeeds and rotates the token, so the other four refreshes send a token that is now invalid (and many servers treat that reuse as theft and end the whole session). Sharing one in-flight refresh promise, then retrying the waiting requests with the new access token, fixes the race. (Several open tabs need the same idea across tabs, for example a lock or a broadcast channel.) Wrong (turn off rotation): it hides the race by giving up a protection that detects stolen refresh tokens. Wrong (retry the refresh): each retry still sends the old, already-used refresh token, so it keeps failing. Wrong (always sequential): it does avoid the race, but it makes every page slower all the time to fix a problem that only happens at refresh.",
+    "expected_time_s": 70,
+    "choices": [
+      "Let the first 401 start one refresh; the other requests wait for that same refresh, then retry",
+      "Turn off refresh token rotation, so that the same refresh token can be used many times over",
+      "Retry each failed refresh call up to three times, with a short delay between the attempts",
+      "Always send API calls one after another instead of in parallel, so only one can fail at a time"
+    ],
+    "answer": {
+      "correct": 0
+    }
+  },
+  {
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "secondary_skill_codes": [
+      "engineering.security.auth"
+    ],
+    "bank_key": "swe.fullstack.k.cross-origin-fetch-credentials",
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.backend.http",
+    "prompt": "The web app at `https://app.example.com` signs in with `fetch('https://api.example.com/login', { method: 'POST', body })`. The API answers 200 with `Set-Cookie: session=...; HttpOnly; Secure; SameSite=Lax`, and its CORS headers allow the app's exact origin with credentials. The next call, `fetch('https://api.example.com/me')`, returns 401. What is the cause?",
+    "explanation": "Correct: the default credentials mode of `fetch` is `same-origin`, so for a request to another origin the browser ignores `Set-Cookie` in the response and attaches no cookies. Adding `credentials: 'include'` to both calls fixes it, with the API's exact-origin CORS headers kept as they are. Wrong (SameSite=Lax): SameSite is about sites, not origins; `app.example.com` and `api.example.com` are the same site, so Lax cookies are sent between them. Wrong (HttpOnly not sent by fetch): HttpOnly only hides the cookie from scripts; fetch sends it when credentials are included. Wrong (Allow-Origin on the request): `Access-Control-Allow-Origin` is a response header that the server sends; a request carrying it has no effect.",
+    "expected_time_s": 60,
+    "choices": [
+      "HttpOnly cookies are only sent when the whole page loads, and never on requests made with `fetch`",
+      "`SameSite=Lax` blocks cookies between `app.example.com` and `api.example.com`, so it must be `None`",
+      "Both calls need `credentials: 'include'`; without it, a cross-origin fetch does not store or send cookies",
+      "The `/me` request must itself carry an `Access-Control-Allow-Origin` header that names the app"
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "group": "cors-credentials"
+  },
+  {
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "secondary_skill_codes": [
+      "engineering.operations.reliability"
+    ],
+    "bank_key": "swe.fullstack.k.rename-field-open-tabs",
+    "difficulty": "hard",
+    "primary_skill_code": "engineering.backend.api_design",
+    "prompt": "You renamed the JSON field `total` to `totalAmount` in an API response, updated the single-page app to read the new name, and deployed both at the same moment. For the next two days, error logs show `Cannot read properties of undefined` coming from the app. What is the best way to ship a rename like this next time?",
+    "explanation": "Correct: the errors come from browser tabs that were opened before the deploy and are still running the old JavaScript, which reads `total`. Users can keep a tab open for days. Adding the new field first, moving the app over, and removing the old field only when old app versions no longer call the API (the expand and contract pattern) means no running version breaks. Wrong (API first, then app): the open tabs still run the old code, and the old field is gone either way. Wrong (deploy at night): fewer people are affected, but every tab left open overnight still breaks. Wrong (no-cache headers): the API response is already fresh and has the new field; the problem is old code expecting the old field.",
+    "expected_time_s": 60,
+    "choices": [
+      "Deploy the API first and the app a few minutes later, so the new field exists before the app needs it",
+      "Return both `total` and `totalAmount` for a while, then remove `total` once old app versions are gone",
+      "Deploy both at exactly the same moment, but late at night, when far fewer people have the app open",
+      "Send headers telling browsers not to cache API responses, so every client sees the new field at once"
+    ],
+    "answer": {
+      "correct": 1
+    }
+  },
+  {
+    "type": "multi_select",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "secondary_skill_codes": [
+      "engineering.system_design.trade_offs"
+    ],
+    "bank_key": "swe.fullstack.k.ssr-benefits",
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.frontend.rendering",
+    "prompt": "You are choosing between server-side rendering (SSR) and client-side rendering (CSR) for a public product catalogue. Which are real advantages of SSR here? Select all that apply.",
+    "choices": [
+      "Your servers do less work, because the browser builds the HTML for each page view",
+      "The product content is in the first HTML response, so crawlers and link previews can read it",
+      "Pages need no JavaScript at all to become interactive, for example for \"Add to basket\"",
+      "People on slow phones see the content sooner, before all of the JavaScript has loaded",
+      "Each user's personalised page can be cached once by the CDN and shared with every user"
+    ],
+    "explanation": "Correct (content in the first HTML): search crawlers and link-preview bots get the products without running your JavaScript. Correct (faster first view on slow phones): the HTML can be shown as soon as it arrives, while the bundle is still downloading. Wrong (servers do less work): that describes CSR; with SSR the server renders HTML for each request, so it does more work. Wrong (no JavaScript needed): interactive parts still need JavaScript, which hydrates the server HTML. Wrong (share personalised pages through the CDN): a page built for one user must not be cached and shown to others; SSR does not change that.",
+    "expected_time_s": 55,
+    "answer": {
+      "correct": [
+        1,
+        3
+      ]
+    }
+  },
+  {
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "secondary_skill_codes": [
+      "engineering.system_design.consistency"
+    ],
+    "bank_key": "swe.fullstack.k.optimistic-update-failure",
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.frontend.components_state",
+    "prompt": "A \"Like\" button increases the count on screen at once (an optimistic update), then sends `POST /posts/42/like`. Sometimes the request fails. What should the client do when it fails?",
+    "explanation": "Correct: an optimistic update is a guess, so a failure must roll the screen back to the last confirmed state and tell the user, and the client should take the real count from the server's next response, since other people's likes change it too. Wrong (keep the count): the screen now shows something the server never stored, and the user believes the like was saved. Wrong (silent endless retries): the user is never told, the screen may stay wrong for a long time, and repeated non-idempotent requests can be counted twice. Wrong (reload the page): it throws away the user's scroll position and anything else they were doing, which is far heavier than undoing one change.",
+    "expected_time_s": 50,
+    "choices": [
+      "Reload the whole page, so that every value shown on it comes fresh from the server again",
+      "Keep the new count on screen, because most requests succeed and users rarely notice the difference",
+      "Retry the request silently every few seconds until it succeeds, however long that takes",
+      "Undo the change on screen, show that it failed, and use the server's count once it is known"
+    ],
+    "answer": {
+      "correct": 3
+    }
+  },
+  {
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "secondary_skill_codes": [
+      "engineering.security.auth"
+    ],
+    "bank_key": "swe.fullstack.k.presigned-upload",
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.system_design.scaling",
+    "prompt": "Users upload videos of up to 2 GB. Today the browser sends each file to your API, which passes it on to object storage (such as S3). During busy hours the API servers run out of memory and uploads time out. Which design is best?",
+    "explanation": "Correct: a presigned URL lets the browser upload one named object, for a few minutes, straight to storage, so the large file never passes through your API servers. The API stays in control: it decides the object name, can limit size and type, and records the file once the client (or a storage event) confirms the upload. Wrong (bigger limits, more servers): it pays more to keep a design where every byte goes through the API, and long uploads still tie up servers. Wrong (storage keys in the browser): anyone could take the keys and read, overwrite or delete everything in the bucket. Wrong (Base64 in JSON): it makes each file about a third bigger and forces the API to hold and parse it, which makes the memory problem worse.",
+    "expected_time_s": 55,
+    "choices": [
+      "Put the storage access keys in the app's config, so that the browser can upload with them directly",
+      "Raise the API's request size limit and timeouts, and add more API servers to cover the busy hours of the day",
+      "The API returns a short-lived presigned URL for one object; the browser uploads straight to storage",
+      "Base64-encode each file in the browser and send it to the API inside a JSON request body"
+    ],
+    "answer": {
+      "correct": 2
+    }
+  },
+  {
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "secondary_skill_codes": [
+      "engineering.system_design.trade_offs"
+    ],
+    "bank_key": "swe.fullstack.k.pages-vs-infinite-scroll",
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.backend.api_design",
+    "prompt": "Two screens need list APIs. (1) A support tool where agents jump to page 37 of the search results and share a link to that page with a colleague. (2) A news feed that people scroll through endlessly while new posts keep arriving at the top. Which API design fits each screen best?",
+    "explanation": "Correct: jumping to page 37 and sharing a link to it needs numbered pages, which offset paging gives; for a support tool's search results that is acceptable. A feed with new posts arriving at the top makes offsets shift, so users see items twice or miss some; a cursor (\"items after this one\") stays stable and stays fast however far people scroll. Wrong (reversed): a cursor cannot jump to page 37, and offsets on a live feed cause duplicates. Wrong (offset for both): simple, but the feed gets duplicates and skipped posts, and deep offsets get slower. Wrong (full list at once): huge responses and memory use, and the feed is never complete anyway.",
+    "expected_time_s": 55,
+    "choices": [
+      "(1) Page numbers with offset and a total count; (2) cursor-based loading with a `nextCursor`",
+      "(1) Cursor-based loading with a `nextCursor`; (2) page numbers with offset and a total count",
+      "Both: page numbers with offset and a total count, because it is simpler and works everywhere",
+      "Both: the full list in one response, and the client shows it in pages or while scrolling"
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "group": "cursor-pagination"
+  },
+  {
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "secondary_skill_codes": [
+      "engineering.frontend.browser_network"
+    ],
+    "bank_key": "swe.fullstack.k.realtime-transport-choice",
+    "difficulty": "easy",
+    "primary_skill_code": "engineering.system_design.trade_offs",
+    "prompt": "Choose how the browser gets updates for each feature: (1) a chat with typing indicators, where both sides send many small messages; (2) a build log that streams progress from the server only; (3) an account status that changes about once a day and only needs checking when the page is opened. Which choice fits best?",
+    "explanation": "Correct: chat needs low-latency messages in both directions, which is what a WebSocket is for. The build log only flows from server to browser, and server-sent events do that over plain HTTP with automatic reconnection built into the browser. A status that changes once a day needs no open connection; a normal request when the page loads is enough. Wrong (SSE for chat): SSE only sends from the server, so every chat message and keystroke would need a separate request; and a socket for a once-a-day value wastes a connection. Wrong (polling every second): slow-feeling chat, a lot of wasted requests, and an open stream for (3) adds nothing. Wrong (WebSocket for everything): it works, but it adds connection handling for (2) that SSE gives for free, and keeps a connection open for a value that almost never changes.",
+    "expected_time_s": 60,
+    "choices": [
+      "A WebSocket for all three, since one kind of live connection is simpler to run",
+      "(1) Server-sent events; (2) a WebSocket; (3) a WebSocket that stays open all day",
+      "(1) Polling every second; (2) polling every second; (3) server-sent events",
+      "(1) WebSocket; (2) server-sent events; (3) a normal request when the page loads"
+    ],
+    "answer": {
+      "correct": 3
+    }
+  },
+  {
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "fullstack"
+    ],
+    "levels": [
+      "L3",
+      "L4"
+    ],
+    "language": null,
+    "secondary_skill_codes": [
+      "engineering.frontend.browser_network"
+    ],
+    "bank_key": "swe.fullstack.k.backend-for-frontend",
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.backend.api_design",
+    "prompt": "On load, your mobile web home screen makes 14 API calls to different services, and several of them must wait for the results of others. On slow phone networks it takes 8 seconds to appear, and most fields in the responses are never used. Which change helps most?",
+    "explanation": "Correct: each round trip on a slow phone network is expensive, and calls that wait for each other multiply that cost. A backend-for-frontend endpoint makes those calls inside the data centre, where they are fast, and sends one response trimmed to what this screen needs. Wrong (Cache-Control): it can speed up repeat visits for data that may be cached, but the first load is just as slow and personal data often cannot be cached. Wrong (longer timeout): fewer errors, but the screen is no faster. Wrong (one after another): it removes the parallelism that remains and makes the screen slower.",
+    "expected_time_s": 55,
+    "choices": [
+      "Raise the client's request timeout, so that slow calls on phone networks no longer fail",
+      "Add `Cache-Control` headers to each of the 14 responses, so that repeat visits load from cache",
+      "Add a backend-for-frontend endpoint that calls the services and returns only what the screen uses",
+      "Send the 14 calls one after another rather than in parallel, to avoid overloading the phone's network"
+    ],
+    "answer": {
+      "correct": 2
+    }
+  },
+  {
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "secondary_skill_codes": [
+      "engineering.security.auth"
+    ],
+    "bank_key": "swe.fullstack.k.publishable-vs-secret-key",
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.security.data_protection",
+    "prompt": "A payment provider gives you a publishable key and a secret key. Your checkout page must collect card details and charge the total of the user's basket. How should the keys and the amount be handled?",
+    "explanation": "Correct: the publishable key is designed to be public and can only do safe things such as collecting card details; the secret key can charge and refund, so it must stay on the server. The server works out the amount from its own record of the basket, because anything from the browser can be changed by the user. Wrong (both keys in the frontend): the secret key becomes public, and the amount comes from code the user controls. Wrong (secret key in the browser, check later): the key leaks to every visitor, and checking after the charge is too late. Wrong (server trusts the browser's amount): the keys are handled correctly, but a user can edit the request and pay 1 instead of 100.",
+    "expected_time_s": 55,
+    "choices": [
+      "Put both keys in the frontend build, and charge the amount that the checkout page calculated",
+      "The browser uses the publishable key; the server uses the secret key and works out the amount itself",
+      "The browser uses the secret key so that it can charge directly, and the server checks the amount later",
+      "The browser uses the publishable key; the server charges whatever amount the browser sends to it"
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "group": "frontend-secret"
+  },
+  {
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "secondary_skill_codes": [
+      "engineering.backend.api_design"
+    ],
+    "bank_key": "swe.fullstack.k.validate-on-server-too",
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.craft.correctness",
+    "prompt": "The web app and its API are both written in TypeScript. The sign-up form checks its fields in the browser, and the API checks them again before saving, but the rules are written twice, once in each codebase. After the API raised the minimum password length to 12, the form still accepts 10-character passwords, and users then see only \"Something went wrong\". Some rules, such as \"username already taken\", can only be checked by the server. What is the best change?",
+    "explanation": "Correct: with one schema (for example a Zod schema in a shared package) a rule change reaches the form and the API at the same time. The API stays the authority, because anyone can call it directly, and errors per field (for example a 422 response listing `password` and `username` with messages) let the form show server-only problems, such as a taken username, next to the right field instead of \"Something went wrong\". Wrong (remove browser checks): still secure, but users lose instant feedback while typing and only learn about problems after each submit. Wrong (remove API checks): anyone can call the API with curl or a script and skip the form; browser checks are only for user experience. Wrong (update the copy, add a comment): it fixes today's mismatch, but two hand-kept copies drift apart again, and server-only errors still show as \"Something went wrong\".",
+    "expected_time_s": 60,
+    "choices": [
+      "Remove the browser checks, and show the API's error text in a pop-up after the form is submitted",
+      "Remove the API checks, since the form already runs every rule before it lets the user submit",
+      "Update the form's copy of the rule to 12, and add a comment in both places to keep them in step",
+      "Use one shared schema for both checks, and have the API return per-field errors for the form"
+    ],
+    "answer": {
+      "correct": 3
+    }
+  },
+  {
+    "type": "multi_select",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "fullstack"
+    ],
+    "levels": [
+      "L3",
+      "L4"
+    ],
+    "language": null,
+    "secondary_skill_codes": [
+      "engineering.backend.http"
+    ],
+    "bank_key": "swe.fullstack.k.cache-layers-s-maxage",
+    "difficulty": "hard",
+    "primary_skill_code": "engineering.system_design.caching",
+    "prompt": "Your API sends `Cache-Control: public, max-age=60, s-maxage=600` on `GET /api/products/42`. A CDN sits in front of the API, and the API also keeps its own 30-second in-memory cache of products. Which statements are true? Select all that apply.",
+    "choices": [
+      "The API's own in-memory cache now keeps the product for 600 seconds instead of 30",
+      "A browser may reuse its copy for up to 60 seconds without asking the CDN or the API",
+      "The CDN may serve its stored copy for up to 10 minutes without asking the API",
+      "The CDN must check with the API on every request before it serves its stored copy",
+      "Purging the CDN after a price change does not remove copies already kept in browsers"
+    ],
+    "explanation": "Correct (browser 60 seconds): browsers are private caches and use `max-age`, so they reuse the response for up to 60 seconds without any request. Correct (CDN up to 10 minutes): shared caches use `s-maxage` in place of `max-age`, so the CDN can serve a stored copy for up to 600 seconds without checking, even if the product changed in the meantime. Correct (purge does not reach browsers): a CDN purge only clears the CDN; browsers keep their copies until their own 60 seconds run out. Wrong (API memory cache becomes 600 seconds): `Cache-Control` is an instruction to HTTP caches; the API's own cache follows its own code. Wrong (CDN checks every time): that is what `no-cache` would mean; here the CDN may serve its copy without asking while it is fresh.",
+    "expected_time_s": 65,
+    "answer": {
+      "correct": [
+        1,
+        2,
+        4
+      ]
+    }
+  },
+  {
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "secondary_skill_codes": [
+      "engineering.system_design.trade_offs"
+    ],
+    "bank_key": "swe.fullstack.k.ssr-slow-dependency",
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.frontend.rendering",
+    "prompt": "After a product page moved to server-side rendering, its time to first byte rose from 50 ms to 1.8 s. The server now waits for a slow recommendations service before it sends any HTML, although the product details are ready after 80 ms. What is the best fix?",
+    "explanation": "Correct: with plain SSR the first byte waits for the slowest data the page needs. Streaming the HTML (for example with Suspense boundaries) or loading the recommendations from the browser lets the product details arrive in about 80 ms, and the slow part fills in when it is ready. Wrong (back to CSR): it gives up content in the first HTML, and the user still waits for the bundle and then the same slow call; SSR is not always slower. Wrong (cache each user's page for a day): a personalised page cannot be shared between users, the first visit stays slow, and recommendations go stale. Wrong (more CPU and memory): the server is waiting on another service over the network, not busy computing, so more hardware changes nothing.",
+    "expected_time_s": 55,
+    "choices": [
+      "Send the product details first, and stream or load the recommendations later behind a placeholder",
+      "Move the whole page back to client-side rendering, because SSR is always slower for the user",
+      "Cache each user's fully rendered page on the CDN for a day, so the slow call happens only once",
+      "Give the server more CPU and memory, so that it can render the page's HTML more quickly"
+    ],
+    "answer": {
+      "correct": 0
+    }
+  }
+]

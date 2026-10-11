@@ -1,0 +1,974 @@
+[
+  {
+    "bank_key": "en.l.dentist-new-day",
+    "type": "listening",
+    "section": "listening",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "english.listening",
+    "secondary_skill_codes": [],
+    "cefr": "A2",
+    "prompt": "What new appointment does the caller offer?",
+    "audio": {
+      "lines": [
+        {
+          "voice": "en-PH-RosaNeural",
+          "text": "Hello, this is Maria from Green Street Dental. I am calling about your appointment on Monday at ten o'clock. The dentist is sick on Monday, so we need to move it. Can you come on Wednesday at ten o'clock instead? Please call us back. Thank you."
+        }
+      ]
+    },
+    "choices": [
+      "Monday at ten o'clock",
+      "Wednesday at ten o'clock",
+      "Tuesday at ten o'clock",
+      "Wednesday at two o'clock"
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "explanation": "The caller says: \"Can you come on Wednesday at ten o'clock instead?\" Monday at ten o'clock is the old appointment that must move. Tuesday is never mentioned, and the time stays ten o'clock, not two.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "en.l.kettle-not-hot",
+    "type": "listening",
+    "section": "listening",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "english.listening",
+    "secondary_skill_codes": [],
+    "cefr": "A2",
+    "prompt": "What is the problem with the kettle?",
+    "audio": {
+      "lines": [
+        {
+          "voice": "en-NG-AbeoNeural",
+          "text": "Hi, I bought a kettle from your shop last week, and today it stopped working. The light comes on, but the water does not get hot."
+        },
+        {
+          "voice": "en-GB-SoniaNeural",
+          "text": "I am sorry to hear that. Do you still have the receipt?"
+        },
+        {
+          "voice": "en-NG-AbeoNeural",
+          "text": "Yes, I have it here."
+        }
+      ]
+    },
+    "choices": [
+      "The light does not come on.",
+      "Water comes out of the bottom.",
+      "It did not work on the first day.",
+      "The water does not get hot."
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "explanation": "The customer says: \"The light comes on, but the water does not get hot.\" So the light does work. Nothing is said about water coming out, and the kettle worked until today (\"today it stopped working\").",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "en.l.kitchen-fourth-floor",
+    "type": "listening",
+    "section": "listening",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "english.listening",
+    "secondary_skill_codes": [],
+    "cefr": "A2",
+    "prompt": "Where should staff go for lunch today?",
+    "audio": {
+      "lines": [
+        {
+          "voice": "en-KE-ChilembaNeural",
+          "text": "Good morning, everyone. Here is a short message about lunch today. The kitchen on the second floor is closed for cleaning. Please use the kitchen on the fourth floor instead. The second floor kitchen will open again tomorrow morning. Thank you."
+        }
+      ]
+    },
+    "choices": [
+      "The kitchen on the fourth floor",
+      "The kitchen on the second floor",
+      "A cafe near the office",
+      "The meeting room on the first floor"
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "explanation": "The speaker says: \"Please use the kitchen on the fourth floor instead.\" The second floor kitchen is closed today for cleaning. A cafe and a meeting room are never mentioned.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "en.l.colleague-take-messages",
+    "type": "listening",
+    "section": "listening",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "english.listening",
+    "secondary_skill_codes": [],
+    "cefr": "A2",
+    "prompt": "What should Aisha do if a customer calls?",
+    "audio": {
+      "lines": [
+        {
+          "voice": "en-US-GuyNeural",
+          "text": "Hi Aisha, can you help me this afternoon? I have a meeting from two to four, so please answer my phone. If a customer calls, write down their name and phone number. Do not try to fix the problem. I will call them back after four."
+        }
+      ]
+    },
+    "choices": [
+      "Try to fix the customer's problem",
+      "Ask the customer to call again at four",
+      "Take the customer's name and number",
+      "Give the customer the manager's number"
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "explanation": "The speaker says: \"If a customer calls, write down their name and phone number.\" He also says \"Do not try to fix the problem\" and that he will call them back himself, so the customer is not asked to call again. No manager is mentioned.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "en.l.taxi-leave-time",
+    "type": "listening",
+    "section": "listening",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "english.listening",
+    "secondary_skill_codes": [],
+    "cefr": "A2",
+    "prompt": "What time does the customer want to leave home?",
+    "audio": {
+      "lines": [
+        {
+          "voice": "en-AU-NatashaNeural",
+          "text": "Good afternoon, City Taxis. How can I help you?"
+        },
+        {
+          "voice": "en-IN-PrabhatNeural",
+          "text": "Hello. I need a taxi to the airport tomorrow morning. My flight is at nine, so I want to leave my house at six thirty."
+        },
+        {
+          "voice": "en-AU-NatashaNeural",
+          "text": "No problem. What is your address, please?"
+        }
+      ]
+    },
+    "choices": [
+      "At 6:00",
+      "At 9:00",
+      "At 6:30",
+      "At 9:30"
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "explanation": "The customer says: \"I want to leave my house at six thirty.\" Nine o'clock is the time of the flight, not the time he leaves. Six o'clock and half past nine are never said.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "en.l.jacket-wrong-colour",
+    "type": "listening",
+    "section": "listening",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "english.listening",
+    "secondary_skill_codes": [],
+    "cefr": "A2",
+    "prompt": "Why is the customer calling?",
+    "audio": {
+      "lines": [
+        {
+          "voice": "en-ZA-LeahNeural",
+          "text": "Hi, this is Grace Molefe. I ordered a blue jacket, size medium, from your website. The parcel came today, but the jacket inside is red. The size is right, but I want a blue one. My order number is 4 4 7 1. Please call me back. Thanks."
+        }
+      ]
+    },
+    "choices": [
+      "The jacket is the wrong colour.",
+      "The jacket is the wrong size.",
+      "Her parcel has not arrived yet.",
+      "She wants to cancel the order."
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "explanation": "The caller says she ordered a blue jacket but \"the jacket inside is red\" and \"I want a blue one.\" She says \"The size is right\", the parcel \"came today\", and she wants a blue jacket, not to cancel.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "en.l.charged-twice-internet",
+    "type": "listening",
+    "section": "listening",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "english.listening",
+    "secondary_skill_codes": [],
+    "cefr": "B1",
+    "prompt": "What will the agent do?",
+    "audio": {
+      "lines": [
+        {
+          "voice": "en-SG-LunaNeural",
+          "text": "Hi, I'm looking at my bank statement, and I think you charged me twice for my internet this month. There are two payments of 40 dollars, one on the third and one on the fifth."
+        },
+        {
+          "voice": "en-CA-LiamNeural",
+          "text": "I'm sorry about that. Let me check your account. Yes, the second payment was our mistake. I'll send the 40 dollars back to your card today. It should reach your account in three to five working days."
+        }
+      ]
+    },
+    "choices": [
+      "Lower the customer's monthly price",
+      "Cancel the customer's internet service",
+      "Ask the customer to call her bank",
+      "Return one payment to her card"
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "explanation": "The agent says: \"I'll send the 40 dollars back to your card today.\" This is the second payment, which was a mistake. The monthly price, cancelling the service and calling the bank are never mentioned.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "en.l.shift-times-change",
+    "type": "listening",
+    "section": "listening",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "english.listening",
+    "secondary_skill_codes": [],
+    "cefr": "B1",
+    "prompt": "What should staff do if they cannot start at seven?",
+    "audio": {
+      "lines": [
+        {
+          "voice": "en-IE-ConnorNeural",
+          "text": "Hi everyone, this is Daniel from the planning team. From next week, the morning shift will start at seven instead of eight, and it will finish at three instead of four. The evening shift will not change. If you cannot start at seven, please tell your team leader by Friday, so that we have time to plan."
+        }
+      ]
+    },
+    "choices": [
+      "Move to the evening shift",
+      "Tell their team leader by Friday",
+      "Start at eight and finish at four",
+      "Call the planning team next week"
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "explanation": "The speaker says: \"If you cannot start at seven, please tell your team leader by Friday.\" Eight to four is the old shift. Nobody is told to move to the evening shift, and staff tell their team leader, not the planning team.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "en.l.collect-parcel-saturday",
+    "type": "listening",
+    "section": "listening",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "english.listening",
+    "secondary_skill_codes": [],
+    "cefr": "B1",
+    "prompt": "How will the customer get her parcel?",
+    "audio": {
+      "lines": [
+        {
+          "voice": "en-KE-AsiliaNeural",
+          "text": "Hello, I have a delivery coming tomorrow, but I'll be at work all day. Can you deliver it on Saturday instead?"
+        },
+        {
+          "voice": "en-PH-JamesNeural",
+          "text": "Let me check. I'm sorry, we don't deliver on Saturdays in your area. We can deliver on Monday, or you can collect it from our store on Saturday morning."
+        },
+        {
+          "voice": "en-KE-AsiliaNeural",
+          "text": "Then I'll collect it from the store on Saturday."
+        }
+      ]
+    },
+    "choices": [
+      "She will collect it from the store on Saturday.",
+      "It will be delivered to her home tomorrow.",
+      "A driver will deliver it to her home on Saturday.",
+      "It will be delivered to her home on Monday."
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "explanation": "The customer decides: \"Then I'll collect it from the store on Saturday.\" She will be at work tomorrow, there is no Saturday delivery in her area, and Monday delivery was offered but she did not choose it.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "en.l.insurance-missing-signature",
+    "type": "listening",
+    "section": "listening",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "english.listening",
+    "secondary_skill_codes": [],
+    "cefr": "B1",
+    "prompt": "What does the caller need from Ms Bello?",
+    "audio": {
+      "lines": [
+        {
+          "voice": "en-GB-RyanNeural",
+          "text": "Good morning, this is Tomas from Brightline Insurance, with a message for Ms Fatima Bello. Thank you for sending your claim form. Unfortunately, one page is missing: the last page, which needs your signature. Could you sign that page and send it back to us by email? As soon as we have it, we can finish your claim within two weeks."
+        }
+      ]
+    },
+    "choices": [
+      "A new copy of the whole claim form",
+      "Photos of the damage",
+      "The signed last page of the form",
+      "Her bank details"
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "explanation": "The caller says one page is missing, \"the last page, which needs your signature. Could you sign that page and send it back to us.\" The rest of the form has already arrived, so a new form is not needed. Photos and bank details are never mentioned.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "en.l.leave-computer-on",
+    "type": "listening",
+    "section": "listening",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "english.listening",
+    "secondary_skill_codes": [],
+    "cefr": "B1",
+    "prompt": "Why should Priya leave her computer on?",
+    "audio": {
+      "lines": [
+        {
+          "voice": "en-SG-WayneNeural",
+          "text": "Hi Priya, before you go home today, please do three things. First, save all your notes in the customer system. Then send me a short email with the number of calls you took. Finally, turn off your screen, but please don't shut down the computer, because the IT team is installing updates tonight."
+        }
+      ]
+    },
+    "choices": [
+      "She needs to save her notes later.",
+      "Her manager wants to check the calls she took.",
+      "The night shift will use her computer.",
+      "The IT team is installing updates tonight."
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "explanation": "The speaker says: \"don't shut down the computer, because the IT team is installing updates tonight.\" Priya saves her notes before she leaves, she sends the number of calls by email, and the night shift is never mentioned.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "en.l.account-locked-link",
+    "type": "listening",
+    "section": "listening",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "english.listening",
+    "secondary_skill_codes": [],
+    "cefr": "B1",
+    "prompt": "What will the agent send to the customer?",
+    "audio": {
+      "lines": [
+        {
+          "voice": "en-US-JennyNeural",
+          "text": "Hi, I tried to log in to my account three times, and now it says my account is locked. I need to pay a bill today."
+        },
+        {
+          "voice": "en-IN-NeerjaNeural",
+          "text": "I understand. For your security, the account locks after three wrong passwords. I can send a link to your email so you can make a new password. After that, you can log in straight away and pay your bill."
+        },
+        {
+          "voice": "en-US-JennyNeural",
+          "text": "Okay, please send it."
+        }
+      ]
+    },
+    "choices": [
+      "A new password by text message",
+      "A link to make a new password",
+      "A copy of the bill",
+      "A form to close the account"
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "explanation": "The agent says: \"I can send a link to your email so you can make a new password\", and the customer agrees. The link goes by email, and the agent does not send a password. A copy of the bill and closing the account are never mentioned.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "en.l.returns-sixty-days",
+    "type": "listening",
+    "section": "listening",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "english.listening",
+    "secondary_skill_codes": [],
+    "cefr": "B1",
+    "prompt": "Which items are NOT covered by the new rule?",
+    "audio": {
+      "lines": [
+        {
+          "voice": "en-AU-WilliamMultilingualNeural",
+          "text": "Attention, all customer service staff. From Monday, customers can return items within 60 days instead of 30. This new rule covers everything we sell except food and gift cards. If customers ask, please tell them about the change, and remember to update the returns answer in your call notes."
+        }
+      ]
+    },
+    "choices": [
+      "Food and gift cards",
+      "Items returned within 60 days",
+      "Clothes and shoes",
+      "Items bought online"
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "explanation": "The speaker says: \"This new rule covers everything we sell except food and gift cards.\" Returns within 60 days are exactly what the rule allows. Clothes, shoes and online orders are part of \"everything we sell\".",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "en.l.wrong-house-number",
+    "type": "listening",
+    "section": "listening",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "english.listening",
+    "secondary_skill_codes": [],
+    "cefr": "B1",
+    "prompt": "Why can the agent still change the address?",
+    "audio": {
+      "lines": [
+        {
+          "voice": "en-ZA-LukeNeural",
+          "text": "Hello, I placed an order about an hour ago, and I've just seen that I typed the wrong house number. It should be 18, not 81."
+        },
+        {
+          "voice": "en-NG-EzinneNeural",
+          "text": "Thank you for calling so quickly. Your order hasn't left the warehouse yet, so I can still change the address. The new address is 18 Hill Road. Is that right?"
+        },
+        {
+          "voice": "en-ZA-LukeNeural",
+          "text": "Yes, that's right. Thank you."
+        }
+      ]
+    },
+    "choices": [
+      "The driver has not called the customer yet.",
+      "The order was placed yesterday.",
+      "The order has not left the warehouse yet.",
+      "The house number was already correct."
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "explanation": "The agent says: \"Your order hasn't left the warehouse yet, so I can still change the address.\" No driver is mentioned, the order was placed \"about an hour ago\", and the number was wrong (81 instead of 18).",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "en.l.hotel-second-room",
+    "type": "listening",
+    "section": "listening",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "english.listening",
+    "secondary_skill_codes": [],
+    "cefr": "B1",
+    "prompt": "What is the problem with the booking?",
+    "audio": {
+      "lines": [
+        {
+          "voice": "en-CA-ClaraNeural",
+          "text": "Hi, this is Ana from the Riverside Hotel, returning your call about your booking. You asked for two rooms for the nights of the 12th and 13th of May. We have one room free for both nights, but the second room is only free on the 13th. Please call me back and let me know if you still want to book."
+        }
+      ]
+    },
+    "choices": [
+      "The hotel has no rooms free in May.",
+      "The price of the rooms has gone up.",
+      "The booking was made for the wrong dates.",
+      "The second room is only free for one night."
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "explanation": "The caller says: \"We have one room free for both nights, but the second room is only free on the 13th.\" So the hotel does have rooms in May, the price is never mentioned, and the dates the guest asked for are not said to be wrong.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "en.l.training-bring-laptop",
+    "type": "listening",
+    "section": "listening",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "english.listening",
+    "secondary_skill_codes": [],
+    "cefr": "B1",
+    "prompt": "What does Kwame need to bring?",
+    "audio": {
+      "lines": [
+        {
+          "voice": "en-IE-EmilyNeural",
+          "text": "Hi Kwame, just a reminder about the training on Thursday. This time it's in Room 5, not Room 3, and it starts at half past nine. Please bring your laptop and your headset. Lunch will be provided, so you don't need to bring any food."
+        }
+      ]
+    },
+    "choices": [
+      "His laptop and lunch",
+      "His laptop and headset",
+      "A notebook and a pencil",
+      "His headset and lunch"
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "explanation": "The speaker says: \"Please bring your laptop and your headset.\" Lunch is provided, so he does not need to bring food. A notebook and pen are never mentioned.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "en.l.gym-cancel-not-pause",
+    "type": "listening",
+    "section": "listening",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "english.listening",
+    "secondary_skill_codes": [],
+    "cefr": "B2",
+    "prompt": "What does the customer decide to do?",
+    "audio": {
+      "lines": [
+        {
+          "voice": "en-NG-EzinneNeural",
+          "text": "Hello, I'd like to cancel my gym membership. I'm moving to another city next month, and you don't have a branch there."
+        },
+        {
+          "voice": "en-GB-RyanNeural",
+          "text": "I'm sorry to hear you're leaving. Before I cancel it, did you know you can pause your membership for up to three months for free? Some members do that while they settle in."
+        },
+        {
+          "voice": "en-NG-EzinneNeural",
+          "text": "That's kind, but it won't help. I won't be coming back. Please just cancel it from the end of this month."
+        },
+        {
+          "voice": "en-GB-RyanNeural",
+          "text": "Of course. I'll cancel it from the 31st, and you'll get an email to confirm."
+        }
+      ]
+    },
+    "choices": [
+      "Pause the membership for three months",
+      "Transfer the membership to a branch in the new city",
+      "Cancel the membership from the end of this month",
+      "Cancel the membership today"
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "explanation": "The customer says: \"Please just cancel it from the end of this month.\" She refuses the pause (\"it won't help\"), there is no branch in the new city, and the cancellation starts on the 31st, not today.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "en.l.printer-breakdown-options",
+    "type": "listening",
+    "section": "listening",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "english.listening",
+    "secondary_skill_codes": [],
+    "cefr": "B2",
+    "prompt": "Which option gets at least some brochures to the customer before the event?",
+    "audio": {
+      "lines": [
+        {
+          "voice": "en-NG-AbeoNeural",
+          "text": "Hello, this is Olumide from Fast Print, calling about the 500 brochures you ordered for your event on the 20th. I'm afraid our printing machine broke down yesterday, and the new part won't arrive until Monday. That means we can't finish them by the 18th as we promised. We could print half of them at our other shop by the 18th and the rest by the 21st, or we could deliver all of them together on the 21st. Please let me know which you'd prefer."
+        }
+      ]
+    },
+    "choices": [
+      "Printing half of them at the other shop",
+      "Delivering all of them together on the 21st",
+      "Collecting all of them from the shop on the 20th",
+      "Printing all of them by the 18th as promised"
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "explanation": "The event is on the 20th, and only one option gives brochures before then: \"We could print half of them at our other shop by the 18th.\" Delivering all of them on the 21st is after the event, collecting on the 20th is never offered, and the caller says \"we can't finish them by the 18th as we promised.\"",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "en.l.payment-system-down",
+    "type": "listening",
+    "section": "listening",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "english.listening",
+    "secondary_skill_codes": [],
+    "cefr": "B2",
+    "prompt": "Why should agents not take card payments at the moment?",
+    "audio": {
+      "lines": [
+        {
+          "voice": "en-IN-PrabhatNeural",
+          "text": "Hi team, a quick update. The card payment system is down, and IT expect it to be working again by about three o'clock. Until then, please don't try to take card payments over the phone, because they'll fail and the customer might be charged twice. Instead, take the customer's details, tell them we'll call them back after three, and add a note with the tag 'payment callback'. If a customer is very upset, you can transfer them to a supervisor."
+        }
+      ]
+    },
+    "choices": [
+      "Supervisors must approve each payment.",
+      "Card payments will stop at three o'clock.",
+      "Customers have been asked to pay online.",
+      "Customers might be charged twice."
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "explanation": "The speaker says: \"don't try to take card payments over the phone, because they'll fail and the customer might be charged twice.\" Supervisors are only for very upset customers, the system should work again from about three o'clock (not stop then), and paying online is never mentioned.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "en.l.technician-call-on-way",
+    "type": "listening",
+    "section": "listening",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "english.listening",
+    "secondary_skill_codes": [],
+    "cefr": "B2",
+    "prompt": "What does the customer ask for at the end of the call?",
+    "audio": {
+      "lines": [
+        {
+          "voice": "en-AU-NatashaNeural",
+          "text": "I took a day off work to wait for your technician, and nobody came. Nobody called, either. This is the second time this has happened."
+        },
+        {
+          "voice": "en-KE-ChilembaNeural",
+          "text": "I'm really sorry. I can see the visit was cancelled by our system, and you should have been told. I can book the first appointment tomorrow, at eight, and I'll add a 20 dollar credit to your account."
+        },
+        {
+          "voice": "en-AU-NatashaNeural",
+          "text": "Eight is fine, but I want the technician to call me when he's on his way."
+        },
+        {
+          "voice": "en-KE-ChilembaNeural",
+          "text": "Of course, I'll add that to the notes."
+        }
+      ]
+    },
+    "choices": [
+      "A larger credit on her account",
+      "A call when the technician is on his way",
+      "A later appointment because eight is too early",
+      "To speak to a manager"
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "explanation": "The customer's last request is: \"I want the technician to call me when he's on his way.\" She accepts eight o'clock (\"Eight is fine\"), does not ask for more credit, and never asks for a manager.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "en.l.handover-email-not-text",
+    "type": "listening",
+    "section": "listening",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "english.listening",
+    "secondary_skill_codes": [],
+    "cefr": "B2",
+    "prompt": "What should Mei do if Mr Osei does not answer the phone?",
+    "audio": {
+      "lines": [
+        {
+          "voice": "en-ZA-LukeNeural",
+          "text": "Hi Mei, here's my handover before I leave. Mr Osei called twice about his refund. I've checked, and it was approved this morning, but the money won't reach his account until Thursday. He hasn't been told yet, because I couldn't reach him by phone. Could you try calling him again before five? If he doesn't answer, send him an email, not a text message, because he asked us not to text him."
+        }
+      ]
+    },
+    "choices": [
+      "Send him a text message",
+      "Call him again on Thursday",
+      "Send him an email",
+      "Ask a supervisor to approve the refund"
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "explanation": "The speaker says: \"If he doesn't answer, send him an email, not a text message, because he asked us not to text him.\" Thursday is when the money arrives, not when to call, and the refund \"was approved this morning\" already.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "en.l.slow-internet-evenings",
+    "type": "listening",
+    "section": "listening",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "english.listening",
+    "secondary_skill_codes": [],
+    "cefr": "B2",
+    "prompt": "According to the agent, what is probably causing the problem?",
+    "audio": {
+      "lines": [
+        {
+          "voice": "en-SG-WayneNeural",
+          "text": "My internet has been really slow every evening this week. In the mornings it's fine."
+        },
+        {
+          "voice": "en-US-JennyNeural",
+          "text": "Thanks for explaining. I've tested your line, and it's working normally, so the problem is probably the number of people using the network in your area in the evenings. We're upgrading the equipment there next week. Until then, I can move you to a faster plan for free, which should help."
+        },
+        {
+          "voice": "en-SG-WayneNeural",
+          "text": "If it's free, then yes, please do that."
+        }
+      ]
+    },
+    "choices": [
+      "Many people use the network in the evenings.",
+      "The customer's line is damaged.",
+      "The customer's router is too old.",
+      "The equipment was upgraded last week."
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "explanation": "The agent says: \"the problem is probably the number of people using the network in your area in the evenings.\" The line is \"working normally\", the router is never mentioned, and the upgrade happens next week, not last week.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "en.l.refund-notes-audit",
+    "type": "listening",
+    "section": "listening",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "english.listening",
+    "secondary_skill_codes": [],
+    "cefr": "C1",
+    "prompt": "What is the speaker mainly asking agents to do?",
+    "audio": {
+      "lines": [
+        {
+          "voice": "en-GB-SoniaNeural",
+          "text": "Before we finish, one point about the new refund guidelines. On paper, nothing has changed: you can still approve refunds of up to 50 dollars without asking anyone. What has changed is that every refund over 20 dollars will now be checked at the end of the week, so please make sure your notes explain the reason clearly. This isn't about trusting you less. Last month the auditors couldn't tell why several refunds had been given, and that's what we need to fix."
+        }
+      ]
+    },
+    "choices": [
+      "Ask a supervisor before approving any refund",
+      "Give fewer refunds of more than 20 dollars",
+      "Stop approving refunds of more than 50 dollars",
+      "Explain each refund clearly in their notes"
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "explanation": "The request is: \"please make sure your notes explain the reason clearly\", and the problem to fix is that auditors \"couldn't tell why several refunds had been given.\" Agents can still approve up to 50 dollars \"without asking anyone\", the speaker does not ask for fewer refunds over 20 dollars (they will only be checked), and the 50 dollar limit has not changed.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "en.l.app-payment-hard-to-find",
+    "type": "listening",
+    "section": "listening",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "english.listening",
+    "secondary_skill_codes": [],
+    "cefr": "C1",
+    "prompt": "What is the customer's main complaint about the new app?",
+    "audio": {
+      "lines": [
+        {
+          "voice": "en-IN-NeerjaNeural",
+          "text": "I'm not saying the new app is bad, exactly. It certainly looks nicer than the old one. It's just that I used to pay my bill with two taps, and now I spend ages hunting for the right screen, by which time I've usually given up and called you instead."
+        },
+        {
+          "voice": "en-PH-JamesNeural",
+          "text": "Thanks for telling me. Is there anything else about it that bothers you?"
+        },
+        {
+          "voice": "en-IN-NeerjaNeural",
+          "text": "Not really. The rest I can live with."
+        }
+      ]
+    },
+    "choices": [
+      "It does not look as nice as the old app.",
+      "Finding where to pay takes too long.",
+      "It often stops working during payment.",
+      "Several of its other features are hard to use."
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "explanation": "The complaint is that paying used to take \"two taps\" and now she spends \"ages hunting for the right screen.\" She says it \"looks nicer than the old one\", never says it stops working, and says about everything else: \"The rest I can live with.\"",
+    "expected_time_s": 50
+  }
+]

@@ -1,4 +1,6 @@
 import { NextResponse } from 'next/server'
+import { apiUser } from '@/lib/roles'
+import { limitOrNull } from '@/lib/rate-limit'
 import { INTERVIEW_MINUTES } from '@/lib/interview-config'
 import { callGemini, callGeminiStream, textFrom, stripJsonFences } from '@/lib/gemini'
 import { callOllama, localLLMEnabled } from '@/lib/ollama'
@@ -644,6 +646,12 @@ function buildContents(messages) {
 
 // ─── Route handler ────────────────────────────────────────────────────────────
 export async function POST(req) {
+  // Logged-in users only, with an hourly limit per user (AI interview uses free
+  // AI or voice quota that one person must not be able to use up).
+  const { user: caller, response: denied } = await apiUser()
+  if (denied) return denied
+  const limited = await limitOrNull(req, [{ bucket: 'interview', limit: 200, windowSec: 3600, userId: caller.id }])
+  if (limited) return limited
   try {
     const {
       action,

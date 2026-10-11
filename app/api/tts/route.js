@@ -1,4 +1,6 @@
-import { MsEdgeTTS, OUTPUT_FORMAT } from 'msedge-tts'
+import { synthesize } from '@/lib/edge-tts'
+import { apiUser } from '@/lib/roles'
+import { limitOrNull } from '@/lib/rate-limit'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -17,8 +19,15 @@ const ALLOWED_VOICES = new Set([
 
 const MAX_TEXT = 4000
 
+// Uses our own Edge TTS client (lib/edge-tts.js): the msedge-tts package's
+// connection started being refused by the service in October 2026.
 export async function POST(req) {
-  let tts
+  // Logged-in users only, with an hourly limit per user (voice uses free
+  // AI or voice quota that one person must not be able to use up).
+  const { user: caller, response: denied } = await apiUser()
+  if (denied) return denied
+  const limited = await limitOrNull(req, [{ bucket: 'tts', limit: 600, windowSec: 3600, userId: caller.id }])
+  if (limited) return limited
   try {
     const { text, voice } = await req.json()
     if (!text || typeof text !== 'string') {
@@ -34,43 +43,14 @@ export async function POST(req) {
       })
     }
     const useVoice = ALLOWED_VOICES.has(voice) ? voice : DEFAULT_VOICE
-
-    tts = new MsEdgeTTS()
-    await tts.setMetadata(useVoice, OUTPUT_FORMAT.AUDIO_24KHZ_48KBITRATE_MONO_MP3)
-    const { audioStream } = tts.toStream(text)
-
-    // Hand ownership of tts to the stream so it's closed after streaming finishes,
-    // not in the finally block (which would run before the stream is consumed).
-    const ttsInstance = tts
-    tts = null
-
-    const readable = new ReadableStream({
-      async start(controller) {
-        try {
-          for await (const chunk of audioStream) {
-            controller.enqueue(chunk)
-          }
-          controller.close()
-        } catch (e) {
-          controller.error(e)
-        } finally {
-          try { ttsInstance.close() } catch {}
-        }
-      },
-    })
-
-    return new Response(readable, {
-      status: 200,
-      headers: {
-        'Content-Type': 'audio/mpeg',
-        'Cache-Control': 'no-store',
-      },
+    const audio = await synthesize(useVoice, text)
+    return new Response(audio, {
+      headers: { 'Content-Type': 'audio/mpeg', 'Cache-Control': 'no-store' },
     })
   } catch (e) {
-    console.error('TTS error:', e)
-    try { tts?.close() } catch {}
-    return new Response(JSON.stringify({ error: e.message || 'TTS failed' }), {
-      status: 500,
+    console.error('tts error:', e.message)
+    return new Response(JSON.stringify({ error: 'Voice is temporarily unavailable' }), {
+      status: 502,
       headers: { 'Content-Type': 'application/json' },
     })
   }

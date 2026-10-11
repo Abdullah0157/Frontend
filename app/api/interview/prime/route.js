@@ -1,4 +1,6 @@
 import { NextResponse } from 'next/server'
+import { apiUser } from '@/lib/roles'
+import { limitOrNull } from '@/lib/rate-limit'
 import { query } from '@/lib/db'
 import { callGemini, textFrom, stripJsonFences } from '@/lib/gemini'
 
@@ -13,6 +15,12 @@ const FALLBACK = {
 }
 
 export async function POST(req) {
+  // Logged-in users only, with an hourly limit per user (interview preparation uses free
+  // AI or voice quota that one person must not be able to use up).
+  const { user: caller, response: denied } = await apiUser()
+  if (denied) return denied
+  const limited = await limitOrNull(req, [{ bucket: 'interview-prime', limit: 30, windowSec: 3600, userId: caller.id }])
+  if (limited) return limited
   let jobId, resumeText, sessionId
   try {
     ;({ jobId, resumeText, sessionId } = await req.json())

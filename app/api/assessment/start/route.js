@@ -2,14 +2,50 @@ import { NextResponse } from 'next/server'
 import { getSupabaseServer } from '@/lib/supabase/server'
 import { query } from '@/lib/db'
 import { logEvent, pickNextItem } from '@/lib/assessment'
+import { createSession, getState, startOptions, loadSession } from '@/lib/written-assessment'
+import { trackFromRoleFamily } from '@/lib/assessment-blueprint'
+import { currentUser, errorResponse } from '@/lib/written-api'
 
 export const dynamic = 'force-dynamic'
+
+// GET /api/assessment/start[?track=&level=] -> families, tracks, levels and
+// coding languages on offer, plus a preview of that test's sections.
+export async function GET(req) {
+  const url = new URL(req.url)
+  return NextResponse.json(startOptions({ track: url.searchParams.get('track'), level: url.searchParams.get('level') }))
+}
+
+// Written assessment (sectioned, timed, per-candidate form).
+// Body: { track, level, language, jobId?, disabledSections? }
+// Returns the session id, its access token (shown once) and the first
+// section intro. The candidate calls /api/assessment/[id]/begin to start it.
+async function startWritten(req, body) {
+  try {
+    const { user } = await currentUser()
+    const track = body.track || trackFromRoleFamily(body.roleFamily)
+    const { sessionId, token, resumed } = await createSession({
+      candidateUserId: user?.id || null,
+      track,
+      level: body.level || body.seniorityBand,
+      language: body.language,
+      jobId: body.jobId || null,
+      disabledSections: Array.isArray(body.disabledSections) ? body.disabledSections : [],
+      options: body.options && typeof body.options === 'object' ? body.options : {},
+      userAgent: req.headers.get('user-agent'),
+    })
+    const state = await getState(await loadSession(sessionId))
+    return NextResponse.json({ sessionId, token, resumed: Boolean(resumed), ...state })
+  } catch (e) {
+    return errorResponse(e, 'assessment/start')
+  }
+}
 
 // POST /api/assessment/start
 // Body: { roleFamily, seniorityBand, targetSkillCodes?[], timeLimitS? }
 // Creates a session, logs SessionStarted, picks + returns the first item.
 export async function POST(req) {
   const body = await req.json().catch(() => ({}))
+  if (body.mode === 'written' || body.track) return startWritten(req, body)
   const roleFamily     = body.roleFamily     || 'swe-backend'
   const seniorityBand  = body.seniorityBand  || 'L4'
   const targetSkills   = Array.isArray(body.targetSkillCodes) ? body.targetSkillCodes : []
@@ -57,7 +93,10 @@ export async function POST(req) {
             prompt: firstItem.prompt,
             // Return rubric ONLY for MCQ (candidate needs to see the choices).
             // For scenario/coding, rubric stays server-side.
-            rubric: firstItem.type === 'mcq' ? firstItem.scoring_rubric : null,
+            // Choice text only: the correct/partial flags stay on the server.
+            rubric: firstItem.type === 'mcq'
+              ? { choices: (firstItem.scoring_rubric?.choices || []).map((c) => ({ text: c.text })) }
+              : null,
             expectedTimeS: firstItem.expected_time_s,
           }
         : null,

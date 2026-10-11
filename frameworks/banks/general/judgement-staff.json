@@ -1,0 +1,1366 @@
+[
+  {
+    "bank_key": "general.j.undercharged-customer",
+    "type": "sjt",
+    "section": "workplace_judgement",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "behavioral.ownership.accountability",
+    "secondary_skill_codes": [
+      "behavioral.ethics.integrity",
+      "behavioral.communication.clarity"
+    ],
+    "prompt": "Yesterday you told a customer a price that was lower than the correct one. The customer paid that price and left happy. Nobody else has noticed the mistake. What do you do first?",
+    "choices": [
+      "Put the difference in from your own money, so the accounts are right and nobody needs to be told.",
+      "Tell your manager today what happened and the amount, so that they can decide how to handle it.",
+      "Check the price list again so you are sure of the amount, and then raise it at your next weekly meeting with your manager.",
+      "Say nothing, as the difference is small and the customer was perfectly happy with the service they got."
+    ],
+    "answer": {
+      "points": [
+        1,
+        3,
+        2,
+        0
+      ]
+    },
+    "explanation": "Best (3): \"Tell your manager today\". Owning the mistake quickly lets the right person decide how to handle it with the customer, and the cause of the wrong price can be fixed. \"Raise it at the weekly meeting\" (2): Honest, but waiting several days makes the mistake harder to put right. \"Pay the difference yourself\" (1): Well meant, but it hides the error, so nobody learns why the wrong price was given and it can happen again. \"Say nothing\" (0): Hides a known mistake that costs the business money.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.j.colleague-skips-final-check",
+    "type": "sjt",
+    "section": "workplace_judgement",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "behavioral.collaboration.conflict",
+    "secondary_skill_codes": [
+      "behavioral.ethics.integrity",
+      "behavioral.communication.clarity"
+    ],
+    "prompt": "A colleague often skips the final check of orders before they go out, to finish faster. Two weeks ago you kindly asked them to do the check, but nothing changed. Last week two customers got the wrong items. The colleague is well liked. What do you do first?",
+    "choices": [
+      "Talk to the colleague privately again, and ask them more firmly to do the check every time.",
+      "Start skipping the final check yourself on busy days as well, since nobody seems to be checking it.",
+      "Check the colleague's orders yourself whenever you have time, without saying anything to them about it.",
+      "Tell your supervisor what you have seen, including the skipped checks and the two wrong orders."
+    ],
+    "answer": {
+      "points": [
+        2,
+        0,
+        1,
+        3
+      ]
+    },
+    "explanation": "Best (3): \"Tell your supervisor\". You already gave the colleague a fair private chance, nothing changed, and customers are now getting the wrong items. When a private word has not worked and customers are affected, the person responsible for the work must know. \"Talk privately again\" (2): Still respectful, but a second private word after customers were affected delays the fix, and the supervisor stays unaware of a known quality problem. \"Check their orders in secret\" (1): Catches some errors, but hides the problem and doubles your work. \"Skip the check yourself\" (0): Copies the habit that is already sending customers the wrong items.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.j.customer-says-you-promised",
+    "type": "sjt",
+    "section": "workplace_judgement",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "behavioral.customer.service_orientation",
+    "secondary_skill_codes": [
+      "behavioral.communication.listening"
+    ],
+    "prompt": "A customer says you promised their order would be ready today. You are sure you never said that. They are upset and ask for a discount, which you are not allowed to give. What is the best response?",
+    "choices": [
+      "Explain calmly but firmly that you never made that promise, and show them the notes written on their order.",
+      "Call your supervisor over straight away, since you are not allowed to give discounts.",
+      "Say you understand the date matters, check the earliest ready time, and ask your supervisor about a discount.",
+      "Give a small discount anyway, so the customer leaves happy and does not make a complaint about you."
+    ],
+    "answer": {
+      "points": [
+        1,
+        2,
+        3,
+        1
+      ]
+    },
+    "explanation": "Best (3): \"Acknowledge the date, find the earliest time, ask the supervisor about a discount\". Arguing about who said what does not help. The customer needs a date, and the supervisor is the person who can decide on a discount. \"Hand over to the supervisor straight away\" (2): Uses the right authority, but passes the customer on without trying to help first. \"Prove you never promised\" (1): It may be true, but winning the argument makes the customer angrier and solves nothing. \"Give a discount anyway\" (1): Customer-friendly, but breaks a clear rule you have no authority to bend.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.j.two-supervisors-clash",
+    "type": "sjt",
+    "section": "workplace_judgement",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "behavioral.communication.clarity",
+    "secondary_skill_codes": [
+      "behavioral.problem_solving.pragmatism"
+    ],
+    "prompt": "Two supervisors at the same level give you different jobs for the same afternoon. One wants the stock count finished. The other wants you to help at the front desk. Both say their job is urgent. What do you do first?",
+    "choices": [
+      "Tell both supervisors about the clash so that they can agree which job comes first.",
+      "Do the job for the supervisor who asked first, and tell the other one you will help them as soon as it is done.",
+      "Switch between the two jobs all afternoon, so that neither supervisor feels their job is being ignored.",
+      "Carry on with the stock count, which you have already started, and say nothing to the other supervisor."
+    ],
+    "answer": {
+      "points": [
+        3,
+        2,
+        1,
+        0
+      ]
+    },
+    "explanation": "Best (3): \"Tell both and ask them to agree\". The supervisors are at the same level, so neither can simply overrule the other. Both learn about the clash, and the people who own the work decide the order. \"Do the first request and tell the other\" (2): Keeps both informed and is a reasonable rule, but who asked first does not show which job is more urgent, and the two supervisors may agree a better order. \"Switch between both jobs\" (1): Neither job is done well, and nobody knows there is a clash. \"Pick one and say nothing\" (0): One supervisor is left thinking their urgent job is being done.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.j.will-miss-deadline",
+    "type": "sjt",
+    "section": "workplace_judgement",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "behavioral.ownership.accountability",
+    "secondary_skill_codes": [
+      "behavioral.communication.clarity"
+    ],
+    "prompt": "Your manager asked you to finish a list of all the equipment in the building by Friday. On Wednesday you realise the job is much bigger than expected, and you will not finish in time. What do you do first?",
+    "choices": [
+      "Work late every evening to try to finish, and tell your manager on Friday only if you have not managed it.",
+      "Hand in the list on Friday with the missing rooms left out, and do not mention that it is incomplete.",
+      "Tell your manager now how far you have got and when you think you can finish, so they can plan.",
+      "Ask a colleague to help you finish by Friday, so that you can still deliver the full list on time."
+    ],
+    "answer": {
+      "points": [
+        1,
+        0,
+        3,
+        2
+      ]
+    },
+    "explanation": "Best (3): \"Tell your manager now\". Early warning gives the manager time to change the plan, add help or reduce the job. \"Ask a colleague to help\" (2): Shows initiative, but takes the colleague away from their own work without the manager knowing, and the risk stays hidden. \"Work late and tell only if you fail\" (1): The effort is good, but the manager hears about the problem when it is too late to act. \"Hand in an incomplete list without saying\" (0): Presents unfinished work as finished, which is dishonest and leaves gaps nobody knows about.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.j.wet-floor-at-entrance",
+    "type": "sjt",
+    "section": "workplace_judgement",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "behavioral.ethics.safety",
+    "secondary_skill_codes": [
+      "behavioral.ownership.initiative"
+    ],
+    "prompt": "On your way in, you see a large wet patch on the floor near the main entrance. People walk through there all the time. Cleaning is not part of your job. What do you do first?",
+    "choices": [
+      "Put something easy to see by the patch so that people avoid it, then tell the cleaning staff.",
+      "Mention the wet patch to your manager when you next see them, as they decide who should clean it.",
+      "Leave it for the cleaning team, who are responsible for floors and will probably notice it soon.",
+      "Go to find the cleaner straight away, and tell them exactly where the wet patch is and how big it is."
+    ],
+    "answer": {
+      "points": [
+        3,
+        1,
+        0,
+        2
+      ]
+    },
+    "explanation": "Best (3): \"Mark the hazard, then tell the person responsible\". A wet floor can injure someone at any moment. Making it visible first protects people, and telling the cleaner gets it removed. \"Go to find the cleaner\" (2): Gets it cleaned, but the patch stays unmarked while you are away. \"Mention it to the manager later\" (1): The hazard stays there for a long time. \"Leave it\" (0): Safety is everyone's job, and someone could fall in the meantime.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.j.friend-wants-staff-discount",
+    "type": "sjt",
+    "section": "workplace_judgement",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "behavioral.ethics.integrity",
+    "secondary_skill_codes": [
+      "behavioral.customer.service_orientation"
+    ],
+    "prompt": "A friend comes in as a customer and asks you to give them the staff discount. The rule says the discount is only for staff. Nobody else would notice. What is the best response?",
+    "choices": [
+      "Give the discount this once, as the amount is small, and tell your friend kindly but clearly it cannot happen again.",
+      "Tell your friend you will ask your supervisor whether an exception can be made for them, just this one time.",
+      "Give the discount, and ask your friend not to mention it to anyone else at all.",
+      "Say kindly that you cannot, because the discount is only for staff, and serve them at the normal price."
+    ],
+    "answer": {
+      "points": [
+        1,
+        2,
+        0,
+        3
+      ]
+    },
+    "explanation": "Best (3): \"Say no kindly and charge the normal price\". Honest, follows the rule and keeps the friendship. \"Ask the supervisor for an exception\" (2): Open and honest, but it asks for a special favour only because the customer is your friend. \"Give it once\" (1): Breaks the rule, even if the amount is small. \"Give it and ask them to keep quiet\" (0): Breaks the rule and hides it on purpose.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.j.asked-to-cover-shift",
+    "type": "sjt",
+    "section": "workplace_judgement",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "behavioral.communication.clarity",
+    "secondary_skill_codes": [
+      "behavioral.collaboration.conflict"
+    ],
+    "prompt": "A colleague asks you to cover their Saturday shift, so they can go to a family event. You already have plans that you cannot easily move. The colleague looks very disappointed. What is the best response?",
+    "choices": [
+      "Agree so they feel better for now, and then tell them on Friday that something has come up after all.",
+      "Say kindly that you cannot this time, and offer to help them find someone else to cover.",
+      "Agree to cover, and cancel your own plans even though it will cause you real problems.",
+      "Say no politely, because you already have plans on Saturday that you cannot easily move."
+    ],
+    "answer": {
+      "points": [
+        0,
+        3,
+        2,
+        2
+      ]
+    },
+    "explanation": "Best (3): \"Say no kindly and help find someone else\". You stay honest about your own commitment and still help the colleague solve their problem. \"Agree and cancel plans at real cost\" (2): Generous, and the shift is covered, but saying yes when it causes you real problems is hard to keep doing and can build resentment. \"Say no politely\" (2): Honest and fair, but does nothing to help the colleague find cover. \"Agree, then pull out on Friday\" (0): Leaves the colleague and the team without cover at the last moment.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.j.pay-list-on-printer",
+    "type": "sjt",
+    "section": "workplace_judgement",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "behavioral.ethics.integrity",
+    "secondary_skill_codes": [
+      "behavioral.ownership.initiative"
+    ],
+    "prompt": "You find a printout on the shared printer. It shows the names, home addresses and pay of several colleagues. Nobody is near the printer. What do you do first?",
+    "choices": [
+      "Without reading further, hand it privately to your manager or HR, because the details are private.",
+      "Send a message to the team saying a pay list was left on the printer, and ask the owner to collect it.",
+      "Put it in a closed folder at your desk, and ask your manager at the end of the day what to do with it.",
+      "Leave it where it is, because it is not yours and whoever printed it will be back for it soon."
+    ],
+    "answer": {
+      "points": [
+        3,
+        1,
+        2,
+        0
+      ]
+    },
+    "explanation": "Best (3): \"Hand it privately to the manager or HR without reading it\". It protects colleagues' private details at once, and the person responsible can find out how it was left out. \"Keep it in a folder until the end of the day\" (2): The papers are safer, but you hold sensitive data for hours and the problem is not reported quickly. \"Message the team\" (1): Tells everyone that private pay details were on show, which spreads the problem. \"Leave it\" (0): Anyone passing can read colleagues' pay and home addresses.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.j.disagree-with-new-process",
+    "type": "sjt",
+    "section": "workplace_judgement",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "behavioral.communication.clarity",
+    "secondary_skill_codes": [
+      "behavioral.problem_solving.pragmatism"
+    ],
+    "prompt": "Your workplace has a new way of recording customer requests. You think it takes longer and will cause mistakes. Everyone has been told to use it from today. What is the best response?",
+    "choices": [
+      "Keep using the old way quietly, since it works better and the end results are the same.",
+      "Ask your manager why the process was changed, and say you think the old way worked better for everyone.",
+      "Use the new process, and note real examples of problems so that you can show them to your manager.",
+      "Use the new process, but tell colleagues at breaks how badly you think it was planned."
+    ],
+    "answer": {
+      "points": [
+        0,
+        2,
+        3,
+        1
+      ]
+    },
+    "explanation": "Best (3): \"Use it and share real examples\". Follows the decision while giving the manager the evidence needed to improve it. \"Ask why and say the old way was better\" (2): Speaking up is fine, but an opinion without examples is easy to dismiss. \"Use it but complain to colleagues\" (1): Lowers team morale and does not reach anyone who can change the process. \"Keep using the old way quietly\" (0): Ignores a clear instruction, and records kept in two different ways can clash.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.j.feedback-feels-unfair",
+    "type": "sjt",
+    "section": "workplace_judgement",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "behavioral.communication.listening",
+    "secondary_skill_codes": [
+      "behavioral.ownership.failure_reflection"
+    ],
+    "prompt": "In your review, your supervisor says you are often slow to answer customer messages. You feel this is unfair, because you were also covering for an absent colleague for a month. What is the best response?",
+    "choices": [
+      "Explain straight away that the feedback is wrong, because you did a lot of extra cover work that month.",
+      "Listen fully, then calmly mention the cover work, since they may not know, and ask what they expect.",
+      "Say nothing in the meeting, but tell colleagues privately afterwards that the review was unfair to you.",
+      "Accept the feedback without comment, and work hard to answer every message faster from now on."
+    ],
+    "answer": {
+      "points": [
+        1,
+        3,
+        0,
+        2
+      ]
+    },
+    "explanation": "Best (3): \"Listen, give the context calmly, ask what they expect\". Respectful, makes sure the supervisor has the full picture, and finds out exactly what is expected. \"Accept without comment\" (2): Polite and willing, but the supervisor never hears about the extra cover work, which matters for a fair review. \"Say it is wrong straight away\" (1): Sounds defensive and stops you from listening to what may be a real point. \"Complain to colleagues later\" (0): Solves nothing and spreads bad feeling.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.j.new-colleague-struggling",
+    "type": "sjt",
+    "section": "workplace_judgement",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "behavioral.leadership.mentorship",
+    "secondary_skill_codes": [
+      "behavioral.ownership.initiative"
+    ],
+    "prompt": "A new colleague keeps making small mistakes and looks stressed. They have not asked anyone for help. You have some spare time today. What do you do first?",
+    "choices": [
+      "Tell your supervisor the new colleague seems to be struggling and may need some more training.",
+      "Leave them to learn by themselves, as the supervisor will step in if the mistakes become serious.",
+      "Fix their mistakes quietly yourself, so the supervisor does not notice them and they do not get into trouble.",
+      "Ask them privately how it is going, since they may not want to ask, and offer to show them a few things."
+    ],
+    "answer": {
+      "points": [
+        2,
+        0,
+        1,
+        3
+      ]
+    },
+    "explanation": "Best (3): \"Offer help privately\". A friendly, private offer helps them without embarrassing them, and you have the time today. \"Tell the supervisor\" (2): May get them training, but the colleague is not asked first and may feel reported. \"Fix their mistakes quietly\" (1): Hides the problem, so they never learn what is going wrong. \"Leave them to it\" (0): You have time and can see they need help.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.j.customer-shouting-in-waiting-area",
+    "type": "sjt",
+    "section": "workplace_judgement",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "behavioral.customer.service_orientation",
+    "secondary_skill_codes": [
+      "behavioral.communication.listening"
+    ],
+    "prompt": "A customer starts shouting at you in a busy waiting area, because they have waited 40 minutes. Other customers are watching. The delay is caused by a staff shortage. What do you do first?",
+    "choices": [
+      "Call your supervisor over straight away, since they have more authority than you.",
+      "Explain that there is a staff shortage today, which means the long wait is not your fault or the team's fault.",
+      "Ask them firmly to stop shouting or leave, as other customers have been waiting as well.",
+      "Stay calm, apologise for the wait, tell them honestly how long it may take, and offer a quieter spot."
+    ],
+    "answer": {
+      "points": [
+        2,
+        1,
+        0,
+        3
+      ]
+    },
+    "explanation": "Best (3): \"Stay calm, apologise, give honest timing, offer a quieter place\". Calm, honest information is what settles most upset customers, and a quieter place protects their dignity and the comfort of others. \"Call the supervisor straight away\" (2): Fine if you cannot cope, but you can start calming the customer yourself first. \"Say it is not your fault\" (1): True, but it sounds like an excuse and does not give them what they need. \"Tell them to stop or leave\" (0): Raises the conflict with a frustrated customer who has a real reason to be upset.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.j.supplier-offers-watch",
+    "type": "sjt",
+    "section": "workplace_judgement",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "behavioral.ethics.integrity",
+    "secondary_skill_codes": [],
+    "prompt": "A supplier offers you an expensive watch to thank you for your work together. You help decide which supplier gets the next large order. Company rules say staff must not accept expensive gifts from suppliers. What is the best response?",
+    "choices": [
+      "Accept it politely, but make sure it does not affect your choice when the next order is decided.",
+      "Thank them, explain the company's gift rule, politely decline, and tell your manager about the offer.",
+      "Tell the supplier you will ask your manager whether an exception can be made, and reply to them later.",
+      "Accept it and say nothing, since refusing a gift could damage a good working relationship."
+    ],
+    "answer": {
+      "points": [
+        1,
+        3,
+        2,
+        0
+      ]
+    },
+    "explanation": "Best (3): \"Explain the rule, decline politely, tell your manager\". The rule is clear, and naming it lets you refuse without offending the supplier. Telling the manager keeps everything open, because the offer itself matters while you help choose suppliers. \"Ask the manager about an exception\" (2): Open and honest, but it asks to bend a clear rule for a gift from someone whose order you help decide. \"Accept but stay fair\" (1): Breaks the rule, and even if you stay fair, others may not believe it and the supplier may expect something back. \"Accept and say nothing\" (0): Breaks the rule and hides it, and hidden gifts from suppliers are a common way bribery starts.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.j.cash-short-at-close",
+    "type": "sjt",
+    "section": "workplace_judgement",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "behavioral.ethics.integrity",
+    "secondary_skill_codes": [
+      "behavioral.ownership.accountability"
+    ],
+    "prompt": "At the end of the day, the cash you count is less than the sales record shows. You have counted it twice. You do not know what happened. What do you do first?",
+    "choices": [
+      "Report the exact difference to your manager now, following the normal end-of-day process.",
+      "Count it a third time with a colleague watching, then leave a note about it for the morning team.",
+      "Enter a count that matches the sales record, as the difference is probably a small error somewhere.",
+      "Make up the difference from your own money, so the day closes without any problems."
+    ],
+    "answer": {
+      "points": [
+        3,
+        2,
+        0,
+        1
+      ]
+    },
+    "explanation": "Best (3): \"Report the exact difference now\". The right people learn about it at once and can check what happened while it is fresh. \"Count again, then leave a note\" (2): Careful, but the report is delayed until the next morning. \"Pay it yourself\" (1): Hides the problem, so a till error or a theft may go on. \"Change the count\" (0): Falsifies a financial record.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.j.lunchtime-rumour",
+    "type": "sjt",
+    "section": "workplace_judgement",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "behavioral.ethics.integrity",
+    "secondary_skill_codes": [
+      "behavioral.collaboration.conflict"
+    ],
+    "prompt": "At lunch, some colleagues say a team member only got their job because they are friends with the manager. They ask what you think. You have no reason to believe it. What is the best response?",
+    "choices": [
+      "Say you are not sure, but share what you have heard other people say about it too.",
+      "Tell the team member privately what people are saying about them, so they can protect themselves.",
+      "Say you would rather not talk about someone who is not here, and change the subject.",
+      "Stay quiet, finish your lunch quickly, and leave the table so that you are not part of it."
+    ],
+    "answer": {
+      "points": [
+        0,
+        1,
+        3,
+        2
+      ]
+    },
+    "explanation": "Best (3): \"Decline politely and change the subject\". You do not spread the rumour, and you do it without causing a scene. \"Leave the table\" (2): You do not spread it, but colleagues may take your silence as agreement. \"Tell the person what is being said\" (1): Well meant, but it spreads the rumour further and may hurt them. \"Share what you have heard\" (0): Spreads a rumour you have no reason to believe.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.j.help-unload-delivery",
+    "type": "sjt",
+    "section": "workplace_judgement",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "behavioral.problem_solving.pragmatism",
+    "secondary_skill_codes": [
+      "behavioral.communication.clarity"
+    ],
+    "prompt": "Your supervisor asks you to help unload a delivery for an hour, because the usual team is short of staff. The boxes are light. It is not part of your job, and you have your own tasks to finish. What is the best response?",
+    "choices": [
+      "Help with the delivery, then stay late to finish your own tasks without mentioning it to anyone.",
+      "Agree to help, and tell your supervisor which of your own tasks will be late because of it.",
+      "Politely refuse, as unloading is not your role and your own tasks are important too.",
+      "Say it is not in your job description, but agree to help just this once as a favour."
+    ],
+    "answer": {
+      "points": [
+        2,
+        3,
+        0,
+        1
+      ]
+    },
+    "explanation": "Best (3): \"Help, and say which tasks will be late\". Helps the team while letting the supervisor decide the trade-off. \"Help, then stay late in silence\" (2): Helpful, but the supervisor does not know the real cost, and staying late every time is not sustainable. \"Say it is not your job, but help once\" (1): You help, but the comment damages goodwill over a reasonable request. \"Refuse\" (0): Unhelpful when the team is short and the task is safe.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.j.never-used-the-system",
+    "type": "sjt",
+    "section": "workplace_judgement",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "behavioral.communication.clarity",
+    "secondary_skill_codes": [
+      "behavioral.ownership.initiative"
+    ],
+    "prompt": "Your supervisor asks you to place the weekly order on a computer system you have never used. They are leaving for a meeting now, and the order is due by the end of the day. What do you do first?",
+    "choices": [
+      "Tell your supervisor before they leave that you have never used the system, and ask who can guide you.",
+      "Find a guide for the system, try the order yourself, and ask a colleague to check it before you send it.",
+      "Leave the order for your supervisor to do tomorrow, since you were never trained on the system.",
+      "Work it out alone as best you can, so that the order still goes out on time, and send it when it looks right."
+    ],
+    "answer": {
+      "points": [
+        3,
+        2,
+        0,
+        1
+      ]
+    },
+    "explanation": "Best (3): \"Tell the supervisor now and ask who can guide you\". The supervisor is about to leave, so this is the moment to say it, and they can name someone who knows the system. \"Find a guide and get it checked\" (2): Good initiative with a check before sending, but the supervisor does not know about the risk. \"Work it out alone and send it\" (1): An order placed by guessing can be costly. \"Leave it for tomorrow\" (0): The order misses its deadline, and the supervisor is not even told.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.j.bus-delay-late-for-shift",
+    "type": "sjt",
+    "section": "workplace_judgement",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "behavioral.ownership.accountability",
+    "secondary_skill_codes": [
+      "behavioral.communication.clarity"
+    ],
+    "prompt": "Your bus is delayed, and you will be about 30 minutes late for your shift. A colleague cannot go home until you arrive. What do you do first?",
+    "choices": [
+      "Get there as fast as you can, and explain the delay to your supervisor when you arrive.",
+      "Call in sick for the day, since arriving late again might get you a warning from your supervisor.",
+      "Call or message your supervisor and the colleague now, and tell them when you expect to arrive.",
+      "Message the colleague you are taking over from, so they know you will be late."
+    ],
+    "answer": {
+      "points": [
+        1,
+        0,
+        3,
+        2
+      ]
+    },
+    "explanation": "Best (3): \"Tell your supervisor and the colleague now\". Both people affected can plan, and giving an arrival time shows responsibility. \"Message only the colleague\" (2): The colleague can plan, but the supervisor does not know the shift will start short. \"Explain when you arrive\" (1): Nobody can plan for 30 minutes. \"Call in sick\" (0): Dishonest, and it leaves the shift short for the whole day.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.j.colleague-takes-supplies-home",
+    "type": "sjt",
+    "section": "workplace_judgement",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "behavioral.ethics.integrity",
+    "secondary_skill_codes": [
+      "behavioral.collaboration.conflict"
+    ],
+    "prompt": "A colleague often takes a few pens and some printing paper home for personal use. The items are cheap, but the company rules say supplies are for work only. When you look surprised, they say everyone does it. What is the best response?",
+    "choices": [
+      "Tell your supervisor what you have seen, because it is their job to decide what to do.",
+      "Say nothing and do not take any yourself, since it is only small items like pens and paper.",
+      "Take a few small things home too, as everyone seems to do it and nobody has ever minded.",
+      "Do not take any yourself, and tell them kindly that the rules say supplies are for work only."
+    ],
+    "answer": {
+      "points": [
+        2,
+        1,
+        0,
+        3
+      ]
+    },
+    "explanation": "Best (3): \"Do not join in, and remind them kindly of the rule\". The items are cheap and this is the first time it has come up between you, so a kind word is honest, proportionate and gives the colleague a fair chance to stop. If it continued, or the items were valuable, the supervisor should be told. \"Tell the supervisor\" (2): A proper channel, but for cheap items, going to the supervisor before saying a word to the colleague is more than the situation needs. It is still better than ignoring it. \"Say nothing but do not join in\" (1): You stay honest, but the rule keeps being broken. \"Join in\" (0): Taking company property against the rules.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.j.jokes-about-colleagues-accent",
+    "type": "sjt",
+    "section": "workplace_judgement",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "behavioral.ethics.integrity",
+    "secondary_skill_codes": [
+      "behavioral.leadership.setting_norms"
+    ],
+    "prompt": "A colleague often makes jokes about another colleague's accent and where they come from. The colleague laughs along, but you have seen them look upset afterwards. This has happened several times. What do you do first?",
+    "choices": [
+      "Stay out of it, because the colleague laughs along and has never complained to anyone.",
+      "Laugh along to keep a good mood in the team, as the jokes are only meant as fun.",
+      "Check privately that the colleague is all right, and tell your supervisor or HR what you have seen.",
+      "Tell the colleague making the jokes, in private, that the jokes are hurtful and should stop."
+    ],
+    "answer": {
+      "points": [
+        1,
+        0,
+        3,
+        2
+      ]
+    },
+    "explanation": "Best (3): \"Check on the colleague privately, and report what you saw\". Supports the person affected and uses the proper channel. Repeated jokes about someone's accent and where they come from are harassment, even when the person laughs along. Unlike small everyday problems between colleagues, harassment should reach the supervisor or HR, who are responsible for stopping it. \"Tell the joker privately\" (2): Brave and may stop it, but the behaviour has been repeated several times and the people responsible for a respectful workplace still do not know. \"Stay out of it\" (1): Laughing along often hides discomfort, and silence lets it continue. \"Laugh along\" (0): Joins in with behaviour that hurts a colleague.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.j.sign-in-for-late-colleague",
+    "type": "sjt",
+    "section": "workplace_judgement",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "behavioral.ethics.integrity",
+    "secondary_skill_codes": [],
+    "prompt": "A colleague messages you that they are running late. They ask you to sign them in on the attendance sheet, so their pay is not cut. What is the best response?",
+    "choices": [
+      "Sign them in this once, since they are only a few minutes away and will arrive soon.",
+      "Tell the supervisor privately that the colleague asked you to sign them in, so the records stay correct.",
+      "Reply that you are too busy to get to the attendance sheet right now, and then carry on with your work.",
+      "Reply that you cannot sign in for them, and suggest they tell the supervisor they are running late."
+    ],
+    "answer": {
+      "points": [
+        0,
+        2,
+        1,
+        3
+      ]
+    },
+    "explanation": "Best (3): \"Decline and suggest they tell the supervisor\". Honest and kind, and it points the colleague to the right fix. \"Report the request to the supervisor\" (2): Honest, but reporting the request before the colleague can put it right is harsher than needed. \"Say you are too busy\" (1): Not dishonest about attendance, but it avoids the real issue and the colleague may ask again. \"Sign them in\" (0): Falsifies attendance and pay records.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.j.not-sure-of-ready-date",
+    "type": "sjt",
+    "section": "workplace_judgement",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "behavioral.customer.service_orientation",
+    "secondary_skill_codes": [
+      "behavioral.ethics.integrity"
+    ],
+    "prompt": "A customer asks if their item will be ready by Friday. You think it probably will be, but you are not sure. They seem worried. What is the best response?",
+    "choices": [
+      "Say you want to give a correct answer, so you will check with the right person and call them back today.",
+      "Say honestly that it will probably be ready, but that you cannot promise it, so they are not misled.",
+      "Tell them to ask your supervisor, as delivery dates are not something you are responsible for.",
+      "Say yes, since it is usually ready on time and you do not want to worry them."
+    ],
+    "answer": {
+      "points": [
+        3,
+        2,
+        1,
+        0
+      ]
+    },
+    "explanation": "Best (3): \"Check and get back the same day\". The customer gets a correct answer, and you do not promise something you are not sure of. \"Say probably, with no promise\" (2): Honest, but it leaves a worried customer without a real answer when you could check. \"Send them to the supervisor\" (1): Not wrong, but it passes the customer on when you could find the answer yourself. \"Say yes\" (0): A promise you cannot be sure of misleads a worried customer and makes things worse if it is broken.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.j.caller-asks-for-password",
+    "type": "sjt",
+    "section": "workplace_judgement",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "behavioral.ethics.integrity",
+    "secondary_skill_codes": [
+      "behavioral.ownership.initiative"
+    ],
+    "prompt": "A caller says they are from your company's IT team. They know your name, and they ask for your password to fix a problem with your account today. What do you do first?",
+    "choices": [
+      "Refuse to give your password, and then carry on with your work as normal.",
+      "Refuse politely, end the call, and report it to IT using the contact details you already have.",
+      "Give it, since they know your name and seem to know about the problem with your account.",
+      "Ask for their name and phone number so that you can call them back after checking."
+    ],
+    "answer": {
+      "points": [
+        2,
+        3,
+        0,
+        1
+      ]
+    },
+    "explanation": "Best (3): \"Refuse, end the call, report it\". Real IT teams do not ask for passwords. Reporting it through contact details you already trust helps protect colleagues who may get the same call. \"Refuse and carry on\" (2): Protects your own account, but others may be targeted next. \"Ask for their number and call back\" (1): Calling a number the caller gives you can lead straight back to the scammer. \"Give it\" (0): Gives a stranger access to company systems.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.j.cut-on-sharp-shelf",
+    "type": "sjt",
+    "section": "workplace_judgement",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "behavioral.ethics.safety",
+    "secondary_skill_codes": [],
+    "prompt": "You cut your hand slightly on a sharp metal edge of a shelf. The cut is small, and you have a lot of work to finish. What do you do first?",
+    "choices": [
+      "Get first aid, then report the cut and the sharp edge so it can be fixed before anyone else is hurt.",
+      "Clean the cut and carry on working, since it is only a small cut and it has stopped bleeding.",
+      "Carry on working without stopping, as stopping now would slow the whole team down.",
+      "Get first aid, and tell your manager about the sharp edge at the end of your shift, when it is quieter."
+    ],
+    "answer": {
+      "points": [
+        3,
+        1,
+        0,
+        2
+      ]
+    },
+    "explanation": "Best (3): \"First aid, then report the cut and the sharp edge\". Looks after the injury and gets the hazard fixed before someone else is hurt. \"Report at the end of the shift\" (2): The hazard is reported, but others are at risk for hours. \"Clean it and carry on\" (1): The cut is looked after, but nobody knows about the sharp edge. \"Carry on without stopping\" (0): Ignores both the injury and the hazard.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.j.told-to-say-order-was-sent",
+    "type": "sjt",
+    "section": "workplace_judgement",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "behavioral.ethics.integrity",
+    "secondary_skill_codes": [
+      "behavioral.communication.clarity"
+    ],
+    "prompt": "Your supervisor tells you to tell callers that their delayed orders \"have been sent\", when they have not. The supervisor says this will calm customers down. What is the best response?",
+    "choices": [
+      "Use the message, and add that the orders should arrive tomorrow to keep callers happy.",
+      "Tell your supervisor privately you are not comfortable saying it, and suggest an honest message.",
+      "Tell callers the truth about the delay, without discussing it with your supervisor first.",
+      "Use the supervisor's message, since they are the one responsible for what customers are told."
+    ],
+    "answer": {
+      "points": [
+        0,
+        3,
+        2,
+        1
+      ]
+    },
+    "explanation": "Best (3): \"Raise it privately and suggest an honest message\". Respectful to the supervisor and honest with customers, and it gives the supervisor a better option. \"Tell the truth without discussing it\" (2): Honest, but it goes against the supervisor without giving them a chance to change the instruction. \"Use the message\" (1): Being told to say it does not make a false statement acceptable. \"Use it and add a date\" (0): Adds a second untrue promise.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.j.colleague-takes-credit",
+    "type": "sjt",
+    "section": "workplace_judgement",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "behavioral.collaboration.conflict",
+    "secondary_skill_codes": [
+      "behavioral.communication.clarity"
+    ],
+    "prompt": "In a team meeting, a colleague presents an idea you shared with them last week as their own. The manager praises them for it. What is the best response?",
+    "choices": [
+      "Send your manager a short message saying you are glad the idea was liked, and that you suggested it first.",
+      "Say nothing, and stop sharing your ideas with colleagues from now on.",
+      "Say in the meeting, in front of everyone, that it was really your idea.",
+      "Talk to the colleague privately, calmly say the idea came from you, and agree how to share credit."
+    ],
+    "answer": {
+      "points": [
+        2,
+        1,
+        1,
+        3
+      ]
+    },
+    "explanation": "Best (3): \"Talk privately and agree how to share credit\". Calm, private and focused on the future. \"Message the manager\" (2): Puts your part on record without a scene, but skips the colleague, who may see it differently. \"Say it in the meeting\" (1): A public challenge embarrasses everyone and is likely to start a conflict. \"Say nothing and stop sharing\" (1): Avoids conflict, but the team loses your ideas.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.j.colleague-on-phone-all-shift",
+    "type": "sjt",
+    "section": "workplace_judgement",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "behavioral.collaboration.conflict",
+    "secondary_skill_codes": [
+      "behavioral.communication.clarity"
+    ],
+    "prompt": "You and a colleague share the same tasks on each shift. For several weeks, they have spent long periods on their phone, and you end up doing most of the work. You have not mentioned it to them yet. What do you do first?",
+    "choices": [
+      "Tell your supervisor that you are doing most of the work, since it is their job to share it fairly.",
+      "Complain about the colleague to other team members, to find out if they have noticed it too.",
+      "Talk to the colleague calmly, and suggest dividing tasks clearly at the start of each shift so it is fair.",
+      "Slow down and do only half of the tasks, so the work is split equally between the two of you."
+    ],
+    "answer": {
+      "points": [
+        2,
+        0,
+        3,
+        1
+      ]
+    },
+    "explanation": "Best (3): \"Raise it calmly and suggest a clear split\". You have not raised it with them yet, so a calm private conversation with a practical fix is the fair first step. If nothing changes, the supervisor should be told. \"Tell the supervisor\" (2): A proper route, but going to the supervisor before speaking to the colleague skips a step that may solve it faster and keep the working relationship. \"Do only half\" (1): Work is left undone, which hurts the team and customers. \"Complain to others\" (0): Gossip harms the team and changes nothing.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.j.finished-tasks-early",
+    "type": "sjt",
+    "section": "workplace_judgement",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "behavioral.ownership.initiative",
+    "secondary_skill_codes": [],
+    "prompt": "You finish all your tasks two hours before the end of your shift. Your supervisor is busy, and some colleagues are behind with work that must be done today. What do you do first?",
+    "choices": [
+      "Do small useful jobs that you can see need doing, like tidying, until the shift ends.",
+      "Use the time for personal things on your phone, since your own work is all done for the day.",
+      "Work more slowly on your last task, so it lasts until the end of the shift.",
+      "Tell your supervisor briefly that you are free, and ask a busy colleague if you can help them."
+    ],
+    "answer": {
+      "points": [
+        2,
+        0,
+        1,
+        3
+      ]
+    },
+    "explanation": "Best (3): \"Tell the supervisor briefly and help a busy colleague\". The colleagues' work must be done today, so your time goes where the team needs it most, and the supervisor knows you are free. \"Do small useful jobs\" (2): Good initiative, but tidying can wait while urgent work is behind, and the supervisor does not know you are free. \"Work slowly\" (1): Wastes paid time. \"Personal things on your phone\" (0): Uses paid work time for personal things while colleagues are struggling.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.j.customer-asks-personal-number",
+    "type": "sjt",
+    "section": "workplace_judgement",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "behavioral.customer.service_orientation",
+    "secondary_skill_codes": [
+      "behavioral.ethics.integrity"
+    ],
+    "prompt": "A customer you have served several times asks for your personal phone number. They say they want to contact you directly next time. Company rules say staff must not give customers their personal numbers. What is the best response?",
+    "choices": [
+      "Give them your number, but ask them to contact you only during your normal working hours.",
+      "Say politely that you are not comfortable sharing your personal number, because it is private.",
+      "Thank them, say you cannot share personal numbers, and give them the work contact details.",
+      "Give them your number, as a closer relationship with a regular customer may bring more business."
+    ],
+    "answer": {
+      "points": [
+        1,
+        2,
+        3,
+        0
+      ]
+    },
+    "explanation": "Best (3): \"Decline politely and give the work contact\". Follows the rule and keeps a professional boundary while still helping the customer reach the business. \"Decline and leave it\" (2): A fair boundary, but the customer is not given another way to reach the business. \"Give it with conditions\" (1): Breaks the rule, even if you try to limit the contact. \"Give it\" (0): Breaks the rule on purpose and puts extra sales above it, with no attempt to keep a boundary. (The rule is stated because in some countries staff often share personal numbers with regular customers, so without it the best answer would depend on the workplace.)",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.j.found-wallet",
+    "type": "sjt",
+    "section": "workplace_judgement",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "behavioral.ethics.integrity",
+    "secondary_skill_codes": [],
+    "prompt": "At the end of the day, you find a wallet with money in it under a seat in the customer area. Nobody else is around. What do you do first?",
+    "choices": [
+      "Look inside for a name or phone number, so that you can try to contact the owner yourself.",
+      "Hand it to your supervisor or into lost property straight away, and note where you found it.",
+      "Keep it safe in your bag overnight, and hand it in when you start work tomorrow.",
+      "Leave it where it is, since the owner will probably remember and come back for it soon."
+    ],
+    "answer": {
+      "points": [
+        2,
+        3,
+        1,
+        0
+      ]
+    },
+    "explanation": "Best (3): \"Hand it in now and note where it was\". Protects the owner and protects you. \"Look inside and contact the owner\" (2): Kind, but going through a wallet alone can raise questions, and the lost property process exists for this. \"Take it home\" (1): Delays the return and can look suspicious. \"Leave it\" (0): Someone else may take it.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.j.dizzy-colleague-about-to-drive",
+    "type": "sjt",
+    "section": "workplace_judgement",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "behavioral.ethics.safety",
+    "secondary_skill_codes": [
+      "behavioral.communication.clarity"
+    ],
+    "prompt": "A colleague is about to drive a work vehicle to a customer. They tell you they slept very little and feel dizzy. Nobody else has noticed. What do you do first?",
+    "choices": [
+      "Ask them not to drive for now, and tell your manager so another driver can be found.",
+      "Say nothing, because they know best how they feel and it is their own decision to make.",
+      "Offer to make the trip yourself if you are allowed to drive that vehicle, so they can rest.",
+      "Suggest they get some fresh air first, and then drive slowly and carefully all the way there."
+    ],
+    "answer": {
+      "points": [
+        3,
+        0,
+        2,
+        1
+      ]
+    },
+    "explanation": "Best (3): \"Ask them not to drive, and tell the manager\". A dizzy driver is a danger to themselves and to others, and the manager can arrange another driver. \"Drive yourself if allowed\" (2): Makes the trip safe if you are allowed to drive it, but the manager does not know about the change or the colleague's state. \"Fresh air and drive slowly\" (1): Does not make a dizzy person safe to drive. \"Say nothing\" (0): Ignores a clear danger.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.j.colleague-asks-to-hide-error",
+    "type": "sjt",
+    "section": "workplace_judgement",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "behavioral.ethics.integrity",
+    "secondary_skill_codes": [
+      "behavioral.ownership.accountability"
+    ],
+    "prompt": "A colleague tells you they sent 30 customers a letter with the wrong appointment time. They ask you not to tell anyone, because they are afraid of losing their job. What is the best response?",
+    "choices": [
+      "Tell the supervisor yourself straight away, without waiting for the colleague.",
+      "Encourage them to tell the supervisor now, because customers must be told, and offer to go with them.",
+      "Agree to keep it secret, as it was an accident and everyone makes mistakes sometimes.",
+      "Help them call the customers quietly with the right time, without telling the supervisor."
+    ],
+    "answer": {
+      "points": [
+        2,
+        3,
+        0,
+        1
+      ]
+    },
+    "explanation": "Best (3): \"Encourage them to tell the supervisor now, and offer to go with them\". The customers need the right time quickly, and the colleague gets the chance to own the mistake with support. If they will not, you must tell the supervisor yourself, because customers are affected. \"Tell the supervisor yourself\" (2): Protects the customers, but does not give the colleague the chance to own it first. \"Fix it together quietly\" (1): Helps the customers, but hides the error, so the cause is not fixed and records stay wrong. \"Keep it secret\" (0): Customers may come at the wrong time or miss their appointments.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.j.train-new-starter-while-busy",
+    "type": "sjt",
+    "section": "workplace_judgement",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "behavioral.leadership.mentorship",
+    "secondary_skill_codes": [
+      "behavioral.problem_solving.pragmatism"
+    ],
+    "prompt": "Your supervisor asks you to show a new colleague how things work today. You also have a full list of your own tasks, and you cannot do both properly in one day. What is the best response?",
+    "choices": [
+      "Let the new colleague watch you do your own tasks, and explain things to them as you go along.",
+      "Tell your supervisor you are too busy today, and suggest that they ask somebody else to do it.",
+      "Agree, and ask your supervisor which of your tasks can wait so that you have time to train them.",
+      "Give the new colleague the written guide to read at a spare desk, and check on them at the end of the day."
+    ],
+    "answer": {
+      "points": [
+        2,
+        1,
+        3,
+        1
+      ]
+    },
+    "explanation": "Best (3): \"Agree, and ask which tasks can wait\". You cannot do both properly, so asking lets the supervisor choose what comes first, and the new colleague gets proper attention. \"Let them watch you\" (2): Practical, and watching helps a little, but with a full list either the training or your own tasks will suffer, and the supervisor does not know. \"Give them the guide and check later\" (1): The new colleague is left alone for most of their first day. \"Say you are too busy\" (1): Refuses a reasonable request instead of discussing priorities.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.j.unclear-instructions",
+    "type": "sjt",
+    "section": "workplace_judgement",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "behavioral.communication.listening",
+    "secondary_skill_codes": [
+      "behavioral.communication.clarity"
+    ],
+    "prompt": "Your supervisor gives you a task quickly while walking past. You are not sure what result they want or when it is due. What do you do first?",
+    "choices": [
+      "Ask two quick questions now about the result and the deadline, so that you do not waste any work.",
+      "Start the task as you understand it, and check with them later in the day.",
+      "Ask a colleague what they think the supervisor meant, so you do not disturb the supervisor.",
+      "Wait until the supervisor explains more, since asking might look like you were not listening."
+    ],
+    "answer": {
+      "points": [
+        3,
+        2,
+        1,
+        0
+      ]
+    },
+    "explanation": "Best (3): \"Ask two quick questions now\". Takes a minute and avoids wasted work. \"Start, and check later\" (2): Some risk of wasted work, but checking the same day limits it. \"Ask a colleague\" (1): The colleague can only guess what the supervisor meant. \"Wait\" (0): The supervisor may not come back, and the task may be late or wrong.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.j.colleague-promised-wrong-date",
+    "type": "sjt",
+    "section": "workplace_judgement",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "behavioral.customer.service_orientation",
+    "secondary_skill_codes": [
+      "behavioral.ethics.integrity"
+    ],
+    "prompt": "A customer comes to collect an item. A colleague told them it would be ready today, but it needs two more days. The customer took time off work to come. What is the best response?",
+    "choices": [
+      "Say it will be ready tomorrow to calm the customer down, and hope it can be rushed through.",
+      "Explain that a colleague made the mistake, and that you were not the one who gave them that date.",
+      "Apologise, and ask your supervisor to come and speak to the customer, since they can decide what to offer.",
+      "Apologise, explain honestly that it needs two more days, and offer to contact them when it is ready."
+    ],
+    "answer": {
+      "points": [
+        0,
+        1,
+        2,
+        3
+      ]
+    },
+    "explanation": "Best (3): \"Apologise, give the real date honestly, offer to contact them\". Honest, takes responsibility on behalf of the business, and makes the next step easy for the customer. \"Call the supervisor\" (2): May be needed if the customer wants more, but you can deal with this yourself first. \"Blame the colleague\" (1): The customer does not care who made the error, and blaming colleagues makes the business look worse. \"Promise tomorrow\" (0): A second promise that may be broken.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.j.too-many-tasks",
+    "type": "sjt",
+    "section": "workplace_judgement",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "behavioral.communication.clarity",
+    "secondary_skill_codes": [
+      "behavioral.problem_solving.decomposition"
+    ],
+    "prompt": "For two weeks you have been given more and more tasks. You stay late every day and you are starting to make small mistakes. What do you do first?",
+    "choices": [
+      "Quietly skip the checks that take longest, so you can finish your list each day.",
+      "Ask a colleague who seems less busy to take some of your tasks for a few weeks, until things get quieter.",
+      "Ask your supervisor for a short talk, show the full list of tasks, and ask which ones matter most.",
+      "Work faster and take shorter breaks, so that your supervisor does not think you cannot cope."
+    ],
+    "answer": {
+      "points": [
+        0,
+        2,
+        3,
+        1
+      ]
+    },
+    "explanation": "Best (3): \"Show the list and ask for priorities\". Gives the supervisor the facts to decide what can wait, before the mistakes grow. \"Ask a colleague to take some\" (2): May help, but moves work around without the supervisor knowing, and the colleague may be busy too. \"Work faster\" (1): Not sustainable, and more mistakes are likely. \"Skip checks\" (0): Lowers quality in secret.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.j.problem-with-agreed-plan",
+    "type": "sjt",
+    "section": "workplace_judgement",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "behavioral.communication.clarity",
+    "secondary_skill_codes": [
+      "behavioral.ownership.initiative"
+    ],
+    "prompt": "In a meeting, the team agrees a plan for next week. Afterwards you notice a problem nobody mentioned: two tasks need the same person at the same time. What do you do first?",
+    "choices": [
+      "Mention it politely to the person who led the meeting, so it can be fixed in time.",
+      "Wait to see if it really causes trouble next week, and raise it then if it does.",
+      "Send the whole team a message explaining the problem, so everyone is aware of it before next week.",
+      "Say nothing, as the group has already agreed the plan and it may still work out."
+    ],
+    "answer": {
+      "points": [
+        3,
+        1,
+        2,
+        0
+      ]
+    },
+    "explanation": "Best (3): \"Tell the person who led the meeting\". The problem can be fixed in time, and the person in charge of the plan decides. \"Message the whole team\" (2): The problem is raised, but it may cause confusion before the person in charge has decided what to change. \"Wait and see\" (1): The problem is known now, and waiting makes it harder to fix. \"Say nothing\" (0): A known problem is left to happen.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.j.unfair-online-review",
+    "type": "sjt",
+    "section": "workplace_judgement",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "behavioral.customer.service_orientation",
+    "secondary_skill_codes": [
+      "behavioral.communication.written"
+    ],
+    "prompt": "A customer posts an angry and unfair review of your workplace online. A friend shows it to you and says you should reply from your own account. What is the best response?",
+    "choices": [
+      "Reply politely from your own account, and explain calmly what really happened that day.",
+      "Reply from your own account, saying the customer is not telling the truth about what happened.",
+      "Ignore it, since replying to reviews is not part of your job and could make things worse.",
+      "Do not reply yourself, and tell your supervisor so the right person can respond."
+    ],
+    "answer": {
+      "points": [
+        1,
+        0,
+        2,
+        3
+      ]
+    },
+    "explanation": "Best (3): \"Do not reply, and tell the supervisor\". The business's reply should come from the person responsible, in one consistent voice. \"Ignore it\" (2): Avoids making it worse, but the supervisor may not know about the review. \"Reply politely from your own account\" (1): Even a polite reply from a staff member's own account can make things worse, and it is not your role. \"Accuse the customer\" (0): A public argument hurts the business.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.j.boxes-block-fire-exit",
+    "type": "sjt",
+    "section": "workplace_judgement",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "behavioral.ethics.safety",
+    "secondary_skill_codes": [
+      "behavioral.communication.clarity"
+    ],
+    "prompt": "The storeroom is full, so boxes have been stacked in front of a fire exit. Your manager says it is only until next week. What is the best response?",
+    "choices": [
+      "Accept it, since your manager has decided and it is only for one week.",
+      "Explain politely that fire exits must stay clear, and offer to help find another place for the boxes.",
+      "Move the boxes to another corridor yourself, without saying anything to anyone.",
+      "Go straight to the person in charge of safety and report the blocked exit, without speaking to your manager again."
+    ],
+    "answer": {
+      "points": [
+        0,
+        3,
+        1,
+        2
+      ]
+    },
+    "explanation": "Best (3): \"Explain politely and help find another place\". A fire exit must be clear at all times, and a blocked one can cost lives. The manager controls the storeroom, so raising it again with a practical solution is the fastest way to get it cleared today. If the manager still refuses, the person in charge of safety must be told the same day. \"Report it to the safety person\" (2): Gets the hazard fixed, but skips the manager, who may clear it at once if asked again with a solution. \"Move the boxes quietly\" (1): May just block another route, and nobody learns about the problem. \"Accept it\" (0): A week is a long time for a blocked fire exit.",
+    "expected_time_s": 60
+  }
+]

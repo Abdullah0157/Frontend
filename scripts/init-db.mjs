@@ -372,11 +372,110 @@ CREATE TABLE IF NOT EXISTS expert_assessments (
   created_at        timestamptz NOT NULL DEFAULT now()
 );
 CREATE INDEX IF NOT EXISTS idx_expert_candidate ON expert_assessments(candidate_user_id, created_at DESC);
+
+-- ==========================================================================
+-- WRITTEN ASSESSMENTS v1 (frameworks/swe-assessment-design.md)
+-- Additive only. Items gain bank metadata and a candidate-visible \`content\`
+-- block (answer keys stay in scoring_rubric, never sent to the browser).
+-- Sessions gain a frozen per-candidate form, a progress pointer and an access
+-- token hash. Reports gain section scores, band and skill map.
+-- ==========================================================================
+ALTER TABLE items ADD COLUMN IF NOT EXISTS bank_key   text;
+ALTER TABLE items ADD COLUMN IF NOT EXISTS section    text;
+ALTER TABLE items ADD COLUMN IF NOT EXISTS format     text;
+ALTER TABLE items ADD COLUMN IF NOT EXISTS language   text;
+ALTER TABLE items ADD COLUMN IF NOT EXISTS difficulty text;
+ALTER TABLE items ADD COLUMN IF NOT EXISTS tracks     text[] NOT NULL DEFAULT '{}';
+ALTER TABLE items ADD COLUMN IF NOT EXISTS levels     text[] NOT NULL DEFAULT '{}';
+ALTER TABLE items ADD COLUMN IF NOT EXISTS content    jsonb;
+CREATE UNIQUE INDEX IF NOT EXISTS idx_items_bank_key ON items(bank_key) WHERE bank_key IS NOT NULL;
+CREATE INDEX IF NOT EXISTS idx_items_section ON items(section, status) WHERE section IS NOT NULL;
+ALTER TABLE items DROP CONSTRAINT IF EXISTS items_type_check;
+ALTER TABLE items ADD CONSTRAINT items_type_check CHECK (type IN (
+  'mcq','multi_select','sjt','coding','code_review','typing','listening','speaking',
+  'scenario_response','voice_response','video_response','system_design'));
+
+ALTER TABLE assessment_sessions ADD COLUMN IF NOT EXISTS track             text;
+ALTER TABLE assessment_sessions ADD COLUMN IF NOT EXISTS language          text;
+ALTER TABLE assessment_sessions ADD COLUMN IF NOT EXISTS form              jsonb;
+ALTER TABLE assessment_sessions ADD COLUMN IF NOT EXISTS progress          jsonb;
+ALTER TABLE assessment_sessions ADD COLUMN IF NOT EXISTS access_token_hash text;
+
+ALTER TABLE item_responses ADD COLUMN IF NOT EXISTS section text;
+
+ALTER TABLE assessment_reports ADD COLUMN IF NOT EXISTS sections  jsonb;
+ALTER TABLE assessment_reports ADD COLUMN IF NOT EXISTS band      text;
+ALTER TABLE assessment_reports ADD COLUMN IF NOT EXISTS skill_map jsonb;
+
+-- Job link + company report v2: which written test a job uses (track, level,
+-- allowed languages), and the report's integrity notes, resume-vs-results
+-- check and follow-up questions for the voice interview.
+ALTER TABLE interview_jobs ADD COLUMN IF NOT EXISTS assessment_config jsonb;
+ALTER TABLE assessment_reports ADD COLUMN IF NOT EXISTS integrity    jsonb;
+ALTER TABLE assessment_reports ADD COLUMN IF NOT EXISTS resume_check jsonb;
+ALTER TABLE assessment_reports ADD COLUMN IF NOT EXISTS followups    jsonb;
+
+-- English test: candidate recordings (kept 90 days, then deleted by
+-- scripts/purge-assessment-audio.mjs) and a cache of generated prompt audio
+-- (the scripts never go to the browser).
+CREATE TABLE IF NOT EXISTS assessment_audio (
+  id           uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  session_id   uuid NOT NULL REFERENCES assessment_sessions(id) ON DELETE CASCADE,
+  item_id      uuid REFERENCES items(id) ON DELETE SET NULL,
+  kind         text NOT NULL CHECK (kind IN ('answer','sound_check')),
+  mime         text NOT NULL,
+  bytes        bytea NOT NULL,
+  duration_ms  int,
+  created_at   timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_audio_session ON assessment_audio(session_id);
+CREATE INDEX IF NOT EXISTS idx_audio_created ON assessment_audio(created_at);
+CREATE TABLE IF NOT EXISTS item_audio_cache (
+  content_hash text PRIMARY KEY,
+  mime         text NOT NULL,
+  bytes        bytea NOT NULL,
+  created_at   timestamptz NOT NULL DEFAULT now()
+);
+ALTER TABLE assessment_reports ADD COLUMN IF NOT EXISTS english jsonb;
+
+-- Columns the app uses that were only ever added by hand or by side scripts
+-- on the live database. A fresh database (e.g. a new server) needs them.
+ALTER TABLE user_profiles ADD COLUMN IF NOT EXISTS linkedin_url text;
+ALTER TABLE user_profiles ADD COLUMN IF NOT EXISTS github_url text;
+ALTER TABLE user_profiles ADD COLUMN IF NOT EXISTS certificates jsonb;
+ALTER TABLE user_profiles ADD COLUMN IF NOT EXISTS resume_sections jsonb;
+ALTER TABLE user_profiles ADD COLUMN IF NOT EXISTS profile_prefs jsonb;
+ALTER TABLE interview_jobs ADD COLUMN IF NOT EXISTS pay_type text;
+ALTER TABLE interview_jobs ADD COLUMN IF NOT EXISTS pay_min integer;
+ALTER TABLE interview_jobs ADD COLUMN IF NOT EXISTS pay_max integer;
+ALTER TABLE interview_jobs ADD COLUMN IF NOT EXISTS pay_currency text DEFAULT 'USD';
+
+-- Request limits for AI, voice and upload routes (lib/rate-limit.js).
+CREATE TABLE IF NOT EXISTS rate_limits (
+  key          text NOT NULL,
+  window_start timestamptz NOT NULL,
+  count        int NOT NULL DEFAULT 1,
+  PRIMARY KEY (key, window_start)
+);
+CREATE INDEX IF NOT EXISTS idx_rate_limits_window ON rate_limits(window_start);
+
+-- Hire outcomes for the evaluation engine (was created inside the API route).
+CREATE TABLE IF NOT EXISTS eie_outcomes (
+  id bigserial PRIMARY KEY,
+  assessment_id bigint,
+  predicted_p numeric,
+  composite_theta numeric,
+  competency_thetas jsonb,
+  success boolean,
+  outcome_type text,
+  outcome_value numeric,
+  created_at timestamptz DEFAULT now()
+);
 `
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false },
+  ssl: process.env.DATABASE_SSL === 'false' ? false : { rejectUnauthorized: false },
 })
 
 try {

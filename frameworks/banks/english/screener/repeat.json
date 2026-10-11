@@ -1,0 +1,1226 @@
+[
+  {
+    "bank_key": "en.p.hold-one-moment",
+    "type": "speaking",
+    "section": "repeat",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "english.listening",
+    "secondary_skill_codes": [
+      "english.pronunciation_fluency"
+    ],
+    "cefr": "A2",
+    "prompt": "Listen to the sentence, then say it back exactly as you heard it. You will hear it only once.",
+    "speaking": {
+      "mode": "repeat",
+      "audio": {
+        "lines": [
+          {
+            "voice": "en-IN-NeerjaNeural",
+            "text": "Please hold for one moment."
+          }
+        ]
+      },
+      "prep_seconds": 0,
+      "max_seconds": 12
+    },
+    "expected_time_s": 20
+  },
+  {
+    "bank_key": "en.p.order-thursday",
+    "type": "speaking",
+    "section": "repeat",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "english.listening",
+    "secondary_skill_codes": [
+      "english.pronunciation_fluency"
+    ],
+    "cefr": "A2",
+    "prompt": "Listen to the sentence, then say it back exactly as you heard it. You will hear it only once.",
+    "speaking": {
+      "mode": "repeat",
+      "audio": {
+        "lines": [
+          {
+            "voice": "en-NG-AbeoNeural",
+            "text": "Your order will arrive on Thursday."
+          }
+        ]
+      },
+      "prep_seconds": 0,
+      "max_seconds": 12
+    },
+    "expected_time_s": 20
+  },
+  {
+    "bank_key": "en.p.call-back-today",
+    "type": "speaking",
+    "section": "repeat",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "english.listening",
+    "secondary_skill_codes": [
+      "english.pronunciation_fluency"
+    ],
+    "cefr": "A2",
+    "prompt": "Listen to the sentence, then say it back exactly as you heard it. You will hear it only once.",
+    "speaking": {
+      "mode": "repeat",
+      "audio": {
+        "lines": [
+          {
+            "voice": "en-PH-RosaNeural",
+            "text": "I will call you back today."
+          }
+        ]
+      },
+      "prep_seconds": 0,
+      "max_seconds": 12
+    },
+    "expected_time_s": 20
+  },
+  {
+    "bank_key": "en.p.name-please",
+    "type": "speaking",
+    "section": "repeat",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "english.listening",
+    "secondary_skill_codes": [
+      "english.pronunciation_fluency"
+    ],
+    "cefr": "A2",
+    "prompt": "Listen to the sentence, then say it back exactly as you heard it. You will hear it only once.",
+    "speaking": {
+      "mode": "repeat",
+      "audio": {
+        "lines": [
+          {
+            "voice": "en-KE-ChilembaNeural",
+            "text": "Can I have your name, please?"
+          }
+        ]
+      },
+      "prep_seconds": 0,
+      "max_seconds": 12
+    },
+    "expected_time_s": 20
+  },
+  {
+    "bank_key": "en.p.office-opens-nine",
+    "type": "speaking",
+    "section": "repeat",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "english.listening",
+    "secondary_skill_codes": [
+      "english.pronunciation_fluency"
+    ],
+    "cefr": "A2",
+    "prompt": "Listen to the sentence, then say it back exactly as you heard it. You will hear it only once.",
+    "speaking": {
+      "mode": "repeat",
+      "audio": {
+        "lines": [
+          {
+            "voice": "en-ZA-LeahNeural",
+            "text": "The office opens at nine o'clock."
+          }
+        ]
+      },
+      "prep_seconds": 0,
+      "max_seconds": 12
+    },
+    "expected_time_s": 20
+  },
+  {
+    "bank_key": "en.p.parcel-post-office",
+    "type": "speaking",
+    "section": "repeat",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "english.listening",
+    "secondary_skill_codes": [
+      "english.pronunciation_fluency"
+    ],
+    "cefr": "A2",
+    "prompt": "Listen to the sentence, then say it back exactly as you heard it. You will hear it only once.",
+    "speaking": {
+      "mode": "repeat",
+      "audio": {
+        "lines": [
+          {
+            "voice": "en-SG-WayneNeural",
+            "text": "Your parcel is at the post office."
+          }
+        ]
+      },
+      "prep_seconds": 0,
+      "max_seconds": 12
+    },
+    "expected_time_s": 20
+  },
+  {
+    "bank_key": "en.p.thank-you-nice-day",
+    "type": "speaking",
+    "section": "repeat",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "english.listening",
+    "secondary_skill_codes": [
+      "english.pronunciation_fluency"
+    ],
+    "cefr": "A2",
+    "prompt": "Listen to the sentence, then say it back exactly as you heard it. You will hear it only once.",
+    "speaking": {
+      "mode": "repeat",
+      "audio": {
+        "lines": [
+          {
+            "voice": "en-GB-SoniaNeural",
+            "text": "Thank you for calling, and have a nice day."
+          }
+        ]
+      },
+      "prep_seconds": 0,
+      "max_seconds": 12
+    },
+    "expected_time_s": 20
+  },
+  {
+    "bank_key": "en.p.check-email-password",
+    "type": "speaking",
+    "section": "repeat",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "english.listening",
+    "secondary_skill_codes": [
+      "english.pronunciation_fluency"
+    ],
+    "cefr": "A2",
+    "prompt": "Listen to the sentence, then say it back exactly as you heard it. You will hear it only once.",
+    "speaking": {
+      "mode": "repeat",
+      "audio": {
+        "lines": [
+          {
+            "voice": "en-IE-ConnorNeural",
+            "text": "Please check your email for the new password."
+          }
+        ]
+      },
+      "prep_seconds": 0,
+      "max_seconds": 12
+    },
+    "expected_time_s": 20
+  },
+  {
+    "bank_key": "en.p.meeting-room-four",
+    "type": "speaking",
+    "section": "repeat",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "english.listening",
+    "secondary_skill_codes": [
+      "english.pronunciation_fluency"
+    ],
+    "cefr": "A2",
+    "prompt": "Listen to the sentence, then say it back exactly as you heard it. You will hear it only once.",
+    "speaking": {
+      "mode": "repeat",
+      "audio": {
+        "lines": [
+          {
+            "voice": "en-US-JennyNeural",
+            "text": "The meeting is in room four this afternoon."
+          }
+        ]
+      },
+      "prep_seconds": 0,
+      "max_seconds": 12
+    },
+    "expected_time_s": 20
+  },
+  {
+    "bank_key": "en.p.spell-last-name",
+    "type": "speaking",
+    "section": "repeat",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "english.listening",
+    "secondary_skill_codes": [
+      "english.pronunciation_fluency"
+    ],
+    "cefr": "A2",
+    "prompt": "Listen to the sentence, then say it back exactly as you heard it. You will hear it only once.",
+    "speaking": {
+      "mode": "repeat",
+      "audio": {
+        "lines": [
+          {
+            "voice": "en-AU-WilliamMultilingualNeural",
+            "text": "Could you spell your last name for me, please?"
+          }
+        ]
+      },
+      "prep_seconds": 0,
+      "max_seconds": 12
+    },
+    "expected_time_s": 20
+  },
+  {
+    "bank_key": "en.p.manager-not-here",
+    "type": "speaking",
+    "section": "repeat",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "english.listening",
+    "secondary_skill_codes": [
+      "english.pronunciation_fluency"
+    ],
+    "cefr": "A2",
+    "prompt": "Listen to the sentence, then say it back exactly as you heard it. You will hear it only once.",
+    "speaking": {
+      "mode": "repeat",
+      "audio": {
+        "lines": [
+          {
+            "voice": "en-CA-ClaraNeural",
+            "text": "I am sorry, but the manager is not here today."
+          }
+        ]
+      },
+      "prep_seconds": 0,
+      "max_seconds": 12
+    },
+    "expected_time_s": 20
+  },
+  {
+    "bank_key": "en.p.new-card-home",
+    "type": "speaking",
+    "section": "repeat",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "english.listening",
+    "secondary_skill_codes": [
+      "english.pronunciation_fluency"
+    ],
+    "cefr": "A2",
+    "prompt": "Listen to the sentence, then say it back exactly as you heard it. You will hear it only once.",
+    "speaking": {
+      "mode": "repeat",
+      "audio": {
+        "lines": [
+          {
+            "voice": "en-IN-PrabhatNeural",
+            "text": "We will send a new card to your home address."
+          }
+        ]
+      },
+      "prep_seconds": 0,
+      "max_seconds": 12
+    },
+    "expected_time_s": 20
+  },
+  {
+    "bank_key": "en.p.appointment-monday",
+    "type": "speaking",
+    "section": "repeat",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "english.listening",
+    "secondary_skill_codes": [
+      "english.pronunciation_fluency"
+    ],
+    "cefr": "B1",
+    "prompt": "Listen to the sentence, then say it back exactly as you heard it. You will hear it only once.",
+    "speaking": {
+      "mode": "repeat",
+      "audio": {
+        "lines": [
+          {
+            "voice": "en-NG-EzinneNeural",
+            "text": "Your appointment has been moved to Monday at half past ten."
+          }
+        ]
+      },
+      "prep_seconds": 0,
+      "max_seconds": 12
+    },
+    "expected_time_s": 20
+  },
+  {
+    "bank_key": "en.p.more-questions",
+    "type": "speaking",
+    "section": "repeat",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "english.listening",
+    "secondary_skill_codes": [
+      "english.pronunciation_fluency"
+    ],
+    "cefr": "B1",
+    "prompt": "Listen to the sentence, then say it back exactly as you heard it. You will hear it only once.",
+    "speaking": {
+      "mode": "repeat",
+      "audio": {
+        "lines": [
+          {
+            "voice": "en-PH-JamesNeural",
+            "text": "If you have any more questions, please call us again."
+          }
+        ]
+      },
+      "prep_seconds": 0,
+      "max_seconds": 12
+    },
+    "expected_time_s": 20
+  },
+  {
+    "bank_key": "en.p.original-box",
+    "type": "speaking",
+    "section": "repeat",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "english.listening",
+    "secondary_skill_codes": [
+      "english.pronunciation_fluency"
+    ],
+    "cefr": "B1",
+    "prompt": "Listen to the sentence, then say it back exactly as you heard it. You will hear it only once.",
+    "speaking": {
+      "mode": "repeat",
+      "audio": {
+        "lines": [
+          {
+            "voice": "en-KE-AsiliaNeural",
+            "text": "Please make sure the item is still in its original box."
+          }
+        ]
+      },
+      "prep_seconds": 0,
+      "max_seconds": 12
+    },
+    "expected_time_s": 20
+  },
+  {
+    "bank_key": "en.p.engineer-visit",
+    "type": "speaking",
+    "section": "repeat",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "english.listening",
+    "secondary_skill_codes": [
+      "english.pronunciation_fluency"
+    ],
+    "cefr": "B1",
+    "prompt": "Listen to the sentence, then say it back exactly as you heard it. You will hear it only once.",
+    "speaking": {
+      "mode": "repeat",
+      "audio": {
+        "lines": [
+          {
+            "voice": "en-ZA-LukeNeural",
+            "text": "The engineer will visit your home between eight and twelve tomorrow."
+          }
+        ]
+      },
+      "prep_seconds": 0,
+      "max_seconds": 12
+    },
+    "expected_time_s": 20
+  },
+  {
+    "bank_key": "en.p.confirm-date-of-birth",
+    "type": "speaking",
+    "section": "repeat",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "english.listening",
+    "secondary_skill_codes": [
+      "english.pronunciation_fluency"
+    ],
+    "cefr": "B1",
+    "prompt": "Listen to the sentence, then say it back exactly as you heard it. You will hear it only once.",
+    "speaking": {
+      "mode": "repeat",
+      "audio": {
+        "lines": [
+          {
+            "voice": "en-SG-LunaNeural",
+            "text": "Before we continue, can you confirm your date of birth, please?"
+          }
+        ]
+      },
+      "prep_seconds": 0,
+      "max_seconds": 12
+    },
+    "expected_time_s": 20
+  },
+  {
+    "bank_key": "en.p.refund-five-days",
+    "type": "speaking",
+    "section": "repeat",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "english.listening",
+    "secondary_skill_codes": [
+      "english.pronunciation_fluency"
+    ],
+    "cefr": "B1",
+    "prompt": "Listen to the sentence, then say it back exactly as you heard it. You will hear it only once.",
+    "speaking": {
+      "mode": "repeat",
+      "audio": {
+        "lines": [
+          {
+            "voice": "en-GB-RyanNeural",
+            "text": "I have sent the refund, and it should arrive within five days."
+          }
+        ]
+      },
+      "prep_seconds": 0,
+      "max_seconds": 12
+    },
+    "expected_time_s": 20
+  },
+  {
+    "bank_key": "en.p.payment-fifth-may",
+    "type": "speaking",
+    "section": "repeat",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "english.listening",
+    "secondary_skill_codes": [
+      "english.pronunciation_fluency"
+    ],
+    "cefr": "B1",
+    "prompt": "Listen to the sentence, then say it back exactly as you heard it. You will hear it only once.",
+    "speaking": {
+      "mode": "repeat",
+      "audio": {
+        "lines": [
+          {
+            "voice": "en-IE-EmilyNeural",
+            "text": "I can see that the payment was made on the fifth of May."
+          }
+        ]
+      },
+      "prep_seconds": 0,
+      "max_seconds": 12
+    },
+    "expected_time_s": 20
+  },
+  {
+    "bank_key": "en.p.closed-holidays-online",
+    "type": "speaking",
+    "section": "repeat",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "english.listening",
+    "secondary_skill_codes": [
+      "english.pronunciation_fluency"
+    ],
+    "cefr": "B1",
+    "prompt": "Listen to the sentence, then say it back exactly as you heard it. You will hear it only once.",
+    "speaking": {
+      "mode": "repeat",
+      "audio": {
+        "lines": [
+          {
+            "voice": "en-US-GuyNeural",
+            "text": "Our store is closed on public holidays, but you can order online."
+          }
+        ]
+      },
+      "prep_seconds": 0,
+      "max_seconds": 12
+    },
+    "expected_time_s": 20
+  },
+  {
+    "bank_key": "en.p.meeting-moved-training",
+    "type": "speaking",
+    "section": "repeat",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "english.listening",
+    "secondary_skill_codes": [
+      "english.pronunciation_fluency"
+    ],
+    "cefr": "B1",
+    "prompt": "Listen to the sentence, then say it back exactly as you heard it. You will hear it only once.",
+    "speaking": {
+      "mode": "repeat",
+      "audio": {
+        "lines": [
+          {
+            "voice": "en-AU-NatashaNeural",
+            "text": "The team meeting has been moved to Wednesday because of the training."
+          }
+        ]
+      },
+      "prep_seconds": 0,
+      "max_seconds": 12
+    },
+    "expected_time_s": 20
+  },
+  {
+    "bank_key": "en.p.size-not-in-stock",
+    "type": "speaking",
+    "section": "repeat",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "english.listening",
+    "secondary_skill_codes": [
+      "english.pronunciation_fluency"
+    ],
+    "cefr": "B1",
+    "prompt": "Listen to the sentence, then say it back exactly as you heard it. You will hear it only once.",
+    "speaking": {
+      "mode": "repeat",
+      "audio": {
+        "lines": [
+          {
+            "voice": "en-CA-LiamNeural",
+            "text": "I'm afraid we don't have that size in stock at the moment."
+          }
+        ]
+      },
+      "prep_seconds": 0,
+      "max_seconds": 12
+    },
+    "expected_time_s": 20
+  },
+  {
+    "bank_key": "en.p.contract-same-price",
+    "type": "speaking",
+    "section": "repeat",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "english.listening",
+    "secondary_skill_codes": [
+      "english.pronunciation_fluency"
+    ],
+    "cefr": "B1",
+    "prompt": "Listen to the sentence, then say it back exactly as you heard it. You will hear it only once.",
+    "speaking": {
+      "mode": "repeat",
+      "audio": {
+        "lines": [
+          {
+            "voice": "en-IN-NeerjaNeural",
+            "text": "Your new contract starts next month, and the price will stay the same."
+          }
+        ]
+      },
+      "prep_seconds": 0,
+      "max_seconds": 12
+    },
+    "expected_time_s": 20
+  },
+  {
+    "bank_key": "en.p.reference-every-note",
+    "type": "speaking",
+    "section": "repeat",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "english.listening",
+    "secondary_skill_codes": [
+      "english.pronunciation_fluency"
+    ],
+    "cefr": "B1",
+    "prompt": "Listen to the sentence, then say it back exactly as you heard it. You will hear it only once.",
+    "speaking": {
+      "mode": "repeat",
+      "audio": {
+        "lines": [
+          {
+            "voice": "en-NG-AbeoNeural",
+            "text": "Please write the customer's reference number at the top of every note you make."
+          }
+        ]
+      },
+      "prep_seconds": 0,
+      "max_seconds": 12
+    },
+    "expected_time_s": 20
+  },
+  {
+    "bank_key": "en.p.discount-last-month",
+    "type": "speaking",
+    "section": "repeat",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "english.listening",
+    "secondary_skill_codes": [
+      "english.pronunciation_fluency"
+    ],
+    "cefr": "B2",
+    "prompt": "Listen to the sentence, then say it back exactly as you heard it. You will hear it only once.",
+    "speaking": {
+      "mode": "repeat",
+      "audio": {
+        "lines": [
+          {
+            "voice": "en-PH-RosaNeural",
+            "text": "Unfortunately, the discount only applies to orders placed before the end of last month."
+          }
+        ]
+      },
+      "prep_seconds": 0,
+      "max_seconds": 12
+    },
+    "expected_time_s": 20
+  },
+  {
+    "bank_key": "en.p.hold-check-supervisor",
+    "type": "speaking",
+    "section": "repeat",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "english.listening",
+    "secondary_skill_codes": [
+      "english.pronunciation_fluency"
+    ],
+    "cefr": "B2",
+    "prompt": "Listen to the sentence, then say it back exactly as you heard it. You will hear it only once.",
+    "speaking": {
+      "mode": "repeat",
+      "audio": {
+        "lines": [
+          {
+            "voice": "en-KE-ChilembaNeural",
+            "text": "Could you hold for a moment while I check the details with my supervisor?"
+          }
+        ]
+      },
+      "prep_seconds": 0,
+      "max_seconds": 12
+    },
+    "expected_time_s": 20
+  },
+  {
+    "bank_key": "en.p.delay-bad-weather",
+    "type": "speaking",
+    "section": "repeat",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "english.listening",
+    "secondary_skill_codes": [
+      "english.pronunciation_fluency"
+    ],
+    "cefr": "B2",
+    "prompt": "Listen to the sentence, then say it back exactly as you heard it. You will hear it only once.",
+    "speaking": {
+      "mode": "repeat",
+      "audio": {
+        "lines": [
+          {
+            "voice": "en-ZA-LeahNeural",
+            "text": "The delivery was delayed because of bad weather, but it has now left our warehouse."
+          }
+        ]
+      },
+      "prep_seconds": 0,
+      "max_seconds": 12
+    },
+    "expected_time_s": 20
+  },
+  {
+    "bank_key": "en.p.never-ask-password",
+    "type": "speaking",
+    "section": "repeat",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "english.listening",
+    "secondary_skill_codes": [
+      "english.pronunciation_fluency"
+    ],
+    "cefr": "B2",
+    "prompt": "Listen to the sentence, then say it back exactly as you heard it. You will hear it only once.",
+    "speaking": {
+      "mode": "repeat",
+      "audio": {
+        "lines": [
+          {
+            "voice": "en-SG-WayneNeural",
+            "text": "To protect your account, we will never ask for your full password over the phone."
+          }
+        ]
+      },
+      "prep_seconds": 0,
+      "max_seconds": 12
+    },
+    "expected_time_s": 20
+  },
+  {
+    "bank_key": "en.p.card-blocked-precaution",
+    "type": "speaking",
+    "section": "repeat",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "english.listening",
+    "secondary_skill_codes": [
+      "english.pronunciation_fluency"
+    ],
+    "cefr": "B2",
+    "prompt": "Listen to the sentence, then say it back exactly as you heard it. You will hear it only once.",
+    "speaking": {
+      "mode": "repeat",
+      "audio": {
+        "lines": [
+          {
+            "voice": "en-GB-SoniaNeural",
+            "text": "We noticed some unusual activity on your card, so we have blocked it as a precaution."
+          }
+        ]
+      },
+      "prep_seconds": 0,
+      "max_seconds": 12
+    },
+    "expected_time_s": 20
+  },
+  {
+    "bank_key": "en.p.booking-changes-48-hours",
+    "type": "speaking",
+    "section": "repeat",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "english.listening",
+    "secondary_skill_codes": [
+      "english.pronunciation_fluency"
+    ],
+    "cefr": "B2",
+    "prompt": "Listen to the sentence, then say it back exactly as you heard it. You will hear it only once.",
+    "speaking": {
+      "mode": "repeat",
+      "audio": {
+        "lines": [
+          {
+            "voice": "en-IE-ConnorNeural",
+            "text": "Any changes to your booking must be made at least forty-eight hours before you arrive."
+          }
+        ]
+      },
+      "prep_seconds": 0,
+      "max_seconds": 12
+    },
+    "expected_time_s": 20
+  },
+  {
+    "bank_key": "en.p.understand-frustration",
+    "type": "speaking",
+    "section": "repeat",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "english.listening",
+    "secondary_skill_codes": [
+      "english.pronunciation_fluency"
+    ],
+    "cefr": "B2",
+    "prompt": "Listen to the sentence, then say it back exactly as you heard it. You will hear it only once.",
+    "speaking": {
+      "mode": "repeat",
+      "audio": {
+        "lines": [
+          {
+            "voice": "en-US-JennyNeural",
+            "text": "I completely understand your frustration, and I'll do everything I can to sort this out today."
+          }
+        ]
+      },
+      "prep_seconds": 0,
+      "max_seconds": 12
+    },
+    "expected_time_s": 20
+  },
+  {
+    "bank_key": "en.p.note-next-agent",
+    "type": "speaking",
+    "section": "repeat",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "english.listening",
+    "secondary_skill_codes": [
+      "english.pronunciation_fluency"
+    ],
+    "cefr": "B2",
+    "prompt": "Listen to the sentence, then say it back exactly as you heard it. You will hear it only once.",
+    "speaking": {
+      "mode": "repeat",
+      "audio": {
+        "lines": [
+          {
+            "voice": "en-AU-WilliamMultilingualNeural",
+            "text": "I've added a note to your account, so the next agent will know exactly what happened."
+          }
+        ]
+      },
+      "prep_seconds": 0,
+      "max_seconds": 12
+    },
+    "expected_time_s": 20
+  },
+  {
+    "bank_key": "en.p.warranty-ended-repair",
+    "type": "speaking",
+    "section": "repeat",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "english.listening",
+    "secondary_skill_codes": [
+      "english.pronunciation_fluency"
+    ],
+    "cefr": "B2",
+    "prompt": "Listen to the sentence, then say it back exactly as you heard it. You will hear it only once.",
+    "speaking": {
+      "mode": "repeat",
+      "audio": {
+        "lines": [
+          {
+            "voice": "en-CA-ClaraNeural",
+            "text": "Although the warranty has ended, we can still offer you a repair at a reduced price."
+          }
+        ]
+      },
+      "prep_seconds": 0,
+      "max_seconds": 12
+    },
+    "expected_time_s": 20
+  },
+  {
+    "bank_key": "en.p.keep-receipt-return",
+    "type": "speaking",
+    "section": "repeat",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "english.listening",
+    "secondary_skill_codes": [
+      "english.pronunciation_fluency"
+    ],
+    "cefr": "B2",
+    "prompt": "Listen to the sentence, then say it back exactly as you heard it. You will hear it only once.",
+    "speaking": {
+      "mode": "repeat",
+      "audio": {
+        "lines": [
+          {
+            "voice": "en-IN-PrabhatNeural",
+            "text": "Please keep your receipt, as you will need it if you decide to return the item later."
+          }
+        ]
+      },
+      "prep_seconds": 0,
+      "max_seconds": 12
+    },
+    "expected_time_s": 20
+  },
+  {
+    "bank_key": "en.p.router-restart-reference",
+    "type": "speaking",
+    "section": "repeat",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "english.listening",
+    "secondary_skill_codes": [
+      "english.pronunciation_fluency"
+    ],
+    "cefr": "B2",
+    "prompt": "Listen to the sentence, then say it back exactly as you heard it. You will hear it only once.",
+    "speaking": {
+      "mode": "repeat",
+      "audio": {
+        "lines": [
+          {
+            "voice": "en-NG-EzinneNeural",
+            "text": "If the problem continues after you restart the router, please call us again and quote this reference."
+          }
+        ]
+      },
+      "prep_seconds": 0,
+      "max_seconds": 12
+    },
+    "expected_time_s": 20
+  },
+  {
+    "bank_key": "en.p.signed-form-ten-days",
+    "type": "speaking",
+    "section": "repeat",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "english.listening",
+    "secondary_skill_codes": [
+      "english.pronunciation_fluency"
+    ],
+    "cefr": "B2",
+    "prompt": "Listen to the sentence, then say it back exactly as you heard it. You will hear it only once.",
+    "speaking": {
+      "mode": "repeat",
+      "audio": {
+        "lines": [
+          {
+            "voice": "en-PH-JamesNeural",
+            "text": "Once we have received the signed form, your claim will usually be processed within ten working days."
+          }
+        ]
+      },
+      "prep_seconds": 0,
+      "max_seconds": 12
+    },
+    "expected_time_s": 20
+  }
+]

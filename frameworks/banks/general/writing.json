@@ -1,0 +1,1084 @@
+[
+  {
+    "bank_key": "general.w.missed-deadline-manager",
+    "type": "scenario_response",
+    "section": "written_communication",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "behavioral.communication.written",
+    "secondary_skill_codes": [
+      "behavioral.ownership.accountability"
+    ],
+    "prompt": "**Situation:** You work in the sales office. Your manager, Grace, asked you to send her the monthly sales report by Friday at 12:00. It is now Wednesday afternoon, and you will not finish the whole report on time.\n\n**Facts:**\n- The report has four regional sections. The East, South and West sections are finished.\n- The North region sent its figures on Wednesday morning instead of Monday, so you have not started that section yet.\n- Because of this, you need one extra working day to check the North figures and add them.\n- You can send the full report on Monday at 12:00.\n- You can still send the three finished sections on Friday at 12:00, as planned.\n- You want to check that Monday at 12:00 is acceptable to Grace.\n\n**Your task:** Write an email to Grace. Tell her about the delay, explain why, say what you will do, and check that the new time works for her. Use every point in the Facts list. Write 80 to 150 words.",
+    "writing": {
+      "min_words": 80,
+      "max_words": 150,
+      "dimensions": [
+        {
+          "name": "Clear purpose",
+          "weight": 0.2,
+          "low": "the delay is only hinted at or appears at the end of the email",
+          "high": "the first lines say the full report will be late and give the new time, Monday at 12:00"
+        },
+        {
+          "name": "Complete facts",
+          "weight": 0.3,
+          "low": "leaves out the reason, the new time or the three finished sections",
+          "high": "states that the North figures came on Wednesday instead of Monday, that one more working day is needed, that East, South and West come on Friday at 12:00 and the full report on Monday at 12:00"
+        },
+        {
+          "name": "Tone suited to the reader",
+          "weight": 0.2,
+          "low": "blames or criticises the North team, or makes excuses that are not in the facts",
+          "high": "calm and professional; takes responsibility for the new plan without blaming anyone"
+        },
+        {
+          "name": "Next step",
+          "weight": 0.15,
+          "low": "gives Grace nothing to reply to",
+          "high": "asks Grace plainly whether Monday at 12:00 works for her"
+        },
+        {
+          "name": "Correct and readable English",
+          "weight": 0.15,
+          "low": "grammar or spelling errors, or long tangled sentences, make the message hard to follow",
+          "high": "plain, clear sentences that read easily the first time; simple words and small slips that do not change the meaning are not marked down"
+        }
+      ],
+      "ideal_answer": "Subject: Monthly sales report, new time Monday 12:00\n\nHi Grace,\n\nI am sorry, but the full monthly sales report will not be ready by Friday at 12:00. I can send it to you on Monday at 12:00.\n\nThe North region sent its figures on Wednesday morning instead of Monday, so I have not been able to start that section yet. I need one more working day to check the figures and add them.\n\nThe East, South and West sections are finished. I will send them to you on Friday at 12:00 as planned, so you can use them if you need to.\n\nCould you please let me know if Monday at 12:00 works for you?\n\nBest regards,\n[Your name]",
+      "must_include": [
+        "the full report will not be ready by Friday at 12:00",
+        "the reason: the North figures arrived on Wednesday instead of Monday",
+        "one more working day is needed",
+        "the East, South and West sections will be sent on Friday at 12:00",
+        "the full report will be sent on Monday at 12:00",
+        "asks whether Monday at 12:00 works for Grace"
+      ],
+      "must_avoid": [
+        "blaming or criticising the North region team",
+        "a vague new time such as \"soon\" or \"next week\"",
+        "reasons that are not in the facts",
+        "promising the full report before Monday at 12:00"
+      ]
+    },
+    "expected_time_s": 480
+  },
+  {
+    "bank_key": "general.w.decline-colleague-request",
+    "type": "scenario_response",
+    "section": "written_communication",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "behavioral.communication.written",
+    "secondary_skill_codes": [
+      "behavioral.collaboration.cross_functional"
+    ],
+    "prompt": "**Situation:** Today is Tuesday. Your colleague Daniel joined your team last week. He sent you this message: \"Hi, could you show me how to use the new booking system tomorrow afternoon? I have a lot of bookings to enter on Friday.\"\n\n**Facts:**\n- You cannot help tomorrow afternoon. You are visiting a supplier all day and will not be in the office.\n- You can show him the system on Thursday from 10:00 to 11:00.\n- The user guide for the booking system is in the shared drive, in the folder called \"Training\".\n- Your colleague Sara also knows the system well, and she is in the office tomorrow.\n\n**Your task:** Write a reply to Daniel. Use every point in the Facts list. Write 60 to 120 words.",
+    "writing": {
+      "min_words": 60,
+      "max_words": 120,
+      "dimensions": [
+        {
+          "name": "Clear answer",
+          "weight": 0.25,
+          "low": "does not say clearly whether you can help tomorrow afternoon",
+          "high": "says early and plainly that you cannot help tomorrow afternoon, with the reason in one sentence"
+        },
+        {
+          "name": "Useful alternatives",
+          "weight": 0.35,
+          "low": "says no without offering anything else",
+          "high": "offers Thursday 10:00 to 11:00, points to the user guide in the \"Training\" folder and suggests asking Sara tomorrow"
+        },
+        {
+          "name": "Tone suited to the reader",
+          "weight": 0.2,
+          "low": "short and cold, or makes Daniel feel he was wrong to ask",
+          "high": "friendly and welcoming to a new colleague"
+        },
+        {
+          "name": "Correct and readable English",
+          "weight": 0.2,
+          "low": "grammar or spelling errors, or long tangled sentences, make the message hard to follow",
+          "high": "plain, clear sentences that read easily the first time; simple words and small slips that do not change the meaning are not marked down"
+        }
+      ],
+      "ideal_answer": "Hi Daniel,\n\nI would be happy to help, but I can't do tomorrow afternoon. I am visiting a supplier all day and won't be in the office.\n\nI can show you the booking system on Thursday from 10:00 to 11:00, which still gives you time before Friday. Would that work for you?\n\nIn the meantime, the user guide is in the shared drive, in the \"Training\" folder. Sara also knows the system well and is in the office tomorrow, so she may be able to help if you get stuck.\n\nBest,\n[Your name]",
+      "must_include": [
+        "cannot help tomorrow afternoon",
+        "the reason: visiting a supplier all day",
+        "offer of Thursday from 10:00 to 11:00",
+        "the user guide is in the \"Training\" folder in the shared drive",
+        "Sara knows the system and is in the office tomorrow"
+      ],
+      "must_avoid": [
+        "offering a time other than Thursday from 10:00 to 11:00",
+        "agreeing to help tomorrow afternoon",
+        "making Daniel feel he should not have asked",
+        "details or promises that are not in the facts"
+      ]
+    },
+    "expected_time_s": 480
+  },
+  {
+    "bank_key": "general.w.supplier-wrong-delivery",
+    "type": "scenario_response",
+    "section": "written_communication",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "behavioral.communication.written",
+    "secondary_skill_codes": [
+      "workplace.attention_to_detail"
+    ],
+    "prompt": "**Situation:** You order office supplies for your company. A delivery from your supplier arrived today with a mistake. Your contact at the supplier is Paul Mensah, Customer Account Manager.\n\n**Facts:**\n- Order number: 4471, placed on 2 May.\n- You ordered 50 boxes of A4 printer paper and 20 black ink cartridges, model K200.\n- Delivered today, 6 May: the 50 boxes of paper are correct. The 20 cartridges are model K210, which do not fit your printers.\n- The K210 cartridges are unopened and still in their boxes.\n- You need the K200 cartridges by Friday 10 May, because your stock will run out then.\n- You want the supplier to collect the K210 cartridges and to confirm the new delivery date.\n\n**Your task:** Write an email to Paul. Use every point in the Facts list. Write 80 to 150 words.",
+    "writing": {
+      "min_words": 80,
+      "max_words": 150,
+      "dimensions": [
+        {
+          "name": "Clear purpose",
+          "weight": 0.2,
+          "low": "the reader has to guess what went wrong or what you want",
+          "high": "the first lines say that order 4471 came with the wrong cartridges and that you need the right ones"
+        },
+        {
+          "name": "Complete facts",
+          "weight": 0.35,
+          "low": "misses the order number, the two model numbers or the date you need them by",
+          "high": "gives the order number, K200 ordered and K210 delivered, that the paper was correct, that the cartridges are unopened, and the Friday 10 May deadline"
+        },
+        {
+          "name": "Tone suited to the reader",
+          "weight": 0.15,
+          "low": "angry, sarcastic or threatening",
+          "high": "firm and polite, focused on fixing the problem"
+        },
+        {
+          "name": "Next step",
+          "weight": 0.15,
+          "low": "no clear request",
+          "high": "asks Paul to collect the K210 cartridges and to confirm the new delivery date"
+        },
+        {
+          "name": "Correct and readable English",
+          "weight": 0.15,
+          "low": "grammar or spelling errors, or long tangled sentences, make the message hard to follow",
+          "high": "plain, clear sentences that read easily the first time; simple words and small slips that do not change the meaning are not marked down"
+        }
+      ],
+      "ideal_answer": "Subject: Order 4471, wrong cartridges delivered\n\nDear Paul,\n\nOur order 4471, placed on 2 May, arrived today, 6 May. The 50 boxes of A4 paper are correct, but we received 20 black ink cartridges model K210 instead of the K200 model we ordered. The K210 cartridges do not fit our printers.\n\nThe K210 cartridges are unopened and still in their boxes, ready to be collected.\n\nCould you please send 20 K200 cartridges so that they arrive by Friday 10 May? Our stock will run out then. Please also arrange collection of the K210 cartridges and confirm the new delivery date by email.\n\nThank you for your help.\n\nKind regards,\n[Your name]",
+      "must_include": [
+        "order number 4471",
+        "K200 was ordered but K210 was delivered, and K210 does not fit the printers",
+        "the 50 boxes of paper were correct",
+        "the K210 cartridges are unopened",
+        "the K200 cartridges are needed by Friday 10 May",
+        "a request to collect the K210 cartridges and confirm the delivery date"
+      ],
+      "must_avoid": [
+        "angry or threatening language",
+        "asking for a refund instead of the right cartridges",
+        "saying that the paper was wrong",
+        "quantities, dates or model numbers that differ from the facts"
+      ]
+    },
+    "expected_time_s": 480
+  },
+  {
+    "bank_key": "general.w.customer-appointment-move",
+    "type": "scenario_response",
+    "section": "written_communication",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "behavioral.communication.written",
+    "secondary_skill_codes": [
+      "behavioral.customer.service_orientation"
+    ],
+    "prompt": "**Situation:** You work for a home internet company. A customer, Mrs Elena Ruiz, has an appointment for an engineer to install her internet on Tuesday 14 May at 10:00. The engineer is ill and no other engineer is free that day, so the appointment must move.\n\n**Facts:**\n- You can offer two new times: Thursday 16 May at 10:00, or Friday 17 May at 14:00.\n- She can choose by replying to your email or by calling the number at the bottom of the email.\n- Ask her to choose by Monday 13 May at 17:00, so that the time can be kept for her.\n- There is no extra charge for the change.\n\n**Your task:** Write an email to Mrs Ruiz. Apologise for the change and use every point in the Facts list. Write 80 to 150 words.",
+    "writing": {
+      "min_words": 80,
+      "max_words": 150,
+      "dimensions": [
+        {
+          "name": "Clear purpose",
+          "weight": 0.2,
+          "low": "the change of appointment is unclear or comes late in the email",
+          "high": "says early that the Tuesday 14 May appointment at 10:00 cannot go ahead and must move"
+        },
+        {
+          "name": "Complete facts",
+          "weight": 0.3,
+          "low": "misses one of the new times, the deadline or how to reply",
+          "high": "gives the original appointment, both new times, how to choose, the Monday 13 May 17:00 deadline and that there is no extra charge"
+        },
+        {
+          "name": "Tone suited to the reader",
+          "weight": 0.25,
+          "low": "no apology, blames the engineer, or uses internal words the customer will not know",
+          "high": "apologises sincerely and briefly and respects her time"
+        },
+        {
+          "name": "Next step",
+          "weight": 0.1,
+          "low": "the customer does not know what to do next",
+          "high": "clearly asks her to reply or call to choose one of the two times"
+        },
+        {
+          "name": "Correct and readable English",
+          "weight": 0.15,
+          "low": "grammar or spelling errors, or long tangled sentences, make the message hard to follow",
+          "high": "plain, clear sentences that read easily the first time; simple words and small slips that do not change the meaning are not marked down"
+        }
+      ],
+      "ideal_answer": "Subject: Your internet installation on Tuesday 14 May needs a new time\n\nDear Mrs Ruiz,\n\nI am sorry, but we need to move your internet installation on Tuesday 14 May at 10:00. Our engineer is ill, and no other engineer is free that day.\n\nWe can offer you either of these new times:\n- Thursday 16 May at 10:00\n- Friday 17 May at 14:00\n\nPlease choose one by Monday 13 May at 17:00, so that we can keep the time for you. You can reply to this email or call the number below. There is no extra charge for this change.\n\nWe apologise for the inconvenience, and thank you for your patience.\n\nKind regards,\n[Your name]\nCustomer Bookings Team",
+      "must_include": [
+        "an apology",
+        "the original appointment: Tuesday 14 May at 10:00",
+        "the reason: the engineer is ill and no other engineer is free",
+        "both new times: Thursday 16 May at 10:00 and Friday 17 May at 14:00",
+        "how to choose: reply to the email or call the number",
+        "the deadline: Monday 13 May at 17:00",
+        "no extra charge"
+      ],
+      "must_avoid": [
+        "blaming the engineer or sharing details of the illness",
+        "offering times that are not in the facts",
+        "asking the customer to pay anything",
+        "internal words the customer will not understand"
+      ]
+    },
+    "expected_time_s": 480
+  },
+  {
+    "bank_key": "general.w.hr-pay-question",
+    "type": "scenario_response",
+    "section": "written_communication",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "behavioral.communication.written",
+    "secondary_skill_codes": [
+      "behavioral.communication.clarity"
+    ],
+    "prompt": "**Situation:** You work in a warehouse. Your April payslip has arrived, and you think your overtime is missing.\n\n**Facts:**\n- Your employee number is 20587.\n- The April payslip shows 160 hours of basic pay and no overtime.\n- You worked 3 hours of overtime on 12 April and 3 hours on 19 April, 6 hours in total.\n- Your supervisor, Omar Haddad, approved both overtime shifts.\n- You expected the overtime to be paid in your April pay.\n- You want to know whether it was missed or will be paid in May, and whether you need to do anything.\n\n**Your task:** Write an email to the HR team. Use every point in the Facts list. Write 80 to 150 words.",
+    "writing": {
+      "min_words": 80,
+      "max_words": 150,
+      "dimensions": [
+        {
+          "name": "Clear question",
+          "weight": 0.3,
+          "low": "HR cannot tell what you are asking",
+          "high": "asks directly whether the 6 hours were missed or will be paid in May, and whether you need to do anything"
+        },
+        {
+          "name": "Complete facts",
+          "weight": 0.3,
+          "low": "misses the employee number, the dates or who approved the overtime",
+          "high": "gives the employee number, the April payslip, 3 hours on 12 April and 3 hours on 19 April, and that Omar Haddad approved them"
+        },
+        {
+          "name": "Tone suited to the reader",
+          "weight": 0.2,
+          "low": "accuses HR of a mistake or sounds angry",
+          "high": "polite and neutral; treats it as a question, not a complaint"
+        },
+        {
+          "name": "Correct and readable English",
+          "weight": 0.2,
+          "low": "grammar or spelling errors, or long tangled sentences, make the message hard to follow",
+          "high": "plain, clear sentences that read easily the first time; simple words and small slips that do not change the meaning are not marked down"
+        }
+      ],
+      "ideal_answer": "Subject: Overtime on my April payslip, employee 20587\n\nDear HR team,\n\nI have a question about my April payslip. My employee number is 20587.\n\nThe payslip shows 160 hours of basic pay but no overtime. I worked 3 hours of overtime on 12 April and 3 hours on 19 April, 6 hours in total. My supervisor, Omar Haddad, approved both shifts.\n\nCould you please tell me whether this overtime was missed from my April pay, or whether it will be paid in May? If I need to send anything or fill in a form, please let me know.\n\nThank you for your help.\n\nKind regards,\n[Your name]",
+      "must_include": [
+        "employee number 20587",
+        "the April payslip shows no overtime",
+        "3 hours on 12 April and 3 hours on 19 April, 6 hours in total",
+        "approved by the supervisor, Omar Haddad",
+        "the question: was it missed, or will it be paid in May",
+        "asks whether any action is needed"
+      ],
+      "must_avoid": [
+        "accusing HR or payroll of a mistake",
+        "angry or emotional language",
+        "claiming an amount of money that is not in the facts",
+        "asking about other people's pay"
+      ]
+    },
+    "expected_time_s": 480
+  },
+  {
+    "bank_key": "general.w.report-safety-issue",
+    "type": "scenario_response",
+    "section": "written_communication",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "behavioral.communication.written",
+    "secondary_skill_codes": [
+      "behavioral.ethics.safety"
+    ],
+    "prompt": "**Situation:** You work in a warehouse. This morning at 08:30 you noticed a safety problem.\n\n**Facts:**\n- The handrail on stairway B (the stairs up to the storage platform) is loose at the top. It moved about 5 cm when you held it.\n- About 20 people use stairway B on each shift.\n- Nobody has been hurt.\n- You tied a \"Do not lean on this handrail\" sign to it and told the people on your shift to use stairway A until it is fixed.\n- You want the handrail checked and repaired today, and you want to know whether stairway B should be closed until then.\n\n**Your task:** Write an email to Samuel Park, the facilities manager. Your supervisor, Joy, will get a copy. Use every point in the Facts list. Write 80 to 150 words.",
+    "writing": {
+      "min_words": 80,
+      "max_words": 150,
+      "dimensions": [
+        {
+          "name": "Clear purpose",
+          "weight": 0.2,
+          "low": "the safety problem is not clear from the start",
+          "high": "the subject and first line say there is a loose handrail on stairway B"
+        },
+        {
+          "name": "Complete facts",
+          "weight": 0.3,
+          "low": "misses where the problem is, what is wrong, when you saw it, or whether anyone was hurt",
+          "high": "gives the top of stairway B, the 5 cm movement, 08:30 today, about 20 people per shift, nobody hurt, and the sign and stairway A"
+        },
+        {
+          "name": "Urgency and next step",
+          "weight": 0.25,
+          "low": "no request, or no time frame",
+          "high": "asks for a check and repair today and asks whether stairway B should be closed until then"
+        },
+        {
+          "name": "Tone suited to the reader",
+          "weight": 0.1,
+          "low": "panicked, exaggerated or blaming",
+          "high": "calm, factual and serious"
+        },
+        {
+          "name": "Correct and readable English",
+          "weight": 0.15,
+          "low": "grammar or spelling errors, or long tangled sentences, make the message hard to follow",
+          "high": "plain, clear sentences that read easily the first time; simple words and small slips that do not change the meaning are not marked down"
+        }
+      ],
+      "ideal_answer": "Subject: Loose handrail on stairway B, repair needed today\n\nDear Samuel,\n\nI want to report a loose handrail on stairway B, the stairs up to the storage platform. At 08:30 this morning I noticed that the top of the handrail moved about 5 cm when I held it. Nobody has been hurt.\n\nAbout 20 people use stairway B on each shift. I have tied a \"Do not lean on this handrail\" sign to it and asked the people on my shift to use stairway A until it is fixed.\n\nCould you please have the handrail checked and repaired today? Please also let me know whether stairway B should be closed until then.\n\nThank you,\n[Your name]",
+      "must_include": [
+        "the handrail at the top of stairway B is loose",
+        "it moved about 5 cm",
+        "noticed at 08:30 today",
+        "nobody has been hurt",
+        "about 20 people use stairway B on each shift",
+        "the warning sign and the instruction to use stairway A",
+        "a request for a check and repair today",
+        "the question about closing stairway B"
+      ],
+      "must_avoid": [
+        "exaggerating the danger or inventing injuries",
+        "blaming a person",
+        "saying the handrail is safe to use or that the repair is not urgent",
+        "saying you will repair the handrail yourself"
+      ]
+    },
+    "expected_time_s": 480
+  },
+  {
+    "bank_key": "general.w.handover-before-leave",
+    "type": "scenario_response",
+    "section": "written_communication",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "behavioral.communication.written",
+    "secondary_skill_codes": [
+      "workplace.attention_to_detail"
+    ],
+    "prompt": "**Situation:** You are going on leave for two weeks from tomorrow. Your colleague Aisha will look after your work while you are away.\n\n**Facts:**\n- Task 1: Greenway Cafe has ordered 200 coffee cups for delivery next Tuesday. The delivery is booked. The driver must confirm the time by Monday at 16:00. If he has not, Aisha should call the delivery company.\n- Task 2: Invoice 3392 for Bright Dental (1,250 dollars) is 5 days overdue. You sent a reminder last Thursday. If it is not paid by Wednesday, Aisha should call their accounts team. The number is in the client file.\n- Task 3: The monthly stock count is on Friday 31 May. The count form is in the shared folder called \"Stock\".\n- You are back on Monday 3 June.\n- For any decision that cannot wait, Aisha should ask your manager, Kenji.\n\n**Your task:** Write a handover email to Aisha. Use every point in the Facts list. Write 100 to 180 words.",
+    "writing": {
+      "min_words": 100,
+      "max_words": 180,
+      "dimensions": [
+        {
+          "name": "Organised and easy to scan",
+          "weight": 0.25,
+          "low": "all the tasks are mixed together in one long paragraph",
+          "high": "each task is separate (numbered or with a heading) and shows what to do and by when"
+        },
+        {
+          "name": "Complete facts",
+          "weight": 0.4,
+          "low": "misses a deadline, a name, an amount or where to find something",
+          "high": "covers the Greenway delivery and the Monday 16:00 check, invoice 3392 and the Wednesday call, the 31 May stock count and the \"Stock\" folder, Kenji for decisions and the 3 June return"
+        },
+        {
+          "name": "Tone suited to the reader",
+          "weight": 0.15,
+          "low": "gives orders without thanks, or sounds as if Aisha owes you a favour",
+          "high": "friendly and thanks her for covering"
+        },
+        {
+          "name": "Correct and readable English",
+          "weight": 0.2,
+          "low": "grammar or spelling errors, or long tangled sentences, make the message hard to follow",
+          "high": "plain, clear sentences that read easily the first time; simple words and small slips that do not change the meaning are not marked down"
+        }
+      ],
+      "ideal_answer": "Subject: Handover while I am on leave\n\nHi Aisha,\n\nThank you for covering my work while I am away. I am back on Monday 3 June. Here are the three open tasks:\n\n1. Greenway Cafe: 200 coffee cups are booked for delivery next Tuesday. The driver must confirm the time by Monday at 16:00. If he has not, please call the delivery company.\n\n2. Bright Dental: invoice 3392 (1,250 dollars) is 5 days overdue. I sent a reminder last Thursday. If it is not paid by Wednesday, please call their accounts team. The number is in the client file.\n\n3. Stock count: the monthly count is on Friday 31 May. The count form is in the shared folder \"Stock\".\n\nIf a decision cannot wait until I am back, please ask Kenji.\n\nThanks again,\n[Your name]",
+      "must_include": [
+        "back on Monday 3 June",
+        "Greenway Cafe: 200 cups, delivery next Tuesday, driver must confirm by Monday 16:00, otherwise call the delivery company",
+        "Bright Dental: invoice 3392, 1,250 dollars, call their accounts team if unpaid by Wednesday, number in the client file",
+        "stock count on Friday 31 May, form in the \"Stock\" folder",
+        "ask Kenji about decisions that cannot wait"
+      ],
+      "must_avoid": [
+        "tasks, dates or instructions that are not in the facts",
+        "vague instructions such as \"keep an eye on things\"",
+        "wrong dates, amounts or numbers",
+        "asking Aisha to make decisions that belong to Kenji"
+      ]
+    },
+    "expected_time_s": 480
+  },
+  {
+    "bank_key": "general.w.invoice-error-apology",
+    "type": "scenario_response",
+    "section": "written_communication",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "behavioral.communication.written",
+    "secondary_skill_codes": [
+      "behavioral.ownership.accountability"
+    ],
+    "prompt": "**Situation:** You work in the accounts team. Yesterday you sent a customer, Mr Tan, invoice 1180. You made a mistake: you typed 450 dollars, but the correct amount is 405 dollars.\n\n**Facts:**\n- A corrected invoice for 405 dollars is attached to your email.\n- If Mr Tan has already paid 450 dollars, the extra 45 dollars will be refunded to the account he paid from within 5 working days. He does not need to do anything.\n- If he has not paid yet, he should pay the corrected amount of 405 dollars. The payment date stays the same: 30 June.\n- He can reply to your email with any questions.\n\n**Your task:** Write an email to Mr Tan. Use every point in the Facts list. Write 80 to 150 words.",
+    "writing": {
+      "min_words": 80,
+      "max_words": 150,
+      "dimensions": [
+        {
+          "name": "Owns the mistake",
+          "weight": 0.25,
+          "low": "hides the error, blames the system or a colleague, or does not apologise",
+          "high": "says plainly that you made a mistake on invoice 1180 and apologises"
+        },
+        {
+          "name": "Complete facts",
+          "weight": 0.35,
+          "low": "misses the correct amount or what happens if he has already paid",
+          "high": "gives the wrong and correct amounts, the attached invoice, the 45-dollar refund within 5 working days if he paid, and the unchanged 30 June date if he has not"
+        },
+        {
+          "name": "Tone suited to the reader",
+          "weight": 0.2,
+          "low": "too casual for a customer, or so many apologies that the facts are lost",
+          "high": "professional, brief and reassuring"
+        },
+        {
+          "name": "Correct and readable English",
+          "weight": 0.2,
+          "low": "grammar or spelling errors, or long tangled sentences, make the message hard to follow",
+          "high": "plain, clear sentences that read easily the first time; simple words and small slips that do not change the meaning are not marked down"
+        }
+      ],
+      "ideal_answer": "Subject: Corrected invoice 1180\n\nDear Mr Tan,\n\nI am sorry, I made a mistake on invoice 1180, which I sent you yesterday. It showed 450 dollars, but the correct amount is 405 dollars. I have attached the corrected invoice.\n\nIf you have already paid 450 dollars, we will refund the extra 45 dollars to the account you paid from within 5 working days. You do not need to do anything.\n\nIf you have not paid yet, please pay the corrected amount of 405 dollars. The payment date stays the same: 30 June.\n\nIf you have any questions, please reply to this email. I apologise again for the trouble.\n\nKind regards,\n[Your name]\nAccounts Team",
+      "must_include": [
+        "an apology and a clear statement that invoice 1180 was wrong",
+        "the wrong amount (450 dollars) and the correct amount (405 dollars)",
+        "the corrected invoice is attached",
+        "if already paid: 45 dollars refunded to the same account within 5 working days, with no action needed",
+        "if not paid: pay 405 dollars, payment date still 30 June"
+      ],
+      "must_avoid": [
+        "blaming the computer system or a colleague",
+        "asking him to do something to get the refund",
+        "a wrong refund amount",
+        "changing the payment date"
+      ]
+    },
+    "expected_time_s": 480
+  },
+  {
+    "bank_key": "general.w.visitor-meeting-confirmation",
+    "type": "scenario_response",
+    "section": "written_communication",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "behavioral.communication.written",
+    "secondary_skill_codes": [
+      "workplace.attention_to_detail"
+    ],
+    "prompt": "**Situation:** A visitor, Ms Fatima Khan from a partner company, is coming to meet your manager, Daniel Okoro. You have been asked to confirm the details with her.\n\n**Facts:**\n- Meeting: Wednesday 22 May, 14:00 to 15:00, with Daniel Okoro.\n- Address: 45 River Road, 3rd floor. She should go to the main reception on the ground floor.\n- Parking: free visitor parking behind the building. She must give her car number plate to reception.\n- She must bring photo ID to get a visitor pass.\n- You will meet her at reception.\n- If she is running late, she should call reception on 0300 555 0142.\n\n**Your task:** Write an email to Ms Khan. Use every point in the Facts list. Write 80 to 150 words.",
+    "writing": {
+      "min_words": 80,
+      "max_words": 150,
+      "dimensions": [
+        {
+          "name": "Clear purpose",
+          "weight": 0.2,
+          "low": "does not open by confirming the meeting",
+          "high": "the first line confirms the date, the time and who she is meeting"
+        },
+        {
+          "name": "Complete facts",
+          "weight": 0.4,
+          "low": "misses the address, the parking, the photo ID or the number to call",
+          "high": "gives the date and time, Daniel Okoro, the address and floor, the ground-floor reception, parking and the number plate, photo ID, that you will meet her, and the reception number"
+        },
+        {
+          "name": "Tone suited to the reader",
+          "weight": 0.2,
+          "low": "too casual for an outside visitor, or reads like a list of orders",
+          "high": "welcoming and professional"
+        },
+        {
+          "name": "Correct and readable English",
+          "weight": 0.2,
+          "low": "grammar or spelling errors, or long tangled sentences, make the message hard to follow",
+          "high": "plain, clear sentences that read easily the first time; simple words and small slips that do not change the meaning are not marked down"
+        }
+      ],
+      "ideal_answer": "Subject: Your meeting with Daniel Okoro on Wednesday 22 May\n\nDear Ms Khan,\n\nI am writing to confirm your meeting with Daniel Okoro on Wednesday 22 May from 14:00 to 15:00.\n\nOur office is at 45 River Road, on the 3rd floor. Please go to the main reception on the ground floor, where I will meet you.\n\nThere is free visitor parking behind the building. Please give your car number plate to reception when you arrive. Please also bring photo ID, so that we can give you a visitor pass.\n\nIf you are running late, please call reception on 0300 555 0142.\n\nWe look forward to seeing you.\n\nKind regards,\n[Your name]",
+      "must_include": [
+        "Wednesday 22 May, 14:00 to 15:00",
+        "the meeting is with Daniel Okoro",
+        "45 River Road, 3rd floor, main reception on the ground floor",
+        "free visitor parking behind the building, number plate to reception",
+        "bring photo ID for a visitor pass",
+        "you will meet her at reception",
+        "call reception on 0300 555 0142 if late"
+      ],
+      "must_avoid": [
+        "a wrong date, time or phone number",
+        "very casual language for an outside visitor",
+        "rules or conditions that are not in the facts"
+      ]
+    },
+    "expected_time_s": 480
+  },
+  {
+    "bank_key": "general.w.phone-message-summary",
+    "type": "scenario_response",
+    "section": "written_communication",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "behavioral.communication.written",
+    "secondary_skill_codes": [
+      "behavioral.communication.listening"
+    ],
+    "prompt": "**Situation:** You took a phone call for your colleague Ravi, who was out of the office.\n\n**Facts:**\n- The caller was Helen Osei from Northline Logistics. She called on Tuesday at 11:15.\n- She wants to move the delivery of order 5520 from Thursday to Friday, because their warehouse is closed on Thursday for repairs.\n- She needs an answer by Wednesday at 12:00.\n- She said email is best: helen.osei@northline.example\n- You told her that Ravi would reply.\n\n**Your task:** Write a message to Ravi about the call. Use every point in the Facts list. Write 50 to 120 words.",
+    "writing": {
+      "min_words": 50,
+      "max_words": 120,
+      "dimensions": [
+        {
+          "name": "Clear purpose",
+          "weight": 0.25,
+          "low": "Ravi has to read everything to find out who called and what she wants",
+          "high": "the first line says who called and what she wants"
+        },
+        {
+          "name": "Complete facts",
+          "weight": 0.4,
+          "low": "misses the order number, the new day, the deadline or how to reply",
+          "high": "gives the caller and company, the time of the call, order 5520, Thursday to Friday, the reason, the Wednesday 12:00 deadline, the email address and that you said Ravi would reply"
+        },
+        {
+          "name": "Brief and easy to act on",
+          "weight": 0.15,
+          "low": "retells the whole conversation",
+          "high": "short, with the action and the deadline easy to see"
+        },
+        {
+          "name": "Correct and readable English",
+          "weight": 0.2,
+          "low": "grammar or spelling errors, or long tangled sentences, make the message hard to follow",
+          "high": "plain, clear sentences that read easily the first time; simple words and small slips that do not change the meaning are not marked down"
+        }
+      ],
+      "ideal_answer": "Hi Ravi,\n\nHelen Osei from Northline Logistics called you on Tuesday at 11:15. She would like to move the delivery of order 5520 from Thursday to Friday, because their warehouse is closed on Thursday for repairs.\n\nShe needs your answer by Wednesday at 12:00. She said email is the best way to reach her: helen.osei@northline.example\n\nI told her that you would reply.\n\nThanks,\n[Your name]",
+      "must_include": [
+        "Helen Osei from Northline Logistics, Tuesday at 11:15",
+        "move the delivery of order 5520 from Thursday to Friday",
+        "the reason: their warehouse is closed on Thursday for repairs",
+        "answer needed by Wednesday at 12:00",
+        "reply by email to helen.osei@northline.example",
+        "you told her Ravi would reply"
+      ],
+      "must_avoid": [
+        "a wrong order number, day or deadline",
+        "agreeing to the change for Ravi",
+        "a long story of the call"
+      ]
+    },
+    "expected_time_s": 480
+  },
+  {
+    "bank_key": "general.w.mgr-schedule-change",
+    "type": "scenario_response",
+    "section": "written_communication",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "behavioral.communication.written",
+    "secondary_skill_codes": [
+      "behavioral.leadership.people_management"
+    ],
+    "prompt": "**Situation:** You manage a team of 12 people in a distribution centre. You need to announce a change to working hours.\n\n**Facts:**\n- From Monday 3 June to Friday 30 August, the centre will open at 07:00 instead of 08:00 and close at 16:00 instead of 17:00.\n- Reason: your biggest customer has moved its truck collections one hour earlier.\n- There will be two shifts: early, 07:00 to 15:00, and late, 08:00 to 16:00. Shifts stay 8 hours long.\n- Each team member should tell you which shift they prefer by Friday 24 May.\n- The new rota will be shared on Tuesday 28 May.\n- Anyone who has a problem with the new times, for example with childcare or travel, should speak to you privately.\n\n**Your task:** Write an email to the whole team. Use every point in the Facts list. Write 100 to 180 words.",
+    "writing": {
+      "min_words": 100,
+      "max_words": 180,
+      "dimensions": [
+        {
+          "name": "Clear purpose",
+          "weight": 0.2,
+          "low": "the change is buried or unclear",
+          "high": "the first lines say what changes and for which dates"
+        },
+        {
+          "name": "Complete facts",
+          "weight": 0.3,
+          "low": "misses the dates, the shift times or the deadlines",
+          "high": "gives the new hours, 3 June to 30 August, both shift times, the reason, the 24 May preference deadline and the 28 May rota date"
+        },
+        {
+          "name": "Tone suited to the reader",
+          "weight": 0.2,
+          "low": "a bare order with no reason, or unsure and over-apologetic",
+          "high": "explains the reason, recognises that the change affects people's lives and invites concerns"
+        },
+        {
+          "name": "Next step",
+          "weight": 0.15,
+          "low": "the team does not know what they must do",
+          "high": "asks everyone for a shift preference by 24 May and offers a private talk about problems"
+        },
+        {
+          "name": "Correct and readable English",
+          "weight": 0.15,
+          "low": "grammar or spelling errors, or long tangled sentences, make the message hard to follow",
+          "high": "plain, clear sentences that read easily the first time; simple words and small slips that do not change the meaning are not marked down"
+        }
+      ],
+      "ideal_answer": "Subject: New working hours from 3 June to 30 August\n\nHi everyone,\n\nFrom Monday 3 June to Friday 30 August, the centre will open at 07:00 instead of 08:00 and close at 16:00 instead of 17:00. Our biggest customer has moved its truck collections one hour earlier, and we need to be ready for them.\n\nThere will be two shifts, and both stay 8 hours long:\n- Early shift: 07:00 to 15:00\n- Late shift: 08:00 to 16:00\n\nPlease tell me which shift you prefer by Friday 24 May. I will share the new rota on Tuesday 28 May.\n\nI know a change like this can affect childcare or travel. If the new times cause you a problem, please come and talk to me privately, and we will look at it together.\n\nThank you,\n[Your name]",
+      "must_include": [
+        "new hours 07:00 to 16:00 instead of 08:00 to 17:00",
+        "from Monday 3 June to Friday 30 August",
+        "the reason: the biggest customer collects one hour earlier",
+        "two shifts: 07:00 to 15:00 and 08:00 to 16:00",
+        "shift preference by Friday 24 May",
+        "rota shared on Tuesday 28 May",
+        "speak privately about any problem with the new times"
+      ],
+      "must_avoid": [
+        "promising everyone the shift they prefer",
+        "wrong dates or shift times",
+        "naming any person's private circumstances",
+        "a threatening or \"no exceptions\" tone"
+      ]
+    },
+    "expected_time_s": 480
+  },
+  {
+    "bank_key": "general.w.mgr-feedback-missed-target",
+    "type": "scenario_response",
+    "section": "written_communication",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "behavioral.communication.written",
+    "secondary_skill_codes": [
+      "behavioral.leadership.people_management"
+    ],
+    "prompt": "**Situation:** You lead a customer contact team. Before your one-to-one meeting, you want to send written feedback to a team member, Carlos, about his call numbers.\n\n**Facts:**\n- The team target is 40 customer calls a day. Over the last 4 weeks, Carlos averaged 31 calls a day.\n- His quality score is 92%, above the team average of 85%. Customers often praise him.\n- Last week he told you that the new customer system is slow for him and he spends a long time on each record.\n- You have booked a 1-hour training session on the new system for him with Lin, the system trainer, on Monday at 10:00.\n- You expect him to reach at least 36 calls a day within the next 4 weeks, while keeping his quality high.\n- You will meet him on Thursday at 14:00 to agree a plan, and then review progress together every 2 weeks.\n\n**Your task:** Write an email to Carlos. Use every point in the Facts list. Write 100 to 180 words.",
+    "writing": {
+      "min_words": 100,
+      "max_words": 180,
+      "dimensions": [
+        {
+          "name": "Specific and fair",
+          "weight": 0.25,
+          "low": "vague (\"you need to do better\") or only negative",
+          "high": "states 31 calls against the target of 40 and recognises his 92% quality and the praise from customers"
+        },
+        {
+          "name": "Support and clear expectation",
+          "weight": 0.25,
+          "low": "no help offered, or no clear target",
+          "high": "links the gap to the system problem he raised, gives the Monday 10:00 training with Lin and states the expectation of 36 calls a day within 4 weeks"
+        },
+        {
+          "name": "Tone suited to the reader",
+          "weight": 0.2,
+          "low": "blaming or threatening, or compares him with named colleagues",
+          "high": "respectful and encouraging while honest about the gap"
+        },
+        {
+          "name": "Next step",
+          "weight": 0.15,
+          "low": "no meeting or follow-up mentioned",
+          "high": "names the Thursday 14:00 meeting to agree a plan together and the reviews every 2 weeks"
+        },
+        {
+          "name": "Correct and readable English",
+          "weight": 0.15,
+          "low": "grammar or spelling errors, or long tangled sentences, make the message hard to follow",
+          "high": "plain, clear sentences that read easily the first time; simple words and small slips that do not change the meaning are not marked down"
+        }
+      ],
+      "ideal_answer": "Subject: Your call numbers and our meeting on Thursday\n\nHi Carlos,\n\nBefore our meeting, I want to share some feedback.\n\nFirst, your quality score is 92%, well above the team average of 85%, and customers often praise you. Thank you for that.\n\nThe area to work on is call numbers. Over the last 4 weeks you averaged 31 calls a day, against the team target of 40. You told me the new customer system is slow for you, and I think that explains much of the gap. I have booked a 1-hour training session for you with Lin on Monday at 10:00.\n\nI expect you to reach at least 36 calls a day within the next 4 weeks, while keeping your quality high.\n\nLet's meet on Thursday at 14:00 to agree a plan, and then review progress every 2 weeks. Please bring any other ideas that would help.\n\nBest regards,\n[Your name]",
+      "must_include": [
+        "31 calls a day over the last 4 weeks, against a target of 40",
+        "quality score 92%, above the team average of 85%",
+        "the system problem he raised",
+        "training with Lin on Monday at 10:00",
+        "expectation: at least 36 calls a day within 4 weeks, quality kept high",
+        "meeting on Thursday at 14:00 and reviews every 2 weeks"
+      ],
+      "must_avoid": [
+        "threats about his job",
+        "comparing him with named colleagues",
+        "criticism without numbers",
+        "a target or deadline that is not in the facts"
+      ]
+    },
+    "expected_time_s": 480
+  },
+  {
+    "bank_key": "general.w.mgr-decline-department-request",
+    "type": "scenario_response",
+    "section": "written_communication",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "behavioral.communication.written",
+    "secondary_skill_codes": [
+      "behavioral.collaboration.cross_functional"
+    ],
+    "prompt": "**Situation:** You manage the warehouse team. Sophie Laurent, the marketing manager, has asked to borrow two of your team members for three days next week, from Monday 13 May to Wednesday 15 May, to help set up a product launch event.\n\n**Facts:**\n- You cannot agree. Your team is doing the quarterly stock count on 13 and 14 May, and one team member is on leave all week.\n- You can offer one person, Ali, on Wednesday 15 May from 13:00 to 17:00.\n- The company works with a temporary staff agency that can usually provide people with 3 days' notice. HR can arrange this.\n- You are happy to help with future events if you hear about them at least 2 weeks ahead.\n\n**Your task:** Write an email to Sophie. Use every point in the Facts list. Write 100 to 180 words.",
+    "writing": {
+      "min_words": 100,
+      "max_words": 180,
+      "dimensions": [
+        {
+          "name": "Clear answer",
+          "weight": 0.25,
+          "low": "the refusal is unclear or only appears at the end",
+          "high": "says early and plainly that you cannot release two people from 13 to 15 May"
+        },
+        {
+          "name": "Reason",
+          "weight": 0.2,
+          "low": "no reason, or a vague one",
+          "high": "gives the stock count on 13 and 14 May and the team member on leave"
+        },
+        {
+          "name": "Helpful alternatives",
+          "weight": 0.3,
+          "low": "says no and stops",
+          "high": "offers Ali on 15 May from 13:00 to 17:00, suggests the agency through HR, and asks for 2 weeks' notice for future events"
+        },
+        {
+          "name": "Tone suited to the reader",
+          "weight": 0.15,
+          "low": "defensive or cold, or criticises marketing's planning",
+          "high": "warm and cooperative towards a fellow manager"
+        },
+        {
+          "name": "Correct and readable English",
+          "weight": 0.1,
+          "low": "grammar or spelling errors, or long tangled sentences, make the message hard to follow",
+          "high": "plain, clear sentences that read easily the first time; simple words and small slips that do not change the meaning are not marked down"
+        }
+      ],
+      "ideal_answer": "Subject: Help for the launch event, 13 to 15 May\n\nHi Sophie,\n\nThank you for asking. I am sorry, but I cannot release two people from Monday 13 to Wednesday 15 May. We are doing the quarterly stock count on 13 and 14 May, and one of my team is on leave all week, so we are already short.\n\nI can offer Ali on Wednesday 15 May from 13:00 to 17:00, if that helps with the final setup.\n\nFor the other days, the temporary staff agency we work with can usually provide people with 3 days' notice. HR can arrange this for you.\n\nI would like to help with future events. If you can let me know at least 2 weeks ahead, I will plan my team's time around them.\n\nGood luck with the launch.\n\nBest regards,\n[Your name]",
+      "must_include": [
+        "a clear no to two people from 13 to 15 May",
+        "the reason: stock count on 13 and 14 May and one person on leave",
+        "offer of Ali on Wednesday 15 May from 13:00 to 17:00",
+        "the temporary staff agency, arranged through HR, with 3 days' notice",
+        "help with future events given 2 weeks' notice"
+      ],
+      "must_avoid": [
+        "criticising marketing for planning late",
+        "offering more people or time than the facts allow",
+        "a vague \"maybe\" instead of a clear answer",
+        "promising that the agency will definitely provide staff"
+      ]
+    },
+    "expected_time_s": 480
+  },
+  {
+    "bank_key": "general.w.mgr-policy-change",
+    "type": "scenario_response",
+    "section": "written_communication",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "behavioral.communication.written",
+    "secondary_skill_codes": [
+      "behavioral.communication.clarity"
+    ],
+    "prompt": "**Situation:** You manage a sales team of 9 people who often travel for work. The company is changing how expenses are claimed, and you must explain the change to your team.\n\n**Facts:**\n- From 1 July, expense claims must be made in the new expenses app. Paper forms will no longer be accepted.\n- Paper forms can still be used for expenses up to 30 June.\n- Receipts are photographed in the app. Staff no longer post paper receipts to finance, but they must keep them for 3 months.\n- Claims will be paid within 5 working days instead of 10.\n- There is a 30-minute training session on 20 June at 10:00 in Room B, and a 10-minute guide video on the staff website.\n- Questions go to Nadia in the finance team.\n\n**Your task:** Write an email to your team. Use every point in the Facts list. Write 100 to 180 words.",
+    "writing": {
+      "min_words": 100,
+      "max_words": 180,
+      "dimensions": [
+        {
+          "name": "Clear purpose",
+          "weight": 0.2,
+          "low": "the change and its start date are not clear early on",
+          "high": "the first lines say that claims move to the app from 1 July"
+        },
+        {
+          "name": "Complete facts",
+          "weight": 0.3,
+          "low": "misses the dates, the receipt rule or where to get help",
+          "high": "covers the 1 July start, paper until 30 June, photographing receipts and keeping them for 3 months, payment within 5 working days, the 20 June training, the video and Nadia"
+        },
+        {
+          "name": "Explains the benefit",
+          "weight": 0.15,
+          "low": "presents it only as a new rule to obey",
+          "high": "points out faster payment (5 working days instead of 10) and no more posting receipts"
+        },
+        {
+          "name": "Easy to scan",
+          "weight": 0.15,
+          "low": "one long block of text",
+          "high": "short paragraphs or a list, so each fact is easy to find later"
+        },
+        {
+          "name": "Correct and readable English",
+          "weight": 0.2,
+          "low": "grammar or spelling errors, or long tangled sentences, make the message hard to follow",
+          "high": "plain, clear sentences that read easily the first time; simple words and small slips that do not change the meaning are not marked down"
+        }
+      ],
+      "ideal_answer": "Subject: New way to claim expenses from 1 July\n\nHi team,\n\nFrom 1 July, all expense claims must be made in the new expenses app. Paper forms will not be accepted after that, but you can still use them for expenses up to 30 June.\n\nWhat changes for you:\n- You photograph your receipts in the app. You no longer post paper receipts to finance, but please keep them for 3 months.\n- Claims will be paid within 5 working days instead of 10, so you will get your money back faster.\n\nHow to get ready:\n- Come to the 30-minute training session on 20 June at 10:00 in Room B, or\n- Watch the 10-minute guide video on the staff website.\n\nIf you have questions about the app, please contact Nadia in the finance team.\n\nThanks,\n[Your name]",
+      "must_include": [
+        "claims must be made in the new app from 1 July",
+        "paper forms only for expenses up to 30 June",
+        "photograph receipts in the app and keep the paper receipts for 3 months",
+        "claims paid within 5 working days instead of 10",
+        "training on 20 June at 10:00 in Room B, and the 10-minute video on the staff website",
+        "questions to Nadia in the finance team"
+      ],
+      "must_avoid": [
+        "saying paper receipts can be thrown away",
+        "wrong dates or numbers",
+        "criticising the change or the finance team",
+        "exceptions that are not in the facts"
+      ]
+    },
+    "expected_time_s": 480
+  },
+  {
+    "bank_key": "general.w.mgr-follow-up-conflict",
+    "type": "scenario_response",
+    "section": "written_communication",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "behavioral.communication.written",
+    "secondary_skill_codes": [
+      "behavioral.collaboration.conflict"
+    ],
+    "prompt": "**Situation:** You manage a small team. Yesterday, in the team meeting, two team members, Hana and Victor, argued loudly about who should handle a large order from the client Atlas. The rest of the team saw it. After the meeting you spoke to each of them separately, and then to both together.\n\n**Facts:**\n- Hana will lead the Atlas order, because she has worked with Atlas before.\n- Victor will take the two new clients who start this month.\n- From next week, the three of you will meet every Monday at 09:30 for 15 minutes to share out the work.\n- Disagreements about work should be raised with you privately, not in team meetings.\n- You value both of them and want them to work well together.\n\n**Your task:** Write one email to both Hana and Victor that confirms what you all agreed. Use every point in the Facts list. Write 100 to 180 words.",
+    "writing": {
+      "min_words": 100,
+      "max_words": 180,
+      "dimensions": [
+        {
+          "name": "Neutral and fair",
+          "weight": 0.3,
+          "low": "blames one person, takes sides, or retells the argument",
+          "high": "treats both people equally and focuses on the agreement, not on who was wrong"
+        },
+        {
+          "name": "Complete facts",
+          "weight": 0.25,
+          "low": "misses one of the agreed points",
+          "high": "confirms that Hana leads Atlas and why, that Victor takes the two new clients, and the Monday 09:30 meeting from next week"
+        },
+        {
+          "name": "Clear expectation",
+          "weight": 0.2,
+          "low": "the rule about disagreements is missing or vague",
+          "high": "states calmly and clearly that disagreements go to you privately, not to team meetings"
+        },
+        {
+          "name": "Positive close",
+          "weight": 0.15,
+          "low": "ends coldly or with a warning",
+          "high": "says you value both of them and invites them to raise any concerns"
+        },
+        {
+          "name": "Correct and readable English",
+          "weight": 0.1,
+          "low": "grammar or spelling errors, or long tangled sentences, make the message hard to follow",
+          "high": "plain, clear sentences that read easily the first time; simple words and small slips that do not change the meaning are not marked down"
+        }
+      ],
+      "ideal_answer": "Subject: What we agreed about the Atlas order and new clients\n\nHi Hana and Victor,\n\nThank you both for talking with me yesterday. I want to confirm what we agreed.\n\n- Hana will lead the Atlas order, as she has worked with Atlas before.\n- Victor will take the two new clients who start this month.\n- From next week, the three of us will meet every Monday at 09:30 for 15 minutes to share out the work.\n\nWe also agreed that if you disagree about work, you will raise it with me privately rather than in team meetings. That way we can sort things out quickly and fairly.\n\nI value you both, and I know you can work well together. If anything in this plan does not work for you, please come and talk to me.\n\nBest regards,\n[Your name]",
+      "must_include": [
+        "Hana leads the Atlas order because she has worked with Atlas before",
+        "Victor takes the two new clients starting this month",
+        "Monday meetings at 09:30 for 15 minutes from next week",
+        "disagreements are raised privately with the manager, not in team meetings",
+        "the manager values both of them"
+      ],
+      "must_avoid": [
+        "blaming one person or taking sides",
+        "retelling the argument in detail",
+        "threats of discipline",
+        "sending it to the whole team"
+      ]
+    },
+    "expected_time_s": 480
+  },
+  {
+    "bank_key": "general.w.mgr-budget-request",
+    "type": "scenario_response",
+    "section": "written_communication",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "behavioral.communication.written",
+    "secondary_skill_codes": [
+      "behavioral.leadership.decision_making"
+    ],
+    "prompt": "**Situation:** You manage the customer support team. You need to ask your director, Ms Ito, for money to replace old laptops.\n\n**Facts:**\n- You are asking for 3,600 dollars to buy 4 new laptops at 900 dollars each.\n- The team's 4 laptops are 6 years old.\n- Each laptop crashes about 3 times a week, and each crash costs about 20 minutes of work, so the team loses about 4 hours a week.\n- The IT team says these laptops will stop getting security updates in October.\n- Two quotes from suppliers are attached. The price above is the lower quote.\n- You need approval by 31 May, so the laptops can be ordered before the end of the quarter.\n\n**Your task:** Write an email to Ms Ito. Use every point in the Facts list. Write 100 to 180 words.",
+    "writing": {
+      "min_words": 100,
+      "max_words": 180,
+      "dimensions": [
+        {
+          "name": "Clear request",
+          "weight": 0.25,
+          "low": "the amount or what it is for is unclear or comes late",
+          "high": "the first lines ask for 3,600 dollars for 4 laptops at 900 dollars each"
+        },
+        {
+          "name": "Justification with facts",
+          "weight": 0.35,
+          "low": "says the laptops are old but gives no numbers or risks",
+          "high": "uses the 6-year age, 3 crashes a week at about 20 minutes each, about 4 hours lost a week, and the end of security updates in October"
+        },
+        {
+          "name": "Next step",
+          "weight": 0.15,
+          "low": "no deadline or decision asked for",
+          "high": "asks for approval by 31 May, says why, and mentions the two attached quotes"
+        },
+        {
+          "name": "Tone suited to the reader",
+          "weight": 0.1,
+          "low": "demanding, or too casual for a director",
+          "high": "short, respectful and businesslike"
+        },
+        {
+          "name": "Correct and readable English",
+          "weight": 0.15,
+          "low": "grammar or spelling errors, or long tangled sentences, make the message hard to follow",
+          "high": "plain, clear sentences that read easily the first time; simple words and small slips that do not change the meaning are not marked down"
+        }
+      ],
+      "ideal_answer": "Subject: Request for 3,600 dollars to replace support team laptops\n\nDear Ms Ito,\n\nI would like to ask for 3,600 dollars to replace the customer support team's 4 laptops, at 900 dollars each.\n\nThe laptops are 6 years old. Each one crashes about 3 times a week, and each crash costs about 20 minutes of work, so the team loses about 4 hours every week. The IT team has also told me that these laptops will stop getting security updates in October, which would be a security risk.\n\nI have attached two quotes from suppliers. The price above is the lower one.\n\nCould you please approve this by 31 May? That would let us order the laptops before the end of the quarter.\n\nThank you for considering this request.\n\nKind regards,\n[Your name]\nCustomer Support Manager",
+      "must_include": [
+        "3,600 dollars for 4 laptops at 900 dollars each",
+        "the laptops are 6 years old",
+        "about 3 crashes a week each, about 20 minutes each, about 4 hours lost a week",
+        "security updates stop in October",
+        "two quotes attached, the lower one used",
+        "approval needed by 31 May to order before the end of the quarter"
+      ],
+      "must_avoid": [
+        "invented or exaggerated numbers",
+        "a wrong total",
+        "a demanding tone",
+        "risks or costs that are not in the facts"
+      ]
+    },
+    "expected_time_s": 480
+  }
+]

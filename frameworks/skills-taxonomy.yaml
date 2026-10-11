@@ -123,6 +123,84 @@ domains:
             label: Refactoring judgment
             description: Knowing when and how to refactor without breaking things.
 
+      # ── Added for the written assessments (frameworks/swe-assessment-design.md).
+      # Each leaf has real items measuring it in frameworks/banks/.
+      backend:
+        label: Backend
+        skills:
+          - code: engineering.backend.api_design
+            label: API design
+            description: Resources, status codes, pagination, versioning, idempotent methods.
+          - code: engineering.backend.http
+            label: HTTP
+            description: Request semantics, caching headers, CORS, timeouts.
+
+      data:
+        label: Data
+        skills:
+          - code: engineering.data.transactions
+            label: Transactions and locking
+            description: Isolation levels, locking, safe read-modify-write.
+          - code: engineering.data.indexing
+            label: Indexes and query performance
+            description: When indexes are used, N+1 queries, query plans.
+
+      security:
+        label: Security
+        skills:
+          - code: engineering.security.injection
+            label: Injection attacks
+          - code: engineering.security.auth
+            label: Authentication and authorisation
+          - code: engineering.security.data_protection
+            label: Protecting data and secrets
+
+      concurrency:
+        label: Concurrency
+        skills:
+          - code: engineering.concurrency.fundamentals
+            label: Concurrency
+            description: Race conditions, locks, the event loop, async pitfalls.
+
+      performance:
+        label: Performance
+        skills:
+          - code: engineering.performance.complexity
+            label: Performance and complexity
+
+      tooling:
+        label: Tooling
+        skills:
+          - code: engineering.tooling.git
+            label: Git
+          - code: engineering.tooling.containers
+            label: Containers
+
+      algorithms:
+        label: Algorithms
+        skills:
+          - code: engineering.algorithms.data_structures
+            label: Data structures
+
+      frontend:
+        label: Frontend
+        skills:
+          - code: engineering.frontend.components_state
+            label: Components and state
+            description: Component design, props vs state, effects, keys, data flow.
+          - code: engineering.frontend.rendering
+            label: Rendering and performance
+            description: Re-renders, memoisation, large lists, bundle size, loading speed.
+          - code: engineering.frontend.browser_network
+            label: Browser and network
+            description: Fetching, caching, cookies, CORS from the browser side, storage, the event loop in the browser.
+          - code: engineering.frontend.accessibility
+            label: Accessibility
+            description: Semantic HTML, keyboard use, labels, focus, contrast.
+          - code: engineering.frontend.css_layout
+            label: CSS and layout
+            description: Flexbox, grid, responsive layout, specificity, stacking.
+
   # ==========================================================================
   product:
     label: Product

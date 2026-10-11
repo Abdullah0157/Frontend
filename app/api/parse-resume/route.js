@@ -125,6 +125,20 @@ ${resumeText.slice(0, 30000)}`
   // model only fills the gaps.
   const det = extractContact(resumeText)
   const pick = (deterministic, fromModel) => str(deterministic) || str(fromModel)
+
+  // Resumes often print a LABEL rather than a link ("LinkedIn: Ahmad Abdullah").
+  // The model helpfully turns that into "https://linkedin.com/in/Ahmad Abdullah",
+  // which contains a space and resolves to nothing. The deterministic extractor
+  // returns empty for these (it requires a real URL), so the invalid model value
+  // would otherwise win the fallback. Only accept a well-formed profile URL.
+  const pickUrl = (deterministic, fromModel, host) => {
+    const d = str(deterministic)
+    if (d) return d
+    const m = str(fromModel)
+    if (!m || /\s/.test(m)) return ''
+    const ok = new RegExp(`^(https?://)?([a-z]{2,3}\\.)?${host}/`, 'i').test(m)
+    return ok ? m : ''
+  }
   const normalized = {
     personal: {
       full_name: pick(det.full_name, p.full_name),
@@ -132,8 +146,8 @@ ${resumeText.slice(0, 30000)}`
       phone: pick(det.phone, p.phone),
       city: pick(det.city, p.city),
       country: pick(det.country, p.country),
-      linkedin: pick(det.linkedin, p.linkedin),
-      github: pick(det.github, p.github),
+      linkedin: pickUrl(det.linkedin, p.linkedin, 'linkedin\\.com'),
+      github: pickUrl(det.github, p.github, 'github\\.com'),
     },
     summary: typeof sections.summary === 'string' ? sections.summary : '',
     experience: Array.isArray(sections.experience) ? sections.experience : [],

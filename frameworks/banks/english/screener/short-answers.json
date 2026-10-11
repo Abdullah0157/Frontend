@@ -1,0 +1,894 @@
+[
+  {
+    "bank_key": "en.s.shop-hours-open",
+    "type": "speaking",
+    "section": "short_answers",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "english.speaking",
+    "secondary_skill_codes": [],
+    "cefr": "A2",
+    "prompt": "Listen to the question, then answer it out loud in a few words.",
+    "speaking": {
+      "mode": "short_answer",
+      "audio": {
+        "lines": [
+          {
+            "voice": "en-IE-ConnorNeural",
+            "text": "A shop opens at nine in the morning and closes at five in the afternoon. How many hours is it open?"
+          }
+        ]
+      },
+      "acceptable": [
+        "eight",
+        "8 hours",
+        "eight hours"
+      ],
+      "prep_seconds": 3,
+      "max_seconds": 15
+    },
+    "expected_time_s": 25
+  },
+  {
+    "bank_key": "en.s.customer-thanks-you",
+    "type": "speaking",
+    "section": "short_answers",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "english.speaking",
+    "secondary_skill_codes": [],
+    "cefr": "A2",
+    "prompt": "Listen to the question, then answer it out loud in a few words.",
+    "speaking": {
+      "mode": "short_answer",
+      "audio": {
+        "lines": [
+          {
+            "voice": "en-US-JennyNeural",
+            "text": "What do you say when a customer thanks you?"
+          }
+        ]
+      },
+      "acceptable": [
+        "you're welcome",
+        "my pleasure",
+        "no problem",
+        "glad to help",
+        "happy to help"
+      ],
+      "prep_seconds": 3,
+      "max_seconds": 15
+    },
+    "expected_time_s": 25
+  },
+  {
+    "bank_key": "en.s.yesterday-day",
+    "type": "speaking",
+    "section": "short_answers",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "english.speaking",
+    "secondary_skill_codes": [],
+    "cefr": "A2",
+    "prompt": "Listen to the question, then answer it out loud in a few words.",
+    "speaking": {
+      "mode": "short_answer",
+      "audio": {
+        "lines": [
+          {
+            "voice": "en-AU-WilliamMultilingualNeural",
+            "text": "If today is Tuesday, what day was yesterday?"
+          }
+        ]
+      },
+      "acceptable": [
+        "Monday",
+        "it was Monday"
+      ],
+      "prep_seconds": 3,
+      "max_seconds": 15
+    },
+    "expected_time_s": 25
+  },
+  {
+    "bank_key": "en.s.emails-left",
+    "type": "speaking",
+    "section": "short_answers",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "english.speaking",
+    "secondary_skill_codes": [],
+    "cefr": "A2",
+    "prompt": "Listen to the question, then answer it out loud in a few words.",
+    "speaking": {
+      "mode": "short_answer",
+      "audio": {
+        "lines": [
+          {
+            "voice": "en-CA-ClaraNeural",
+            "text": "You have ten emails, and you answer four of them. How many emails are left?"
+          }
+        ]
+      },
+      "acceptable": [
+        "six",
+        "6",
+        "six emails"
+      ],
+      "prep_seconds": 3,
+      "max_seconds": 15
+    },
+    "expected_time_s": 25
+  },
+  {
+    "bank_key": "en.s.early-or-late",
+    "type": "speaking",
+    "section": "short_answers",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "english.speaking",
+    "secondary_skill_codes": [],
+    "cefr": "A2",
+    "prompt": "Listen to the question, then answer it out loud in a few words.",
+    "speaking": {
+      "mode": "short_answer",
+      "audio": {
+        "lines": [
+          {
+            "voice": "en-IN-PrabhatNeural",
+            "text": "Your shift starts at eight o'clock, and you arrive at a quarter past eight. Are you early or late?"
+          }
+        ]
+      },
+      "acceptable": [
+        "late",
+        "I am late",
+        "fifteen minutes late"
+      ],
+      "prep_seconds": 3,
+      "max_seconds": 15
+    },
+    "expected_time_s": 25
+  },
+  {
+    "bank_key": "en.s.before-or-after-lunch",
+    "type": "speaking",
+    "section": "short_answers",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "english.speaking",
+    "secondary_skill_codes": [],
+    "cefr": "A2",
+    "prompt": "Listen to the question, then answer it out loud in a few words.",
+    "speaking": {
+      "mode": "short_answer",
+      "audio": {
+        "lines": [
+          {
+            "voice": "en-NG-EzinneNeural",
+            "text": "Is a meeting at nine in the morning before lunch or after lunch?"
+          }
+        ]
+      },
+      "acceptable": [
+        "before",
+        "before lunch"
+      ],
+      "prep_seconds": 3,
+      "max_seconds": 15
+    },
+    "expected_time_s": 25
+  },
+  {
+    "bank_key": "en.s.opposite-open",
+    "type": "speaking",
+    "section": "short_answers",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "english.speaking",
+    "secondary_skill_codes": [],
+    "cefr": "A2",
+    "prompt": "Listen to the question, then answer it out loud in a few words.",
+    "speaking": {
+      "mode": "short_answer",
+      "audio": {
+        "lines": [
+          {
+            "voice": "en-PH-JamesNeural",
+            "text": "What is the opposite of the word open?"
+          }
+        ]
+      },
+      "acceptable": [
+        "closed",
+        "shut"
+      ],
+      "prep_seconds": 3,
+      "max_seconds": 15
+    },
+    "expected_time_s": 25
+  },
+  {
+    "bank_key": "en.s.boxes-of-cups",
+    "type": "speaking",
+    "section": "short_answers",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "english.speaking",
+    "secondary_skill_codes": [],
+    "cefr": "A2",
+    "prompt": "Listen to the question, then answer it out loud in a few words.",
+    "speaking": {
+      "mode": "short_answer",
+      "audio": {
+        "lines": [
+          {
+            "voice": "en-KE-AsiliaNeural",
+            "text": "A customer orders three boxes, and each box has two cups. How many cups is that?"
+          }
+        ]
+      },
+      "acceptable": [
+        "six",
+        "6",
+        "six cups"
+      ],
+      "prep_seconds": 3,
+      "max_seconds": 15
+    },
+    "expected_time_s": 25
+  },
+  {
+    "bank_key": "en.s.answer-phone-morning",
+    "type": "speaking",
+    "section": "short_answers",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "english.speaking",
+    "secondary_skill_codes": [],
+    "cefr": "A2",
+    "prompt": "Listen to the question, then answer it out loud in a few words.",
+    "speaking": {
+      "mode": "short_answer",
+      "audio": {
+        "lines": [
+          {
+            "voice": "en-ZA-LukeNeural",
+            "text": "What can you say when you answer the phone at work in the morning?"
+          }
+        ]
+      },
+      "acceptable": [
+        "good morning",
+        "hello",
+        "a polite greeting, for example good morning, how can I help you"
+      ],
+      "prep_seconds": 3,
+      "max_seconds": 15
+    },
+    "expected_time_s": 25
+  },
+  {
+    "bank_key": "en.s.see-you-tomorrow",
+    "type": "speaking",
+    "section": "short_answers",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "english.speaking",
+    "secondary_skill_codes": [],
+    "cefr": "A2",
+    "prompt": "Listen to the question, then answer it out loud in a few words.",
+    "speaking": {
+      "mode": "short_answer",
+      "audio": {
+        "lines": [
+          {
+            "voice": "en-SG-LunaNeural",
+            "text": "Your colleague says, see you tomorrow. Is your colleague arriving or leaving?"
+          }
+        ]
+      },
+      "acceptable": [
+        "leaving",
+        "going home",
+        "they are leaving"
+      ],
+      "prep_seconds": 3,
+      "max_seconds": 15
+    },
+    "expected_time_s": 25
+  },
+  {
+    "bank_key": "en.s.up-or-down",
+    "type": "speaking",
+    "section": "short_answers",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "english.speaking",
+    "secondary_skill_codes": [],
+    "cefr": "A2",
+    "prompt": "Listen to the question, then answer it out loud in a few words.",
+    "speaking": {
+      "mode": "short_answer",
+      "audio": {
+        "lines": [
+          {
+            "voice": "en-GB-RyanNeural",
+            "text": "The office is on the third floor, and you are on the first floor. Do you go up or down?"
+          }
+        ]
+      },
+      "acceptable": [
+        "up",
+        "go up",
+        "upstairs"
+      ],
+      "prep_seconds": 3,
+      "max_seconds": 15
+    },
+    "expected_time_s": 25
+  },
+  {
+    "bank_key": "en.s.speak-quietly",
+    "type": "speaking",
+    "section": "short_answers",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "english.speaking",
+    "secondary_skill_codes": [],
+    "cefr": "A2",
+    "prompt": "Listen to the question, then answer it out loud in a few words.",
+    "speaking": {
+      "mode": "short_answer",
+      "audio": {
+        "lines": [
+          {
+            "voice": "en-IE-EmilyNeural",
+            "text": "A customer is speaking very quietly. What can you ask the customer to do?"
+          }
+        ]
+      },
+      "acceptable": [
+        "speak louder",
+        "speak up",
+        "speak a little louder",
+        "say it again more loudly"
+      ],
+      "prep_seconds": 3,
+      "max_seconds": 15
+    },
+    "expected_time_s": 25
+  },
+  {
+    "bank_key": "en.s.parcel-days-late",
+    "type": "speaking",
+    "section": "short_answers",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "english.speaking",
+    "secondary_skill_codes": [],
+    "cefr": "B1",
+    "prompt": "Listen to the question, then answer it out loud in a few words.",
+    "speaking": {
+      "mode": "short_answer",
+      "audio": {
+        "lines": [
+          {
+            "voice": "en-US-GuyNeural",
+            "text": "A parcel should have arrived on Monday, but it arrived on Wednesday. How many days late was it?"
+          }
+        ]
+      },
+      "acceptable": [
+        "two",
+        "2 days",
+        "two days late"
+      ],
+      "prep_seconds": 3,
+      "max_seconds": 15
+    },
+    "expected_time_s": 25
+  },
+  {
+    "bank_key": "en.s.company-mistake-first",
+    "type": "speaking",
+    "section": "short_answers",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "english.speaking",
+    "secondary_skill_codes": [],
+    "cefr": "B1",
+    "prompt": "Listen to the question, then answer it out loud in a few words.",
+    "speaking": {
+      "mode": "short_answer",
+      "audio": {
+        "lines": [
+          {
+            "voice": "en-AU-NatashaNeural",
+            "text": "A customer is upset because the company made a mistake. What should you say first?"
+          }
+        ]
+      },
+      "acceptable": [
+        "sorry",
+        "I'm sorry",
+        "I apologise",
+        "an apology"
+      ],
+      "prep_seconds": 3,
+      "max_seconds": 15
+    },
+    "expected_time_s": 25
+  },
+  {
+    "bank_key": "en.s.train-arrival-time",
+    "type": "speaking",
+    "section": "short_answers",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "english.speaking",
+    "secondary_skill_codes": [],
+    "cefr": "B1",
+    "prompt": "Listen to the question, then answer it out loud in a few words.",
+    "speaking": {
+      "mode": "short_answer",
+      "audio": {
+        "lines": [
+          {
+            "voice": "en-CA-LiamNeural",
+            "text": "A train leaves at ten past three, and the journey takes twenty minutes. What time does it arrive?"
+          }
+        ]
+      },
+      "acceptable": [
+        "half past three",
+        "three thirty",
+        "3:30"
+      ],
+      "prep_seconds": 3,
+      "max_seconds": 15
+    },
+    "expected_time_s": 25
+  },
+  {
+    "bank_key": "en.s.report-before-friday",
+    "type": "speaking",
+    "section": "short_answers",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "english.speaking",
+    "secondary_skill_codes": [],
+    "cefr": "B1",
+    "prompt": "Listen to the question, then answer it out loud in a few words.",
+    "speaking": {
+      "mode": "short_answer",
+      "audio": {
+        "lines": [
+          {
+            "voice": "en-IN-NeerjaNeural",
+            "text": "Your manager says, please send the report before Friday. Is it OK to send it on Saturday?"
+          }
+        ]
+      },
+      "acceptable": [
+        "no",
+        "no, it is too late",
+        "no, it must be before Friday"
+      ],
+      "prep_seconds": 3,
+      "max_seconds": 15
+    },
+    "expected_time_s": 25
+  },
+  {
+    "bank_key": "en.s.change-to-give-back",
+    "type": "speaking",
+    "section": "short_answers",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "english.speaking",
+    "secondary_skill_codes": [],
+    "cefr": "B1",
+    "prompt": "Listen to the question, then answer it out loud in a few words.",
+    "speaking": {
+      "mode": "short_answer",
+      "audio": {
+        "lines": [
+          {
+            "voice": "en-NG-AbeoNeural",
+            "text": "A customer paid fifty dollars, but the price was forty dollars. How much money should you give back?"
+          }
+        ]
+      },
+      "acceptable": [
+        "ten dollars",
+        "ten",
+        "10"
+      ],
+      "prep_seconds": 3,
+      "max_seconds": 15
+    },
+    "expected_time_s": 25
+  },
+  {
+    "bank_key": "en.s.meeting-earlier-later",
+    "type": "speaking",
+    "section": "short_answers",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "english.speaking",
+    "secondary_skill_codes": [],
+    "cefr": "B1",
+    "prompt": "Listen to the question, then answer it out loud in a few words.",
+    "speaking": {
+      "mode": "short_answer",
+      "audio": {
+        "lines": [
+          {
+            "voice": "en-PH-RosaNeural",
+            "text": "A meeting was moved from two o'clock to four o'clock. Is it now earlier or later?"
+          }
+        ]
+      },
+      "acceptable": [
+        "later",
+        "two hours later"
+      ],
+      "prep_seconds": 3,
+      "max_seconds": 15
+    },
+    "expected_time_s": 25
+  },
+  {
+    "bank_key": "en.s.weekend-email-reply",
+    "type": "speaking",
+    "section": "short_answers",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "english.speaking",
+    "secondary_skill_codes": [],
+    "cefr": "B1",
+    "prompt": "Listen to the question, then answer it out loud in a few words.",
+    "speaking": {
+      "mode": "short_answer",
+      "audio": {
+        "lines": [
+          {
+            "voice": "en-KE-ChilembaNeural",
+            "text": "An office is closed on Saturdays and Sundays. A customer sends an email on Saturday. What is the first day the office can reply?"
+          }
+        ]
+      },
+      "acceptable": [
+        "Monday",
+        "on Monday"
+      ],
+      "prep_seconds": 3,
+      "max_seconds": 15
+    },
+    "expected_time_s": 25
+  },
+  {
+    "bank_key": "en.s.waiting-over-an-hour",
+    "type": "speaking",
+    "section": "short_answers",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "english.speaking",
+    "secondary_skill_codes": [],
+    "cefr": "B1",
+    "prompt": "Listen to the question, then answer it out loud in a few words.",
+    "speaking": {
+      "mode": "short_answer",
+      "audio": {
+        "lines": [
+          {
+            "voice": "en-ZA-LeahNeural",
+            "text": "A customer says, I have been waiting for over an hour. How does the customer probably feel?"
+          }
+        ]
+      },
+      "acceptable": [
+        "annoyed",
+        "angry",
+        "upset",
+        "frustrated",
+        "impatient"
+      ],
+      "prep_seconds": 3,
+      "max_seconds": 15
+    },
+    "expected_time_s": 25
+  },
+  {
+    "bank_key": "en.s.three-calls-time",
+    "type": "speaking",
+    "section": "short_answers",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "english.speaking",
+    "secondary_skill_codes": [],
+    "cefr": "B1",
+    "prompt": "Listen to the question, then answer it out loud in a few words.",
+    "speaking": {
+      "mode": "short_answer",
+      "audio": {
+        "lines": [
+          {
+            "voice": "en-SG-WayneNeural",
+            "text": "You have three calls waiting, and each call takes about five minutes. About how long will it take to answer all of them?"
+          }
+        ]
+      },
+      "acceptable": [
+        "fifteen minutes",
+        "15 minutes",
+        "a quarter of an hour"
+      ],
+      "prep_seconds": 3,
+      "max_seconds": 15
+    },
+    "expected_time_s": 25
+  },
+  {
+    "bank_key": "en.s.missed-last-digits",
+    "type": "speaking",
+    "section": "short_answers",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "english.speaking",
+    "secondary_skill_codes": [],
+    "cefr": "B1",
+    "prompt": "Listen to the question, then answer it out loud in a few words.",
+    "speaking": {
+      "mode": "short_answer",
+      "audio": {
+        "lines": [
+          {
+            "voice": "en-GB-SoniaNeural",
+            "text": "A customer gives you a phone number, but you do not hear the last two numbers. What do you ask the customer?"
+          }
+        ]
+      },
+      "acceptable": [
+        "could you repeat the last two numbers",
+        "can you say the number again",
+        "please repeat the number",
+        "asks the customer to repeat the number"
+      ],
+      "prep_seconds": 3,
+      "max_seconds": 15
+    },
+    "expected_time_s": 25
+  },
+  {
+    "bank_key": "en.s.speak-more-slowly",
+    "type": "speaking",
+    "section": "short_answers",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "english.speaking",
+    "secondary_skill_codes": [],
+    "cefr": "B1",
+    "prompt": "Listen to the question, then answer it out loud in a few words.",
+    "speaking": {
+      "mode": "short_answer",
+      "audio": {
+        "lines": [
+          {
+            "voice": "en-IE-ConnorNeural",
+            "text": "A customer asks you to speak more slowly. What should you change?"
+          }
+        ]
+      },
+      "acceptable": [
+        "my speed",
+        "how fast I speak",
+        "speak slower",
+        "talk more slowly"
+      ],
+      "prep_seconds": 3,
+      "max_seconds": 15
+    },
+    "expected_time_s": 25
+  },
+  {
+    "bank_key": "en.s.longer-call",
+    "type": "speaking",
+    "section": "short_answers",
+    "tracks": [
+      "english"
+    ],
+    "levels": [
+      "screener",
+      "full"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "english.speaking",
+    "secondary_skill_codes": [],
+    "cefr": "B1",
+    "prompt": "Listen to the question, then answer it out loud in a few words.",
+    "speaking": {
+      "mode": "short_answer",
+      "audio": {
+        "lines": [
+          {
+            "voice": "en-US-JennyNeural",
+            "text": "Which call is longer: a call that lasts twenty minutes, or a call that lasts half an hour?"
+          }
+        ]
+      },
+      "acceptable": [
+        "half an hour",
+        "the half-hour call",
+        "the second one",
+        "the call that lasts half an hour"
+      ],
+      "prep_seconds": 3,
+      "max_seconds": 15
+    },
+    "expected_time_s": 25
+  }
+]

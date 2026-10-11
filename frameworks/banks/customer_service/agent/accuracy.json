@@ -1,0 +1,1249 @@
+[
+  {
+    "bank_key": "cs.a.partial-refund-return-fee",
+    "type": "mcq",
+    "section": "accuracy",
+    "format": "numbers",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "workplace.numeracy",
+    "secondary_skill_codes": [
+      "customer_service.policy_adherence"
+    ],
+    "prompt": "A customer bought 5 identical desk lamps at 24.00 each. They return 3 lamps and keep 2.\n\nRefund policy: refund the price of each returned item, minus a 6.00 return shipping fee. The fee is charged once per return, not once per item.\n\nHow much should the customer get back?",
+    "choices": [
+      "66.00",
+      "72.00",
+      "54.00",
+      "42.00"
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "calc": "3 * 24 - 6",
+    "explanation": "Working: 3 returned lamps x 24.00 = 72.00, minus one 6.00 fee = 66.00. Wrong: 72.00 forgets the return fee. Wrong: 54.00 charges the 6.00 fee for each of the 3 lamps (72.00 - 18.00), but the policy says once per return. Wrong: 42.00 is worked out on the 2 lamps the customer kept (2 x 24.00 - 6.00), not the 3 returned.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "cs.a.prorata-unused-days-credit",
+    "type": "mcq",
+    "section": "accuracy",
+    "format": "numbers",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "workplace.numeracy",
+    "secondary_skill_codes": [
+      "customer_service.policy_adherence"
+    ],
+    "prompt": "A customer pays 45.00 for each 30-day billing period. They cancel at the end of day 12, so they used the service for 12 days.\n\nPolicy: give a credit for the unused days. Daily rate = monthly price divided by 30.\n\nHow much credit should the customer get?",
+    "choices": [
+      "18.00",
+      "25.50",
+      "27.00",
+      "28.50"
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "calc": "45 / 30 * (30 - 12)",
+    "explanation": "Working: daily rate 45.00 / 30 = 1.50. Unused days: 30 - 12 = 18. Credit: 18 x 1.50 = 27.00. Wrong: 18.00 is the charge for the 12 used days, not the credit for the unused ones. Wrong: 25.50 counts 17 unused days and 28.50 counts 19; there are exactly 18 days left in the period.",
+    "expected_time_s": 55
+  },
+  {
+    "bank_key": "cs.a.coupon-before-tax",
+    "type": "mcq",
+    "section": "accuracy",
+    "format": "numbers",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "workplace.numeracy",
+    "secondary_skill_codes": [
+      "customer_service.policy_adherence"
+    ],
+    "prompt": "A customer's basket comes to 200.00. They use a coupon for 20.00 off. Tax is 8%.\n\nPolicy: take the coupon off first, then add tax to the reduced amount.\n\nWhat is the total the customer pays?",
+    "choices": [
+      "196.00",
+      "194.40",
+      "216.00",
+      "180.00"
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "calc": "(200 - 20) * 1.08",
+    "explanation": "Working: 200.00 - 20.00 = 180.00. Tax: 8% of 180.00 = 14.40. Total: 180.00 + 14.40 = 194.40. Wrong: 196.00 adds tax first (200.00 x 1.08 = 216.00) and then takes the coupon off, which is the order the policy rules out. Wrong: 216.00 forgets the coupon. Wrong: 180.00 forgets the tax.",
+    "expected_time_s": 55
+  },
+  {
+    "bank_key": "cs.a.percent-discount-then-tax",
+    "type": "mcq",
+    "section": "accuracy",
+    "format": "numbers",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "workplace.numeracy",
+    "secondary_skill_codes": [
+      "customer_service.policy_adherence"
+    ],
+    "prompt": "An item costs 60.00. The customer gets a 10% discount. Then 5% tax is added to the discounted price.\n\nWhat does the customer pay?",
+    "choices": [
+      "57.00",
+      "54.00",
+      "56.70",
+      "63.00"
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "calc": "60 * 0.9 * 1.05",
+    "explanation": "Working: 60.00 - 10% (6.00) = 54.00. Tax: 5% of 54.00 = 2.70. Total: 54.00 + 2.70 = 56.70. Wrong: 57.00 treats it as 5% off overall (10% off minus 5% tax), but the tax is worked out on 54.00, not on 60.00. Wrong: 54.00 forgets the tax. Wrong: 63.00 forgets the discount and only adds tax.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "cs.a.late-fee-free-days",
+    "type": "mcq",
+    "section": "accuracy",
+    "format": "numbers",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "workplace.numeracy",
+    "secondary_skill_codes": [
+      "customer_service.policy_adherence"
+    ],
+    "prompt": "A bill was due on 3 March. The customer paid it on 17 March.\n\nLate fee rule: the first 5 days late are free. Each day late after that costs 1.50. The fee is never more than 20.00.\n\nWhat is the late fee?",
+    "choices": [
+      "13.50",
+      "20.00",
+      "12.00",
+      "15.00"
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "calc": "(17 - 3 - 5) * 1.5",
+    "explanation": "Working: days late = 17 - 3 = 14 (paying on 4 March would be 1 day late). Charged days = 14 - 5 free days = 9. Fee = 9 x 1.50 = 13.50, which is under the 20.00 limit. Wrong: 20.00 ignores the 5 free days (14 x 1.50 = 21.00, then limited to 20.00). Wrong: 12.00 counts only 8 charged days. Wrong: 15.00 counts both 3 March and 17 March, giving 15 days late and 10 charged days.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "cs.a.delivery-weight-table",
+    "type": "mcq",
+    "section": "accuracy",
+    "format": "numbers",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "workplace.numeracy",
+    "secondary_skill_codes": [
+      "customer_service.policy_adherence"
+    ],
+    "prompt": "Delivery prices depend on the total weight of the parcel:\n\n```\nTotal weight               Delivery price\nup to 2 kg                 4.00\nover 2 kg, up to 5 kg      7.50\nover 5 kg, up to 10 kg     11.00\nover 10 kg                 11.00 plus 1.20 for each kg over 10 kg\n```\n\nA customer orders three items weighing 2.5 kg, 4 kg and 6.5 kg. All three are sent together in one parcel.\n\nWhat is the delivery price?",
+    "choices": [
+      "26.00",
+      "11.00",
+      "15.80",
+      "14.60"
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "calc": "11 + (2.5 + 4 + 6.5 - 10) * 1.2",
+    "explanation": "Working: total weight 2.5 + 4 + 6.5 = 13 kg, so the \"over 10 kg\" row applies: 11.00 + 3 kg x 1.20 = 14.60. Wrong: 26.00 prices each item as its own parcel (7.50 + 7.50 + 11.00), but they go in one parcel. Wrong: 11.00 forgets the charge for the 3 kg over 10 kg. Wrong: 15.80 charges 4 extra kg instead of 3.",
+    "expected_time_s": 65
+  },
+  {
+    "bank_key": "cs.a.minutes-over-plan",
+    "type": "mcq",
+    "section": "accuracy",
+    "format": "numbers",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "workplace.numeracy",
+    "secondary_skill_codes": [
+      "customer_service.policy_adherence"
+    ],
+    "prompt": "A phone plan costs 30.00 a month and includes 500 minutes. Each extra minute costs 0.08. This month the customer used 642 minutes.\n\nWhat is the total bill for the month?",
+    "choices": [
+      "11.36",
+      "41.36",
+      "81.36",
+      "51.36"
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "calc": "30 + (642 - 500) * 0.08",
+    "explanation": "Working: extra minutes = 642 - 500 = 142. Extra charge = 142 x 0.08 = 11.36. Total = 30.00 + 11.36 = 41.36. Wrong: 11.36 is only the extra charge and leaves out the 30.00 plan price. Wrong: 81.36 charges all 642 minutes at 0.08 (51.36) and then adds the plan price. Wrong: 51.36 charges all 642 minutes at 0.08 and leaves out the plan price.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "cs.a.extra-data-rounded-up",
+    "type": "mcq",
+    "section": "accuracy",
+    "format": "numbers",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "workplace.numeracy",
+    "secondary_skill_codes": [
+      "customer_service.policy_adherence"
+    ],
+    "prompt": "A plan includes 20 GB of data each month. Extra data costs 2.50 for each GB or part of a GB. For example, 0.3 GB extra is charged as 1 GB.\n\nThis month the customer used 23.4 GB.\n\nWhat is the extra data charge?",
+    "choices": [
+      "8.50",
+      "7.50",
+      "10.00",
+      "58.50"
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "calc": "Math.ceil(23.4 - 20) * 2.5",
+    "explanation": "Working: extra data = 23.4 - 20 = 3.4 GB. Each part of a GB counts as a whole GB, so 4 GB are charged: 4 x 2.50 = 10.00. Wrong: 8.50 charges exactly 3.4 GB and ignores the rounding rule. Wrong: 7.50 rounds down to 3 GB. Wrong: 58.50 charges all 23.4 GB instead of only the extra.",
+    "expected_time_s": 55
+  },
+  {
+    "bank_key": "cs.a.late-delivery-comp-capped",
+    "type": "mcq",
+    "section": "accuracy",
+    "format": "numbers",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "workplace.numeracy",
+    "secondary_skill_codes": [
+      "customer_service.policy_adherence"
+    ],
+    "prompt": "Compensation policy for late deliveries: the customer gets 10% of the order value for each day the order is late, up to a maximum of 50% of the order value.\n\nAn order worth 86.00 was promised for 4 June and arrived on 11 June.\n\nHow much compensation is due?",
+    "choices": [
+      "60.20",
+      "43.00",
+      "8.60",
+      "51.60"
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "calc": "86 * Math.min(0.1 * (11 - 4), 0.5)",
+    "explanation": "Working: days late = 11 - 4 = 7, so 7 x 10% = 70%. The maximum is 50%, so the compensation is 50% of 86.00 = 43.00. Wrong: 60.20 is 70% and ignores the 50% maximum. Wrong: 8.60 gives 10% once instead of 10% per day. Wrong: 51.60 counts 6 days (60%) and also ignores the maximum.",
+    "expected_time_s": 55,
+    "group": "cs-a-late-delivery-comp"
+  },
+  {
+    "bank_key": "cs.a.late-delivery-comp-under-cap",
+    "type": "mcq",
+    "section": "accuracy",
+    "format": "numbers",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "workplace.numeracy",
+    "secondary_skill_codes": [
+      "customer_service.policy_adherence"
+    ],
+    "prompt": "Compensation policy for late deliveries: the customer gets 10% of the order value for each day the order is late, up to a maximum of 50% of the order value.\n\nAn order worth 64.00 was promised for 9 June and arrived on 12 June.\n\nHow much compensation is due?",
+    "choices": [
+      "32.00",
+      "6.40",
+      "25.60",
+      "19.20"
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "calc": "64 * Math.min(0.1 * (12 - 9), 0.5)",
+    "explanation": "Working: days late = 12 - 9 = 3, so 3 x 10% = 30% of 64.00 = 19.20. This is under the 50% maximum, so the maximum does not apply. Wrong: 32.00 pays the 50% maximum, which is only a limit, not a fixed amount. Wrong: 6.40 gives 10% once instead of 10% per day. Wrong: 25.60 counts both 9 June and 12 June, giving 4 days (40%).",
+    "expected_time_s": 50,
+    "group": "cs-a-late-delivery-comp"
+  },
+  {
+    "bank_key": "cs.a.restocking-fee-one-item",
+    "type": "mcq",
+    "section": "accuracy",
+    "format": "numbers",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "workplace.numeracy",
+    "secondary_skill_codes": [
+      "customer_service.policy_adherence"
+    ],
+    "prompt": "A customer ordered a jacket (90.00) and a pair of boots (120.00), and paid 10.00 for delivery. They return only the boots.\n\nReturn policy:\n- Refund the item price minus a 15% restocking fee.\n- The delivery charge is refunded only if the whole order is returned.\n\nHow much should the customer get back?",
+    "choices": [
+      "102.00",
+      "112.00",
+      "120.00",
+      "178.50"
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "calc": "120 * (1 - 0.15)",
+    "explanation": "Working: 15% of 120.00 = 18.00, so the refund is 120.00 - 18.00 = 102.00. The delivery charge stays, because only part of the order came back. Wrong: 112.00 also refunds the 10.00 delivery charge, which the policy allows only for a whole-order return. Wrong: 120.00 forgets the restocking fee. Wrong: 178.50 refunds both items minus 15% (210.00 x 0.85), but the jacket was kept.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "cs.a.annual-plan-early-cancel",
+    "type": "mcq",
+    "section": "accuracy",
+    "format": "numbers",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "workplace.numeracy",
+    "secondary_skill_codes": [
+      "customer_service.policy_adherence"
+    ],
+    "prompt": "A customer paid 240.00 for a 12-month plan. They cancel after using 7 full months.\n\nPolicy: refund each unused full month at the monthly rate (240.00 divided by 12), minus a 15.00 early cancellation fee.\n\nHow much is the refund?",
+    "choices": [
+      "100.00",
+      "125.00",
+      "65.00",
+      "85.00"
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "calc": "(12 - 7) * (240 / 12) - 15",
+    "explanation": "Working: monthly rate = 240.00 / 12 = 20.00. Unused months = 12 - 7 = 5. Refund = 5 x 20.00 - 15.00 = 85.00. Wrong: 100.00 forgets the 15.00 fee. Wrong: 125.00 refunds the 7 used months (7 x 20.00 - 15.00) instead of the 5 unused ones. Wrong: 65.00 counts only 4 unused months (4 x 20.00 - 15.00).",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "cs.a.mid-period-plan-change",
+    "type": "mcq",
+    "section": "accuracy",
+    "format": "numbers",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "workplace.numeracy",
+    "secondary_skill_codes": [
+      "customer_service.policy_adherence"
+    ],
+    "prompt": "A customer's billing period is 30 days. On days 1 to 10 they were on the Basic plan (20.00 a month). On day 11 they moved to the Plus plan (35.00 a month) and stayed on it until day 30.\n\nPolicy: charge each plan only for the days the customer was on it. Daily rate = monthly price divided by 30.\n\nWhat is the bill for this period?",
+    "choices": [
+      "35.00",
+      "29.50",
+      "30.00",
+      "55.00"
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "calc": "20 / 30 * 10 + 35 / 30 * 20",
+    "explanation": "Working: Basic for days 1 to 10 = 10 days x (20.00 / 30) = 6.67. Plus for days 11 to 30 = 20 days x (35.00 / 30) = 23.33. Total = 30.00. Wrong: 35.00 charges the full Plus price for the whole period. Wrong: 29.50 puts day 11 on Basic (11 days Basic, 19 days Plus), but the customer moved on day 11. Wrong: 55.00 charges both plans in full.",
+    "expected_time_s": 70
+  },
+  {
+    "bank_key": "cs.a.balance-after-payment",
+    "type": "mcq",
+    "section": "accuracy",
+    "format": "numbers",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "workplace.numeracy",
+    "secondary_skill_codes": [
+      "customer_service.policy_adherence"
+    ],
+    "prompt": "The customer asks what their balance is now. The account summary:\n\n```\nBalance owed at last bill     56.40\nPayment received              80.00\nNew charges this month        31.25\n```\n\nWhat is the customer's balance now?",
+    "choices": [
+      "7.65 owed",
+      "23.60 in credit",
+      "87.65 owed",
+      "31.25 owed"
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "calc": "Math.round((56.40 - 80 + 31.25) * 100) / 100",
+    "explanation": "Working: 56.40 owed - 80.00 paid = 23.60 in credit. Then 31.25 of new charges: 31.25 - 23.60 = 7.65 owed. Wrong: 23.60 in credit forgets the new charges. Wrong: 87.65 owed forgets the payment (56.40 + 31.25). Wrong: 31.25 owed treats the payment as clearing only the old balance and loses the 23.60 overpaid.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "cs.a.coupon-full-price-items",
+    "type": "mcq",
+    "section": "accuracy",
+    "format": "numbers",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "workplace.numeracy",
+    "secondary_skill_codes": [
+      "customer_service.policy_adherence"
+    ],
+    "prompt": "A customer buys these items:\n\n```\nShirt      30.00    full price\nTrousers   50.00    sale item\nHat        20.00    full price\n```\n\nThey use a coupon for 20% off full-price items only. Sale items get no extra discount. There is no tax or delivery charge.\n\nWhat is the total?",
+    "choices": [
+      "80.00",
+      "90.00",
+      "100.00",
+      "94.00"
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "calc": "(30 + 20) * 0.8 + 50",
+    "explanation": "Working: full-price items 30.00 + 20.00 = 50.00, minus 20% = 40.00. Add the sale trousers at 50.00: total 90.00. Wrong: 80.00 takes 20% off all three items, including the sale item. Wrong: 100.00 forgets the coupon. Wrong: 94.00 takes 20% off the shirt only and misses the hat.",
+    "expected_time_s": 55
+  },
+  {
+    "bank_key": "cs.a.duplicate-charge-remaining",
+    "type": "mcq",
+    "section": "accuracy",
+    "format": "numbers",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "workplace.numeracy",
+    "secondary_skill_codes": [
+      "customer_service.policy_adherence"
+    ],
+    "prompt": "A customer was charged twice for the same order of 47.80. Last week another agent refunded 20.00 of the second charge.\n\nHow much more must be refunded so that the customer has paid for the order only once?",
+    "choices": [
+      "47.80",
+      "27.80",
+      "75.60",
+      "67.80"
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "calc": "47.80 - 20",
+    "explanation": "Working: the extra charge was 47.80 and 20.00 of it is already back, so 47.80 - 20.00 = 27.80 is still owed. Wrong: 47.80 ignores the 20.00 already refunded. Wrong: 75.60 is the total still held (2 x 47.80 - 20.00), which includes the one payment the customer should make. Wrong: 67.80 adds the earlier refund instead of taking it away.",
+    "expected_time_s": 45
+  },
+  {
+    "bank_key": "cs.a.late-charge-full-months",
+    "type": "mcq",
+    "section": "accuracy",
+    "format": "numbers",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "workplace.numeracy",
+    "secondary_skill_codes": [
+      "customer_service.policy_adherence"
+    ],
+    "prompt": "A customer has an overdue balance of 600.00. It has been overdue for 3 full months and 10 days.\n\nPolicy: add a late charge of 1.5% of the overdue balance for each full month overdue. Part months are not counted. Each month's charge is worked out on the original 600.00 (charges are not added to the balance before the next month).\n\nWhat is the total late charge?",
+    "choices": [
+      "36.00",
+      "9.00",
+      "27.41",
+      "27.00"
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "calc": "600 * 0.015 * 3",
+    "explanation": "Working: 1.5% of 600.00 = 9.00 per full month. 3 full months x 9.00 = 27.00. The extra 10 days are a part month, so they are not counted. Wrong: 36.00 counts the 10 days as a fourth month. Wrong: 9.00 charges only one month. Wrong: 27.41 adds each month's charge to the balance first (600.00 x 1.015 x 1.015 x 1.015 - 600.00), which the policy rules out.",
+    "expected_time_s": 65
+  },
+  {
+    "bank_key": "cs.a.room-tax-not-parking",
+    "type": "mcq",
+    "section": "accuracy",
+    "format": "numbers",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "workplace.numeracy",
+    "secondary_skill_codes": [
+      "customer_service.policy_adherence"
+    ],
+    "prompt": "A booking is for 3 nights at 85.00 a night. Parking is 10.00 a night for all 3 nights.\n\nTax rule: 12% tax is added to the room price only. Parking is not taxed.\n\nWhat is the total for the stay?",
+    "choices": [
+      "319.20",
+      "295.60",
+      "285.60",
+      "315.60"
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "calc": "3 * 85 * 1.12 + 3 * 10",
+    "explanation": "Working: room 3 x 85.00 = 255.00, plus 12% tax (30.60) = 285.60. Parking 3 x 10.00 = 30.00, not taxed. Total = 315.60. Wrong: 319.20 also taxes the parking ((255.00 + 30.00) x 1.12). Wrong: 295.60 adds parking for only one night. Wrong: 285.60 leaves out the parking.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "cs.a.outage-credit-full-days",
+    "type": "mcq",
+    "section": "accuracy",
+    "format": "numbers",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "workplace.numeracy",
+    "secondary_skill_codes": [
+      "customer_service.policy_adherence"
+    ],
+    "prompt": "Service credit policy: if the service is down for 24 hours or more in a row, the customer gets a credit of the monthly fee divided by 30 for each full 24 hours of outage. Part days are not credited.\n\nThe customer's monthly fee is 54.00. Their service was down from 9:00 on 3 May until 15:00 on 6 May.\n\nHow much credit is due?",
+    "choices": [
+      "5.40",
+      "7.20",
+      "1.80",
+      "5.85"
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "calc": "Math.floor(((6 - 3) * 24 + (15 - 9)) / 24) * (54 / 30)",
+    "explanation": "Working: from 9:00 on 3 May to 9:00 on 6 May is 72 hours (3 full days), plus 6 more hours to 15:00. That is 3 full 24-hour periods. Credit per day = 54.00 / 30 = 1.80, so 3 x 1.80 = 5.40. Wrong: 7.20 counts 4 days (3, 4, 5 and 6 May) as if each calendar date were a full day. Wrong: 1.80 gives only one day of credit. Wrong: 5.85 credits 3.25 days (78 hours / 24), but part days are not credited.",
+    "expected_time_s": 70
+  },
+  {
+    "bank_key": "cs.a.free-delivery-threshold",
+    "type": "mcq",
+    "section": "accuracy",
+    "format": "numbers",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "workplace.numeracy",
+    "secondary_skill_codes": [
+      "customer_service.policy_adherence"
+    ],
+    "prompt": "Delivery costs 6.95. Delivery is free when the order total after discounts is 50.00 or more.\n\nA customer's items come to 54.00, and they have a code for 10% off. The code applies to items only, not to delivery.\n\nWhat does the customer pay in total?",
+    "choices": [
+      "48.60",
+      "60.95",
+      "55.55",
+      "54.86"
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "calc": "54 * 0.9 + 6.95",
+    "explanation": "Working: items after the code = 54.00 x 0.9 = 48.60. That is under 50.00, so delivery is charged: 48.60 + 6.95 = 55.55. Wrong: 48.60 gives free delivery by checking the 50.00 limit before the discount. Wrong: 60.95 forgets the 10% code. Wrong: 54.86 also takes 10% off the delivery charge ((54.00 + 6.95) x 0.9), but the code is for items only.",
+    "expected_time_s": 65
+  },
+  {
+    "bank_key": "cs.a.split-parcel-second-mug",
+    "type": "mcq",
+    "section": "accuracy",
+    "format": "concept",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "workplace.attention_to_detail",
+    "secondary_skill_codes": [
+      "workplace.reading_comprehension"
+    ],
+    "prompt": "A customer says: \"I ordered two blue mugs but only one arrived.\" The order record:\n\n```\nOrder 50417            placed 2 Jun\n  2 x Mug, blue        9.00 each\n\nParcel A   1 x Mug, blue   dispatched 3 Jun   delivered 5 Jun\nParcel B   1 x Mug, blue   dispatched 6 Jun   in transit\n\nRefunds: none\n```\n\nWhat does the record show?",
+    "choices": [
+      "The second mug was sent later in its own parcel and is still on the way.",
+      "The order was for one mug, so nothing is missing from the delivery.",
+      "The second mug was out of stock and was refunded to the card.",
+      "Both mugs were delivered on 5 Jun, so the customer should look again."
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "explanation": "Deciding lines: \"Parcel A 1 x Mug ... delivered 5 Jun\" and \"Parcel B 1 x Mug ... dispatched 6 Jun in transit\". The order was split, and the second mug is still on its way. Wrong: the order line says \"2 x Mug\", not one. Wrong: \"Refunds: none\", and nothing says out of stock. Wrong: only Parcel A, with one mug, was delivered on 5 Jun.",
+    "expected_time_s": 45
+  },
+  {
+    "bank_key": "cs.a.chat-details-mismatch",
+    "type": "multi_select",
+    "section": "accuracy",
+    "format": "concept",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "workplace.attention_to_detail",
+    "secondary_skill_codes": [
+      "customer_service.privacy_verification"
+    ],
+    "prompt": "A customer writes in chat: \"Hi, I'm Dana Price. Order 88213 went to 14 Hill Road. I paid 64.50 by card ending 2291 on 3 March.\"\n\nThe order record:\n\n```\nOrder:       88213\nCustomer:    Dana Price\nAddress:     41 Hill Road, Northgate\nOrder date:  3 March\nPaid:        46.50, card ending 2291\n```\n\nWhich details the customer gave do NOT match the record? Select all that apply.",
+    "choices": [
+      "The customer's name",
+      "The house number",
+      "The order date",
+      "The amount paid",
+      "The card ending"
+    ],
+    "answer": {
+      "correct": [
+        1,
+        3
+      ]
+    },
+    "explanation": "Mismatches: the customer says 14 Hill Road, the record says 41 Hill Road (digits swapped); the customer says 64.50, the record says 46.50. Not mismatches: the name (Dana Price), the order date (3 March) and the card ending (2291) are the same in both.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "cs.a.id-check-swapped-postcode",
+    "type": "mcq",
+    "section": "accuracy",
+    "format": "concept",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "customer_service.privacy_verification",
+    "secondary_skill_codes": [
+      "workplace.attention_to_detail"
+    ],
+    "prompt": "Identity check rule: before discussing an account, the caller must correctly give at least 2 of these 3 details: date of birth, postcode, last 4 digits of the card on file.\n\nAccount record:\n\n```\nName:            Ruth Mensah\nDate of birth:   12 April 1990\nPostcode:        30418\nCard on file:    ends 5521\n```\n\nThe caller says: born 12 April 1990, postcode 30481, card ending 5521.\n\nDoes the caller pass the check?",
+    "choices": [
+      "No. The postcode is wrong, so the check fails.",
+      "Yes. The date of birth and card digits match: 2 of 3.",
+      "No. Only the date of birth matches the record.",
+      "Yes. All three details match the record."
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "explanation": "Date of birth 12 April 1990 matches. Card ending 5521 matches. Postcode 30481 does not match 30418 (last two digits swapped). That is 2 of 3, so the caller passes. Wrong: the rule needs 2 of 3, not all 3, so one wrong postcode does not fail the check. Wrong: the card digits match too, not only the date of birth. Wrong: the postcode does not match, so it is not all three.",
+    "expected_time_s": 55
+  },
+  {
+    "bank_key": "cs.a.id-check-fails-next-step",
+    "type": "mcq",
+    "section": "accuracy",
+    "format": "concept",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "customer_service.privacy_verification",
+    "secondary_skill_codes": [
+      "customer_service.policy_adherence"
+    ],
+    "prompt": "Identity check rule: the caller must correctly give at least 2 of 3 details: date of birth, postcode, last 4 digits of the card on file. If the check fails, do not share or change anything on the account.\n\nAccount record:\n\n```\nName:            Sam Okafor\nDate of birth:   3 July 1998\nPostcode:        61027\nCard on file:    ends 4401\n```\n\nThe caller says: born 3 July 1989, postcode 61027, card ending 4410.\n\nWhat should the agent do?",
+    "choices": [
+      "Pass: the name and the postcode both match the record.",
+      "Pass: the date of birth and the postcode both match.",
+      "Fail: only the postcode matches, so share nothing.",
+      "Fail, then read out the card ending so they can retry."
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "explanation": "Year of birth 1989 does not match 1998. Card ending 4410 does not match 4401. Only the postcode 61027 matches: 1 of 3, so the check fails and nothing on the account is shared or changed. Wrong: the name is not one of the 3 check details. Wrong: the year of birth is wrong (1989, not 1998). Wrong: reading out the card ending shares account details with someone who failed the check.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "cs.a.authorised-callers",
+    "type": "multi_select",
+    "section": "accuracy",
+    "format": "concept",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "customer_service.privacy_verification",
+    "secondary_skill_codes": [
+      "workplace.attention_to_detail"
+    ],
+    "prompt": "Policy: you may discuss an account only with the account holder or an authorised user listed on it. The caller must also correctly give at least 2 of these 3 account details: the holder's date of birth, the postcode, the last 4 digits of the card on file.\n\nAccount record:\n\n```\nAccount:            3308\nHolder:             Lee Chen\nAuthorised users:   Mia Chen\nHolder's DOB:       9 Feb 1975\nPostcode:           22841\nCard on file:       ends 7310\n```\n\nWhich of these callers can the agent help? Select all that apply.",
+    "choices": [
+      "Mia Chen, who gives postcode 22841 and card ending 7310",
+      "Tom Chen, the holder's son, who gives all three details correctly",
+      "Lee Chen, who gives date of birth 9 Feb 1975 and card ending 7310",
+      "Lee Chen, who gives postcode 22814 and card ending 7310",
+      "Mia Chen, who gives date of birth 9 Feb 1975 and postcode 22841"
+    ],
+    "answer": {
+      "correct": [
+        0,
+        2,
+        4
+      ]
+    },
+    "explanation": "Help: Mia Chen is an authorised user and gives 2 correct details (postcode, card). Help: Lee Chen is the holder and gives 2 correct details (date of birth, card). Help: Mia Chen gives 2 correct details (date of birth, postcode). Do not help: Tom Chen is not the holder or an authorised user, so knowing the details is not enough. Do not help: postcode 22814 does not match 22841, so that Lee Chen caller has only 1 correct detail.",
+    "expected_time_s": 70
+  },
+  {
+    "bank_key": "cs.a.notes-book-engineer",
+    "type": "mcq",
+    "section": "accuracy",
+    "format": "concept",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "customer_service.policy_adherence",
+    "secondary_skill_codes": [
+      "workplace.reading_comprehension"
+    ],
+    "prompt": "A customer calls on 16 May about their internet. The account notes say:\n\n```\n12 May 10:14  Router drops the connection every evening.\n12 May 10:20  Line test: PASSED. Asked customer to restart router\n              and call back if it continues.\n15 May 18:02  Customer called back: still dropping. Line test: PASSED.\n15 May 18:10  Fault process: after 2 passed line tests with the fault\n              still there, book an engineer visit. Customer is free\n              on weekdays after 4 pm.\n15 May 18:12  Call cut off before the visit was booked.\n```\n\nWhat do the notes say should happen now?",
+    "choices": [
+      "Run a third line test before booking anything.",
+      "Ask the customer to restart the router again.",
+      "Close the case, because both line tests passed.",
+      "Book an engineer visit on a weekday after 4 pm."
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "explanation": "Deciding lines: 15 May 18:10 says that after 2 passed line tests with the fault still there, an engineer visit is booked, and 18:12 says the visit was never booked. Two passed tests are already on the record, and the customer is free on weekdays after 4 pm. Wrong: a third line test is not part of the process and only delays the visit. Wrong: the restart was already tried on 12 May. Wrong: passed line tests with the fault still there are the reason to send an engineer, not to close the case.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "cs.a.refund-approval-code-rule",
+    "type": "mcq",
+    "section": "accuracy",
+    "format": "concept",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "customer_service.policy_adherence",
+    "secondary_skill_codes": [
+      "workplace.attention_to_detail"
+    ],
+    "prompt": "Rule: any refund over 100.00 needs a team leader's approval code before it is issued.\n\n```\nTicket   Refund     Approval code   Status\nT-201    45.00      -               Issued\nT-202    130.00     TL-5521         Issued\nT-203    100.00     -               Issued\nT-204    112.50     -               Issued\n```\n\nWhich ticket breaks the rule?",
+    "choices": [
+      "T-201",
+      "T-202",
+      "T-203",
+      "T-204"
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "explanation": "T-204 refunded 112.50, which is over 100.00, and has no approval code. Wrong: T-201 is 45.00, so no code is needed. Wrong: T-202 is over 100.00 but has code TL-5521. Wrong: T-203 is exactly 100.00, which is not over 100.00, so no code is needed.",
+    "expected_time_s": 50
+  },
+  {
+    "bank_key": "cs.a.closed-ticket-rules",
+    "type": "multi_select",
+    "section": "accuracy",
+    "format": "concept",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "customer_service.policy_adherence",
+    "secondary_skill_codes": [
+      "workplace.attention_to_detail"
+    ],
+    "prompt": "Rules for closed tickets: every closed ticket must have a category, a resolution note, and a first contact with the customer within 24 hours of the ticket being opened.\n\n```\nTicket  Opened        First contact   Category   Resolution note   Status\nC-11    4 Mar 09:00   5 Mar 10:10     Billing    Refund issued     Closed\nC-12    4 Mar 10:15   4 Mar 16:40     Delivery   Parcel re-sent    Closed\nC-13    4 Mar 13:00   4 Mar 13:45     (blank)    (blank)           Open\nC-14    5 Mar 08:20   5 Mar 16:05     Billing    (blank)           Closed\nC-15    5 Mar 09:30   6 Mar 09:10     Account    Password reset    Closed\n```\n\nWhich tickets break the rules? Select all that apply.",
+    "choices": [
+      "C-11",
+      "C-12",
+      "C-13",
+      "C-14",
+      "C-15"
+    ],
+    "answer": {
+      "correct": [
+        0,
+        3
+      ]
+    },
+    "explanation": "Break: C-11 was opened 4 Mar 09:00 and first contact was 5 Mar 10:10, which is 25 hours 10 minutes, over 24 hours. Break: C-14 is closed with no resolution note. Fine: C-12 had contact after 6 hours 25 minutes and has a category and a note. Fine: C-13 has blanks but is still Open, and the rules are for closed tickets. Fine: C-15 had contact after 23 hours 40 minutes, just inside 24 hours.",
+    "expected_time_s": 70
+  },
+  {
+    "bank_key": "cs.a.charged-twice-history",
+    "type": "mcq",
+    "section": "accuracy",
+    "format": "concept",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "workplace.attention_to_detail",
+    "secondary_skill_codes": [
+      "customer_service.problem_resolution"
+    ],
+    "prompt": "A customer says: \"You charged me twice for order 6610 and never fixed it.\" The payment history:\n\n```\nDate     Order   Type            Amount    Result\n02 Aug   6610    Card payment    58.20     Approved\n02 Aug   6610    Card payment    58.20     Declined\n02 Aug   6610    Card payment    58.20     Approved\n03 Aug   6610    Refund          58.20     Completed\n```\n\nWhat does the history show?",
+    "choices": [
+      "Three charges went through and one was refunded, so one more refund is due.",
+      "Two charges went through and one was refunded, so the customer paid once.",
+      "Two charges went through and none was refunded, so one refund is due.",
+      "Only one charge went through, so the 3 Aug refund was given in error."
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "explanation": "Two card payments say \"Approved\" and one says \"Declined\", so two charges went through. The refund on 03 Aug is \"Completed\". Two charges minus one refund means the customer has paid once, so the double charge was already fixed. Wrong: the declined attempt was never charged, so there were not three charges. Wrong: the 03 Aug refund is completed, so it is not true that none was refunded. Wrong: two payments were approved, not one.",
+    "expected_time_s": 55
+  },
+  {
+    "bank_key": "cs.a.return-window-dropoff-scan",
+    "type": "mcq",
+    "section": "accuracy",
+    "format": "concept",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "customer_service.policy_adherence",
+    "secondary_skill_codes": [
+      "workplace.attention_to_detail"
+    ],
+    "prompt": "Return policy: the item must be scanned at a drop-off point within 30 days of delivery.\n\nA customer says: \"I sent it back on day 28, so it was in time.\" The record:\n\n```\nOrder 7302\nDelivered:                    4 Sep\nReturn label created:         1 Oct\nScanned at drop-off point:    6 Oct\nReceived at warehouse:        9 Oct\n```\n\nWhich statement is correct?",
+    "choices": [
+      "It was scanned 28 days after delivery, as the customer says, so it was in time.",
+      "The label was made 27 days after delivery, and that is the date that counts.",
+      "It was scanned 32 days after delivery, so it was outside the 30-day window.",
+      "It was scanned 30 days after delivery, so it was just inside the window."
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "explanation": "September has 30 days, so 4 Sep to 4 Oct is 30 days and 6 Oct is 32 days after delivery. The policy counts the drop-off scan, so the return was 2 days late. Wrong: 28 days after delivery would be 2 Oct, but the scan was on 6 Oct. Wrong: the label was made on day 27 (1 Oct), but the policy counts the drop-off scan, not the label. Wrong: day 30 is 4 Oct, not 6 Oct.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "cs.a.upgrade-quote-mismatch",
+    "type": "mcq",
+    "section": "accuracy",
+    "format": "concept",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "workplace.attention_to_detail",
+    "secondary_skill_codes": [
+      "workplace.reading_comprehension"
+    ],
+    "prompt": "A customer emails: \"I upgraded to Premium on 1 June with your agent, who promised 25 a month. Now I am billed 29.\" The account notes:\n\n```\n01 Jun 14:22  Agent R. Diaz: customer asked about Premium.\n              Quoted offer price 25 a month, valid until 7 Jun.\n01 Jun 14:30  Agent R. Diaz: upgrade NOT done. Customer wants to\n              check with partner first.\n08 Jun 09:05  Customer upgraded online to Premium at 29 a month.\n```\n\nWhich part of the customer's message does not match the notes?",
+    "choices": [
+      "The upgrade: it was done online on 8 June, after the offer ended.",
+      "The price: the agent quoted 29 a month on 1 June, not 25.",
+      "The plan: the customer is still on Basic, not on Premium.",
+      "The agent: R. Diaz did not speak to the customer on 1 June."
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "explanation": "Deciding lines: 01 Jun 14:30 says the upgrade was NOT done, and 08 Jun 09:05 says the customer upgraded online at 29 a month. The 25 offer was valid until 7 Jun, so it had ended. Wrong: the agent did quote 25, as the customer says. Wrong: the customer is on Premium (upgraded 8 Jun). Wrong: R. Diaz did speak to the customer on 1 June (14:22 and 14:30).",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "cs.a.repeat-fault-30-days",
+    "type": "mcq",
+    "section": "accuracy",
+    "format": "concept",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "customer_service.policy_adherence",
+    "secondary_skill_codes": [
+      "workplace.attention_to_detail"
+    ],
+    "prompt": "Rule: if the same fault has been reported 3 or more times in the last 30 days (counting today's report), escalate to the senior technical team instead of booking a standard repair.\n\nToday is 18 Mar. The customer's notes:\n\n```\n10 Feb   Fault: no hot water. Standard repair booked, fixed 12 Feb.\n26 Feb   Billing question about the February bill. Answered.\n03 Mar   Fault: no hot water. Standard repair booked, fixed 5 Mar.\n18 Mar   Fault: no hot water again. (this call)\n```\n\nWhat should the agent do?",
+    "choices": [
+      "Escalate, because this is the third report of the same fault.",
+      "Escalate, because the customer has contacted us four times.",
+      "Book a standard repair: the 10 Feb report is more than 30 days ago.",
+      "Close the call, because the fault was fixed on 5 Mar."
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "explanation": "The fault was reported on 10 Feb, 3 Mar and 18 Mar. The last 30 days go back to 16 Feb (17 Feb in a leap year), so the 10 Feb report is outside them. Only 2 reports (3 Mar and today) count, so a standard repair is booked. Wrong: it is the third report overall, but not the third in the last 30 days. Wrong: the 26 Feb contact was a billing question, not the same fault. Wrong: the fault is back, so the call cannot be closed.",
+    "expected_time_s": 65
+  },
+  {
+    "bank_key": "cs.a.split-payment-refund",
+    "type": "mcq",
+    "section": "accuracy",
+    "format": "concept",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "workplace.attention_to_detail",
+    "secondary_skill_codes": [
+      "customer_service.problem_resolution"
+    ],
+    "prompt": "A customer says: \"I returned my whole order but only got 35.00 back on my card. You owe me 20.00.\" The record:\n\n```\nOrder 9124           total 55.00\nPaid with:           gift card            20.00\n                     card ending 6620     35.00\nReturn:              whole order, received 2 Dec\nRefund 3 Dec:        20.00 to gift card             completed\n                     35.00 to card ending 6620      completed\n```\n\nWhat happened to the other 20.00?",
+    "choices": [
+      "It went back to the gift card that paid for part of the order.",
+      "The refund failed and must be sent again to the card.",
+      "It was kept back as a return fee, as the policy allows.",
+      "It is still pending and will reach the card in a few days."
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "explanation": "Deciding line: \"Refund 3 Dec: 20.00 to gift card completed\". The order was paid partly by gift card, and that part was refunded to the gift card. Wrong: both refund lines say completed, so nothing failed. Wrong: no fee appears in the record; 20.00 + 35.00 = the full 55.00. Wrong: the 20.00 is not pending, and it was never going to the card.",
+    "expected_time_s": 55
+  },
+  {
+    "bank_key": "cs.a.update-form-typo",
+    "type": "mcq",
+    "section": "accuracy",
+    "format": "concept",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "workplace.attention_to_detail",
+    "secondary_skill_codes": [],
+    "prompt": "A customer emailed: \"Please update my details. I have moved to Flat 4, 72 Mill Lane, Eastbury, postcode 58103. My new mobile number is 0791 442 6610. My email address has not changed.\"\n\nThe record after the agent's update:\n\n```\nName:       Priya Nair\nAddress:    Flat 4, 72 Mill Lane, Eastbury\nPostcode:   58130\nMobile:     0791 442 6610\nEmail:      priya.nair@example.com\n```\n\nWhich detail was entered wrongly?",
+    "choices": [
+      "House number",
+      "Postcode",
+      "Mobile number",
+      "Flat number"
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "explanation": "The email gives postcode 58103, but the record says 58130 (the last two digits are swapped). Wrong: the house number is 72 in both. Wrong: the mobile number is 0791 442 6610 in both. Wrong: the flat number is 4 in both.",
+    "expected_time_s": 55
+  },
+  {
+    "bank_key": "cs.a.confirmation-vs-warehouse",
+    "type": "multi_select",
+    "section": "accuracy",
+    "format": "concept",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "workplace.attention_to_detail",
+    "secondary_skill_codes": [],
+    "prompt": "The customer's confirmation email and the warehouse record for the same order:\n\n```\nField       Confirmation email     Warehouse record\nOrder       40562                  40562\nItem        Desk chair, grey       Desk chair, grey\nQuantity    2                      1\nPrice       89.00 each             89.00 each\nDelivery    14 Oct                 17 Oct\nAddress     9 Park Street          9 Park Street\nPhone       0712 558 304           0712 558 340\n```\n\nWhich details differ between the two? Select all that apply.",
+    "choices": [
+      "Item colour",
+      "Quantity",
+      "Price",
+      "Address",
+      "Delivery date",
+      "Phone number"
+    ],
+    "answer": {
+      "correct": [
+        1,
+        4,
+        5
+      ]
+    },
+    "explanation": "Differ: quantity (2 in the email, 1 in the warehouse record). Differ: delivery date (14 Oct against 17 Oct). Differ: phone number (ends 304 against 340). Same: the item colour is grey in both, the price is 89.00 each in both, and the address is 9 Park Street in both.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "cs.a.refund-band-from-delivery",
+    "type": "mcq",
+    "section": "accuracy",
+    "format": "concept",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "customer_service.policy_adherence",
+    "secondary_skill_codes": [
+      "workplace.attention_to_detail"
+    ],
+    "prompt": "Refund policy for unused items:\n- Up to 14 days after delivery: full refund to the original payment method.\n- 15 to 30 days after delivery: store credit only.\n- More than 30 days after delivery: no refund.\n\nOrder record:\n\n```\nOrder 6118\nOrdered:       1 May\nDispatched:    4 May\nDelivered:     9 May\nCustomer asked for a refund (item unused):  21 May\n```\n\nWhat should the customer be offered?",
+    "choices": [
+      "Store credit only: it is 17 days since dispatch.",
+      "A full refund: it is 12 days since delivery.",
+      "Store credit only: it is 20 days since the order.",
+      "Store credit only: it is 12 days since delivery."
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "explanation": "The policy counts from delivery: 21 May - 9 May = 12 days, which is in the \"up to 14 days\" band, so a full refund to the original payment method. Wrong: counting from dispatch (17 days) uses the wrong date. Wrong: counting from the order date (20 days) uses the wrong date. Wrong: 12 days is right, but 12 days falls in the full-refund band, not the store-credit band.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "cs.a.third-party-note-blocks",
+    "type": "mcq",
+    "section": "accuracy",
+    "format": "concept",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "customer_service.privacy_verification",
+    "secondary_skill_codes": [
+      "customer_service.policy_adherence"
+    ],
+    "prompt": "Policy: discuss an account only with the account holder or an authorised user listed on it, and only after they pass the identity check.\n\nAccount record:\n\n```\nAccount holder:      Grace Bell\nAuthorised users:    none\nNote 3 Jan:          Holder asked that no one else, including\n                     her husband Ken Bell, is given any\n                     information about this account.\n```\n\nKen Bell calls and asks for the account balance. He correctly gives the holder's date of birth, postcode and card ending.\n\nWhat should the agent do?",
+    "choices": [
+      "Share the balance, as he passed the identity check.",
+      "Share only the balance, not the card or address details.",
+      "Share nothing: he is not the holder or an authorised user.",
+      "Add him as an authorised user first, then share the balance."
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "explanation": "Deciding lines: the policy, \"Authorised users: none\" and the 3 Jan note naming Ken Bell. Ken is neither the holder nor an authorised user, so knowing the details does not allow the agent to discuss the account, and the holder has also asked that he is told nothing. Wrong: the identity check only matters for the holder or an authorised user, and Ken is neither. Wrong: the balance is account information too. Wrong: only the holder can add an authorised user, and she asked for the opposite.",
+    "expected_time_s": 55
+  },
+  {
+    "bank_key": "cs.a.notes-sensitive-data",
+    "type": "multi_select",
+    "section": "accuracy",
+    "format": "concept",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "customer_service.policy_adherence",
+    "secondary_skill_codes": [
+      "customer_service.privacy_verification"
+    ],
+    "prompt": "Note-taking rule: never write a full card number, a card security code or a password in account notes. Only the last 4 digits of a card may appear.\n\nAn agent wrote these notes during one call:\n\n```\n1  11:02  Customer passed ID check (date of birth and postcode).\n2  11:04  Customer read out card 4532 7781 0094 4417. Matches file.\n3  11:06  Card on file ends 4417, customer confirmed.\n4  11:09  Customer gave security code 381 for the new payment.\n5  11:11  Old password Rover2024 not working, sent reset link.\n6  11:13  Reset link sent to email on file, customer logged in.\n```\n\nWhich notes break the rule? Select all that apply.",
+    "choices": [
+      "Note 1",
+      "Note 2",
+      "Note 3",
+      "Note 4",
+      "Note 5",
+      "Note 6"
+    ],
+    "answer": {
+      "correct": [
+        1,
+        3,
+        4
+      ]
+    },
+    "explanation": "Break: note 2 has a full card number. Break: note 4 has the card security code (381). Break: note 5 has a password (Rover2024), even an old one. Fine: note 1 says which checks passed but not the answers. Fine: note 3 shows only the last 4 digits, which the rule allows. Fine: note 6 mentions a reset link, not a password.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "cs.a.cancelled-item-refunded",
+    "type": "mcq",
+    "section": "accuracy",
+    "format": "concept",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "workplace.attention_to_detail",
+    "secondary_skill_codes": [
+      "workplace.reading_comprehension"
+    ],
+    "prompt": "A customer says: \"I ordered three things and only got two. Where is the third?\" The record:\n\n```\nOrder 3381   placed 10 Jan\n  Kettle    dispatched 11 Jan   delivered 13 Jan\n  Toaster   dispatched 11 Jan   delivered 13 Jan\n  Blender   cancelled 12 Jan (out of stock)\n\nRefunds:    42.00 for Blender, completed 12 Jan\n```\n\nWhat does the record show?",
+    "choices": [
+      "The blender is still waiting to be sent out.",
+      "The blender was delivered with the other two items.",
+      "The blender was cancelled, but its refund is still pending.",
+      "The blender was cancelled and 42.00 was refunded."
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "explanation": "Deciding lines: \"Blender cancelled 12 Jan (out of stock)\" and \"Refunds: 42.00 for Blender, completed 12 Jan\". Wrong: it was cancelled, so it is not waiting to be sent. Wrong: only the kettle and toaster show \"delivered\". Wrong: the refund says completed, not pending.",
+    "expected_time_s": 45
+  },
+  {
+    "bank_key": "cs.a.express-voucher-eligibility",
+    "type": "multi_select",
+    "section": "accuracy",
+    "format": "concept",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "customer_service.policy_adherence",
+    "secondary_skill_codes": [
+      "workplace.attention_to_detail"
+    ],
+    "prompt": "Voucher rule: give a 10.00 voucher when an order with paid Express delivery arrives after its promised date. Standard delivery orders do not get a voucher.\n\n```\nOrder   Delivery   Promised   Delivered\nA-31    Standard   5 Apr      9 Apr\nA-32    Express    4 Apr      4 Apr\nA-33    Express    4 Apr      6 Apr\nA-34    Express    7 Apr      5 Apr\nA-35    Express    6 Apr      7 Apr\n```\n\nWhich orders should get a voucher? Select all that apply.",
+    "choices": [
+      "A-31",
+      "A-32",
+      "A-33",
+      "A-34",
+      "A-35"
+    ],
+    "answer": {
+      "correct": [
+        2,
+        4
+      ]
+    },
+    "explanation": "Voucher: A-33 is Express and arrived 6 Apr, after the promised 4 Apr. Voucher: A-35 is Express and arrived 7 Apr, one day after the promised 6 Apr. No voucher: A-31 was late but is Standard delivery. No voucher: A-32 arrived on the promised date. No voucher: A-34 arrived early (5 Apr, promised 7 Apr).",
+    "expected_time_s": 60
+  }
+]

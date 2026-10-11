@@ -1,0 +1,663 @@
+[
+  {
+    "bank_key": "general.i.returns-full-refund",
+    "type": "mcq",
+    "section": "instructions",
+    "format": "concept",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "workplace.reading_comprehension",
+    "secondary_skill_codes": [
+      "workplace.attention_to_detail"
+    ],
+    "group": "returns-policy",
+    "prompt": "Read the policy below, then answer the question.\n\n**Returns policy**\n\nAll returns must be made within 30 days of purchase. A customer with a receipt or order number gets a full refund. A customer with no receipt or order number can get store credit only, up to a value of 50 dollars. Items must be unused and in their original packaging, except faulty items, which may be returned used or without packaging. Sale items cannot be refunded; they can only be exchanged, within 14 days of purchase. Opened software and gift cards cannot be returned unless they are faulty. Refunds go back to the payment method the customer used: an item paid for by card is refunded to that card, never in cash. If a return does not meet these rules, the customer gets nothing back: no refund, no exchange and no store credit.\n\n**Question:** Under this policy, which return should get a full refund?",
+    "choices": [
+      "An unused lamp from the sale, still in its box, bought 10 days ago, with the receipt",
+      "An unused toaster in its box, bought 20 days ago, but the customer has no receipt or order number",
+      "An unused kettle in its original box, bought 25 days ago, with the receipt",
+      "A blender that has been used and works normally, bought 12 days ago, with the receipt"
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "explanation": "The kettle meets every condition: \"All returns must be made within 30 days of purchase\" (25 days), \"A customer with a receipt or order number gets a full refund\", and \"Items must be unused and in their original packaging\". Wrong: the sale lamp, because \"Sale items cannot be refunded; they can only be exchanged\". Wrong: the toaster without a receipt, because \"A customer with no receipt or order number can get store credit only\". Wrong: the blender has been used and is not faulty, and only \"faulty items ... may be returned used\".",
+    "expected_time_s": 70
+  },
+  {
+    "bank_key": "general.i.returns-faulty-card-cash",
+    "type": "mcq",
+    "section": "instructions",
+    "format": "concept",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "workplace.reading_comprehension",
+    "secondary_skill_codes": [
+      "workplace.attention_to_detail"
+    ],
+    "group": "returns-policy",
+    "prompt": "Read the policy below, then answer the question.\n\n**Returns policy**\n\nAll returns must be made within 30 days of purchase. A customer with a receipt or order number gets a full refund. A customer with no receipt or order number can get store credit only, up to a value of 50 dollars. Items must be unused and in their original packaging, except faulty items, which may be returned used or without packaging. Sale items cannot be refunded; they can only be exchanged, within 14 days of purchase. Opened software and gift cards cannot be returned unless they are faulty. Refunds go back to the payment method the customer used: an item paid for by card is refunded to that card, never in cash. If a return does not meet these rules, the customer gets nothing back: no refund, no exchange and no store credit.\n\n**Question:** A customer paid by card for a toaster 10 days ago. It is faulty and has been used. She has the receipt and asks for her money back in cash. What should the staff member do?",
+    "choices": [
+      "Refund the money to the card she paid with",
+      "Refuse the return, because the toaster has been used",
+      "Refund the money in cash, because the toaster is faulty",
+      "Offer her store credit of up to 50 dollars instead"
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "explanation": "A used item can come back when it is faulty (\"except faulty items, which may be returned used or without packaging\"), and the refund must go to the card: \"an item paid for by card is refunded to that card, never in cash.\" Wrong: refusing misses the exception for faulty items. Wrong: cash is forbidden for card payments. Wrong: store credit is for customers with \"no receipt or order number\", and she has the receipt.",
+    "expected_time_s": 75
+  },
+  {
+    "bank_key": "general.i.returns-nothing-back",
+    "type": "multi_select",
+    "section": "instructions",
+    "format": "concept",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "workplace.reading_comprehension",
+    "secondary_skill_codes": [
+      "workplace.attention_to_detail"
+    ],
+    "group": "returns-policy",
+    "prompt": "Read the policy below, then answer the question.\n\n**Returns policy**\n\nAll returns must be made within 30 days of purchase. A customer with a receipt or order number gets a full refund. A customer with no receipt or order number can get store credit only, up to a value of 50 dollars. Items must be unused and in their original packaging, except faulty items, which may be returned used or without packaging. Sale items cannot be refunded; they can only be exchanged, within 14 days of purchase. Opened software and gift cards cannot be returned unless they are faulty. Refunds go back to the payment method the customer used: an item paid for by card is refunded to that card, never in cash. If a return does not meet these rules, the customer gets nothing back: no refund, no exchange and no store credit.\n\n**Question:** Under this policy, which of these customers can get nothing back (no refund, no exchange and no store credit)? Select all that apply.",
+    "choices": [
+      "Opened software that works correctly, bought 5 days ago, with the receipt",
+      "An unused sale shirt bought 20 days ago, with the receipt; the customer wants a different size",
+      "An unused lamp in its box, bought 15 days ago, worth 30 dollars, with no receipt",
+      "A faulty phone charger that has been used, bought 10 days ago, with the receipt",
+      "An unused clock in its box, bought 35 days ago, with the receipt"
+    ],
+    "answer": {
+      "correct": [
+        0,
+        1,
+        4
+      ]
+    },
+    "explanation": "The policy ends: \"If a return does not meet these rules, the customer gets nothing back: no refund, no exchange and no store credit.\" Correct: the working opened software, because \"Opened software and gift cards cannot be returned unless they are faulty.\" Correct: the sale shirt, because sale items \"cannot be refunded; they can only be exchanged, within 14 days of purchase\", and 20 days is too late (store credit is only for customers with no receipt). Correct: the clock, because \"All returns must be made within 30 days of purchase\" and 35 days is too late. Wrong: the lamp without a receipt can get store credit (\"store credit only, up to a value of 50 dollars\", and it is worth 30, returned after 15 days). Wrong: the used charger is faulty, and \"faulty items ... may be returned used\", so it gets a refund.",
+    "expected_time_s": 90
+  },
+  {
+    "bank_key": "general.i.leave-manager-can-approve",
+    "type": "mcq",
+    "section": "instructions",
+    "format": "concept",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "workplace.reading_comprehension",
+    "secondary_skill_codes": [
+      "workplace.attention_to_detail"
+    ],
+    "group": "leave-policy",
+    "prompt": "Read the policy below, then answer the question.\n\n**Annual leave policy**\n\n- Full-time staff get 20 days of paid annual leave each year (January to December).\n- Ask your line manager for leave in the HR system. For 1 to 3 days off, ask at least 1 week before the first day. For 4 days or more, ask at least 4 weeks before.\n- No leave is given during the stock count (the last 2 weeks of June) unless the HR manager agrees in writing.\n- Staff in their first 3 months (probation) may take no more than 2 days of leave in total.\n- At the end of the year, up to 5 unused days move to the next year. Any other unused days are lost.\n\n**Question:** Each employee below has enough leave left and has finished probation, unless stated otherwise. Which request can the line manager approve without anyone else agreeing?",
+    "choices": [
+      "Asking 2 weeks ahead for 5 days off in September",
+      "Asking 6 weeks ahead for 2 days off in the last week of June",
+      "A new employee in her second month asking 5 weeks ahead for 4 days off in October",
+      "Asking 2 weeks ahead for 3 days off in the first week of June"
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "explanation": "3 days needs only 1 week's notice (\"For 1 to 3 days off, ask at least 1 week before the first day\"), and the first week of June is outside the stock count (\"the last 2 weeks of June\"). Wrong: 5 days needs 4 weeks (\"For 4 days or more, ask at least 4 weeks before\"), and 2 weeks is not enough. Wrong: the last week of June is in the stock count, so leave needs the HR manager (\"unless the HR manager agrees in writing\"). Wrong: a new employee on probation \"may take no more than 2 days of leave in total\".",
+    "expected_time_s": 85
+  },
+  {
+    "bank_key": "general.i.leave-carry-over",
+    "type": "mcq",
+    "section": "instructions",
+    "format": "concept",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "workplace.reading_comprehension",
+    "secondary_skill_codes": [
+      "workplace.attention_to_detail"
+    ],
+    "group": "leave-policy",
+    "prompt": "Read the policy below, then answer the question.\n\n**Annual leave policy**\n\n- Full-time staff get 20 days of paid annual leave each year (January to December).\n- Ask your line manager for leave in the HR system. For 1 to 3 days off, ask at least 1 week before the first day. For 4 days or more, ask at least 4 weeks before.\n- No leave is given during the stock count (the last 2 weeks of June) unless the HR manager agrees in writing.\n- Staff in their first 3 months (probation) may take no more than 2 days of leave in total.\n- At the end of the year, up to 5 unused days move to the next year. Any other unused days are lost.\n\n**Question:** Amir works full time. At the end of the year he has 8 days of annual leave that he has not used. What happens to these 8 days?",
+    "choices": [
+      "All 8 days move to the next year",
+      "5 days move to the next year and 3 days are lost",
+      "3 days move to the next year and 5 are lost",
+      "All 8 days are lost when the year ends"
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "explanation": "The policy says \"At the end of the year, up to 5 unused days move to the next year. Any other unused days are lost.\" So 5 of the 8 days move and the other 3 are lost. Wrong: all 8 cannot move, because the limit is 5. Wrong: 3 moving and 5 lost reverses the numbers. Wrong: not all days are lost, because up to 5 move.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "general.i.leave-probation-limit",
+    "type": "mcq",
+    "section": "instructions",
+    "format": "concept",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "workplace.reading_comprehension",
+    "secondary_skill_codes": [
+      "workplace.attention_to_detail"
+    ],
+    "group": "leave-policy",
+    "prompt": "Read the policy below, then answer the question.\n\n**Annual leave policy**\n\n- Full-time staff get 20 days of paid annual leave each year (January to December).\n- Ask your line manager for leave in the HR system. For 1 to 3 days off, ask at least 1 week before the first day. For 4 days or more, ask at least 4 weeks before.\n- No leave is given during the stock count (the last 2 weeks of June) unless the HR manager agrees in writing.\n- Staff in their first 3 months (probation) may take no more than 2 days of leave in total.\n- At the end of the year, up to 5 unused days move to the next year. Any other unused days are lost.\n\n**Question:** Lena started her job 6 weeks ago, so she is still on probation, and she has not taken any leave yet. She asks her line manager, 2 weeks ahead, for 3 days off in October. What does the policy say?",
+    "choices": [
+      "It can be approved, because she asked more than 1 week before her leave",
+      "It cannot be approved, because 3 days off needs 4 weeks of notice",
+      "It cannot be approved as asked, because of the 2-day probation limit",
+      "It can be approved only if the HR manager agrees in writing"
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "explanation": "The deciding sentence is \"Staff in their first 3 months (probation) may take no more than 2 days of leave in total.\" Lena is in her probation, so 3 days is too many, even though her notice is long enough. Wrong: the notice is fine, but the probation limit still stops it. Wrong: 3 days needs only 1 week of notice; 4 weeks is for \"4 days or more\". Wrong: the HR manager's written agreement is only mentioned for the stock count in June.",
+    "expected_time_s": 75
+  },
+  {
+    "bank_key": "general.i.fire-short-bursts",
+    "type": "mcq",
+    "section": "instructions",
+    "format": "concept",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "workplace.reading_comprehension",
+    "secondary_skill_codes": [
+      "behavioral.ethics.safety"
+    ],
+    "group": "fire-alarm-procedure",
+    "prompt": "Read the procedure below, then answer the question.\n\n**Fire alarm procedure**\n\n- A continuous alarm means fire. Stop work at once and leave the building by the nearest safe exit. Use the stairs, never the lifts (elevators). Do not stop to collect bags or coats. Go to the assembly point in the front car park.\n- An alarm that goes on and off in short bursts is a warning. Stay where you are, switch off any machine you are using and wait for your floor warden's instructions.\n- Do not go back into the building until the fire service or the site manager says it is safe.\n- The alarm is tested every Monday at 10:00 with one short ring. You do not need to do anything during the test.\n\n**Question:** It is Wednesday at 14:00. You are using a machine when the alarm starts going on and off in short bursts. What should you do?",
+    "choices": [
+      "Leave by the nearest safe exit and go to the assembly point",
+      "Switch off the machine, stay where you are and wait for instructions",
+      "Carry on working, because a short ring is only the weekly test",
+      "Walk over to the floor warden's desk and ask whether you should leave"
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "explanation": "The procedure says \"An alarm that goes on and off in short bursts is a warning. Stay where you are, switch off any machine you are using and wait for your floor warden's instructions.\" Wrong: leaving is for a continuous alarm. Wrong: the test is \"every Monday at 10:00 with one short ring\", and this is Wednesday with repeated bursts. Wrong: walking to the warden breaks \"Stay where you are\".",
+    "expected_time_s": 65
+  },
+  {
+    "bank_key": "general.i.fire-going-back-in",
+    "type": "mcq",
+    "section": "instructions",
+    "format": "concept",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "workplace.reading_comprehension",
+    "secondary_skill_codes": [
+      "behavioral.ethics.safety"
+    ],
+    "group": "fire-alarm-procedure",
+    "prompt": "Read the procedure below, then answer the question.\n\n**Fire alarm procedure**\n\n- A continuous alarm means fire. Stop work at once and leave the building by the nearest safe exit. Use the stairs, never the lifts (elevators). Do not stop to collect bags or coats. Go to the assembly point in the front car park.\n- An alarm that goes on and off in short bursts is a warning. Stay where you are, switch off any machine you are using and wait for your floor warden's instructions.\n- Do not go back into the building until the fire service or the site manager says it is safe.\n- The alarm is tested every Monday at 10:00 with one short ring. You do not need to do anything during the test.\n\n**Question:** After a continuous alarm, everyone is at the assembly point. Your floor warden says the alarm was caused by burnt toast and that people can go back in. The fire service has not arrived, and the site manager has not said anything. What should you do?",
+    "choices": [
+      "Go back in now, because the floor warden has already checked the area",
+      "Go back in quickly for your bag, then return to the assembly point",
+      "Go back in now, because the alarm has stopped and there is no fire",
+      "Wait outside until the fire service or the site manager says it is safe"
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "explanation": "The procedure says \"Do not go back into the building until the fire service or the site manager says it is safe.\" The floor warden is neither of them. Wrong: the warden's word is not enough under this rule. Wrong: going back for a bag still means going back in. Wrong: the alarm stopping does not change who must give permission.",
+    "expected_time_s": 75
+  },
+  {
+    "bank_key": "general.i.fire-continuous-monday",
+    "type": "multi_select",
+    "section": "instructions",
+    "format": "concept",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "workplace.reading_comprehension",
+    "secondary_skill_codes": [
+      "behavioral.ethics.safety"
+    ],
+    "group": "fire-alarm-procedure",
+    "prompt": "Read the procedure below, then answer the question.\n\n**Fire alarm procedure**\n\n- A continuous alarm means fire. Stop work at once and leave the building by the nearest safe exit. Use the stairs, never the lifts (elevators). Do not stop to collect bags or coats. Go to the assembly point in the front car park.\n- An alarm that goes on and off in short bursts is a warning. Stay where you are, switch off any machine you are using and wait for your floor warden's instructions.\n- Do not go back into the building until the fire service or the site manager says it is safe.\n- The alarm is tested every Monday at 10:00 with one short ring. You do not need to do anything during the test.\n\n**Question:** It is Monday at 11:30, and a continuous alarm starts. Which actions follow the procedure? Select all that apply.",
+    "choices": [
+      "Stop work at once and leave by the nearest safe exit",
+      "Take the lift if the stairs are crowded",
+      "Go to the assembly point in the front car park",
+      "Collect your bag from your desk on the way out",
+      "Keep working, because the alarm is tested on Mondays"
+    ],
+    "answer": {
+      "correct": [
+        0,
+        2
+      ]
+    },
+    "explanation": "A continuous alarm means: \"Stop work at once and leave the building by the nearest safe exit\" and \"Go to the assembly point in the front car park.\" Wrong: \"Use the stairs, never the lifts.\" Wrong: \"Do not stop to collect bags or coats.\" Wrong: the test is \"every Monday at 10:00 with one short ring\"; this is 11:30 and the alarm is continuous, so it is not the test.",
+    "expected_time_s": 80
+  },
+  {
+    "bank_key": "general.i.swap-supervisor-approves",
+    "type": "mcq",
+    "section": "instructions",
+    "format": "concept",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "workplace.reading_comprehension",
+    "secondary_skill_codes": [
+      "workplace.attention_to_detail"
+    ],
+    "group": "shift-swap-rule",
+    "prompt": "Read the rule below, then answer the question.\n\n**Shift swap rule**\n\n- You may swap a shift with a colleague if you both agree.\n- Enter the swap in the rota app at least 48 hours before the earlier of the two shifts. The shift supervisor then approves or rejects it in the app.\n- A swap entered less than 48 hours before the earlier shift can only be approved by the duty manager, by phone.\n- Both people must be trained for the work on the shift they take. For example, only forklift-trained staff can take a forklift shift.\n- After a swap, no one may work more than 6 shifts in a row or have less than 11 hours' rest between two shifts.\n- Until a swap is approved, each person must work their original shift.\n\n**Question:** Ana and Ben want to swap shifts. In every case below, both of them would still get at least 11 hours' rest between shifts. Which swap can the shift supervisor approve in the app?",
+    "choices": [
+      "Entered 3 days before the earlier shift; both are trained; Ana would then work 5 shifts in a row",
+      "Entered 1 day before the earlier shift; both are trained; Ana would then work 4 shifts in a row",
+      "Entered 5 days before the earlier shift; both are trained; Ana would then work 7 shifts in a row",
+      "Entered 4 days before the earlier shift; Ben would take Ana's forklift shift but has no forklift training"
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "explanation": "It was entered more than 48 hours ahead (\"at least 48 hours before the earlier of the two shifts\"), both are trained, and 5 in a row is within \"no one may work more than 6 shifts in a row\". Wrong: 1 day is less than 48 hours, so it \"can only be approved by the duty manager, by phone\". Wrong: 7 shifts in a row breaks the 6-shift limit. Wrong: \"only forklift-trained staff can take a forklift shift\".",
+    "expected_time_s": 85
+  },
+  {
+    "bank_key": "general.i.swap-not-yet-approved",
+    "type": "mcq",
+    "section": "instructions",
+    "format": "concept",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "workplace.reading_comprehension",
+    "secondary_skill_codes": [
+      "workplace.attention_to_detail"
+    ],
+    "group": "shift-swap-rule",
+    "prompt": "Read the rule below, then answer the question.\n\n**Shift swap rule**\n\n- You may swap a shift with a colleague if you both agree.\n- Enter the swap in the rota app at least 48 hours before the earlier of the two shifts. The shift supervisor then approves or rejects it in the app.\n- A swap entered less than 48 hours before the earlier shift can only be approved by the duty manager, by phone.\n- Both people must be trained for the work on the shift they take. For example, only forklift-trained staff can take a forklift shift.\n- After a swap, no one may work more than 6 shifts in a row or have less than 11 hours' rest between two shifts.\n- Until a swap is approved, each person must work their original shift.\n\n**Question:** Joy and Karim agreed a swap and entered it in the rota app 3 days ago. The shift supervisor has not approved it yet. Joy's original shift starts in 2 hours. What should Joy do?",
+    "choices": [
+      "Stay at home, because the swap was entered more than 48 hours ago",
+      "Stay at home, because the supervisor has not rejected the swap",
+      "Work her original shift, because the swap has not been approved",
+      "Ask Karim to start her shift, because he agreed to the swap"
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "explanation": "The rule says \"Until a swap is approved, each person must work their original shift.\" Wrong: entering it on time does not make it approved; \"The shift supervisor then approves or rejects it in the app.\" Wrong: not rejected is not the same as approved. Wrong: Karim's agreement is not approval, so Joy still works her own shift.",
+    "expected_time_s": 65
+  },
+  {
+    "bank_key": "general.i.swap-rest-hours",
+    "type": "mcq",
+    "section": "instructions",
+    "format": "concept",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "workplace.reading_comprehension",
+    "secondary_skill_codes": [
+      "workplace.attention_to_detail"
+    ],
+    "group": "shift-swap-rule",
+    "prompt": "Read the rule below, then answer the question.\n\n**Shift swap rule**\n\n- You may swap a shift with a colleague if you both agree.\n- Enter the swap in the rota app at least 48 hours before the earlier of the two shifts. The shift supervisor then approves or rejects it in the app.\n- A swap entered less than 48 hours before the earlier shift can only be approved by the duty manager, by phone.\n- Both people must be trained for the work on the shift they take. For example, only forklift-trained staff can take a forklift shift.\n- After a swap, no one may work more than 6 shifts in a row or have less than 11 hours' rest between two shifts.\n- Until a swap is approved, each person must work their original shift.\n\n**Question:** Leo's shift ends at 22:00 on Tuesday. He agrees to take a colleague's shift that starts at 07:00 on Wednesday. The swap is entered in the app 4 days ahead, both are trained, and Leo would then work 3 shifts in a row. Can the swap be approved?",
+    "choices": [
+      "Yes, because it was entered more than 48 hours ahead",
+      "Yes, but only if the duty manager approves it by phone",
+      "Yes, because Leo would work fewer than 6 shifts in a row",
+      "No, because he would have only 9 hours' rest between shifts"
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "explanation": "From 22:00 to 07:00 is 9 hours, and the rule says no one may \"have less than 11 hours' rest between two shifts.\" Wrong: entering it on time does not cancel the rest rule. Wrong: the duty manager is only for a swap \"entered less than 48 hours before the earlier shift\", and this one was entered 4 days ahead; the rest rule still applies. Wrong: staying under 6 shifts in a row is only one of the two limits.",
+    "expected_time_s": 75
+  },
+  {
+    "bank_key": "general.i.expense-paid-in-full",
+    "type": "mcq",
+    "section": "instructions",
+    "format": "concept",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "workplace.reading_comprehension",
+    "secondary_skill_codes": [
+      "workplace.attention_to_detail",
+      "behavioral.ethics.integrity"
+    ],
+    "group": "expense-policy",
+    "prompt": "Read the policy below, then answer the question.\n\n**Travel expenses policy**\n\nStaff can claim back money spent on approved work trips. Submit claims within 30 days of the expense, with a receipt for every item over 10 dollars. Hotels are paid up to 120 dollars a night; a higher rate is paid only if your manager approved it before the trip. Meals while travelling are paid up to 40 dollars a day. Alcohol is never paid. Use a train or bus where possible. A taxi is paid only if no train or bus can get you there within 1 hour, or if you travel between 22:00 and 06:00.\n\n**Question:** All of these costs are from approved work trips. Under this policy, which claim should be paid in full?",
+    "choices": [
+      "A hotel night at 150 dollars, with a receipt, booked without asking the manager before the trip",
+      "A 35-dollar taxi at 23:30 from the airport to the hotel, with a receipt, claimed 2 weeks later",
+      "One day's meals while travelling costing 48 dollars, with receipts, claimed 1 week later",
+      "A 15-dollar train ticket with no receipt, claimed 3 days later"
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "explanation": "The taxi is at 23:30, inside \"between 22:00 and 06:00\", it has a receipt and it is claimed \"within 30 days of the expense\". Wrong: the hotel is over \"120 dollars a night\" without the manager approving it \"before the trip\". Wrong: meals are paid \"up to 40 dollars a day\", so 48 dollars is not paid in full. Wrong: the ticket is over 10 dollars, and the policy needs \"a receipt for every item over 10 dollars\".",
+    "expected_time_s": 80
+  },
+  {
+    "bank_key": "general.i.expense-breaks-policy",
+    "type": "multi_select",
+    "section": "instructions",
+    "format": "concept",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "workplace.reading_comprehension",
+    "secondary_skill_codes": [
+      "workplace.attention_to_detail",
+      "behavioral.ethics.integrity"
+    ],
+    "group": "expense-policy",
+    "prompt": "Read the policy below, then answer the question.\n\n**Travel expenses policy**\n\nStaff can claim back money spent on approved work trips. Submit claims within 30 days of the expense, with a receipt for every item over 10 dollars. Hotels are paid up to 120 dollars a night; a higher rate is paid only if your manager approved it before the trip. Meals while travelling are paid up to 40 dollars a day. Alcohol is never paid. Use a train or bus where possible. A taxi is paid only if no train or bus can get you there within 1 hour, or if you travel between 22:00 and 06:00.\n\n**Question:** Nadia submits a claim today for an approved work trip. Which items on her claim break the policy? Select all that apply.",
+    "choices": [
+      "A hotel at 110 dollars a night, not discussed with her manager",
+      "A taxi at 14:00 to a client office that a bus reaches in 25 minutes",
+      "A 9-dollar lunch with no receipt",
+      "A train ticket, with a receipt, bought 45 days ago",
+      "Meals costing 38 dollars on one day, with receipts"
+    ],
+    "answer": {
+      "correct": [
+        1,
+        3
+      ]
+    },
+    "explanation": "Correct: the taxi, because a taxi is paid only \"if no train or bus can get you there within 1 hour, or if you travel between 22:00 and 06:00\", and a bus takes 25 minutes at 14:00. Correct: the train ticket, because claims must be submitted \"within 30 days of the expense\". Wrong: 110 dollars is within \"up to 120 dollars a night\", so no approval is needed. Wrong: receipts are needed only \"for every item over 10 dollars\", and lunch was 9. Wrong: 38 dollars is within \"up to 40 dollars a day\".",
+    "expected_time_s": 90
+  },
+  {
+    "bank_key": "general.i.expense-approved-hotel",
+    "type": "mcq",
+    "section": "instructions",
+    "format": "concept",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "workplace.reading_comprehension",
+    "secondary_skill_codes": [
+      "workplace.attention_to_detail",
+      "behavioral.ethics.integrity"
+    ],
+    "group": "expense-policy",
+    "prompt": "Read the policy below, then answer the question.\n\n**Travel expenses policy**\n\nStaff can claim back money spent on approved work trips. Submit claims within 30 days of the expense, with a receipt for every item over 10 dollars. Hotels are paid up to 120 dollars a night; a higher rate is paid only if your manager approved it before the trip. Meals while travelling are paid up to 40 dollars a day. Alcohol is never paid. Use a train or bus where possible. A taxi is paid only if no train or bus can get you there within 1 hour, or if you travel between 22:00 and 06:00.\n\n**Question:** Before a work trip, Tom's manager approved a hotel that costs 160 dollars a night. Tom claims within a week and includes the receipt. How much is paid for each night?",
+    "choices": [
+      "160 dollars, because his manager approved it before the trip",
+      "120 dollars, because that is the most the policy pays for a night",
+      "Nothing, because the hotel costs more than the 120-dollar limit",
+      "160 dollars, but only after the finance team also approves it"
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "explanation": "The policy says \"Hotels are paid up to 120 dollars a night; a higher rate is paid only if your manager approved it before the trip.\" The manager approved it before the trip, so the full 160 dollars is paid. Wrong: 120 dollars is the limit only when there is no prior approval. Wrong: a cost above the limit is not refused outright. Wrong: the policy does not mention any finance team approval.",
+    "expected_time_s": 70
+  },
+  {
+    "bank_key": "general.i.data-caller-address-mismatch",
+    "type": "mcq",
+    "section": "instructions",
+    "format": "concept",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "workplace.reading_comprehension",
+    "secondary_skill_codes": [
+      "behavioral.ethics.integrity"
+    ],
+    "group": "data-protection-rule",
+    "prompt": "Read the rule below, then answer the question.\n\n**Customer data rule**\n\nCustomer personal data (names, phone numbers, addresses and account details) may only be used for the work you are doing for that customer. Never send customer data to your personal email or save it on your own phone, laptop or USB stick. When you send customer data outside the company, put it in a password-protected file and give the password separately, by phone or text message, never in the same email. Before you discuss an account on the phone, ask the caller to confirm their full name, date of birth and the address on the account. If they cannot confirm all three, do not share any account information; offer to post a letter to the address on the account instead.\n\n**Question:** A caller gives the correct full name and date of birth for an account. She says she has just moved, and the address she gives does not match the account. What should you do?",
+    "choices": [
+      "Share the account information, because she confirmed two of the three details",
+      "Share nothing, and offer to post a letter to the new address she gave",
+      "Ask for her account number instead, and share the information if it matches",
+      "Share nothing, and offer to post a letter to the address on the account"
+    ],
+    "answer": {
+      "correct": 3
+    },
+    "explanation": "The rule says \"If they cannot confirm all three, do not share any account information; offer to post a letter to the address on the account instead.\" She could not confirm the address. Wrong: two out of three is not \"all three\". Wrong: the letter must go \"to the address on the account\", not to a new address that has not been checked. Wrong: the rule names the three checks and does not allow an account number in place of one of them.",
+    "expected_time_s": 80
+  },
+  {
+    "bank_key": "general.i.data-send-outside",
+    "type": "mcq",
+    "section": "instructions",
+    "format": "concept",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "workplace.reading_comprehension",
+    "secondary_skill_codes": [
+      "behavioral.ethics.integrity"
+    ],
+    "group": "data-protection-rule",
+    "prompt": "Read the rule below, then answer the question.\n\n**Customer data rule**\n\nCustomer personal data (names, phone numbers, addresses and account details) may only be used for the work you are doing for that customer. Never send customer data to your personal email or save it on your own phone, laptop or USB stick. When you send customer data outside the company, put it in a password-protected file and give the password separately, by phone or text message, never in the same email. Before you discuss an account on the phone, ask the caller to confirm their full name, date of birth and the address on the account. If they cannot confirm all three, do not share any account information; offer to post a letter to the address on the account instead.\n\n**Question:** You must send a list of customer names and addresses to an outside printing company. Which way follows the rule?",
+    "choices": [
+      "Email the list in a password-protected file and write the password at the end of the same email",
+      "Email the list to your personal email account so you can send it from home tonight",
+      "Email the list in a password-protected file, then phone the printer to give the password",
+      "Save the list on your own USB stick and hand it to the printer in person"
+    ],
+    "answer": {
+      "correct": 2
+    },
+    "explanation": "The rule says \"put it in a password-protected file and give the password separately, by phone or text message, never in the same email.\" Wrong: the password in the same email is exactly what the rule forbids. Wrong: \"Never send customer data to your personal email\". Wrong: \"Never ... save it on your own phone, laptop or USB stick\".",
+    "expected_time_s": 75
+  },
+  {
+    "bank_key": "general.i.data-allowed-use",
+    "type": "mcq",
+    "section": "instructions",
+    "format": "concept",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "workplace.reading_comprehension",
+    "secondary_skill_codes": [
+      "behavioral.ethics.integrity"
+    ],
+    "group": "data-protection-rule",
+    "prompt": "Read the rule below, then answer the question.\n\n**Customer data rule**\n\nCustomer personal data (names, phone numbers, addresses and account details) may only be used for the work you are doing for that customer. Never send customer data to your personal email or save it on your own phone, laptop or USB stick. When you send customer data outside the company, put it in a password-protected file and give the password separately, by phone or text message, never in the same email. Before you discuss an account on the phone, ask the caller to confirm their full name, date of birth and the address on the account. If they cannot confirm all three, do not share any account information; offer to post a letter to the address on the account instead.\n\n**Question:** Which use of customer data is allowed under this rule?",
+    "choices": [
+      "Saving a regular customer's phone number on your own phone so you can reach her faster",
+      "Calling a customer on the number on her account to arrange delivery of her order",
+      "Using customers' addresses to send them invitations to a friend's shop opening",
+      "Looking up a well-known customer's home address because you are curious"
+    ],
+    "answer": {
+      "correct": 1
+    },
+    "explanation": "Arranging a customer's own delivery is \"the work you are doing for that customer\", which is the only allowed use: \"may only be used for the work you are doing for that customer.\" Wrong: saving data on your own phone is forbidden (\"Never ... save it on your own phone\"). Wrong: a friend's shop opening is not work for those customers. Wrong: curiosity is not work for that customer.",
+    "expected_time_s": 70
+  },
+  {
+    "bank_key": "general.i.room-video-call",
+    "type": "mcq",
+    "section": "instructions",
+    "format": "concept",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "workplace.reading_comprehension",
+    "secondary_skill_codes": [
+      "workplace.attention_to_detail"
+    ],
+    "group": "room-booking-procedure",
+    "prompt": "Read the procedure below, then answer the question.\n\n**Meeting room booking procedure**\n\n- Book meeting rooms in the shared calendar, up to 2 weeks ahead.\n- A booking can last up to 2 hours. For a longer booking, ask the office manager.\n- Room A seats 12 and has a screen and video-call equipment. Room B seats 6 and has a whiteboard only.\n- If you no longer need a room, delete the booking at least 1 hour before it starts.\n- If nobody checks in on the room tablet within 15 minutes of the start time, the booking is cancelled automatically.\n- Food may be eaten in Room B but not in Room A.\n\n**Question:** You need a room for a 1-hour video call with 8 people, 10 days from now. What should you do?",
+    "choices": [
+      "Book Room A yourself in the shared calendar",
+      "Ask the office manager to book Room A for you",
+      "Book Room B and bring a laptop for the video call",
+      "Wait 3 days to book, because bookings open 1 week ahead"
+    ],
+    "answer": {
+      "correct": 0
+    },
+    "explanation": "Only \"Room A seats 12 and has a screen and video-call equipment\", and you can \"Book meeting rooms in the shared calendar, up to 2 weeks ahead\"; 10 days is within 2 weeks and 1 hour is within \"up to 2 hours\". Wrong: the office manager is only needed \"For a longer booking\". Wrong: \"Room B seats 6\", and there are 8 people. Wrong: bookings open 2 weeks ahead, not 1.",
+    "expected_time_s": 65
+  },
+  {
+    "bank_key": "general.i.room-breaks-rules",
+    "type": "multi_select",
+    "section": "instructions",
+    "format": "concept",
+    "tracks": [
+      "general"
+    ],
+    "levels": [
+      "staff",
+      "manager"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "workplace.reading_comprehension",
+    "secondary_skill_codes": [
+      "workplace.attention_to_detail"
+    ],
+    "group": "room-booking-procedure",
+    "prompt": "Read the procedure below, then answer the question.\n\n**Meeting room booking procedure**\n\n- Book meeting rooms in the shared calendar, up to 2 weeks ahead.\n- A booking can last up to 2 hours. For a longer booking, ask the office manager.\n- Room A seats 12 and has a screen and video-call equipment. Room B seats 6 and has a whiteboard only.\n- If you no longer need a room, delete the booking at least 1 hour before it starts.\n- If nobody checks in on the room tablet within 15 minutes of the start time, the booking is cancelled automatically.\n- Food may be eaten in Room B but not in Room A.\n\n**Question:** Which of these break the booking procedure? Select all that apply.",
+    "choices": [
+      "Booking Room B 5 days ahead for a 90-minute planning meeting",
+      "Booking Room A for a 3-hour training session without asking the office manager",
+      "Eating lunch during a meeting in Room A",
+      "Booking Room B 3 weeks ahead for a team review",
+      "Deleting a booking 2 hours before it starts because the meeting was cancelled"
+    ],
+    "answer": {
+      "correct": [
+        1,
+        2,
+        3
+      ]
+    },
+    "explanation": "Correct: 3 hours is longer than \"up to 2 hours\", and \"For a longer booking, ask the office manager.\" Correct: \"Food may be eaten in Room B but not in Room A.\" Correct: 3 weeks is more than \"up to 2 weeks ahead\". Wrong: 90 minutes, 5 days ahead, in Room B follows every rule. Wrong: deleting 2 hours before meets \"at least 1 hour before it starts\".",
+    "expected_time_s": 85
+  }
+]

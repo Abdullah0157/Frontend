@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { apiUser, ROLES } from '@/lib/roles'
 import { query } from '@/lib/db'
 import { validitySummary, recalibrateBar, recalibrateWeights } from '@/lib/calibration'
 
@@ -10,6 +11,9 @@ export const runtime = 'nodejs'
 //   { minN? }                  → read stored eie_outcomes and compute everything
 // Returns predictive validity + recalibrated bar & weights, or insufficient_data.
 export async function POST(req) {
+  // Internal engine tool: super admins only (no page in the app calls it).
+  const { response: denied } = await apiUser(ROLES.SUPER_ADMIN)
+  if (denied) return denied
   const body = await req.json().catch(() => ({}))
   const minN = body.minN ?? 50
 

@@ -32,10 +32,10 @@ const StatItem = ({ initialValue, suffix, label, colorClass }) => {
       className="text-center md:text-left cursor-pointer group"
       onClick={() => setCount(prev => prev + 1)}
     >
-      <p className={`text-4xl md:text-5xl font-black mb-2 tracking-tighter font-sans transition-all group-active:scale-110 ${colorClass}`}>
+      <p className={`text-4xl md:text-5xl font-bold mb-2 tracking-tight font-sans transition-all group-active:scale-110 ${colorClass}`}>
         {count}{suffix}
       </p>
-      <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] font-sans leading-tight group-hover:text-indigo-600 transition-colors">
+      <p className="text-xs font-bold text-muted font-sans leading-tight group-hover:text-brand transition-colors">
         {label}
       </p>
     </div>
@@ -85,7 +85,7 @@ const ArticleCard = ({ category, readTime, title, excerpt, link, gradientClass, 
   const showPhoto = imageUrl && !imgFailed
 
   return (
-  <div className="max-w-6xl mx-auto bg-white border border-slate-200 rounded-[4rem] overflow-hidden flex flex-col md:flex-row shadow-sm hover:shadow-xl transition-all duration-500 group mb-20">
+  <div className="max-w-6xl mx-auto bg-white border border-line rounded-[4rem] overflow-hidden flex flex-col md:flex-row shadow-sm hover:shadow-xl transition-all duration-500 group mb-20">
     <div className={`w-full md:w-1/2 relative min-h-[400px] p-12 flex items-center justify-center overflow-hidden ${gradientClass}`}>
       {/* Real photo (falls back to the illustration if it fails to load) */}
       {showPhoto && (
@@ -113,27 +113,27 @@ const ArticleCard = ({ category, readTime, title, excerpt, link, gradientClass, 
       )}
 
       {/* Badge pinned bottom-left */}
-      <div className="absolute bottom-8 left-8 z-10 bg-slate-900/30 backdrop-blur-md border border-white/20 px-5 py-2 rounded-full text-[10px] font-black text-white uppercase tracking-[0.4em]">
+      <div className="absolute bottom-8 left-8 z-10 bg-slate-900/30 backdrop-blur-md border border-white/20 px-5 py-2 rounded-full text-xs font-bold text-white">
         {badgeText || 'FEATURED ARTICLE'}
       </div>
     </div>
 
     <div className="w-full md:w-1/2 p-12 md:p-20 flex flex-col justify-center">
       <div className="flex items-center gap-3 mb-8">
-        <span className="text-[10px] font-black text-indigo-600 uppercase tracking-[0.4em] font-sans">{category}</span>
+        <span className="text-xs font-bold text-brand font-sans">{category}</span>
         <span className="w-1 h-1 bg-slate-400 rounded-full"></span>
-        <span className="text-[10px] font-black text-slate-500 uppercase tracking-[0.4em] font-sans">{readTime}</span>
+        <span className="text-xs font-bold text-muted font-sans">{readTime}</span>
       </div>
 
-      <h2 className="text-3xl md:text-5xl font-black text-slate-900 mb-8 leading-tight tracking-tighter uppercase">
+      <h2 className="text-3xl md:text-5xl font-bold text-ink mb-8 leading-tight tracking-tight">
         {title}
       </h2>
 
-      <p className="text-slate-500 text-lg leading-relaxed mb-12 font-sans font-medium">
+      <p className="text-muted text-lg leading-relaxed mb-12 font-sans font-medium">
         {excerpt}
       </p>
 
-      <Link href={link} className="text-sm font-black text-slate-900 uppercase tracking-widest border-b-2 border-slate-900 pb-1 hover:text-indigo-600 hover:border-indigo-600 transition-all flex items-center w-fit font-sans">
+      <Link href={link} className="text-sm font-bold text-ink border-b-2 border-slate-900 pb-1 hover:text-brand hover:border-indigo-600 transition-all flex items-center w-fit font-sans">
         READ ARTICLE
         <svg className="w-4 h-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
@@ -148,10 +148,10 @@ export default function BlogPage() {
   const [activeCategory, setActiveCategory] = useState('ALL')
 
   const stats = [
-    { value: '50', suffix: 'K+', label: 'REMOTE PROFESSIONALS', color: 'text-slate-900' },
-    { value: '500', suffix: '+', label: 'COMPANIES HIRING', color: 'text-slate-900' },
-    { value: '1', suffix: 'K+', label: 'JOBS POSTED', color: 'text-slate-900' },
-    { value: '150', suffix: '+', label: 'COUNTRIES SUPPORTED', color: 'text-slate-900' }
+    { value: '50', suffix: 'K+', label: 'REMOTE PROFESSIONALS', color: 'text-ink' },
+    { value: '500', suffix: '+', label: 'COMPANIES HIRING', color: 'text-ink' },
+    { value: '1', suffix: 'K+', label: 'JOBS POSTED', color: 'text-ink' },
+    { value: '150', suffix: '+', label: 'COUNTRIES SUPPORTED', color: 'text-ink' }
   ]
 
   const categories = ['ALL', 'CAREER TIPS', 'SKILLS & DEVELOPMENT']
@@ -161,20 +161,20 @@ export default function BlogPage() {
       {/* SECTION 1: HERO */}
       <section className="container mx-auto px-4 mb-20">
         <div className="max-w-6xl mx-auto">
-          <h1 className="text-5xl md:text-7xl font-black text-slate-900 mb-16 leading-tight tracking-tighter">
+          <h1 className="text-5xl md:text-7xl font-bold text-ink mb-16 leading-tight tracking-tight">
             Remote work, <br />
             simplified for you.
           </h1>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-12">
-            <p className="text-slate-700 text-lg leading-relaxed font-sans">
+            <p className="text-body text-lg leading-relaxed font-sans">
               Career tips, industry trends, and practical guides to help you land remote jobs, grow your skills, and build a thriving career from anywhere in the world.
             </p>
             <div>
-              <p className="text-slate-700 text-lg leading-relaxed mb-8 font-sans">
+              <p className="text-body text-lg leading-relaxed mb-8 font-sans">
                 Stay ahead of the remote job market with expert insights from the JobStream team — written for real people building real careers.
               </p>
-              <Link href="#articles" className="text-sm font-black text-slate-900 uppercase tracking-widest border-b-2 border-slate-900 pb-1 hover:text-indigo-600 hover:border-indigo-600 transition-all flex items-center w-fit font-sans">
+              <Link href="#articles" className="text-sm font-bold text-ink border-b-2 border-slate-900 pb-1 hover:text-brand hover:border-indigo-600 transition-all flex items-center w-fit font-sans">
                 EXPLORE ALL ARTICLES
                 <svg className="w-4 h-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
@@ -186,7 +186,7 @@ export default function BlogPage() {
       </section>
 
       {/* SECTION 2: STATS */}
-      <section className="border-t border-b border-slate-200 py-16 mb-20">
+      <section className="border-t border-b border-line py-16 mb-20">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {stats.map((stat, i) => (
@@ -209,10 +209,10 @@ export default function BlogPage() {
             <button
               key={cat}
               onClick={() => setActiveCategory(cat)}
-              className={`px-8 py-3 rounded-xl text-[10px] font-black uppercase tracking-[0.4em] transition-all border font-sans ${
+              className={`px-8 py-3 rounded-xl text-xs font-bold transition-all border font-sans ${
                 activeCategory === cat
                   ? 'bg-slate-900 border-slate-900 text-white'
-                  : 'bg-white border-slate-300 text-slate-500 hover:border-slate-900 hover:text-slate-900'
+                  : 'bg-white border-slate-300 text-muted hover:border-slate-900 hover:text-slate-900'
               }`}
             >
               {cat}

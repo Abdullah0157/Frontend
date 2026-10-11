@@ -13,6 +13,7 @@ export default function ApplicationHub({ job, steps, doneCount, allComplete, app
   const [submitted, setSubmitted] = useState(application?.status === 'submitted')
 
   const total = steps.length
+  const nextStep = steps.find((st) => !st.done)
   const pct = total ? Math.round((doneCount / total) * 100) : 0
 
   async function submitApplication() {
@@ -38,8 +39,8 @@ export default function ApplicationHub({ job, steps, doneCount, allComplete, app
     <div className="min-h-screen pt-28 pb-24 px-4">
       <div className="container mx-auto max-w-2xl">
         {/* Job header */}
-        <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 mb-2">{job.title}</h1>
-        <div className="flex items-center gap-2 text-sm text-slate-500 mb-8 flex-wrap">
+        <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-ink mb-2">{job.title}</h1>
+        <div className="flex items-center gap-2 text-sm text-muted mb-8 flex-wrap">
           <span className="inline-flex items-center gap-1.5">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
             {job.role}
@@ -55,26 +56,26 @@ export default function ApplicationHub({ job, steps, doneCount, allComplete, app
         {submitted ? (
           <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-10 text-center">
             <div className="w-14 h-14 mx-auto mb-4 rounded-full bg-emerald-500/20 flex items-center justify-center">
-              <svg className="w-7 h-7 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+              <svg className="w-7 h-7 text-emerald-700" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
             </div>
-            <h2 className="text-2xl font-bold text-slate-900 mb-2">Application Submitted</h2>
-            <p className="text-slate-600 text-sm max-w-sm mx-auto">
+            <h2 className="text-2xl font-bold text-ink mb-2">Application Submitted</h2>
+            <p className="text-body text-sm max-w-sm mx-auto">
               Your steps have been sent to the hiring team. You'll hear back if there's a match.
             </p>
-            <Link href="/jobs" className="inline-block mt-6 text-sm font-semibold px-6 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition">
+            <Link href="/jobs" className="inline-block mt-6 text-sm font-semibold px-6 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-body transition">
               Browse more jobs
             </Link>
           </div>
         ) : (
-          <div className="bg-white border border-slate-200 rounded-2xl p-6 md:p-8">
+          <div className="bg-white border border-line rounded-2xl p-6 md:p-8">
             {/* Application progress */}
             <div className="flex items-center justify-between mb-2">
-              <h2 className="text-lg font-bold text-slate-900">Application</h2>
-              <span className="text-sm font-semibold text-slate-500">{pct}%</span>
+              <h2 className="text-lg font-bold text-ink">Application</h2>
+              <span className="text-sm font-semibold text-muted">{pct}%</span>
             </div>
-            <p className="text-sm text-slate-500 mb-3">{doneCount} of {total} steps completed</p>
+            <p className="text-sm text-muted mb-3">{doneCount} of {total} steps completed</p>
             <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden mb-8">
-              <div className="h-full bg-indigo-600 rounded-full transition-all" style={{ width: `${pct}%` }} />
+              <div className="h-full bg-brand rounded-full transition-all" style={{ width: `${pct}%` }} />
             </div>
 
             {error && (
@@ -91,21 +92,21 @@ export default function ApplicationHub({ job, steps, doneCount, allComplete, app
                 >
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <span className="font-semibold text-slate-900">{s.label}</span>
+                      <span className="font-semibold text-ink">{s.label}</span>
                       {s.core && (
-                        <span className="text-[9px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded bg-slate-100 text-slate-500 border border-slate-200">Core</span>
+                        <span className="text-xs font-bold px-1.5 py-0.5 rounded bg-slate-100 text-muted border border-line">Core</span>
                       )}
                       {s.reused && (
-                        <span className="text-[9px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded bg-indigo-50 text-indigo-600 border border-indigo-100">Reused</span>
+                        <span className="text-xs font-bold px-1.5 py-0.5 rounded bg-indigo-50 text-brand border border-indigo-100">Reused</span>
                       )}
                     </div>
-                    <p className={`text-sm mt-0.5 ${s.done ? 'text-slate-400' : 'text-slate-500'}`}>
+                    <p className={`text-sm mt-0.5 ${s.done ? 'text-muted' : 'text-muted'}`}>
                       {s.done ? s.statusDone : s.statusTodo}
                     </p>
                   </div>
                   {/* Check circle */}
                   {s.done ? (
-                    <span className="w-6 h-6 rounded-full bg-indigo-600 flex items-center justify-center flex-shrink-0">
+                    <span className="w-6 h-6 rounded-full bg-brand flex items-center justify-center flex-shrink-0">
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M5 13l4 4L19 7"/></svg>
                     </span>
                   ) : (
@@ -117,19 +118,30 @@ export default function ApplicationHub({ job, steps, doneCount, allComplete, app
               ))}
             </div>
 
-            <p className="text-xs text-slate-400 mt-6 flex items-start gap-2">
+            <p className="text-xs text-muted mt-6 flex items-start gap-2">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="flex-shrink-0 mt-0.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
-              <span>Steps marked <span className="font-semibold text-indigo-500">Reused</span> are shared across every role — do them once and you never repeat them.</span>
+              <span>Steps marked <span className="font-semibold text-brand">Reused</span> are shared across every role — do them once and you never repeat them.</span>
             </p>
 
-            {/* Submit */}
-            <button
-              onClick={submitApplication}
-              disabled={!allComplete || submitting}
-              className="mt-6 w-full py-3.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed transition"
-            >
-              {submitting ? 'Submitting…' : allComplete ? 'Submit Application' : `Continue application · ${total - doneCount} step${total - doneCount !== 1 ? 's' : ''} left`}
-            </button>
+            {/* Main action: the next unfinished step, then submit once all are done.
+                (It used to be a greyed-out "Continue application" button that
+                did nothing until every step was complete.) */}
+            {allComplete ? (
+              <button
+                onClick={submitApplication}
+                disabled={submitting}
+                className="mt-6 w-full py-3.5 rounded-xl bg-brand hover:bg-brand-dark text-white text-sm font-bold disabled:opacity-60 disabled:cursor-not-allowed transition"
+              >
+                {submitting ? 'Submitting…' : 'Submit application'}
+              </button>
+            ) : nextStep ? (
+              <Link
+                href={nextStep.href}
+                className="mt-6 block w-full py-3.5 rounded-xl bg-brand hover:bg-brand-dark text-white text-sm font-bold text-center transition"
+              >
+                Next: {nextStep.label} · {total - doneCount} step{total - doneCount !== 1 ? 's' : ''} left
+              </Link>
+            ) : null}
           </div>
         )}
       </div>

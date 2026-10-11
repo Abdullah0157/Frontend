@@ -1,0 +1,1400 @@
+[
+  {
+    "bank_key": "cs.s.interrupting-caller-discount-ended",
+    "type": "sjt",
+    "section": "customer_situations",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "customer_service.de_escalation",
+    "secondary_skill_codes": [
+      "behavioral.communication.listening",
+      "customer_service.empathy"
+    ],
+    "prompt": "A caller is angry that his monthly bill has gone up. Each time you start to explain, he interrupts and says the company is cheating him. You have checked, and the bill is correct: a six-month discount has ended. What do you do?",
+    "choices": [
+      "Wait until he stops, say sorry that the change was not clear, and read out the line on his bill that shows the discount ending and the date.",
+      "Ask him politely to stop interrupting, and tell him you cannot help him unless he lets you finish what you are saying.",
+      "Stop talking and let him finish. Then say back what he is upset about, and ask if you can explain the change in one minute.",
+      "Keep explaining over his interruptions so that he hears the reason, then ask whether he has any other questions."
+    ],
+    "answer": {
+      "points": [
+        2,
+        1,
+        3,
+        0
+      ]
+    },
+    "explanation": "Best (3): \"Let him finish, show you heard, ask to explain\". An angry caller who is interrupted back gets angrier. Letting him finish and saying back his concern shows he was heard, and asking permission makes him ready to listen to the short explanation. \"Wait, apologise, read out the bill line\" (2): Polite and correct, but it jumps straight to the facts without showing he was heard, so he is likely to keep interrupting. \"Ask him to stop interrupting\" (1): True, but it sounds like blame and usually raises the temperature of the call. \"Talk over him\" (0): A fight for the floor. He hears nothing, the call escalates, and it sounds like the agent is not listening.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "cs.s.interrupting-caller-missed-technician",
+    "type": "sjt",
+    "section": "customer_situations",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "customer_service.de_escalation",
+    "secondary_skill_codes": [
+      "customer_service.empathy",
+      "customer_service.problem_resolution"
+    ],
+    "prompt": "A customer took a day off work to wait for a technician who never came. She is shouting, and she interrupts every time you start the standard apology from your script. The system shows the visit was cancelled by mistake. The next free visit is in three days, and team leaders can approve a priority visit for missed appointments. What do you do?",
+    "choices": [
+      "Let her finish, say you understand she lost a day of work, and ask your team leader for a priority visit while she is on the line.",
+      "Explain that the visit was cancelled by a system error and not by anyone in your team, then book the first free visit in three days.",
+      "Let her finish, say sorry in your own words, and book the first free visit in three days, with a text message to remind her of the date.",
+      "Start the script apology again from the beginning, as quality checks score whether you used the exact words."
+    ],
+    "answer": {
+      "points": [
+        3,
+        1,
+        2,
+        1
+      ]
+    },
+    "explanation": "Best (3): \"Acknowledge the lost day, ask for a priority visit\". It names the real harm (a lost day of work) and uses the remedy that exists for exactly this case. Asking now, while she is on the line, shows ownership. \"Say it was the system, not you\" (1): Defending yourself does not help her. The customer does not care whose fault it was, only that the company let her down, and she still waits three days. \"Apologise and book the visit in three days\" (2): A sincere apology and a booking, but it ignores the priority option that the company offers for missed visits. \"Restart the script apology\" (1): Reading a script to someone who keeps interrupting it ignores what she is saying. Quality checks reward listening, not word-for-word reading.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "cs.s.refund-outside-window-hospital",
+    "type": "sjt",
+    "section": "customer_situations",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "customer_service.policy_adherence",
+    "secondary_skill_codes": [
+      "customer_service.empathy",
+      "behavioral.ethics.integrity"
+    ],
+    "prompt": "A customer asks for a refund on an unused item she bought 40 days ago. Your policy allows refunds within 30 days, and team leaders can approve exceptions for a strong reason. She says she was in hospital for most of the last month. What do you do?",
+    "choices": [
+      "Explain the 30-day rule kindly, and tell her that sadly you cannot give a refund this time, as the rule is the same for everyone.",
+      "Change the purchase date in the system to 29 days ago, since she has a good reason and the item is unused.",
+      "Pass the request to your team leader, and tell her a refund is very likely because her reason is a strong one.",
+      "Say sorry she was unwell, explain the 30-day rule, and ask your team leader for an exception without promising the result."
+    ],
+    "answer": {
+      "points": [
+        1,
+        0,
+        2,
+        3
+      ]
+    },
+    "explanation": "Best (3): \"Ask for an exception, no promise\". Being in hospital is the kind of strong reason the exception route exists for. The agent uses it, stays inside the rules, and does not raise hopes that the team leader may not meet. \"Kind refusal\" (1): Polite and follows the basic rule, but ignores the exception process that the policy gives for this kind of case. \"Change the purchase date\" (0): Falsifying a record is dishonest, whatever the reason. It also hides the case from the people who are allowed to decide. \"Pass it on but say it is very likely\" (2): The right action, but \"very likely\" sets an expectation the agent cannot control. If the answer is no, the customer feels let down twice.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "cs.s.refund-nonrefundable-fee-button",
+    "type": "sjt",
+    "section": "customer_situations",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "customer_service.policy_adherence",
+    "secondary_skill_codes": [
+      "behavioral.ethics.integrity"
+    ],
+    "prompt": "A customer asks you to refund a booking change fee. The fee was shown clearly before he confirmed the change, and the policy says it cannot be refunded. Your system lets you give small refunds without approval. He says, \"Just press the button, nobody will check.\" What do you do?",
+    "choices": [
+      "Explain that the fee cannot be refunded, and read him the fee section of the booking terms word for word, so the rule is completely clear.",
+      "Say you understand, explain politely that the fee is not refundable since it was shown before he agreed, and note his feedback.",
+      "Refund the fee, since it is within your limit and keeping the customer happy matters more than one small charge.",
+      "Tell him the system will not let you do it, which is easier than explaining the policy and will stop him asking."
+    ],
+    "answer": {
+      "points": [
+        2,
+        3,
+        0,
+        1
+      ]
+    },
+    "explanation": "Best (3): \"Explain politely, note his feedback\". The fee was clear and the policy is clear. Having the technical power to refund is not permission to break policy. The answer is honest and kind, and noting his feedback means his view is heard without suggesting the fee might change. \"Refuse and read the terms word for word\" (2): Correct, but reading the terms word for word sounds cold and defensive and does nothing for how he feels. \"Refund it anyway\" (0): Breaks a clear policy because the agent can and the customer pushed. \"Nobody will check\" is not a reason, and small refunds outside policy add up. \"Say the system blocks it\" (1): The outcome is right, but the reason is untrue. Customers who later learn the truth stop trusting what agents tell them.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "cs.s.abusive-caller-first-warning",
+    "type": "sjt",
+    "section": "customer_situations",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "customer_service.de_escalation",
+    "secondary_skill_codes": [
+      "customer_service.policy_adherence",
+      "behavioral.communication.clarity"
+    ],
+    "prompt": "A caller is unhappy about a late order. He starts swearing at you personally and calling you names. Your company policy says agents should give one clear warning, and may end the call if the abuse continues. This is the first time he has sworn at you. What do you do?",
+    "choices": [
+      "Tell him his language is not acceptable, and that you will not help with his order until he says sorry.",
+      "Calmly say that you want to help with his order, but that you will end the call if the personal language continues.",
+      "End the call straight away without giving a warning. Nobody should have to accept being sworn at.",
+      "Ignore the swearing completely, stay polite, and keep working on his order so that the call is over as soon as possible."
+    ],
+    "answer": {
+      "points": [
+        0,
+        3,
+        1,
+        2
+      ]
+    },
+    "explanation": "Best (3): \"Calm, clear warning\". This is exactly what the policy asks: one clear, calm warning that also says the agent still wants to help. Many callers calm down at this point. \"Demand an apology first\" (0): Holding the service back until the customer says sorry turns the call into a power struggle and is not a step the policy allows. \"End the call with no warning\" (1): Understandable, but the policy asks for a warning first. The order problem is left unsolved and he will likely call back angrier. \"Ignore it and carry on\" (2): Keeps the call professional, but the agent accepts personal abuse and skips the warning the policy gives them.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "cs.s.abusive-caller-after-warning",
+    "type": "sjt",
+    "section": "customer_situations",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "customer_service.policy_adherence",
+    "secondary_skill_codes": [
+      "customer_service.de_escalation",
+      "behavioral.communication.clarity"
+    ],
+    "prompt": "You have already given a caller one polite warning about his abusive language, as your policy requires. He keeps shouting insults at you. The policy says you may now end the call. What do you do?",
+    "choices": [
+      "Hang up without saying anything else. He has already had his warning, and the policy now allows you to end the call.",
+      "End the call politely, and tell your team leader about it later in the day so the call can be checked if he complains.",
+      "Tell him clearly what you think of his behaviour and how rude he has been, and then end the call.",
+      "Calmly say you are ending the call because of his language, explain how he can call again, end it and add a note."
+    ],
+    "answer": {
+      "points": [
+        1,
+        2,
+        0,
+        3
+      ]
+    },
+    "explanation": "Best (3): \"Explain, end politely, add a note\". Follows the policy and ends with dignity. Telling him how to come back keeps the door open, and the note means the next agent knows what happened. \"Hang up without a word\" (1): Allowed by the policy, but it looks like the line dropped, which often leads to a complaint and an angrier repeat call. \"End politely, tell team leader later\" (2): Correct and polite, but with no note on the account the next agent starts blind if he calls again. \"Tell him off, then end\" (0): Answering abuse with personal comments is unprofessional, can be heard on recordings, and gives him a real reason to complain.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "cs.s.demands-manager-at-start",
+    "type": "sjt",
+    "section": "customer_situations",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "customer_service.de_escalation",
+    "secondary_skill_codes": [
+      "customer_service.problem_resolution",
+      "behavioral.communication.listening"
+    ],
+    "prompt": "A customer's first words are, \"Put me through to a manager. I am not explaining this again to another agent.\" Her account shows two calls this week, both with notes. Your team leader is available to take escalated calls. What do you do?",
+    "choices": [
+      "Agree to get the team leader, ask for one minute to read her notes, and brief the team leader before passing her over.",
+      "Ask her to explain the problem to you from the start, and tell her a manager will only join if you cannot solve it yourself.",
+      "Transfer the call to your team leader straight away, as she asked, without reading her notes or telling the team leader anything.",
+      "Tell her politely that managers do not take customer calls, and that you are the right person to help her with any problem she has."
+    ],
+    "answer": {
+      "points": [
+        3,
+        1,
+        1,
+        0
+      ]
+    },
+    "explanation": "Best (3): \"Agree, read the notes, brief the team leader\". Saying yes first lowers the tension. One minute with the notes of her two earlier calls means the team leader starts informed and she does not have to explain a third time, which is her real complaint. Managers who prefer agents to try first and managers who prefer to honour the request straight away both accept this. \"Make her explain from the start\" (1): The notes already hold the story, so asking her to repeat it is exactly what she refused, and putting a condition on her request raises the tension. \"Cold transfer\" (1): Gives her what she asked for, but the team leader starts blind and she is likely to be asked to explain again. \"Say managers do not take calls\" (0): Untrue, since the team leader is available, and refusing a clear request will make her angrier.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "cs.s.manager-unavailable-callback",
+    "type": "sjt",
+    "section": "customer_situations",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "customer_service.policy_adherence",
+    "secondary_skill_codes": [
+      "behavioral.ethics.integrity",
+      "customer_service.de_escalation"
+    ],
+    "prompt": "A customer insists on speaking to a manager about a complaint. No manager is free, and your process says a manager will call back within 24 hours. The customer says, \"Fine, but I want that call within the hour.\" What do you do?",
+    "choices": [
+      "Agree to a call within the hour so that the customer stays calm, and send the request to the managers.",
+      "Explain the 24-hour callback and log the request, but leave the details of the complaint for the manager to collect when they call.",
+      "Be honest that a manager will call within 24 hours, write a full note of the complaint, and offer any help you can give now.",
+      "Keep the customer on hold until a manager becomes free, even if that takes a long time, so the complaint is heard today."
+    ],
+    "answer": {
+      "points": [
+        0,
+        2,
+        3,
+        1
+      ]
+    },
+    "explanation": "Best (3): \"Honest timeline, full note\". Tells the truth about what will happen, makes sure the manager has everything before calling, and still tries to help now. \"Promise a call within the hour\" (0): A promise the agent cannot keep. When the hour passes, the customer has a second complaint. \"Honest timeline, no details\" (2): Honest, but the manager has to start from zero and the customer must repeat the whole story. \"Long hold until a manager is free\" (1): Wastes the customer's time and blocks the line, and there is no sign a manager will become free soon.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "cs.s.spouse-calling-for-account",
+    "type": "sjt",
+    "section": "customer_situations",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "customer_service.privacy_verification",
+    "secondary_skill_codes": [
+      "behavioral.ethics.integrity",
+      "customer_service.empathy"
+    ],
+    "prompt": "A woman calls about her husband's account. She knows his date of birth, address and account number, and says he is at work and asked her to sort out a late payment. She is not listed on the account as an authorised person. What do you do?",
+    "choices": [
+      "Share only the amount that is overdue and the due date, but nothing else from the account, as she wants to pay it.",
+      "Answer her questions, since she knows all the security details and is clearly trying to help him pay.",
+      "Ask her to have her husband call back when he is free, because only the account holder can discuss it, and end the call there.",
+      "Explain kindly that you can only discuss the account with him or an authorised person, and tell her how he can add her."
+    ],
+    "answer": {
+      "points": [
+        1,
+        0,
+        2,
+        3
+      ]
+    },
+    "explanation": "Best (3): \"Explain kindly, explain how to add her\". Security questions check the account holder, and she has said she is not him. The agent protects his data and gives her a real path to help next time. \"Share only the overdue amount\" (1): The overdue amount is still account information, so this is a small breach of privacy. \"Answer because she knows the details\" (0): Knowing someone's details does not give permission. This is exactly how account takeover and family disputes turn into data breaches. \"Ask the husband to call back\" (2): Protects the data correctly, but she leaves without knowing she could be added as an authorised person.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "cs.s.son-calling-father-consent",
+    "type": "sjt",
+    "section": "customer_situations",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "customer_service.privacy_verification",
+    "secondary_skill_codes": [
+      "customer_service.empathy",
+      "customer_service.policy_adherence"
+    ],
+    "prompt": "A man calls about his elderly father's account. His father is sitting next to him and can speak, but finds phone calls tiring. The son is not on the account. Your policy allows an account holder who has passed security to give spoken permission for someone else to speak for him on that call. What do you do?",
+    "choices": [
+      "Tell the son you can only speak with his father, and ask the father to stay on the line himself for the whole conversation.",
+      "Help the son with whatever he needs today, since his father is sitting right beside him and it is obvious he agrees.",
+      "Ask to speak to the father briefly, take him through security, and ask if he agrees to his son speaking for him.",
+      "Ask the son for his father's date of birth and full address, and carry on with the son if both of them match your records."
+    ],
+    "answer": {
+      "points": [
+        2,
+        0,
+        3,
+        1
+      ]
+    },
+    "explanation": "Best (3): \"Verify the father, get his permission\". This is the policy exactly: verify the account holder, then get his spoken permission. It takes one minute and spares the father the rest of the call. \"Speak only to the father\" (2): Safe, but it ignores the permission option that exists for this case and makes a tiring call longer for an elderly customer. \"Help the son straight away\" (0): Assumes permission that was never given. Being next to someone does not mean they agree. \"Check the son knows the details\" (1): Family members often know these details. It checks the wrong person and gives no real permission.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "cs.s.insistent-customer-expired-offer",
+    "type": "sjt",
+    "section": "customer_situations",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "customer_service.problem_resolution",
+    "secondary_skill_codes": [
+      "behavioral.communication.clarity",
+      "customer_service.policy_adherence"
+    ],
+    "prompt": "A customer insists she should get a 20% discount she saw in an advert last month. You check, and the offer ended two weeks before she ordered. She keeps saying, \"I saw it, so you have to give it to me.\" What do you do?",
+    "choices": [
+      "Give her the discount anyway, since arguing will take longer and she may leave a bad review.",
+      "Say you understand why she expected it, explain when the offer ended, and tell her about any offer that is open now.",
+      "Repeat firmly that the offer has ended, and that there is nothing more to discuss on this point.",
+      "Explain the date the offer ended, and offer to email her the full terms of the offer so that she can read the dates herself."
+    ],
+    "answer": {
+      "points": [
+        0,
+        3,
+        1,
+        2
+      ]
+    },
+    "explanation": "Best (3): \"Acknowledge, explain the end date, offer current deals\". She is wrong, but her expectation is understandable. The agent stays accurate, does not argue, and offers something real that she can have. \"Give the discount anyway\" (0): Gives an expired offer to the customer who argues loudest. That is unfair to other customers and not the agent's decision to make. \"Repeat firmly, close the topic\" (1): Correct on the facts but cold. It invites more argument or a complaint. \"Explain and send the terms\" (2): Accurate and gives proof, but feels a little like \"read it yourself\" and offers nothing that could still help her.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "cs.s.insistent-customer-refuses-check",
+    "type": "sjt",
+    "section": "customer_situations",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "customer_service.problem_resolution",
+    "secondary_skill_codes": [
+      "behavioral.communication.listening",
+      "customer_service.de_escalation"
+    ],
+    "prompt": "A customer says his new phone is broken because the screen goes dark after a few seconds, and he demands a replacement. From what he describes, it is almost certainly a power-saving setting. He says he has \"already checked everything\" and refuses to try anything. What do you do?",
+    "choices": [
+      "Say you understand, and ask him to try one 30-second check with you, since it could save him days without a phone.",
+      "Tell him the phone is not broken and that the problem is his settings, so a replacement is not possible.",
+      "Email him the step-by-step guide for the power-saving setting, and tell him to call back if the guide does not solve it.",
+      "Start the replacement process as he asks, since he says he has already checked everything."
+    ],
+    "answer": {
+      "points": [
+        3,
+        1,
+        2,
+        1
+      ]
+    },
+    "explanation": "Best (3): \"One short check, explain the benefit\". Respects his frustration and gives him a reason that is in his own interest. One short check is likely to fix it today, and if it does not, the replacement can start. \"Tell him it is his settings\" (1): Probably right, but saying it as a fact before checking sounds like blame and closes the conversation. \"Send the guide, ask him to call back\" (2): Could fix the problem, but it sends the work back to a customer who is already annoyed and may cause a repeat call. \"Start the replacement\" (1): He waits days and goes through a return for a phone that is not broken, and the same setting will cause the same problem on the new one.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "cs.s.repeat-caller-internet-third-time",
+    "type": "sjt",
+    "section": "customer_situations",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "customer_service.problem_resolution",
+    "secondary_skill_codes": [
+      "behavioral.ownership.accountability",
+      "customer_service.empathy"
+    ],
+    "prompt": "A customer calls for the third time this week because her internet keeps dropping. The notes show that each previous agent asked her to restart her router and then closed the case. She sounds tired and annoyed. What do you do?",
+    "choices": [
+      "Apologise, say you can see the restarts were already tried, and escalate the fault with the full history and a case number.",
+      "Say sorry, and ask her to write down the times the line drops for a week and call back, so you can escalate it with evidence.",
+      "Ask her to restart the router once more while you wait on the line, as this is the first step in the guide.",
+      "Tell her the problem is probably with her own devices, and close the case as three restarts did not find a fault."
+    ],
+    "answer": {
+      "points": [
+        3,
+        2,
+        1,
+        0
+      ]
+    },
+    "explanation": "Best (3): \"Escalate with history and a case number\". Shows she was heard, does not repeat what already failed, and moves the fault to the people who can fix it, with a reference she can use. \"Ask her to log drops for a week\" (2): Evidence can help, but she already has three calls of history. Another week of waiting is a lot to ask. \"Restart the router again\" (1): Repeats the step that has failed three times. It tells her nobody read her notes. \"Blame her devices and close\" (0): A guess presented as a reason to close the case. It guarantees a fourth call and probably a complaint.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "cs.s.repeat-caller-refund-never-sent",
+    "type": "sjt",
+    "section": "customer_situations",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "behavioral.ownership.accountability",
+    "secondary_skill_codes": [
+      "customer_service.problem_resolution",
+      "behavioral.ethics.integrity"
+    ],
+    "prompt": "A customer calls for the fourth time about a refund. Each previous agent wrote \"refund requested\" in the notes, but you see that the refund was never actually submitted in the refund system. What do you do?",
+    "choices": [
+      "Write \"refund requested\" in the notes again, and ask her to wait a few more days for the refund team.",
+      "Tell her honestly it was never sent, apologise, submit it now, and give her the reference number and the real timeline.",
+      "Submit the refund now, say sorry for the delay, and tell her it should arrive within the normal refund time.",
+      "Submit the refund now, and tell her it was held up by the bank so that she does not lose trust in your team."
+    ],
+    "answer": {
+      "points": [
+        0,
+        3,
+        2,
+        1
+      ]
+    },
+    "explanation": "Best (3): \"Be honest, submit now, give reference\". The agent finds the real cause, fixes it, and gives the customer a reference and a real date. Honesty about the mistake rebuilds trust. \"Note it and ask her to wait\" (0): Repeats the same failure as the three agents before and leaves the refund unsent. \"Submit now, vague timeline\" (2): Fixes the problem, but with no reference or clear date she cannot check it, and she does not learn why it took four calls. \"Submit now, blame the bank\" (1): Fixes the problem but lies about the cause. If she asks the bank, the company looks dishonest.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "cs.s.previous-agent-free-month",
+    "type": "sjt",
+    "section": "customer_situations",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "behavioral.ethics.integrity",
+    "secondary_skill_codes": [
+      "customer_service.policy_adherence",
+      "behavioral.ownership.accountability"
+    ],
+    "prompt": "A customer says the agent he spoke to last week promised him a free month because of a service problem. The notes confirm the promise, but agents are not allowed to give free months. Only team leaders can approve credits. What do you do?",
+    "choices": [
+      "Add the free month yourself with a manual credit, and note that it was promised by the agent he spoke to last week.",
+      "Tell him the previous agent made a mistake and that free months do not exist, so there is nothing you can do.",
+      "Apologise, explain that a team leader must approve it, and ask your team leader to review it, since the company made the promise.",
+      "Explain that you cannot give free months, and offer to log his request for a team leader if he wants to make a complaint about it."
+    ],
+    "answer": {
+      "points": [
+        1,
+        0,
+        3,
+        2
+      ]
+    },
+    "explanation": "Best (3): \"Honest, ask team leader to review\". The company did make the promise, so it deserves a real review by the person who can approve it. The agent is honest about the rule and does not repeat the promise. \"Add the credit yourself\" (1): The customer is happy, but the agent uses authority they do not have, which is the same mistake the first agent made. \"Blame the agent and refuse\" (0): Blames a colleague to the customer and breaks a promise the company made, without asking anyone who could help. \"Refuse, offer a complaint route\" (2): Honest, but it makes the customer do the work of fixing the company's mistake.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "cs.s.previous-agent-delivery-date",
+    "type": "sjt",
+    "section": "customer_situations",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "behavioral.ethics.integrity",
+    "secondary_skill_codes": [
+      "customer_service.empathy",
+      "customer_service.problem_resolution"
+    ],
+    "prompt": "A customer calls to check that her order will arrive by Friday, as an agent promised her yesterday. The system shows the earliest delivery is next Wednesday, and no faster delivery is available. Orders can be cancelled for a full refund before they ship. The order is a birthday present. What do you do?",
+    "choices": [
+      "Tell her the real delivery date is next Wednesday, and send her the tracking link so that she can watch for any changes.",
+      "Tell her it should still arrive by Friday, and add a note asking the warehouse to hurry if they can.",
+      "Tell her the real date and explain that the previous agent made the mistake, not you, and that you cannot change it.",
+      "Apologise for the wrong date, tell her the real one now, and explain her options, including cancelling for a full refund."
+    ],
+    "answer": {
+      "points": [
+        2,
+        0,
+        1,
+        3
+      ]
+    },
+    "explanation": "Best (3): \"Correct the date now, explain options\". Bad news early is better than a missed birthday. She hears the truth today, gets an apology, and can still choose to cancel and buy elsewhere. \"Give the real date and tracking\" (2): Honest, but with no apology and no mention that she can cancel, she may miss the chance to get a present in time. \"Repeat the Friday promise\" (0): Knowingly repeats a promise the system says cannot be kept. She finds out on Friday, when it is too late to do anything. \"Blame the previous agent\" (1): The date is corrected, but blaming a colleague makes the whole company look unreliable, and she hears no apology or options.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "cs.s.bereavement-close-account",
+    "type": "sjt",
+    "section": "customer_situations",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "customer_service.empathy",
+    "secondary_skill_codes": [
+      "customer_service.policy_adherence",
+      "behavioral.customer.service_orientation"
+    ],
+    "prompt": "A caller tells you that her husband died last week and she needs to close his phone account. She is crying and says she does not know what documents she needs. Your company has a set process for bereavement cases. What do you do?",
+    "choices": [
+      "Mention that she could move his number onto her own account with a new plan that has a discount this month.",
+      "Ask her to call back when she feels a little better. This is a hard moment to deal with paperwork.",
+      "Say you are sorry for her loss, go at her pace, follow the bereavement process, and offer to send her the steps in writing.",
+      "Say you are very sorry, then read out the full list of documents quickly, since she will probably want the call to be short."
+    ],
+    "answer": {
+      "points": [
+        0,
+        1,
+        3,
+        2
+      ]
+    },
+    "explanation": "Best (3): \"Sympathy, her pace, process, written steps\". Shows real care, uses the process built for these cases, and the written steps help because people in grief often cannot remember what was said. \"Offer a new plan\" (0): Selling during a bereavement call is insensitive and likely to cause a complaint. \"Ask her to call back later\" (1): Meant kindly, but it sends her away without help and makes her face a second call. \"Read the list quickly\" (2): Kind words and the right information, but rushing a crying caller means she will not take it in.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "cs.s.financial-hardship-cannot-pay",
+    "type": "sjt",
+    "section": "customer_situations",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "customer_service.empathy",
+    "secondary_skill_codes": [
+      "customer_service.policy_adherence",
+      "behavioral.ethics.integrity"
+    ],
+    "prompt": "A customer says he lost his job last month and cannot pay this month's bill. He asks you to \"cancel the debt\". Your company has a hardship team that can set up payment plans or short payment breaks. Agents cannot cancel debts. What do you do?",
+    "choices": [
+      "Remind him that late payment may lead to his service being stopped, so that he understands why paying on time matters.",
+      "Give him the hardship team's direct number, and tell him to call them when he is ready to talk about a payment plan.",
+      "Tell him you will ask for the debt to be cancelled, so he does not need to worry about it for now.",
+      "Thank him for telling you, say you cannot cancel the debt, and transfer him to the hardship team with a note on his situation."
+    ],
+    "answer": {
+      "points": [
+        1,
+        2,
+        0,
+        3
+      ]
+    },
+    "explanation": "Best (3): \"Explain, warm transfer to hardship team\". Honest about what is not possible, and connects him directly to the team that can actually help, so he does not have to explain his situation again. \"Warn about the service being stopped\" (1): Adds pressure without offering any of the help the company has for this exact situation. \"Give the hardship number\" (2): Points to the right help, but people in financial stress often do not make the second call. \"Say you will ask to cancel the debt\" (0): Creates false hope. He may stop paying and end up in a worse position.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "cs.s.elderly-pressured-new-phones",
+    "type": "sjt",
+    "section": "customer_situations",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "behavioral.ethics.safety",
+    "secondary_skill_codes": [
+      "customer_service.privacy_verification",
+      "customer_service.empathy"
+    ],
+    "prompt": "An elderly customer, who has been with the company for 20 years, calls to order three new phones on her account, to be sent to a different address. A man in the background keeps telling her what to say, and she sounds unsure and scared. She passes security. Your company has a process for customers who may be at risk. What do you do?",
+    "choices": [
+      "Speak to her gently with simple questions, hold the order, and follow the process for customers who may be at risk.",
+      "Hold the order without saying why, and tell your team leader about the call at the end of your shift, when it is quieter.",
+      "Ask the man in the background to come to the phone himself and explain why she needs three new phones sent elsewhere.",
+      "Place the order, since she passed security and it is her account and her decision."
+    ],
+    "answer": {
+      "points": [
+        3,
+        2,
+        1,
+        0
+      ]
+    },
+    "explanation": "Best (3): \"Gentle questions, hold, follow risk process\". The signs of pressure are clear. Passing security does not mean the customer is safe. Holding the order and using the process protects her without accusing anyone. \"Hold and tell team leader later\" (2): Stops the order, but a possible case of abuse waits hours, she gets no explanation, and nothing is set up to protect her. \"Ask the man to explain\" (1): Speaks to someone who is not the account holder and may be the person pressuring her, which can make things worse for her. \"Place the order\" (0): Ignores clear warning signs. Security questions prove who is speaking, not that she is acting freely.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "cs.s.elderly-refund-other-account",
+    "type": "sjt",
+    "section": "customer_situations",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "behavioral.ethics.safety",
+    "secondary_skill_codes": [
+      "customer_service.privacy_verification",
+      "behavioral.communication.listening"
+    ],
+    "prompt": "An elderly man calls to cancel his home insurance and asks for the refund to be paid into a new bank account in another person's name. A woman in the background answers most of your questions for him, and he often pauses before agreeing with her. He passes security. Your company has a process for customers who may be at risk. What do you do?",
+    "choices": [
+      "Make the change, since he has passed security and has agreed to it.",
+      "Gently ask if he can talk freely, let him say what he wants in his own words, hold the change, and follow the at-risk process.",
+      "Pay the refund only into his usual account, since paying a third party is risky, and do not ask him any more questions.",
+      "Tell him openly that you think the woman with him may be trying to cheat him out of his money, and ask him to be careful."
+    ],
+    "answer": {
+      "points": [
+        0,
+        3,
+        2,
+        1
+      ]
+    },
+    "explanation": "Best (3): \"Check he can talk freely, hold, follow process\". Gives him a safe chance to speak for himself and uses the company's process for possible financial abuse, without accusing anyone. \"Make the change\" (0): Paying money to a third party when there are clear signs of pressure is how financial abuse of elderly customers succeeds. \"Pay only to his usual account\" (2): Protects the money, but nobody checks on him or records the concern, and the people pressuring him may simply try another way. \"Warn him about the woman\" (1): Saying this while she can hear may put him at risk, and the agent may be wrong.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "cs.s.social-media-threat-refund",
+    "type": "sjt",
+    "section": "customer_situations",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "customer_service.de_escalation",
+    "secondary_skill_codes": [
+      "customer_service.policy_adherence",
+      "behavioral.communication.clarity"
+    ],
+    "prompt": "A customer is unhappy with a refund decision that follows policy. She says, \"If you do not refund me today, I will post about this everywhere and tag your company.\" What do you do?",
+    "choices": [
+      "Tell her firmly that posting online will not change the decision, so there is no point in threatening you or the company.",
+      "Stay calm, say you understand, explain again what you can do, and tell her how to ask for a formal review of the decision.",
+      "Give her the refund she wants, since a bad public post could cost the company much more than the refund.",
+      "Ask your team leader to take over the call because of the threat to post online, and pass on all the refund details."
+    ],
+    "answer": {
+      "points": [
+        1,
+        3,
+        0,
+        2
+      ]
+    },
+    "explanation": "Best (3): \"Calm, explain, offer complaint route\". A threat does not change the policy, and treating her with respect does not either. She gets a real route to have the decision reviewed. \"Say posting changes nothing\" (1): Accurate, but it sounds like a challenge and almost guarantees the post. \"Give the refund to avoid the post\" (0): Teaches customers that threats work, is unfair to customers who do not threaten, and goes beyond what the agent may approve. \"Hand the call to team leader\" (2): Not harmful, but it is not needed for a normal threat to post online and suggests the threat worked.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "cs.s.social-media-post-already",
+    "type": "sjt",
+    "section": "customer_situations",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "behavioral.ownership.accountability",
+    "secondary_skill_codes": [
+      "customer_service.problem_resolution",
+      "customer_service.de_escalation"
+    ],
+    "prompt": "On a chat, a customer says she has already posted a video online about her broken washing machine and how your company has ignored her for two weeks. You check and see that her repair request was never booked. What do you do?",
+    "choices": [
+      "Apologise, book the earliest repair date now, and tell your team leader about the video so the right team can respond.",
+      "Book the repair now and give her the date in the chat, and leave the video for her to deal with however she chooses.",
+      "Find her post online and reply to it from your own social media account, to explain that the problem is now being fixed.",
+      "Book the repair, but ask her to take the video down first, and only then confirm the repair date to her in the chat."
+    ],
+    "answer": {
+      "points": [
+        3,
+        2,
+        0,
+        1
+      ]
+    },
+    "explanation": "Best (3): \"Book now, tell team leader about the post\". She was right: the company failed her. Fixing it now is the priority, and the team leader should know about a public post so the right team can respond. \"Book now, ignore the video\" (2): Fixes the problem, which matters most, but the company does not learn about a public post that its social media team may need to answer. \"Reply from your own account\" (0): Agents should never speak for the company or discuss a customer's case on a personal account. It risks privacy and makes the situation more public. \"Ask her to remove the video first\" (1): Makes the fix depend on her removing the post. It feels like pressure and will likely make the post worse.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "cs.s.tech-issue-cannot-solve-app",
+    "type": "sjt",
+    "section": "customer_situations",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "customer_service.problem_resolution",
+    "secondary_skill_codes": [
+      "behavioral.ownership.accountability",
+      "behavioral.communication.clarity"
+    ],
+    "prompt": "A customer cannot log in to the mobile app. You have tried every step in the troubleshooting guide with her, and nothing has worked. Your team can pass problems to the technical team using a ticket. What do you do?",
+    "choices": [
+      "Tell her the app works for everyone else, so the problem must be on her phone, and close the case.",
+      "Ask her to delete the app and install it once more. Reinstalling sometimes works on the second try.",
+      "Open a ticket for the technical team with the note \"login problem\", and tell her they will be in touch soon.",
+      "Open a ticket with every step you tried and her device details, and give her the reference and when to expect an update."
+    ],
+    "answer": {
+      "points": [
+        0,
+        1,
+        2,
+        3
+      ]
+    },
+    "explanation": "Best (3): \"Detailed ticket, reference, timeline\". When the agent cannot fix it, the next best thing is a clean handover: full details so the technical team does not repeat the steps, and a reference and timeline for her. \"Blame her phone and close\" (0): A guess, presented as fact, followed by closing a problem that is not solved. \"Reinstall again\" (1): Repeats a guide step that has already failed and delays the real escalation. \"Short ticket, no timeline\" (2): Escalates, but the technical team will have to ask her everything again, and she does not know when to expect help.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "cs.s.tech-question-unknown-answer",
+    "type": "sjt",
+    "section": "customer_situations",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "behavioral.ethics.integrity",
+    "secondary_skill_codes": [
+      "customer_service.problem_resolution",
+      "behavioral.ownership.initiative"
+    ],
+    "prompt": "A customer asks whether the printer he is about to buy will work with his laptop, which uses an older system. You are not sure, and the product page does not say. He wants a yes or no now. What do you do?",
+    "choices": [
+      "Tell him you do not know, and suggest he searches online, as the printer maker's website may list the systems it supports.",
+      "Tell him honestly that you are not sure, and suggest he buys it and returns it within the return period if it does not work with his laptop.",
+      "Say you are not sure, and check the knowledge base or ask a colleague while he holds. If you still do not know, offer a callback.",
+      "Say yes, since most printers work with most laptops and he is ready to buy."
+    ],
+    "answer": {
+      "points": [
+        1,
+        2,
+        3,
+        0
+      ]
+    },
+    "explanation": "Best (3): \"Check properly, call back if needed\". Honest, and the agent does the work of finding the answer rather than guessing or passing it back. \"Suggest searching online\" (1): Honest, but answering product questions is the agent's job, and the customer is left to find it alone. \"Suggest buying and returning\" (2): Honest and practical, but makes the customer carry the risk and effort when the answer may be easy to find. \"Say yes\" (0): A guess presented as fact. If it is wrong, he has a return, a wasted purchase and a reason not to trust the company.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "cs.s.queue-pressure-finish-fix",
+    "type": "sjt",
+    "section": "customer_situations",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "customer_service.problem_resolution",
+    "secondary_skill_codes": [
+      "behavioral.problem_solving.pragmatism",
+      "behavioral.customer.service_orientation"
+    ],
+    "prompt": "You are helping a customer whose account settings are wrong. You can fully fix them now, but it will take about eight more minutes. The screen shows 25 callers waiting, and your team leader has asked everyone to keep calls short today. Your team does not make callbacks, so anything left unfinished means she has to call again. What do you do?",
+    "choices": [
+      "Put the customer on hold and ask your team leader whether you should finish the fix now or ask her to call back later.",
+      "Do the quickest part now, and ask the customer to call back tomorrow morning, when it is quieter, to finish the rest.",
+      "Tell the customer the system is running too slowly today to make the changes, and ask her to call back tomorrow.",
+      "Finish the fix now, working efficiently and explaining each step, so that she does not need to call again."
+    ],
+    "answer": {
+      "points": [
+        2,
+        1,
+        0,
+        3
+      ]
+    },
+    "explanation": "Best (3): \"Finish the fix efficiently\". A problem fixed on the first contact is cheaper and better than two calls. Keeping calls short means no wasted time, not leaving work half done. \"Ask team leader first\" (2): Not wrong, but it adds hold time and takes the team leader away from the queue for a decision the agent can make. \"Half fix, call back tomorrow\" (1): Moves the work to tomorrow and adds a second call to another busy queue. \"Say the system is slow\" (0): Untrue, and it leaves the problem unfixed to protect a number.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "cs.s.aht-second-question",
+    "type": "sjt",
+    "section": "customer_situations",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "behavioral.customer.service_orientation",
+    "secondary_skill_codes": [
+      "customer_service.problem_resolution",
+      "behavioral.ethics.integrity"
+    ],
+    "prompt": "Your average call time is above target this month, and your team leader has asked you to bring it down. At the end of a call, the customer asks a second question about how to read her bill. You know the answer, and it will take about two minutes. What do you do?",
+    "choices": [
+      "Tell her the system will not let you see her bill details on this call, and ask her to call again later today.",
+      "Answer her question clearly now, since sending her somewhere else would likely mean another call.",
+      "Offer to email her a short guide on how to read the bill, so that she can read it later, and end the call.",
+      "Say that bill questions are best answered by the online help pages, give her the page address, and end the call politely."
+    ],
+    "answer": {
+      "points": [
+        0,
+        3,
+        2,
+        1
+      ]
+    },
+    "explanation": "Best (3): \"Answer it now\". Two minutes now saves a whole new call later. Good average times come from efficient calls, not from sending customers away. \"Say the system blocks it\" (0): A lie told to protect a number, and it creates a second call. \"Email a guide\" (2): Helpful, but she may still not understand her own bill and call back anyway. \"Send her to the help pages\" (1): Pushes the work back to the customer when the agent knows the answer.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "cs.s.colleague-wrong-refund-time",
+    "type": "sjt",
+    "section": "customer_situations",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "behavioral.collaboration.conflict",
+    "secondary_skill_codes": [
+      "customer_service.policy_adherence",
+      "behavioral.ethics.integrity"
+    ],
+    "prompt": "You hear the colleague next to you tell several customers that refunds arrive in two days. The policy says refunds take seven to ten working days. What do you do?",
+    "choices": [
+      "Interrupt his call straight away to correct the information, so that the customer on the line hears the right timeline.",
+      "Say nothing to anyone. It is his job, and the quality team will find the mistake when they check his calls.",
+      "After his call, show him the policy privately, then tell your team leader together so the customers can be called.",
+      "Tell your team leader exactly what you heard and which customers seemed to be affected, without speaking to the colleague first."
+    ],
+    "answer": {
+      "points": [
+        1,
+        0,
+        3,
+        2
+      ]
+    },
+    "explanation": "Best (3): \"Talk privately, then tell the team leader together\". Respectful to the colleague, fixes the cause, and does not depend on him agreeing to report it. Customers who were already given the wrong date will call back angry unless someone contacts them, which needs the team leader. \"Interrupt his call\" (1): Correcting him in front of a customer embarrasses him and confuses the customer. \"Say nothing\" (0): Customers keep getting wrong information until someone happens to check. \"Go straight to team leader\" (2): Gets the problem fixed, but skipping a simple private word can damage trust in the team.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "cs.s.colleague-wrong-tip-team-chat",
+    "type": "sjt",
+    "section": "customer_situations",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "behavioral.collaboration.conflict",
+    "secondary_skill_codes": [
+      "customer_service.policy_adherence",
+      "behavioral.communication.written"
+    ],
+    "prompt": "In the team chat, an experienced colleague posts that the product warranty now covers water damage. You check the warranty page, and it does not. Several new agents have already replied with a thumbs up. What do you do?",
+    "choices": [
+      "Message her privately with the warranty page, ask her to correct her post, and tell your team leader.",
+      "Reply politely in the team chat with a link to the warranty page, so that every agent who saw the post also sees the correct rule.",
+      "Say nothing and follow the correct rule yourself, since she is more experienced and correcting her is not your job.",
+      "Reply in the team chat that she is wrong, and tell the new agents to check the policy pages instead of trusting her tips."
+    ],
+    "answer": {
+      "points": [
+        3,
+        2,
+        0,
+        1
+      ]
+    },
+    "explanation": "Best (3): \"Private message, she corrects her post, team leader told\". The wrong rule is corrected in the same chat where it was posted, the colleague corrects it herself, and the team leader can follow up on any customers who were already given the wrong information. This works in teams that prefer direct public feedback and in teams that prefer private feedback. \"Polite public correction\" (2): Gets the right rule to everyone quickly, but the team leader is not told about customers who may already have been misinformed, and some colleagues find a public correction embarrassing. \"Say nothing\" (0): New agents will give customers wrong warranty information, which leads to complaints. \"Say she is wrong and not to trust her\" (1): The facts may be right, but attacking her trust in front of the team damages relationships.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "cs.s.cancel-price-retention-offer",
+    "type": "sjt",
+    "section": "customer_situations",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "behavioral.customer.service_orientation",
+    "secondary_skill_codes": [
+      "customer_service.policy_adherence",
+      "behavioral.ethics.integrity"
+    ],
+    "prompt": "A customer calls to cancel her plan because she found a cheaper one with another company. You are allowed to offer a 15% discount for six months to customers who want to leave. What do you do?",
+    "choices": [
+      "Thank her, mention the discount once, and if she still wants to leave, cancel the plan smoothly and confirm the end date.",
+      "Keep offering the discount in different ways until she agrees, since every saved customer counts toward your target.",
+      "Offer a bigger discount than you are allowed to give. Losing her would cost the company more than the extra discount.",
+      "Cancel the plan straight away as she asked and confirm the end date, without mentioning the discount, as she has decided."
+    ],
+    "answer": {
+      "points": [
+        3,
+        0,
+        1,
+        2
+      ]
+    },
+    "explanation": "Best (3): \"Mention the offer once, then cancel smoothly\". She may not know the offer exists, so mentioning it once is fair. Respecting her decision afterwards leaves a good last impression. \"Keep pushing the offer\" (0): Pressure selling. It annoys customers and leads to complaints. \"Offer more than allowed\" (1): Goes beyond the agent's authority, even if the reason sounds sensible. \"Cancel without mentioning the offer\" (2): Respects her request, but she may have stayed for a discount she never heard about.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "cs.s.cancel-early-exit-fee",
+    "type": "sjt",
+    "section": "customer_situations",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "behavioral.ethics.integrity",
+    "secondary_skill_codes": [
+      "behavioral.communication.clarity",
+      "customer_service.policy_adherence"
+    ],
+    "prompt": "A customer wants to cancel his contract. He still has five months left, so an early exit fee of 60 applies. He has not asked about any fees. What do you do?",
+    "choices": [
+      "Cancel the contract as he asked, since the exit fee is explained in the contract he signed and he can read it there.",
+      "Tell him there is an exit fee without giving the amount, and ask him to check his contract for the details before deciding.",
+      "Before cancelling, tell him the fee is 60, since he may not know, and check whether he still wants to go ahead.",
+      "Tell him that he cannot cancel until the five months of the contract have ended, to save him from paying the exit fee."
+    ],
+    "answer": {
+      "points": [
+        1,
+        2,
+        3,
+        0
+      ]
+    },
+    "explanation": "Best (3): \"Tell him the fee first, let him decide\". Customers should know the cost of a decision before they make it. It prevents a surprise bill and a complaint. \"Cancel without mentioning the fee\" (1): Technically allowed, but the surprise bill leads to an angry call back and a complaint. \"Mention a fee, no amount\" (2): Honest, but the agent knows the amount and makes the customer find it himself. \"Say he cannot cancel\" (0): Untrue. Customers can cancel by paying the fee, and lying to stop a cancellation is a serious problem.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "cs.s.language-barrier-interpreter",
+    "type": "sjt",
+    "section": "customer_situations",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "behavioral.customer.service_orientation",
+    "secondary_skill_codes": [
+      "behavioral.communication.clarity",
+      "customer_service.empathy"
+    ],
+    "prompt": "A caller speaks a little English but keeps saying \"Sorry, I don't understand\" while you explain a change to her bill. Your company offers a phone interpreter service for many languages. What do you do?",
+    "choices": [
+      "Use shorter sentences and simpler words, and send her a written summary after the call so that she can read it slowly.",
+      "Ask her, in simple words, if she would like an interpreter in her language, and set it up if she says yes.",
+      "Repeat the explanation more slowly and a little louder, using the same words so that she does not get confused.",
+      "Ask her to call back later with a family member who speaks English, as that will be quicker for both of you."
+    ],
+    "answer": {
+      "points": [
+        2,
+        3,
+        1,
+        0
+      ]
+    },
+    "explanation": "Best (3): \"Offer the interpreter service\". The company provides this for exactly this case. She can understand her own bill fully, in her own language. \"Simpler words and a written summary\" (2): Helps, but she has already said she does not understand, and the interpreter service would remove the problem. \"Slower and louder, same words\" (1): Volume does not help understanding, and the same words will cause the same confusion. \"Ask her to bring a family member\" (0): Sends her away without help and shares her account with someone who has not been verified.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "cs.s.hard-to-hear-account-number",
+    "type": "sjt",
+    "section": "customer_situations",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "behavioral.communication.listening",
+    "secondary_skill_codes": [
+      "customer_service.privacy_verification"
+    ],
+    "prompt": "You find it hard to understand a caller's accent, and he says his account number quickly. You think you heard it, but you are not sure about two of the digits. What do you do?",
+    "choices": [
+      "Search with the digits you think you heard, and carry on with the first account that comes up.",
+      "Ask for his full name and address instead, as those may be easier for you to hear correctly on this line.",
+      "Tell him kindly that his accent is hard for you to understand, and ask if someone else at home could speak to you instead.",
+      "Ask him politely to repeat the number slowly, then read it back digit by digit so that you both know it is right."
+    ],
+    "answer": {
+      "points": [
+        0,
+        2,
+        1,
+        3
+      ]
+    },
+    "explanation": "Best (3): \"Ask to repeat, read it back\". Simple and respectful. Reading it back confirms the exact number without any comment on how he speaks. \"Guess the digits\" (0): May open the wrong customer's account, which is a data breach. \"Ask for name and address instead\" (2): Can work, but the same hearing problem may happen again, and nothing is read back to confirm it. \"Ask for someone else to speak\" (1): Commenting on an accent is disrespectful, and the other person may not be authorised on the account.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "cs.s.two-chats-holding-message",
+    "type": "sjt",
+    "section": "customer_situations",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "customer_service.written_tone",
+    "secondary_skill_codes": [
+      "behavioral.customer.service_orientation",
+      "behavioral.communication.written"
+    ],
+    "prompt": "You are handling two chats at once. One customer has a complex billing problem that needs your full attention for about five more minutes. The other customer has just written, \"Hello? Is anyone there?\" after waiting four minutes for your reply. What do you do?",
+    "choices": [
+      "Keep working on the billing problem first, since replying to the second customer now would slow down both chats.",
+      "Close the second chat for now. The customer can easily start a new chat later, when you are less busy with billing.",
+      "Send the waiting customer a short, honest message that you will reply within five minutes, then keep to that time.",
+      "Send the waiting customer a quick \"One moment please\", then go back to the billing problem and stay on it until it is solved."
+    ],
+    "answer": {
+      "points": [
+        1,
+        0,
+        3,
+        2
+      ]
+    },
+    "explanation": "Best (3): \"Honest holding message with a time\". A few seconds to set a real expectation stops the customer feeling ignored, and keeping to the time builds trust. \"Ignore the second chat for now\" (1): Silence after four minutes looks like nobody is there, and the customer may leave or complain. \"Close the second chat\" (0): Throws away a customer who is waiting, and they must start again in the queue. \"Quick one-moment message\" (2): Better than silence, but after a four-minute wait, \"one moment\" with no time sounds empty.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "cs.s.two-chats-fraud-first",
+    "type": "sjt",
+    "section": "customer_situations",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "customer_service.problem_resolution",
+    "secondary_skill_codes": [
+      "behavioral.leadership.decision_making",
+      "behavioral.ethics.safety"
+    ],
+    "prompt": "You have two chats open. In the first, a customer wants help choosing between two phone plans. In the second, a customer says there are three payments on her card from your company that she did not make. Both wrote at the same moment. Your company has a fraud process for payments that customers do not recognise. What do you do?",
+    "choices": [
+      "Answer the card payments customer first using the fraud process, and tell the other customer you will be with them shortly.",
+      "Reply to the card payments customer first, and leave the plans customer without a message until you finish.",
+      "Tell the card payments customer to contact her own bank first, as the payments may not really be from your company.",
+      "Help the plans customer first, since that chat could lead to a sale and is easier to finish."
+    ],
+    "answer": {
+      "points": [
+        3,
+        2,
+        1,
+        0
+      ]
+    },
+    "explanation": "Best (3): \"Fraud first, holding message to the other\". Possible fraud is urgent and gets worse with time. A short message to the other customer keeps them informed. \"Fraud first, no message to the other\" (2): The right priority, but the plans customer is left in silence. \"Send her to her bank first\" (1): Her bank can block the card, so the advice is not useless, but sending her away before checking the payments or starting the fraud process leaves the company's side unchecked. \"Plans first\" (0): Puts a possible sale ahead of a customer who may be losing money right now.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "cs.s.complaint-about-billing-team",
+    "type": "sjt",
+    "section": "customer_situations",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "behavioral.ownership.accountability",
+    "secondary_skill_codes": [
+      "customer_service.empathy",
+      "customer_service.problem_resolution"
+    ],
+    "prompt": "A customer tells you that the billing team was rude to him yesterday and gave him the wrong payment date. He now has a late fee. The call notes confirm the wrong date was given. You are allowed to remove late fees caused by company mistakes. What do you do?",
+    "choices": [
+      "Agree that the billing team often makes mistakes, so that he feels you are on his side.",
+      "Apologise, remove the late fee, confirm the correct payment date, and log his feedback through the complaints process.",
+      "Transfer him back to the billing team. They made the mistake, and they should be the ones to fix it.",
+      "Say sorry and remove the late fee, but leave his comments about the rude call out of your notes, as it was not your team."
+    ],
+    "answer": {
+      "points": [
+        0,
+        3,
+        1,
+        2
+      ]
+    },
+    "explanation": "Best (3): \"Apologise, remove fee, record feedback\". To the customer, the company is one team. The agent fixes what they are allowed to fix and makes sure the feedback reaches the people who need it. \"Agree billing often gets it wrong\" (0): Criticising colleagues to customers damages trust in the whole company. \"Transfer back to billing\" (1): Sends him back to the team that upset him for something this agent is allowed to fix. \"Remove fee, skip the feedback\" (2): Fixes the money problem, but the feedback is lost and the same thing may happen to other customers.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "cs.s.other-team-dont-send-me-again",
+    "type": "sjt",
+    "section": "customer_situations",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "behavioral.ownership.accountability",
+    "secondary_skill_codes": [
+      "behavioral.collaboration.cross_functional",
+      "customer_service.problem_resolution"
+    ],
+    "prompt": "A customer's delivery problem can only be fixed by the delivery team. She has already been transferred to them twice and waited on hold a long time each time. She says, \"Please do not send me to them again.\" Your process allows you to send the delivery team an internal request for her. What do you do?",
+    "choices": [
+      "Give her the delivery team's direct number, since calling them herself may be faster than a transfer.",
+      "Send the internal request with her details, and tell her that the delivery team will contact her soon and she can stop calling.",
+      "Transfer her to the delivery team anyway. It is their job, and you cannot fix the problem yourself.",
+      "Send the delivery team an internal request, give her the reference and when to expect contact, and follow up if they miss it."
+    ],
+    "answer": {
+      "points": [
+        1,
+        2,
+        0,
+        3
+      ]
+    },
+    "explanation": "Best (3): \"Internal request, reference, follow up\". Takes ownership even though another team must do the fix. She does not wait on hold again, and someone is checking that it happens. \"Give her their number\" (1): Still sends her back to the queue she asked to avoid, just without a transfer. \"Internal request, vague timing\" (2): The right channel, but \"soon\" with no date or reference leaves her with nothing to check. \"Transfer her again\" (0): Ignores a clear and reasonable request and repeats what has failed twice.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "cs.s.sent-wrong-invoice-email",
+    "type": "sjt",
+    "section": "customer_situations",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "customer_service.privacy_verification",
+    "secondary_skill_codes": [
+      "behavioral.ownership.accountability",
+      "behavioral.ethics.integrity"
+    ],
+    "prompt": "You realise you have just emailed a customer an invoice that belongs to another customer. It shows the other customer's name, address and order. Nobody has complained. What do you do?",
+    "choices": [
+      "Send the right invoice to your customer with an apology, and report the mistake to your team leader at the end of your shift.",
+      "Report it straight away to your team leader or data protection contact, since the company may need to act quickly.",
+      "Email the person who got it and ask them to delete it, and only tell your team leader if they do not reply.",
+      "Try to recall the email, and say nothing if it seems to have worked, since mistakes happen to everyone."
+    ],
+    "answer": {
+      "points": [
+        2,
+        3,
+        1,
+        0
+      ]
+    },
+    "explanation": "Best (3): \"Report straight away, follow process\". Data mistakes often have legal time limits and the company may need to tell the other customer. Reporting fast and honestly is what matters most. \"Fix your customer's invoice, report later\" (2): Honest, but hours of delay can matter for a data mistake. \"Ask them to delete, report only if no reply\" (1): Acts on its own and may hide the breach. The company, not the agent, decides what to do. \"Recall and say nothing\" (0): Hides a data breach. A recall often does not work, and the other customer has a right to know.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "cs.s.skipped-security-question",
+    "type": "sjt",
+    "section": "customer_situations",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "hard",
+    "primary_skill_code": "customer_service.privacy_verification",
+    "secondary_skill_codes": [
+      "behavioral.ethics.integrity",
+      "behavioral.ownership.failure_reflection"
+    ],
+    "prompt": "Halfway through a call, you realise you told the caller her account balance before you finished the security check. You skipped the last question. She now asks you to change the email address on the account. What do you do?",
+    "choices": [
+      "Change the email address, since she already knew enough to get this far into the call.",
+      "Ask the missing security question now, and if she fails it, end the call politely without making the email change she asked for.",
+      "End the call politely and ask her to call back, so that another agent can start again with a full security check.",
+      "Ask the missing security question before any change. If she fails, stop and report what you shared, following your process."
+    ],
+    "answer": {
+      "points": [
+        0,
+        2,
+        1,
+        3
+      ]
+    },
+    "explanation": "Best (3): \"Finish security; if she fails, stop and report\". Completes the check before a high-risk change, and is honest about the earlier slip if it turns out to matter. \"Make the change\" (0): Changing contact details without a full check is a classic way accounts are taken over. \"Finish security; if she fails, just end the call\" (2): Protects the account from the change, but hides the fact that a balance may have been shared with the wrong person. \"Ask her to call back\" (1): Safe, but wastes the customer's time when the agent could simply finish the check now.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "cs.s.personal-number-grateful-caller",
+    "type": "sjt",
+    "section": "customer_situations",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "easy",
+    "primary_skill_code": "behavioral.ethics.integrity",
+    "secondary_skill_codes": [
+      "customer_service.policy_adherence",
+      "behavioral.customer.service_orientation"
+    ],
+    "prompt": "After you solve a long problem, a grateful customer says, \"You are the only one who helped me. Can I have your personal mobile number, so I can call you directly next time?\" What do you do?",
+    "choices": [
+      "Tell him firmly that you are not allowed to share it, and end the call quickly so that he does not ask you again.",
+      "Give him your personal number. He is clearly a genuine customer, and it will save him time explaining his problem again.",
+      "Thank him, explain you cannot share personal numbers, and give him his case reference so the next agent sees the history.",
+      "Thank him, decline politely, and suggest that he asks for you by name the next time he calls the main customer service line."
+    ],
+    "answer": {
+      "points": [
+        1,
+        0,
+        3,
+        2
+      ]
+    },
+    "explanation": "Best (3): \"Thank, decline, give case reference\". Protects the agent and the customer's data, and the case reference gives him what he really wants: not having to explain again. \"Refuse and end quickly\" (1): Correct to refuse, but cold after a good call, and he leaves with no way to avoid repeating himself. \"Give the number\" (0): Breaks policy, mixes work and private life, and takes customer contact outside recorded company channels. \"Decline, ask for you by name\" (2): Correct to decline, but most contact centres cannot route calls to one agent, so it sets up a disappointment.",
+    "expected_time_s": 60
+  },
+  {
+    "bank_key": "cs.s.personal-social-media-chat",
+    "type": "sjt",
+    "section": "customer_situations",
+    "tracks": [
+      "customer_service"
+    ],
+    "levels": [
+      "agent"
+    ],
+    "language": null,
+    "difficulty": "medium",
+    "primary_skill_code": "behavioral.ethics.integrity",
+    "secondary_skill_codes": [
+      "customer_service.written_tone",
+      "customer_service.policy_adherence"
+    ],
+    "prompt": "On a chat, after you help a customer with his order, he writes that you seem very nice and asks for your social media name so you can \"stay in touch\". He has been polite throughout. What do you do?",
+    "choices": [
+      "Thank him, say you cannot share personal details, and ask if there is anything else he needs help with on his order.",
+      "Say you are not able to share that, and end the chat politely, so the chat stays professional.",
+      "Share your social media name, since he has been polite and it seems harmless.",
+      "Close the chat without replying. His order question has already been answered, so nothing more is needed."
+    ],
+    "answer": {
+      "points": [
+        3,
+        2,
+        0,
+        1
+      ]
+    },
+    "explanation": "Best (3): \"Thank, decline, back to the order\". A clear, friendly boundary that does not embarrass him, and it brings the chat back to the company's service. \"Decline and end the chat\" (2): The right boundary, but a little abrupt for someone who has been polite. \"Share your social media name\" (0): Gives personal details to a customer, which breaks policy and can put the agent at risk. \"Close without replying\" (1): Avoids the question, but silence feels rude and he may try again in another chat.",
+    "expected_time_s": 60
+  }
+]

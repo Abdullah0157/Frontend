@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server'
 import { query } from '@/lib/db'
 import { logEvent, pickNextItem, scoreResponse, updateSkillGraph, shouldStop, generateReport } from '@/lib/assessment'
+import { submitAnswer } from '@/lib/written-assessment'
+import { authorizedSession, errorResponse } from '@/lib/written-api'
 
 export const dynamic = 'force-dynamic'
 
@@ -15,6 +17,22 @@ export async function POST(req) {
 
   if (!sessionId || !itemId) {
     return NextResponse.json({ error: 'sessionId and itemId required' }, { status: 400 })
+  }
+
+  // Written assessments (sessions with a frozen form) use the new engine.
+  const { rows: kind } = await query(
+    `SELECT form IS NOT NULL AS written FROM assessment_sessions WHERE id = $1`,
+    [sessionId]
+  ).catch(() => ({ rows: [] }))
+  if (kind[0]?.written) {
+    try {
+      const { session } = await authorizedSession(req, sessionId)
+      return NextResponse.json(await submitAnswer(session, {
+        itemId, response: rawResponse, timeSpentMs: Number(timeSpentMs),
+      }))
+    } catch (e) {
+      return errorResponse(e, 'assessment/respond')
+    }
   }
 
   try {
@@ -148,7 +166,9 @@ export async function POST(req) {
         type: nextItem.type,
         modality: nextItem.modality,
         prompt: nextItem.prompt,
-        rubric: nextItem.type === 'mcq' ? nextItem.scoring_rubric : null,
+        rubric: nextItem.type === 'mcq'
+          ? { choices: (nextItem.scoring_rubric?.choices || []).map((c) => ({ text: c.text })) }
+          : null,
         expectedTimeS: nextItem.expected_time_s,
       },
     })
