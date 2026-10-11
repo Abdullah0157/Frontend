@@ -77,8 +77,12 @@ test('public pages: no calls to the old hosted backend, honest home page, reset 
   for (const path of ['/forgot-password', '/reset-password']) {
     assert.equal((await fetch(BASE + path)).status, 200, `${path} loads`)
   }
+  // The login form renders in the browser, so look in the page's own script.
   const login = await (await fetch(`${BASE}/login`)).text()
-  assert.match(login, /Forgot password\?/)
+  assert.match(login, /<title>Sign in \| JobStream<\/title>/, 'pages have their own titles')
+  const script = /src="(\/_next\/static\/chunks\/app\/login\/page-[^"]+\.js)"/.exec(login)?.[1]
+  if (script) assert.match(await (await fetch(BASE + script)).text(), /Forgot password\?/)
+  else assert.match(login, /Forgot password\?/)
   const analytics = await fetch(`${BASE}/analytics`, { redirect: 'manual' })
   assert.ok([307, 308].includes(analytics.status) && /\/admin\/analytics|\/login/.test(analytics.headers.get('location') || ''), 'public stats page moved to admin')
 })

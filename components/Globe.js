@@ -15,7 +15,7 @@ export default function Globe() {
         <div 
           className="absolute inset-0 w-[200%] h-full animate-rotate-slow pointer-events-none"
           style={{
-            backgroundImage: `url('/images/earth_texture.png')`,
+            backgroundImage: `url('/images/earth_texture.webp')`,
             backgroundSize: '50% 100%',
             backgroundRepeat: 'repeat-x',
             opacity: 0.9

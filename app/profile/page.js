@@ -659,5 +659,5 @@ function ProfileInner() {
 }
 
 export default function ProfilePage() {
-  return <Suspense><ProfileInner /></Suspense>
+  return <Suspense fallback={<div className="min-h-screen" aria-busy="true" />}><ProfileInner /></Suspense>
 }

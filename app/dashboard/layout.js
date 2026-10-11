@@ -2,7 +2,7 @@ import { requireRole, ROLES } from '@/lib/roles'
 import DashboardSidebar from './DashboardSidebar'
 import WorkspaceTopbar from '@/components/WorkspaceTopbar'
 
-export const metadata = { title: 'Dashboard — JobStream' }
+export const metadata = { title: 'Dashboard' }
 
 export default async function DashboardLayout({ children }) {
   // Candidate workspace. Super admins → /admin, company users → /company,

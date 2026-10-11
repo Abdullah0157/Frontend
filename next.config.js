@@ -1,6 +1,13 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  async redirects() {
+    return [
+      // The site statistics page is for admins (login + super-admin role); the
+      // old public copy read from a backend that no longer exists.
+      { source: '/analytics', destination: '/admin/analytics', permanent: false },
+    ]
+  },
   images: {
     domains: ['images.unsplash.com', 'logo.clearbit.com'], // For mock images
   },

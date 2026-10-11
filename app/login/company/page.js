@@ -104,7 +104,7 @@ function CompanyLoginInner() {
 
 export default function CompanyLoginPage() {
   return (
-    <Suspense>
+    <Suspense fallback={<div className="min-h-screen" aria-busy="true" />}>
       <CompanyLoginInner />
     </Suspense>
   )

@@ -23,7 +23,7 @@ export default function Footer() {
           {/* Brand / Socials */}
           <div className="flex flex-col items-center md:items-start gap-6">
             <span className="flex items-center gap-2.5">
-              <img src="/jobstream-icon.png" alt="Jobstream" className="w-9 h-9 object-contain" />
+              <img src="/jobstream-icon.png" alt="" className="w-9 h-9 object-contain" />
               <span className="text-xl font-black tracking-tighter text-slate-900">Jobstream</span>
             </span>
             <div className="flex space-x-6">

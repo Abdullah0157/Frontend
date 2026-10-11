@@ -3,17 +3,21 @@
 import React, { useRef, useEffect } from 'react'
 import { usePathname } from 'next/navigation'
 
-// Routes that are the "app" (not marketing) — the animated particle canvas must
-// NOT run here: a constant-repaint canvas behind the dashboard causes jank.
-const APP_ROUTES = /^\/(dashboard|admin|company|interview|assessment|skill-profile)(\/|$)/
+// Home page only. The canvas redraws every frame (an O(n²) line pass), which
+// cost phones about a second of main-thread work per page and sat behind forms
+// on login, sign-up and the job board. Off for visitors who ask their system
+// to reduce motion.
+const ANIMATED_ROUTES = new Set(['/'])
+const prefersReducedMotion = () =>
+  typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
 
 export default function ParticleBackground() {
   const canvasRef = useRef(null)
   const pathname = usePathname()
-  const isApp = APP_ROUTES.test(pathname || '')
+  const isApp = !ANIMATED_ROUTES.has(pathname || '')
 
   useEffect(() => {
-    if (isApp) return // no animation loop on app routes
+    if (isApp || prefersReducedMotion()) return
     const canvas = canvasRef.current
     if (!canvas) return
     const ctx = canvas.getContext('2d')
@@ -67,7 +71,8 @@ export default function ParticleBackground() {
     const init = () => {
       particles = []
       // Density tuned so the O(n²) connect() pass stays smooth at 60fps.
-      const numberOfParticles = Math.min(180, (canvas.width * canvas.height) / 11000)
+      // Fewer on small screens: the line pass grows with the square of the count.
+      const numberOfParticles = Math.min(canvas.width < 768 ? 50 : 140, (canvas.width * canvas.height) / 11000)
       for (let i = 0; i < numberOfParticles; i++) {
         particles.push(new Particle())
       }

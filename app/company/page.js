@@ -250,7 +250,7 @@ function CompanyDashboardInner() {
 
 export default function CompanyDashboard() {
   return (
-    <Suspense>
+    <Suspense fallback={<div className="min-h-screen" aria-busy="true" />}>
       <CompanyDashboardInner />
     </Suspense>
   )

@@ -80,7 +80,7 @@ export default function Header() {
         <div className="flex justify-between items-center h-24">
           <div className="flex-shrink-0 flex items-center">
             <Link href="/" className="flex items-center gap-2.5 group">
-              <img src="/jobstream-icon.png" alt="Jobstream" className="w-11 h-11 object-contain group-hover:scale-110 transition-transform duration-300" />
+              <img src="/jobstream-icon.png" alt="" className="w-11 h-11 object-contain group-hover:scale-110 transition-transform duration-300" />
               <span className="text-2xl font-black tracking-tighter text-slate-900">Jobstream</span>
             </Link>
           </div>
@@ -121,7 +121,13 @@ export default function Header() {
           </nav>
 
           <div className="md:hidden flex items-center text-slate-700">
-            <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="hover:text-indigo-600 focus:outline-none">
+            <button
+              type="button"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
+              aria-expanded={isMenuOpen}
+              className="hover:text-indigo-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded-lg"
+            >
               <svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 {isMenuOpen ? (
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />

@@ -149,7 +149,7 @@ function SignupInner() {
 
 export default function SignupPage() {
   return (
-    <Suspense>
+    <Suspense fallback={<div className="min-h-screen" aria-busy="true" />}>
       <SignupInner />
     </Suspense>
   )

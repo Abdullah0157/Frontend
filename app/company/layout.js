@@ -2,7 +2,7 @@ import { requireRole, ROLES } from '@/lib/roles'
 import CompanySidebar from '@/components/CompanySidebar'
 import WorkspaceTopbar from '@/components/WorkspaceTopbar'
 
-export const metadata = { title: 'Company Dashboard — JobStream' }
+export const metadata = { title: 'Company dashboard' }
 
 export default async function CompanyLayout({ children }) {
   // Only company-role users can access /company/*. Super admins are redirected

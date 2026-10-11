@@ -2,7 +2,7 @@ import { requireRole, ROLES } from '@/lib/roles'
 import AdminSidebar from './AdminSidebar'
 import WorkspaceTopbar from '@/components/WorkspaceTopbar'
 
-export const metadata = { title: 'Super Admin — JobStream' }
+export const metadata = { title: 'Admin' }
 
 export default async function AdminLayout({ children }) {
   const { user } = await requireRole(ROLES.SUPER_ADMIN)
