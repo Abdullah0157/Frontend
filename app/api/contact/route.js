@@ -12,11 +12,6 @@ export const dynamic = 'force-dynamic'
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/
 
 export async function POST(req) {
-  const limited = await limitOrNull(req, [
-    { bucket: 'contact', limit: 5, windowSec: 3600, message: 'You have sent a few messages already. We will be in touch soon.' },
-    { bucket: 'contact', limit: 300, windowSec: 86400, global: true, message: 'Please try again tomorrow, or reach us on LinkedIn.' },
-  ])
-  if (limited) return limited
   const body = await req.json().catch(() => ({}))
   if (body.website) return NextResponse.json({ ok: true }) // bot: pretend it worked
   const field = (k, max) => String(body[k] ?? '').trim().slice(0, max)
@@ -27,6 +22,13 @@ export async function POST(req) {
   const message = field('message', 3000)
   if (!name || !company || !message) return NextResponse.json({ error: 'Please fill in your name, company and message.' }, { status: 400 })
   if (!EMAIL.test(email)) return NextResponse.json({ error: 'Please enter a valid email address.' }, { status: 400 })
+  // Only messages that would be saved count towards the limits (a typo or a
+  // bot does not use up a real visitor's allowance).
+  const limited = await limitOrNull(req, [
+    { bucket: 'contact', limit: 5, windowSec: 3600, message: 'You have sent a few messages already. We will be in touch soon.' },
+    { bucket: 'contact', limit: 300, windowSec: 86400, global: true, message: 'Please try again tomorrow, or reach us on LinkedIn.' },
+  ])
+  if (limited) return limited
   try {
     await query(
       `INSERT INTO company_enquiries (name, company, email, phone, message) VALUES ($1, $2, $3, $4, $5)`,

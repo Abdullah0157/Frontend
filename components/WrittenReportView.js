@@ -135,6 +135,25 @@ export default function WrittenReportView({ data }) {
         </Card>
       )}
 
+      {(data.snapshots || []).length > 0 && data.sessionId && (
+        <Card title="Camera photos" right={<span className="text-xs text-slate-500">{data.snapshots.length} photos, one every 30 seconds</span>}>
+          <p className="text-xs text-slate-500 mb-4">Check that the same person took the whole test, alone. Photos are deleted after 90 days.</p>
+          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2">
+            {data.snapshots.map((p) => (
+              <a key={p.id} href={`/api/company/written-reports/${data.sessionId}/snapshots/${p.id}`} target="_blank" rel="noreferrer" className="block">
+                <img
+                  src={`/api/company/written-reports/${data.sessionId}/snapshots/${p.id}`}
+                  alt={`Camera photo at ${new Date(p.at).toLocaleTimeString()}`}
+                  loading="lazy"
+                  className="w-full aspect-[4/3] object-cover rounded-lg border border-slate-200 bg-slate-100"
+                />
+                <span className="block text-[11px] text-slate-500 mt-1">{new Date(p.at).toLocaleTimeString()}</span>
+              </a>
+            ))}
+          </div>
+        </Card>
+      )}
+
       {(data.speaking || []).length > 0 && (
         <Card title="Spoken answers">
           <div className="grid gap-4">

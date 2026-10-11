@@ -524,6 +524,84 @@ function useFullscreenGuard(active, record) {
   return { blocked, enter }
 }
 
+// Camera photos (owner's decision, Oct 2026): the camera must be on to start,
+// a small photo goes to the hiring team's report every 30 seconds while a
+// question is on screen, and if the camera stops the question is covered
+// until it is back (the time off is noted, like leaving full screen).
+const SNAPSHOT_MS = 30000
+
+function useCamera(session, active, itemId, record) {
+  const streamRef = useRef(null)
+  const videoRef = useRef(null)
+  const itemRef = useRef(itemId)
+  itemRef.current = itemId
+  const [on, setOn] = useState(false)
+  const [error, setError] = useState('')
+
+  // The one <video> element (the corner preview) is also the photo source.
+  const attach = useCallback((el) => {
+    videoRef.current = el
+    if (el && streamRef.current) { el.srcObject = streamRef.current; el.play?.().catch(() => {}) }
+  }, [])
+
+  // Must be called from a click: browsers ask for permission then.
+  const turnOn = useCallback(async () => {
+    setError('')
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: { width: { ideal: 320 }, height: { ideal: 240 }, facingMode: 'user' }, audio: false })
+      streamRef.current?.getTracks().forEach((t) => t.stop())
+      streamRef.current = stream
+      stream.getVideoTracks()[0]?.addEventListener('ended', () => setOn(false))
+      if (videoRef.current) { videoRef.current.srcObject = stream; videoRef.current.play?.().catch(() => {}) }
+      setOn(true)
+    } catch (e) {
+      setError(e?.name === 'NotAllowedError'
+        ? 'Camera access was blocked. Allow the camera for this site (the camera icon in the address bar), then try again.'
+        : 'No camera was found. Connect a camera and try again.')
+    }
+  }, [])
+
+  const stop = useCallback(() => {
+    streamRef.current?.getTracks().forEach((t) => t.stop())
+    streamRef.current = null
+    setOn(false)
+  }, [])
+  useEffect(() => () => streamRef.current?.getTracks().forEach((t) => t.stop()), [])
+
+  // Note the camera going off and coming back while a question is showing.
+  const wasOn = useRef(false)
+  const offAt = useRef(null)
+  useEffect(() => {
+    if (active && wasOn.current && !on) { offAt.current = Date.now(); record({ kind: 'camera_off' }) }
+    if (active && !wasOn.current && on && offAt.current) { record({ kind: 'camera_back', ms: Date.now() - offAt.current }); offAt.current = null }
+    wasOn.current = on
+  }, [on, active, record])
+
+  // A photo shortly after each section starts, then every 30 seconds.
+  useEffect(() => {
+    if (!active || !on || !session) return
+    const snap = () => {
+      const v = videoRef.current
+      if (!v || !v.videoWidth) return
+      const c = document.createElement('canvas')
+      c.width = 320
+      c.height = Math.round((320 * v.videoHeight) / v.videoWidth) || 240
+      c.getContext('2d').drawImage(v, 0, 0, c.width, c.height)
+      const image = c.toDataURL('image/jpeg', 0.6).split(',')[1]
+      fetch(`/api/assessment/${session.id}/snapshot`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json', ...(session.token ? { 'x-assessment-token': session.token } : {}) },
+        body: JSON.stringify({ image, itemId: itemRef.current }),
+      }).catch(() => {})
+    }
+    const first = setTimeout(snap, 2000)
+    const every = setInterval(snap, SNAPSHOT_MS)
+    return () => { clearTimeout(first); clearInterval(every) }
+  }, [active, on, session])
+
+  return { on, error, turnOn, attach, stop, blocked: active && !on }
+}
+
 export default function WrittenAssessment({ track = 'backend', level = null, jobId = null, allowedLanguages = null, options: testOptions = {}, returnTo = null }) {
   const [options, setOptions] = useState(null)
   const [chosenLevel, setChosenLevel] = useState(level || 'L3')
@@ -633,7 +711,8 @@ export default function WrittenAssessment({ track = 'backend', level = null, job
   useEffect(() => () => clearTimeout(noticeTimer.current), [])
   const [flushIntegrity, typedChars, recordIntegrity] = useIntegrity(session, state?.status === 'in_progress' ? state.item?.id : null, showBlocked)
   const fullscreen = useFullscreenGuard(state?.status === 'in_progress' && Boolean(state?.item), recordIntegrity)
-  useEffect(() => { if (state?.status === 'completed') leaveFullscreen() }, [state?.status])
+  const camera = useCamera(session, state?.status === 'in_progress' && Boolean(state?.item), state?.item?.id, recordIntegrity)
+  useEffect(() => { if (state?.status === 'completed') { leaveFullscreen(); camera.stop() } }, [state?.status]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const submit = useCallback(async ({ skip = false } = {}) => {
     const item = state?.item
@@ -712,6 +791,27 @@ export default function WrittenAssessment({ track = 'backend', level = null, job
         </div>
 
         {error && <div className="mb-6 p-4 rounded-2xl border border-amber-200 bg-amber-50 text-amber-800 text-sm">{error}</div>}
+        {camera.blocked && (
+          <div className="fixed inset-0 z-[61] bg-white flex items-center justify-center p-6">
+            <div className="max-w-md text-center">
+              <h2 className="text-2xl md:text-3xl font-black text-slate-900 mb-4">Turn your camera on</h2>
+              <p className="text-slate-600 mb-8">
+                The test needs your camera. The question is hidden until it is back on, and the timer keeps running.
+                Time with the camera off is noted for the hiring team.
+              </p>
+              {camera.error && <p className="text-red-600 text-sm mb-6">{camera.error}</p>}
+              <button type="button" onClick={camera.turnOn} className={primary}>
+                <div className="btn-shimmer"></div><span>Turn camera on</span>
+              </button>
+            </div>
+          </div>
+        )}
+        {camera.on && state?.status !== 'completed' && (
+          <figure className="fixed bottom-6 left-6 z-[62] w-32 md:w-40 rounded-2xl overflow-hidden border-2 border-white shadow-2xl bg-slate-900">
+            <video ref={camera.attach} autoPlay muted playsInline className="w-full aspect-[4/3] object-cover -scale-x-100" aria-label="Your camera" />
+            <figcaption className="sr-only">Your camera is on; a photo is taken every 30 seconds.</figcaption>
+          </figure>
+        )}
         {fullscreen.blocked && (
           <div className="fixed inset-0 z-[60] bg-white flex items-center justify-center p-6">
             <div className="max-w-md text-center">
@@ -752,10 +852,12 @@ export default function WrittenAssessment({ track = 'backend', level = null, job
                 </p>
               )}
               <p className="text-slate-500 text-xs leading-relaxed">
-                Please work on your own. The test runs in full screen. Copying the questions and pasting text from
-                outside the test are turned off (you can still copy and paste within your own answer). We note when
-                you leave full screen or this page, or try to paste, and share these notes with the hiring team. They
-                are not an automatic fail; the team may simply ask you about them.
+                Please work on your own. The test runs in full screen with your camera on: a photo is taken every
+                30 seconds and shared with the hiring team, and photos are deleted after 90 days. Copying the
+                questions and pasting text from outside the test are turned off (you can still copy and paste within
+                your own answer). We note when you leave full screen or this page, turn the camera off, or try to
+                paste, and share these notes with the hiring team. They are not an automatic fail; the team may
+                simply ask you about them.
               </p>
               <div className="grid sm:grid-cols-2 gap-4">
                 {!level && (
@@ -775,7 +877,19 @@ export default function WrittenAssessment({ track = 'backend', level = null, job
                   </label>
                 )}
               </div>
-              <button type="button" onClick={start} disabled={busy || !options || (usesCode && !language)} className={primary}>
+              <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 flex flex-wrap items-center gap-3">
+                <span className={`inline-block w-2.5 h-2.5 rounded-full ${camera.on ? 'bg-emerald-500' : 'bg-slate-400'}`} aria-hidden="true" />
+                <span className="text-sm text-slate-700 flex-1 min-w-[180px]">
+                  {camera.on ? 'Camera is on. You can start.' : 'Turn on your camera to start the test.'}
+                </span>
+                {!camera.on && (
+                  <button type="button" onClick={camera.turnOn} className="text-sm font-bold px-4 py-2 rounded-xl bg-slate-900 text-white hover:bg-slate-800">
+                    Turn on camera
+                  </button>
+                )}
+                {camera.error && <p className="w-full text-sm text-red-600">{camera.error}</p>}
+              </div>
+              <button type="button" onClick={start} disabled={busy || !options || (usesCode && !language) || !camera.on} className={primary}>
                 <div className="btn-shimmer"></div><span>{busy ? 'Preparing…' : 'Start assessment'}</span>
               </button>
             </div>

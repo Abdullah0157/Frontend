@@ -18,7 +18,8 @@ const sections = [
       'Your profile and resume: the text we read from the PDF you upload.',
       'Test and interview answers: what you write, code or choose, how long each answer took, and interview transcripts.',
       'Voice recordings from the English test, so the company can listen to them.',
-      'Test integrity notes: for example leaving full screen or the page, or trying to paste text. We note these; we do not record your screen or camera during written tests.',
+      'Camera photos during written tests: a small photo every 30 seconds, so the company can check who took the test. We do not record video or your screen during written tests.',
+      'Test integrity notes: for example leaving full screen or the page, turning the camera off, or trying to paste text.',
       'For companies: company details and the jobs you post.',
     ],
   },
@@ -34,14 +35,14 @@ const sections = [
   {
     title: 'Who can see it',
     body: [
-      'When you apply for a job, the company that posted it sees your report, answers, recordings and integrity notes for that job. We do not sell your data or use it for advertising.',
+      'When you apply for a job, the company that posted it sees your report, answers, recordings, camera photos and integrity notes for that job. We do not sell your data or use it for advertising.',
       'Service providers process data for us under contract: our sign-in and database provider (Supabase), our hosting provider, and AI services that mark answers and turn speech into text (Google Gemini and Groq, or models on our own server). They may not use it for anything else.',
     ],
   },
   {
     title: 'How long we keep it',
     list: [
-      'Voice recordings are deleted automatically after 90 days.',
+      'Voice recordings and camera photos are deleted automatically after 90 days.',
       'Other application data is kept while your account is open and for [RETENTION PERIOD] after, so companies can complete their hiring.',
       'You can ask us to delete your account and data at any time.',
     ],

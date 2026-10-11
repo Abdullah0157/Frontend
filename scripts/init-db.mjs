@@ -450,6 +450,18 @@ ALTER TABLE interview_jobs ADD COLUMN IF NOT EXISTS pay_min integer;
 ALTER TABLE interview_jobs ADD COLUMN IF NOT EXISTS pay_max integer;
 ALTER TABLE interview_jobs ADD COLUMN IF NOT EXISTS pay_currency text DEFAULT 'USD';
 
+-- Camera photos taken every 30 seconds during a written test, for the hiring
+-- company's report. Deleted after 90 days (/api/cron/purge).
+CREATE TABLE IF NOT EXISTS assessment_snapshots (
+  id          uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  session_id  uuid NOT NULL REFERENCES assessment_sessions(id) ON DELETE CASCADE,
+  item_id     uuid,
+  bytes       bytea NOT NULL,
+  created_at  timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_snapshots_session ON assessment_snapshots(session_id, created_at);
+CREATE INDEX IF NOT EXISTS idx_snapshots_created ON assessment_snapshots(created_at);
+
 -- "Contact us" messages from companies (companies are invite-only).
 CREATE TABLE IF NOT EXISTS company_enquiries (
   id          bigserial PRIMARY KEY,
