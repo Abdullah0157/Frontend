@@ -3,6 +3,7 @@ export const dynamic = 'force-dynamic'
 import { redirect } from 'next/navigation'
 import { getSupabaseServer } from '@/lib/supabase/server'
 import { query } from '@/lib/db'
+import { rankJobs } from '@/lib/job-match'
 import DashboardJobsBoard from './DashboardJobsBoard'
 
 // Candidate "Apply" workspace — lives INSIDE the dashboard (separate from the
@@ -14,7 +15,7 @@ export default async function DashboardJobsPage() {
   if (!user) redirect('/login?next=/dashboard/jobs')
 
   const [profileRes, jobsRes, doneRes] = await Promise.all([
-    query('SELECT (resume_text IS NOT NULL) AS has_resume FROM user_profiles WHERE user_id = $1 LIMIT 1', [user.id]).catch(() => null),
+    query('SELECT resume_text FROM user_profiles WHERE user_id = $1 LIMIT 1', [user.id]).catch(() => null),
     // to_regclass guard: the pay columns are added by the marketplace seeder, so
     // select them only if they exist — otherwise a fresh database 500s here.
     query(`SELECT id, title, role, description, slug, created_at, company,
@@ -24,10 +25,16 @@ export default async function DashboardJobsPage() {
     query('SELECT DISTINCT job_id FROM interview_candidates WHERE user_id = $1', [user.id]).catch(() => null),
   ])
 
-  const hasResume = !!profileRes?.rows?.[0]?.has_resume
+  const resumeText = profileRes?.rows?.[0]?.resume_text || null
+  const hasResume = !!resumeText
   // Serialize created_at to a plain string for the client component.
-  const jobs = (jobsRes?.rows || []).map((j) => ({
+  // With a resume, rank by how well each job matches it (same as the public
+  // board); the board keeps that order under "Best match".
+  const rows = jobsRes?.rows || []
+  const ranked = resumeText ? rankJobs(rows, resumeText) : rows
+  const jobs = ranked.map((j) => ({
     id: j.id, title: j.title, role: j.role, slug: j.slug, company: j.company || null,
+    match_pct: j.match_pct ?? null,
     pay_type: j.pay_type || null, pay_min: j.pay_min ?? null, pay_max: j.pay_max ?? null,
     created_at: j.created_at ? new Date(j.created_at).toISOString() : null,
   }))

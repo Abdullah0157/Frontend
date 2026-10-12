@@ -8,9 +8,9 @@ const PER_PAGE = 12
 
 
 export default function DashboardJobsBoard({ jobs = [], hasResume = false, doneJobIds = [] }) {
-  const [tab, setTab] = useState('jobs')          // 'jobs' | 'assessments'
   const [q, setQ] = useState('')
-  const [sort, setSort] = useState('all')         // 'all' | 'newest'
+  // With a resume the jobs arrive ranked by match; 'newest' re-sorts by date.
+  const [sort, setSort] = useState(hasResume ? 'match' : 'all')   // 'match' | 'all' | 'newest'
   const [domain, setDomain] = useState('')        // role filter
   const [page, setPage] = useState(1)
 
@@ -43,25 +43,15 @@ export default function DashboardJobsBoard({ jobs = [], hasResume = false, doneJ
 
   return (
     <div className="max-w-6xl mx-auto">
-      {/* Header + Jobs/Assessments toggle */}
-      <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
+      {/* Header. Each job's tests and interview are steps inside its application. */}
+      <div className="mb-6">
         <h1 className="text-[28px] md:text-3xl font-semibold tracking-tight text-slate-900">Apply to Jobs</h1>
-        <div className="inline-flex items-center gap-1 p-1 rounded-full bg-slate-100">
-          {[['jobs', 'Jobs'], ['assessments', 'Assessments']].map(([key, label]) => (
-            <button
-              key={key}
-              onClick={() => setTab(key)}
-              className={`px-4 py-1.5 rounded-full text-sm font-medium transition ${
-                tab === key ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-800'
-              }`}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
+        <p className="mt-1 text-sm text-slate-500">
+          {hasResume ? 'Best matches for your resume come first. ' : ''}Open a job to see its steps: a skills test and a short AI interview.
+        </p>
       </div>
 
-      {!hasResume && tab === 'jobs' && (
+      {!hasResume && (
         <Link
           href="/dashboard/profile?tab=resume"
           className="flex items-center justify-between gap-4 px-5 py-3.5 mb-6 rounded-2xl border border-amber-200 bg-amber-50/70 hover:bg-amber-50 transition"
@@ -71,13 +61,7 @@ export default function DashboardJobsBoard({ jobs = [], hasResume = false, doneJ
         </Link>
       )}
 
-      {tab === 'assessments' ? (
-        <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50/50 px-6 py-20 text-center">
-          <p className="text-slate-500">Skill assessments are coming soon.</p>
-          <p className="text-slate-500 text-sm mt-1">You'll be able to take role-based assessments right here.</p>
-        </div>
-      ) : (
-        <>
+      <>
           {/* Search + filters */}
           <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-6">
             <div className="relative flex-1">
@@ -91,12 +75,12 @@ export default function DashboardJobsBoard({ jobs = [], hasResume = false, doneJ
             </div>
             <div className="flex items-center gap-2 flex-wrap">
               <div className="inline-flex items-center gap-1 p-1 rounded-full bg-slate-100">
-                {[['all', 'All'], ['newest', 'Newest']].map(([key, label]) => (
+                {(hasResume ? [['match', 'Best match'], ['newest', 'Newest']] : [['all', 'All'], ['newest', 'Newest']]).map(([key, label]) => (
                   <button
                     key={key}
                     onClick={() => reset(setSort)(key)}
                     className={`px-3.5 py-1.5 rounded-full text-sm font-medium transition ${
-                      sort === key ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-800'
+                      sort === key ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600 hover:text-slate-900'
                     }`}
                   >
                     {label}
@@ -126,7 +110,7 @@ export default function DashboardJobsBoard({ jobs = [], hasResume = false, doneJ
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
               {pageJobs.map((job) => {
                 const interviewed = doneSet.has(job.id)
-                const href = interviewed || hasResume ? `/interview/${job.slug}` : '/dashboard/profile?tab=resume'
+                const href = interviewed || hasResume ? `/dashboard/apply/${job.slug}` : '/dashboard/profile?tab=resume'
                 return (
                   <Link
                     key={job.id}
@@ -190,8 +174,7 @@ export default function DashboardJobsBoard({ jobs = [], hasResume = false, doneJ
               </PageBtn>
             </div>
           )}
-        </>
-      )}
+      </>
     </div>
   )
 }

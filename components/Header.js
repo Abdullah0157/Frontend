@@ -73,7 +73,8 @@ export default function Header() {
     { href: '/', label: 'Home', show: true },
     { href: '/about', label: 'About', show: true },
     { href: '/blog', label: 'Blog', show: true },
-    { href: '/jobs', label: 'Find Jobs', show: isGuest || isCandidate },
+    // Logged-in candidates find jobs inside their dashboard ("My dashboard").
+    { href: '/jobs', label: 'Find Jobs', show: isGuest },
     { href: '/company', label: 'Dashboard', show: isCompany },
     { href: '/company/candidates', label: 'Candidates', show: isCompany },
   ]
@@ -104,8 +105,8 @@ export default function Header() {
                   </Link>
                 )}
                 {isCandidate && (
-                  <Link href="/dashboard/profile" className="text-xs font-black uppercase tracking-[0.3em] text-slate-700 hover:text-indigo-600">
-                    Profile
+                  <Link href="/dashboard" className="text-xs font-black uppercase tracking-widest px-4 py-2 rounded-full bg-indigo-600 text-white hover:bg-indigo-500">
+                    My dashboard
                   </Link>
                 )}
                 <button onClick={logout} className="text-xs font-black uppercase tracking-widest px-4 py-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300">
@@ -158,7 +159,7 @@ export default function Header() {
                   <Link href="/admin" className="block bg-red-600 hover:bg-red-500 text-white font-black text-xs uppercase tracking-[0.3em] py-3 px-4 rounded-full text-center">Admin Dashboard</Link>
                 )}
                 {isCandidate && (
-                  <Link href="/dashboard/profile" className="block text-slate-700 font-black text-xs uppercase tracking-[0.3em] py-3 border-b border-slate-200">Profile</Link>
+                  <Link href="/dashboard" className="block bg-indigo-600 hover:bg-indigo-500 text-white font-black text-xs uppercase tracking-[0.3em] py-3 px-4 rounded-full text-center">My dashboard</Link>
                 )}
                 <button onClick={logout} className="block w-full text-left text-indigo-600 font-black text-xs uppercase tracking-[0.3em] py-3">Log out</button>
               </>

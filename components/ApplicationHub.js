@@ -6,8 +6,9 @@ import Link from 'next/link'
 // Candidate application hub — Mercor-style. Shows the job, an application
 // progress bar, and a checklist of steps (resume, expert interview, skills
 // assessments, AI interview) each with a completion state. Account-level steps
-// (resume, expert interview) are reused across every role.
-export default function ApplicationHub({ job, steps, doneCount, allComplete, application }) {
+// (resume, expert interview) are reused across every role. inDashboard: shown
+// inside the candidate dashboard (its own menu and spacing, links stay inside).
+export default function ApplicationHub({ job, steps, doneCount, allComplete, application, inDashboard = false }) {
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
   const [submitted, setSubmitted] = useState(application?.status === 'submitted')
@@ -15,6 +16,7 @@ export default function ApplicationHub({ job, steps, doneCount, allComplete, app
   const total = steps.length
   const nextStep = steps.find((st) => !st.done)
   const pct = total ? Math.round((doneCount / total) * 100) : 0
+  const jobsHref = inDashboard ? '/dashboard/jobs' : '/jobs'
 
   async function submitApplication() {
     setError('')
@@ -36,8 +38,11 @@ export default function ApplicationHub({ job, steps, doneCount, allComplete, app
   }
 
   return (
-    <div className="min-h-screen pt-28 pb-24 px-4">
-      <div className="container mx-auto max-w-2xl">
+    <div className={inDashboard ? 'pb-10' : 'min-h-screen pt-28 pb-24 px-4'}>
+      <div className={inDashboard ? 'max-w-2xl' : 'container mx-auto max-w-2xl'}>
+        {inDashboard && (
+          <Link href={jobsHref} className="mb-4 inline-block text-sm font-medium text-indigo-600 hover:text-indigo-700">← All jobs</Link>
+        )}
         {/* Job header */}
         <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 mb-2">{job.title}</h1>
         <div className="flex items-center gap-2 text-sm text-slate-500 mb-8 flex-wrap">
@@ -62,7 +67,7 @@ export default function ApplicationHub({ job, steps, doneCount, allComplete, app
             <p className="text-slate-600 text-sm max-w-sm mx-auto">
               Your steps have been sent to the hiring team. You'll hear back if there's a match.
             </p>
-            <Link href="/jobs" className="inline-block mt-6 text-sm font-semibold px-6 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition">
+            <Link href={jobsHref} className="inline-block mt-6 text-sm font-semibold px-6 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition">
               Browse more jobs
             </Link>
           </div>
@@ -94,13 +99,13 @@ export default function ApplicationHub({ job, steps, doneCount, allComplete, app
                     <div className="flex items-center gap-2 flex-wrap">
                       <span className="font-semibold text-slate-900">{s.label}</span>
                       {s.core && (
-                        <span className="text-[9px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded bg-slate-100 text-slate-500 border border-slate-200">Core</span>
+                        <span className="text-[9px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded bg-slate-100 text-slate-600 border border-slate-200">Core</span>
                       )}
                       {s.reused && (
                         <span className="text-[9px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded bg-indigo-50 text-indigo-600 border border-indigo-100">Reused</span>
                       )}
                     </div>
-                    <p className={`text-sm mt-0.5 ${s.done ? 'text-slate-400' : 'text-slate-500'}`}>
+                    <p className="text-sm mt-0.5 text-slate-500">
                       {s.done ? s.statusDone : s.statusTodo}
                     </p>
                   </div>
@@ -120,7 +125,7 @@ export default function ApplicationHub({ job, steps, doneCount, allComplete, app
 
             <p className="text-xs text-slate-500 mt-6 flex items-start gap-2">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="flex-shrink-0 mt-0.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
-              <span>Steps marked <span className="font-semibold text-indigo-500">Reused</span> are shared across every role — do them once and you never repeat them.</span>
+              <span>Steps marked <span className="font-semibold text-indigo-600">Reused</span> are shared across every role — do them once and you never repeat them.</span>
             </p>
 
             {/* Main action: the next unfinished step, then submit once all are done.
