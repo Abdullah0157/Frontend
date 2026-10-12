@@ -128,6 +128,9 @@ CREATE TABLE IF NOT EXISTS interview_sessions (
 );
 
 CREATE INDEX IF NOT EXISTS idx_sessions_job_id ON interview_sessions(job_id);
+-- Whose interview it is: the server keeps the conversation and only its owner
+-- may continue it (lib/interview-record.js).
+ALTER TABLE interview_sessions ADD COLUMN IF NOT EXISTS user_id uuid;
 
 -- SaaS usage tracking per company per month
 CREATE TABLE IF NOT EXISTS company_usage (

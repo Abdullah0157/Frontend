@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { getSupabaseServer } from '@/lib/supabase/server'
 import { query } from '@/lib/db'
+import { candidateView } from '@/lib/interview-record'
 import InterviewList from './InterviewList'
 
 export default async function DashboardInterviewsPage() {
@@ -20,7 +21,8 @@ export default async function DashboardInterviewsPage() {
      ORDER BY ic.created_at DESC`,
     [user.id]
   ).catch(() => null)
-  const interviews = res?.rows || []
+  // Only the candidate's own view leaves the server, never the full report.
+  const interviews = (res?.rows || []).map(({ report, ...row }) => ({ ...row, view: candidateView(report) }))
 
   return (
     <div className="max-w-6xl mx-auto">

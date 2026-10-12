@@ -3,6 +3,7 @@ import { query } from '@/lib/db'
 import EieProfile from '@/components/EieProfile'
 import { jobSteps, verdictFor, sessionTrack, trackLabel, bandLabel } from '@/lib/job-verdict'
 import { LEVELS, LANGUAGES } from '@/lib/assessment-blueprint'
+import { evidenceText } from '@/lib/report-text'
 
 export const dynamic = 'force-dynamic'
 export const metadata = { title: 'Candidate — JobStream Admin' }
@@ -485,9 +486,9 @@ export default async function AdminCandidateDetail({ params }) {
                       <div key={i} className="rounded-lg bg-slate-50 px-3 py-2">
                         <div className="flex justify-between gap-2">
                           <p className="text-[11px] font-medium text-slate-700">{r.skill}</p>
-                          <p className="text-[11px] font-semibold text-slate-900">{r.score}/10</p>
+                          <p className="text-[11px] font-semibold text-slate-900">{r.score == null ? 'Not assessed' : `${r.score}/10`}</p>
                         </div>
-                        {r.evidence && <p className="text-[11px] text-slate-500 mt-1 line-clamp-2">{r.evidence}</p>}
+                        {evidenceText(r.evidence) && <p className="text-[11px] text-slate-500 mt-1 line-clamp-2">{evidenceText(r.evidence)}</p>}
                       </div>
                     ))}
                   </div>

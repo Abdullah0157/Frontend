@@ -214,34 +214,16 @@ export default function DomainExpertExperience({ userProfile = null }) {
           resumeText: detected.resumeText,
           domainExpertise: detected.domain,
           sessionId: sessionIdRef.current,
+          evasions: evasionsRef.current,
         }),
       })
       if (!res.ok) throw new Error((await res.json().catch(() => ({}))).error || 'Report failed')
-      const { report: r } = await res.json()
+      // The server writes the report and saves it in the same step, so a
+      // finished interview cannot be lost or changed on the way.
+      const { report: r, saved } = await res.json()
       setReport(r)
+      setSaveState(saved ? 'saved' : 'failed')
       setPhase('report')
-
-      // Persist the assessment so it shows in the dashboard / My Interviews and
-      // admins can audit it. This must not block the candidate from seeing their
-      // report, but it also must not fail SILENTLY — a lost save means a finished
-      // interview vanishes. So: retry, then tell the user if it still failed.
-      if (r) {
-        const payload = JSON.stringify({
-          domain: detected.domain, transcript: finalMessages, report: r, evasions: evasionsRef.current,
-        })
-        ;(async () => {
-          for (let attempt = 1; attempt <= 3; attempt++) {
-            try {
-              const saveRes = await fetch('/api/interview/save-expert-report', {
-                method: 'POST', headers: { 'Content-Type': 'application/json' }, body: payload,
-              })
-              if (saveRes.ok) { setSaveState('saved'); return }
-            } catch { /* network blip — retry below */ }
-            if (attempt < 3) await new Promise(res => setTimeout(res, attempt * 1500))
-          }
-          setSaveState('failed')
-        })()
-      }
     } catch (err) {
       setError(friendlyError(err))
       setPhase('report')

@@ -8,6 +8,8 @@ import { query } from '@/lib/db'
 import { finalizeReport, anchorGuideText } from '@/lib/expert-rubric'
 import { scoreTranscript } from '@/lib/eie-rate'
 import { buildStrategy, planFromProfile, targetDirective } from '@/lib/interview-planner'
+import { InterviewError, openSession, conversation, recordQuestion, finishSession, jobInterviewDone, candidateView } from '@/lib/interview-record'
+import { saveJobInterview, saveExpertInterview } from '@/lib/interview-save'
 
 // ─── Iris persona — used as systemInstruction ─────────────────────────────────
 const irisPersona = (role, jobDescription, resumeText) => `You are Iris, a senior human interviewer with twenty years of experience conducting interviews across engineering, product, sales, and leadership roles. You are conducting a real live interview right now for: ${role}.
@@ -633,6 +635,25 @@ function validateReport(report, messages) {
   return v
 }
 
+// ─── Write a report ───────────────────────────────────────────────────────────
+// Ask the model for the JSON report, a second time if the first answer cannot
+// be read. Returns { report }, { error, status } or { report: null, text }.
+async function writeReport(body) {
+  let text = ''
+  for (let attempt = 0; attempt < 2; attempt++) {
+    const result = localLLMEnabled() ? await callOllama(body, { json: true }) : await callGemini(body)
+    if (!result.ok) return { error: result.data?.error?.message || 'AI error', status: result.status }
+    text = textFrom(result.data)
+    try { return { report: JSON.parse(stripJsonFences(text)) } } catch {}
+  }
+  return { report: null, text }
+}
+
+// A saved interview never sends unreadable report text to the browser: it may
+// hold the score and the hiring recommendation. The interview stays open, so
+// the candidate can try again.
+const REPORT_FAILED = { error: 'Your interview report could not be written just now. Please try again.' }
+
 // ─── Build clean conversation history for Gemini ─────────────────────────────
 function buildContents(messages) {
   if (!messages.length) {
@@ -656,7 +677,7 @@ export async function POST(req) {
     const {
       action,
       candidate,
-      messages = [],
+      messages: sentMessages = [],
       totalQuestions = 5,
       jobId,
       resumeText: resumeFromBody,
@@ -668,6 +689,7 @@ export async function POST(req) {
       focusAreas = [],             // domain_expert: resume-derived topics to steer questions
       beliefTarget = null,         // domain_expert: DEIE next-target (from /plan/next) to steer the question
       clientBelief = false,        // domain_expert: client runs the belief loop → don't re-score server-side
+      evasions = 0,                // domain_expert: unresolved dodges, for the interview-quality score
     } = await req.json()
 
     if (!['question', 'report'].includes(action)) {
@@ -677,14 +699,31 @@ export async function POST(req) {
     let role = candidate?.role || 'the role'
     let jobDescription = ''
     if (jobId) {
+      if (!/^[0-9a-f-]{36}$/i.test(String(jobId))) return NextResponse.json({ error: 'Job not found' }, { status: 404 })
       const r = await query(`SELECT role, description FROM interview_jobs WHERE id = $1`, [jobId])
-      if (r.rowCount > 0) {
-        role = r.rows[0].role
-        jobDescription = r.rows[0].description
-      }
+      if (r.rowCount === 0) return NextResponse.json({ error: 'Job not found' }, { status: 404 })
+      role = r.rows[0].role
+      jobDescription = r.rows[0].description
     }
     const name = candidate?.name || ''
-    const resumeText = resumeFromBody || candidate?.resumeText || ''
+
+    // Job interviews (Iris) and expert interviews (Maya) are saved, so their
+    // conversation comes from the server's own record and the resume from the
+    // candidate's profile, never from the browser. A practice interview (no
+    // job) is neither recorded nor saved.
+    const recorded = Boolean(jobId) || assessmentType === 'domain_expert'
+    let session = null
+    let messages = sentMessages
+    let resumeText = resumeFromBody || candidate?.resumeText || ''
+    if (recorded) {
+      if (jobId && await jobInterviewDone(jobId, caller.id)) {
+        throw new InterviewError('You have already done the AI interview for this job.', 409)
+      }
+      session = await openSession({ sessionId, userId: caller.id, jobId: jobId || null })
+      messages = conversation(session.messages, sentMessages)
+      const { rows: prof } = await query(`SELECT resume_text FROM user_profiles WHERE user_id = $1`, [caller.id])
+      resumeText = prof[0]?.resume_text || ''
+    }
 
     // ── Domain Expert report ──────────────────────────────────────────────────
     if (action === 'report' && assessmentType === 'domain_expert') {
@@ -705,23 +744,18 @@ export async function POST(req) {
         },
       }
       // Local free model (opt-in) vs Groq/Gemini. Local forces valid-JSON output.
-      const result = localLLMEnabled()
-        ? await callOllama(reportBody, { json: true })
-        : await callGemini(reportBody)
-
-      if (!result.ok) {
-        return NextResponse.json({ error: result.data?.error?.message || 'AI error' }, { status: result.status })
-      }
-      const text = textFrom(result.data)
-      try {
-        // Deterministic scoring: the model provides the 5 dimensions + confidence;
-        // finalizeReport computes the overall score/level from a fixed weighted
-        // formula so the same answers always yield the same number (no drift).
-        const report = finalizeReport(JSON.parse(stripJsonFences(text)))
-        return NextResponse.json({ report })
-      } catch {
-        return NextResponse.json({ report: null, raw: text }, { status: 200 })
-      }
+      const out = await writeReport(reportBody)
+      if (out.error) return NextResponse.json({ error: out.error }, { status: out.status })
+      if (!out.report) return NextResponse.json(REPORT_FAILED, { status: 502 })
+      // Deterministic scoring: the model provides the 5 dimensions + confidence;
+      // finalizeReport (in saveExpertInterview) computes the overall score/level
+      // from a fixed weighted formula, so the same answers always give the same number.
+      const { report } = await saveExpertInterview({
+        userId: caller.id, domain: domainExpertise || role, transcript: messages, report: out.report,
+        evasions: Math.max(0, Math.min(50, Math.round(Number(evasions) || 0))),
+      })
+      await finishSession(session.id, messages)
+      return NextResponse.json({ report, saved: true })
     }
 
     // ── Report ────────────────────────────────────────────────────────────────
@@ -745,34 +779,34 @@ export async function POST(req) {
           thinkingConfig: { thinkingBudget: 0 },
         },
       }
-      const result = localLLMEnabled()
-        ? await callOllama(irisReportBody, { json: true })
-        : await callGemini(irisReportBody)
-
-      if (!result.ok) {
-        return NextResponse.json(
-          { error: result.data?.error?.message || 'AI error' },
-          { status: result.status }
-        )
+      const out = await writeReport(irisReportBody)
+      if (out.error) return NextResponse.json({ error: out.error }, { status: out.status })
+      if (!out.report) {
+        if (recorded) return NextResponse.json(REPORT_FAILED, { status: 502 })
+        return NextResponse.json({ report: null, raw: out.text }, { status: 200 })
       }
-      const text = textFrom(result.data)
-      try {
-        const report = JSON.parse(stripJsonFences(text))
-        // Post-process: verify Gemini's citations against the actual transcript.
-        // Attaches a validation block; does NOT reject the report — recruiters
-        // see the evidence quality and adjust their trust accordingly.
-        report.validation = validateReport(report, messages)
-        report.framework_version = null // TODO: link to competency framework once shipped
-        if (sessionId) {
-          query(
-            `UPDATE interview_sessions SET status = 'completed', completed_at = now(), updated_at = now() WHERE id = $1`,
-            [sessionId]
-          ).catch(() => {})
-        }
-        return NextResponse.json({ report })
-      } catch {
-        return NextResponse.json({ report: null, raw: text }, { status: 200 })
+      const report = out.report
+      // Post-process: verify Gemini's citations against the actual transcript.
+      // Attaches a validation block; does NOT reject the report — recruiters
+      // see the evidence quality and adjust their trust accordingly.
+      report.validation = validateReport(report, messages)
+      report.framework_version = null // TODO: link to competency framework once shipped
+      if (jobId) {
+        // Saved here, by the server; the candidate gets only their own view.
+        const { rows: who } = await query(`SELECT full_name FROM user_profiles WHERE user_id = $1`, [caller.id])
+        await saveJobInterview({
+          job: { id: jobId, role, description: jobDescription },
+          userId: caller.id,
+          name: who[0]?.full_name || name || caller.email?.split('@')[0] || 'Candidate',
+          email: caller.email,
+          transcript: messages,
+          report,
+          resumeText,
+        })
+        await finishSession(session.id, messages)
+        return NextResponse.json({ report: candidateView(report), saved: true })
       }
+      return NextResponse.json({ report })
     }
 
     // ── Domain Expert question (streaming) ───────────────────────────────────
@@ -836,7 +870,9 @@ export async function POST(req) {
         // Live turn — cap rate-limit backoff so a slow provider can't freeze it.
         const result = await callGemini(geminiBody, { maxRateLimitWaitMs: 2500 })
         if (!result.ok) return NextResponse.json({ error: result.data?.error?.message || 'AI error' }, { status: result.status })
-        return NextResponse.json({ question: textFrom(result.data) })
+        const question = textFrom(result.data)
+        if (session && question) await recordQuestion(session.id, messages, question)
+        return NextResponse.json({ question })
       }
 
       const encoder = new TextEncoder()
@@ -864,11 +900,8 @@ export async function POST(req) {
                 } catch {}
               }
             }
+            if (session && fullQuestion) await recordQuestion(session.id, messages, fullQuestion).catch(() => {})
             controller.close()
-            if (sessionId && fullQuestion) {
-              const updatedMsgs = [...messages, { role: 'assistant', content: fullQuestion.trim() }]
-              query(`UPDATE interview_sessions SET messages = $1::jsonb, updated_at = now() WHERE id = $2`, [JSON.stringify(updatedMsgs), sessionId]).catch(() => {})
-            }
           } catch (e) { controller.error(e) }
         },
       })
@@ -884,17 +917,6 @@ export async function POST(req) {
     const state = computeInterviewState(messages, primedContext, totalQuestions)
     const guidance = questionInstruction(state)
 
-    // TEMP DIAG — remove after debugging. Logs exactly what Iris sees each turn.
-    console.log('━━━━ /api/interview turn ━━━━')
-    console.log('Total messages:', messages.length, '| answered:', state.answeredCount, '/', totalQuestions, '| stage:', state.stage)
-    messages.forEach((m, i) => {
-      const preview = m.content.length > 120 ? m.content.slice(0, 120) + '…' : m.content
-      console.log(`  [${i + 1}] ${m.role.padEnd(9)}: ${preview}`)
-    })
-    if (state.lastAnswerIsVague) console.log('  ⚠️ last answer flagged VAGUE')
-    if (state.lastAnswerFeelsMemorized) console.log('  ⚠️ last answer flagged MEMORIZED')
-    if (state.stuckTopic) console.log(`  ⚠️ stuck on topic: ${state.stuckTopic}`)
-    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
 
     // Append the director note to the last user turn (or add a synthetic one).
     // Director notes are wrapped in unmistakable delimiters so the model treats
@@ -937,7 +959,9 @@ export async function POST(req) {
           { status: result.status }
         )
       }
-      return NextResponse.json({ question: textFrom(result.data) })
+      const question = textFrom(result.data)
+      if (session && question) await recordQuestion(session.id, messages, question)
+      return NextResponse.json({ question })
     }
 
     const encoder = new TextEncoder()
@@ -965,14 +989,8 @@ export async function POST(req) {
               } catch {}
             }
           }
+          if (session && fullQuestion) await recordQuestion(session.id, messages, fullQuestion).catch(() => {})
           controller.close()
-          if (sessionId && fullQuestion) {
-            const updatedMsgs = [...messages, { role: 'assistant', content: fullQuestion.trim() }]
-            query(
-              `UPDATE interview_sessions SET messages = $1::jsonb, updated_at = now() WHERE id = $2`,
-              [JSON.stringify(updatedMsgs), sessionId]
-            ).catch(() => {})
-          }
         } catch (e) {
           controller.error(e)
         }
@@ -987,6 +1005,7 @@ export async function POST(req) {
       },
     })
   } catch (err) {
+    if (err instanceof InterviewError) return NextResponse.json({ error: err.message }, { status: err.status })
     console.error('interview route error:', err)
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
   }

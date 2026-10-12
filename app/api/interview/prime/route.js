@@ -93,10 +93,11 @@ Output STRICT JSON only, no markdown, no code fences:
 
     try {
       await query(
-        `INSERT INTO interview_sessions (id, job_id, primed_context, total_questions, messages)
-         VALUES ($1, $2, $3::jsonb, $4, '[]'::jsonb)
-         ON CONFLICT (id) DO UPDATE SET primed_context = EXCLUDED.primed_context, updated_at = now()`,
-        [sessionId, jobId, JSON.stringify(primedContext), primedContext.totalQuestions]
+        `INSERT INTO interview_sessions (id, job_id, primed_context, total_questions, messages, user_id)
+         VALUES ($1, $2, $3::jsonb, $4, '[]'::jsonb, $5)
+         ON CONFLICT (id) DO UPDATE SET primed_context = EXCLUDED.primed_context, updated_at = now()
+         WHERE interview_sessions.user_id IS NULL OR interview_sessions.user_id = EXCLUDED.user_id`,
+        [sessionId, jobId, JSON.stringify(primedContext), primedContext.totalQuestions, caller.id]
       )
     } catch (dbErr) {
       console.warn('interview_sessions upsert skipped:', dbErr.message)
