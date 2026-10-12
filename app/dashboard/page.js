@@ -13,7 +13,7 @@ export default async function DashboardOverview() {
   const [profileRes, interviewsRes, appsRes, expertRes] = await Promise.all([
     query('SELECT full_name, (resume_text IS NOT NULL) AS has_resume FROM user_profiles WHERE user_id = $1 LIMIT 1', [user.id]).catch(() => null),
     query(
-      `SELECT ic.id, ic.created_at, ic.report, ic.job_fit_score,
+      `SELECT ic.id, ic.created_at,
               ij.title AS job_title, ij.role AS job_role, ij.slug AS job_slug
        FROM interview_candidates ic
        JOIN interview_jobs ij ON ij.id = ic.job_id
@@ -29,19 +29,17 @@ export default async function DashboardOverview() {
       [user.id]
     ).catch(() => null),
     query(
-      `SELECT id, domain, report, expertise_score, expertise_level, created_at
+      `SELECT id, domain, expertise_score, expertise_level, created_at
        FROM expert_assessments WHERE candidate_user_id = $1 ORDER BY created_at DESC LIMIT 20`,
       [user.id]
     ).catch(() => null),
   ])
 
   const profile = profileRes?.rows?.[0] || null
+  // Job interview scores and recommendations are for the hiring team only.
   const interviews = (interviewsRes?.rows || []).map((r) => ({
     id: r.id,
     createdAt: r.created_at,
-    score: r.report?.score ?? null,
-    recommendation: r.report?.recommendation ?? null,
-    jobFit: r.job_fit_score ?? null,
     jobTitle: r.job_title,
     jobRole: r.job_role,
     jobSlug: r.job_slug,
@@ -58,7 +56,6 @@ export default async function DashboardOverview() {
   const expertAssessments = (expertRes?.rows || []).map((r) => ({
     id: r.id,
     domain: r.domain,
-    report: r.report,
     score: r.expertise_score,
     level: r.expertise_level,
     createdAt: r.created_at,

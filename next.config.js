@@ -8,6 +8,10 @@ const nextConfig = {
       { source: '/analytics', destination: '/admin', permanent: false },
       { source: '/admin/analytics', destination: '/admin', permanent: false },
       { source: '/admin/skills', destination: '/admin', permanent: false },
+      // The candidate "Skill Profile" read data only the retired adaptive test
+      // wrote, so it was always empty. Test feedback lives on each application.
+      { source: '/dashboard/skills', destination: '/dashboard', permanent: false },
+      { source: '/skill-profile', destination: '/dashboard', permanent: false },
       // Company accounts are invite-only; companies ask through the contact page.
       { source: '/signup/company', destination: '/contact', permanent: false },
     ]

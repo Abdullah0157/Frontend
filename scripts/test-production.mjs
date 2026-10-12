@@ -14,6 +14,7 @@ const { rateLimit, clientIp } = await import('../lib/rate-limit.js')
 const { rankJobs, resumeKeywords, tokenize } = await import('../lib/job-match.js')
 const { query } = await import('../lib/db.js')
 const { jobSteps, verdictFor, jobRequirements } = await import('../lib/job-verdict.js')
+const { conversation, candidateView } = await import('../lib/interview-record.js')
 
 const fakeReq = (ip) => ({ headers: new Headers({ 'x-forwarded-for': `${ip}, 10.0.0.1` }) })
 
@@ -85,6 +86,24 @@ test('job verdict: steps from the job, then Recommended / Consider / Not a fit y
   assert.equal(jobSteps(job, [{ ...skills('strong'), track: 'general' }], null)[0].status, 'missing')
 })
 
+test('interview record: the server keeps the conversation; candidates see no score', () => {
+  const Q = (c) => ({ role: 'assistant', content: c })
+  const A = (c) => ({ role: 'user', content: c })
+  const rec = [Q('q1'), A('a1'), Q('q2')]
+  assert.deepEqual(conversation([], []), [])
+  assert.deepEqual(conversation(rec, [...rec, A('a2')]), [...rec, A('a2')])
+  // Earlier turns always come from the record, whatever the browser sends.
+  assert.deepEqual(conversation(rec, [Q('fake'), A('perfect answer'), Q('q2'), A('a2')]), [...rec, A('a2')])
+  assert.deepEqual(conversation(rec, rec), rec)
+  assert.deepEqual(conversation(rec, [...rec, A('   ')]), rec)
+  assert.equal(conversation(rec, [...rec, A('x'.repeat(9000))])[3].content.length, 8000)
+  const view = candidateView({
+    score: 3, recommendation: 'no', summary: 'Weak.', concerns: [{ claim: 'c' }], risk_factors: ['r'], internal_scores: { technical: 2 },
+    strengths: [{ claim: 'Clear examples' }, 'Calm'], rubric: [{ skill: 'Design', score: 7 }, { skill: 'SQL', score: 2 }, { skill: 'Talk', score: 5 }],
+  })
+  assert.deepEqual(view, { strengths: ['Clear examples', 'Calm'], practise: ['SQL', 'Talk'] })
+})
+
 test('routes that cost money or change data refuse visitors who are not logged in', { skip: !BASE && 'set BASE to run' }, async () => {
   const id = '00000000-0000-0000-0000-000000000000'
   const json = { 'content-type': 'application/json' }
@@ -110,6 +129,11 @@ test('routes that cost money or change data refuse visitors who are not logged i
   const snap = await fetch(`${BASE}/api/assessment/${id}/snapshot`, { method: 'POST', headers: json, body: '{"image":"/9j/"}' })
   assert.ok([403, 404].includes(snap.status), `photo upload without the test's token is refused (got ${snap.status})`)
   assert.equal((await fetch(`${BASE}/api/cron/purge`)).status, 401, 'the clean-up job needs the cron secret')
+  // Interview reports are saved by the server; the old save routes are gone.
+  for (const path of [`/api/jobs/${id}/candidates`, '/api/interview/save-expert-report']) {
+    const res = await fetch(BASE + path, { method: 'POST', headers: json, body: '{"name":"x","transcript":[{"role":"user","content":"x"}],"report":{"score":10}}' })
+    assert.ok([404, 405].includes(res.status), `${path} should not exist (got ${res.status})`)
+  }
   const gone = await fetch(`${BASE}/api/jobs/from-external`, { method: 'POST', headers: json, body: '{}' })
   assert.ok([404, 405].includes(gone.status), 'the external-job route is removed')
 })

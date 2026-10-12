@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import EieProfile from '@/components/EieProfile'
+import { claimText, evidenceText, highlightText } from '@/lib/report-text'
 
 function fitColor(score) {
   if (score == null) return 'text-slate-400'
@@ -229,19 +230,21 @@ export default function JobDashboard() {
                           </h4>
                           <div className="space-y-3">
                             {c.report.rubric.map((r, i) => {
-                              const score = Number(r.score) || 0
-                              const pct = Math.max(0, Math.min(100, (score / 5) * 100))
-                              const barColor = score >= 4 ? 'bg-emerald-500' : score >= 3 ? 'bg-indigo-500' : score >= 2 ? 'bg-amber-500' : 'bg-red-500'
+                              // Iris scores each skill 0 to 10 (null when the interview did not test it).
+                              const assessed = r.score != null && Number.isFinite(Number(r.score))
+                              const score = assessed ? Number(r.score) : 0
+                              const pct = Math.max(0, Math.min(100, score * 10))
+                              const barColor = score >= 8 ? 'bg-emerald-500' : score >= 6 ? 'bg-indigo-500' : score >= 4 ? 'bg-amber-500' : 'bg-red-500'
                               return (
                                 <div key={i} className="border border-slate-200 rounded-2xl p-4">
                                   <div className="flex items-center justify-between mb-2">
                                     <p className="font-black text-slate-900 text-sm">{r.skill}</p>
-                                    <p className="text-sm font-black text-slate-900">{score}/5</p>
+                                    <p className="text-sm font-black text-slate-900">{assessed ? `${score}/10` : 'Not assessed'}</p>
                                   </div>
                                   <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden mb-2">
                                     <div className={`h-full ${barColor}`} style={{ width: `${pct}%` }} />
                                   </div>
-                                  {r.evidence && <p className="text-xs text-slate-500 leading-relaxed">{r.evidence}</p>}
+                                  {evidenceText(r.evidence) && <p className="text-xs text-slate-500 leading-relaxed">{evidenceText(r.evidence)}</p>}
                                 </div>
                               )
                             })}
@@ -254,7 +257,7 @@ export default function JobDashboard() {
                           <div>
                             <h4 className="text-xs font-black uppercase tracking-[0.3em] text-emerald-600 mb-2">Strengths</h4>
                             <ul className="list-disc pl-5 space-y-1 text-slate-700 text-sm">
-                              {c.report.strengths.map((s, i) => <li key={i}>{s}</li>)}
+                              {c.report.strengths.map((s, i) => <li key={i}>{claimText(s)}</li>)}
                             </ul>
                           </div>
                         )}
@@ -262,14 +265,14 @@ export default function JobDashboard() {
                           <div>
                             <h4 className="text-xs font-black uppercase tracking-[0.3em] text-amber-600 mb-2">Concerns</h4>
                             <ul className="list-disc pl-5 space-y-1 text-slate-700 text-sm">
-                              {c.report.concerns.map((x, i) => <li key={i}>{x}</li>)}
+                              {c.report.concerns.map((x, i) => <li key={i}>{claimText(x)}</li>)}
                             </ul>
                           </div>
                         )}
                       </div>
-                      {c.report?.highlight_quote && (
+                      {highlightText(c.report) && (
                         <blockquote className="border-l-4 border-indigo-500 pl-4 italic text-slate-600 text-sm">
-                          "{c.report.highlight_quote}"
+                          “{highlightText(c.report)}”
                         </blockquote>
                       )}
 

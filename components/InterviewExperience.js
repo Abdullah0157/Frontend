@@ -40,7 +40,9 @@ export default function InterviewExperience({
   const [streamingQuestion, setStreamingQuestion] = useState('')
   const [report, setReport] = useState(null)
   const [error, setError] = useState('')
-  const [savedCandidateId, setSavedCandidateId] = useState(null)
+  // Job interviews are saved by the server when it writes the report.
+  const [sentToTeam, setSentToTeam] = useState(false)
+  const finalMessagesRef = useRef(null)
   const autoStartedRef = useRef(false)
   const sessionIdRef = useRef(null)
   if (!sessionIdRef.current) sessionIdRef.current = crypto.randomUUID()
@@ -234,6 +236,39 @@ export default function InterviewExperience({
     }
   }
 
+  // Ask the server for the report. For a job interview the server also saves
+  // it and sends back only the candidate's own view (no score).
+  async function finishInterview(finalMessages) {
+    finalMessagesRef.current = finalMessages
+    setPhase('finishing')
+    setError('')
+    const { report: r, saved } = await callApi('/api/interview', {
+      action: 'report',
+      candidate,
+      messages: finalMessages,
+      jobId: job?.id,
+      resumeText,
+      sessionId: sessionIdRef.current,
+      primedContext,
+    })
+    if (isJobScoped && !saved) throw new Error('Your interview could not be saved. Please try again.')
+    setReport(r)
+    setSentToTeam(Boolean(saved))
+    setPhase('report')
+  }
+
+  async function retryFinish() {
+    if (!finalMessagesRef.current || loading) return
+    setLoading(true)
+    try {
+      await finishInterview(finalMessagesRef.current)
+    } catch (err) {
+      setError(friendlyError(err))
+    } finally {
+      setLoading(false)
+    }
+  }
+
   async function submitAnswer(e, overrideText) {
     e?.preventDefault()
     const text = (overrideText ?? draft).trim()
@@ -247,34 +282,7 @@ export default function InterviewExperience({
     setStreamingQuestion('')
     try {
       if (newAnsweredCount >= totalQuestions) {
-        setPhase('finishing')
-        const { report: r } = await callApi('/api/interview', {
-          action: 'report',
-          candidate,
-          messages: nextMessages,
-          jobId: job?.id,
-          resumeText,
-          sessionId: sessionIdRef.current,
-          primedContext,
-        })
-        setReport(r)
-        if (isJobScoped) {
-          try {
-            const { candidate: saved } = await callApi(`/api/jobs/${job.id}/candidates`, {
-              name: candidate.name,
-              email: candidate.email || null,
-              transcript: nextMessages,
-              report: r,
-              resumeText,
-              sessionId: sessionIdRef.current,
-            })
-            setSavedCandidateId(saved?.id || null)
-          } catch (saveErr) {
-            console.error('Save failed:', saveErr)
-            setError(`Report generated, but saving failed: ${saveErr.message}`)
-          }
-        }
-        setPhase('report')
+        await finishInterview(nextMessages)
       } else {
         const question = await fetchQuestion({
           candidate,
@@ -303,7 +311,7 @@ export default function InterviewExperience({
     setDraft('')
     setReport(null)
     setError('')
-    setSavedCandidateId(null)
+    setSentToTeam(false)
     setStreamingQuestion('')
   }
 
@@ -358,6 +366,11 @@ export default function InterviewExperience({
         {error && (
           <div className="mb-6 p-4 rounded-2xl border border-red-200 bg-red-50 text-red-600 text-sm">
             {error}
+            {phase === 'finishing' && finalMessagesRef.current && (
+              <button type="button" onClick={retryFinish} disabled={loading} className="ml-3 font-bold underline disabled:opacity-50">
+                {loading ? 'Sending…' : 'Try again'}
+              </button>
+            )}
           </div>
         )}
 
@@ -463,14 +476,38 @@ export default function InterviewExperience({
               <p className="text-slate-500 mt-1 text-sm">
                 {candidate.name}{job ? ` — ${job.title}` : candidate.role ? ` — ${candidate.role}` : ''}
               </p>
-              {isJobScoped && savedCandidateId && (
-                <p className="text-emerald-600 text-xs mt-3">
-                  ✓ Your submission has been sent to the hiring team.
+              {isJobScoped && sentToTeam && (
+                <p className="text-emerald-700 text-xs mt-3">
+                  ✓ Your interview has been sent to the hiring team.
                 </p>
               )}
             </div>
 
-            {report ? (
+            {isJobScoped ? (
+              // The candidate's own view: what went well and what to practise.
+              // The score and the hiring recommendation go to the hiring team only.
+              <div className="space-y-6">
+                {report?.strengths?.length > 0 && (
+                  <div>
+                    <h3 className="text-xs font-black uppercase tracking-[0.3em] text-emerald-700 mb-2">What went well</h3>
+                    <ul className="space-y-2 text-slate-800">
+                      {report.strengths.map((s) => <li key={s} className="pl-4 border-l-2 border-emerald-200">{s}</li>)}
+                    </ul>
+                  </div>
+                )}
+                {report?.practise?.length > 0 && (
+                  <div>
+                    <h3 className="text-xs font-black uppercase tracking-[0.3em] text-slate-600 mb-2">Good to practise</h3>
+                    <ul className="space-y-2 text-slate-800">
+                      {report.practise.map((s) => <li key={s} className="pl-4 border-l-2 border-slate-200">{s}</li>)}
+                    </ul>
+                  </div>
+                )}
+                <p className="text-sm text-slate-500">
+                  The hiring team reviews every interview. They will contact you if there is a match.
+                </p>
+              </div>
+            ) : report ? (
               <div className="space-y-8">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="rounded-2xl border border-slate-200 p-6 text-center">

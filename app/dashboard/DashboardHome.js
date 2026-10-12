@@ -4,7 +4,6 @@ import { useState } from 'react'
 import { interviewLengthLabel } from '@/lib/interview-config'
 import Link from 'next/link'
 
-const REC_LABEL = { strong_yes: 'Strong Yes', yes: 'Yes', maybe: 'Maybe', no: 'No' }
 
 function fmtDate(d) {
   return new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
@@ -186,13 +185,7 @@ export default function DashboardHome({ firstName, fullName, email, hasResume, i
                   <p className="font-semibold text-slate-900">{iv.jobTitle || 'Interview'}</p>
                   <p className="text-sm text-slate-500 mt-0.5">{iv.jobRole ? `${iv.jobRole} · ` : ''}{fmtDate(iv.createdAt)}</p>
                   <div className="flex items-center gap-2.5 mt-4">
-                    {iv.score != null && <span className="text-sm font-semibold text-slate-900">{iv.score}<span className="text-slate-500">/10</span></span>}
-                    {iv.recommendation && (
-                      <span className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">
-                        {REC_LABEL[iv.recommendation] || iv.recommendation}
-                      </span>
-                    )}
-                    {iv.jobFit != null && <span className="text-xs text-slate-500">Fit {iv.jobFit}%</span>}
+                    <span className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700">Sent to the hiring team</span>
                   </div>
                 </div>
               ))}
