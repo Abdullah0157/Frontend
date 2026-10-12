@@ -25,16 +25,21 @@ export async function GET() {
     const auth = await requireCompany()
     if (auth.error) return NextResponse.json({ error: auth.error }, { status: auth.status })
 
+    // A company sees its own jobs; the admin sees every job on the site
+    // (including the ones with no owner) so it can open or close them.
+    // Candidates = people who started a test or the interview for the job.
     const { rows } = await query(
-      `SELECT j.id, j.slug, j.title, j.role, j.created_at,
-              COUNT(c.id)::int AS candidate_count,
-              MAX(c.job_fit_score) AS top_fit
+      `SELECT j.id, j.slug, j.title, j.role, j.created_at, j.is_active IS NOT FALSE AS is_open,
+              COALESCE(NULLIF(j.company, ''), cp.company_name) AS company,
+              (SELECT COUNT(DISTINCT x.u)::int FROM (
+                 SELECT candidate_user_id AS u FROM assessment_sessions WHERE job_id = j.id
+                 UNION SELECT user_id FROM interview_candidates WHERE job_id = j.id) x) AS candidate_count,
+              (SELECT MAX(job_fit_score) FROM interview_candidates WHERE job_id = j.id) AS top_fit
        FROM interview_jobs j
-       LEFT JOIN interview_candidates c ON c.job_id = j.id
-       WHERE j.owner_id = $1
-       GROUP BY j.id
-       ORDER BY j.created_at DESC`,
-      [auth.user.id]
+       LEFT JOIN company_profiles cp ON cp.user_id = j.owner_id
+       WHERE $2::boolean OR j.owner_id = $1
+       ORDER BY j.is_active IS NOT FALSE DESC, j.created_at DESC`,
+      [auth.user.id, auth.isAdmin]
     )
     return NextResponse.json({ jobs: rows })
   } catch (e) {

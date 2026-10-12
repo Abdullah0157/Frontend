@@ -137,6 +137,25 @@ export default function CompanyJobsPage() {
       .then((d) => setIsAdmin(d?.accountType === 'super_admin')).catch(() => {})
   }, [])
 
+  // Close a job (off the jobs page, no new candidates) or open it again.
+  const [busyId, setBusyId] = useState(null)
+  async function setOpen(job, open) {
+    setBusyId(job.id)
+    try {
+      const res = await fetch(`/api/jobs/${job.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ isActive: open }),
+      })
+      if (!res.ok) throw new Error((await res.json().catch(() => ({}))).error || 'Could not update the job.')
+      setJobs((list) => list.map((j) => (j.id === job.id ? { ...j, is_open: open } : j)))
+    } catch (e) {
+      setError(e.message)
+    } finally {
+      setBusyId(null)
+    }
+  }
+
   async function createJob(e) {
     e.preventDefault()
     if (!form.title.trim() || !form.role.trim() || !form.description.trim()) return
@@ -183,11 +202,14 @@ export default function CompanyJobsPage() {
   }
 
   return (
-    <div className="px-8 py-10">
+    <div className="px-4 sm:px-8 py-10">
       <div className="flex items-end justify-between mb-10">
         <div>
           <p className="text-[10px] font-black uppercase tracking-[0.4em] text-indigo-600 mb-2">Jobs</p>
-          <h1 className="text-3xl md:text-4xl font-black text-slate-900">Your open positions</h1>
+          <h1 className="text-3xl md:text-4xl font-black text-slate-900">{isAdmin ? 'All jobs' : 'Your open positions'}</h1>
+          {isAdmin && (
+            <p className="text-slate-500 text-sm mt-2">Every job on the site. Close a job to take it off the jobs page.</p>
+          )}
         </div>
         <button
           onClick={() => setShowForm((s) => !s)}
@@ -421,13 +443,21 @@ export default function CompanyJobsPage() {
           )}
         </div>
       ) : (
-        <div className="grid gap-3">
+        <div className="grid grid-cols-1 gap-3">
           {jobs.map((j) => (
-            <div key={j.id} className="bg-white border border-slate-200 rounded-2xl p-5 hover:border-slate-300 transition shadow-sm">
+            // min-w-0: a long interview link must not stretch every card past a phone screen.
+            <div key={j.id} className="min-w-0 bg-white border border-slate-200 rounded-2xl p-5 hover:border-slate-300 transition shadow-sm">
               <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div>
-                  <h2 className="text-lg font-black text-slate-900">{j.title}</h2>
-                  <p className="text-indigo-600 text-[10px] font-black uppercase tracking-widest mt-1">{j.role}</p>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <h2 className="text-lg font-black text-slate-900">{j.title}</h2>
+                    <span className={`text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full border ${j.is_open ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-slate-100 text-slate-600 border-slate-200'}`}>
+                      {j.is_open ? 'Open' : 'Closed'}
+                    </span>
+                  </div>
+                  <p className="text-indigo-600 text-[10px] font-black uppercase tracking-widest mt-1">
+                    {[j.role, isAdmin && j.company].filter(Boolean).join(' · ')}
+                  </p>
                 </div>
                 <div className="flex items-center gap-6 text-sm">
                   <div className="text-center">
@@ -447,7 +477,14 @@ export default function CompanyJobsPage() {
                 >
                   Copy Interview Link
                 </button>
-                <code className="text-[10px] text-slate-500 truncate md:flex-1">{shareLink(j.slug)}</code>
+                <code className="text-[10px] text-slate-500 truncate min-w-0 max-w-full md:flex-1">{shareLink(j.slug)}</code>
+                <button
+                  onClick={() => setOpen(j, !j.is_open)}
+                  disabled={busyId === j.id}
+                  className="text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-full bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 transition disabled:opacity-50"
+                >
+                  {j.is_open ? 'Close job' : 'Open job'}
+                </button>
                 <Link
                   href={`/company/jobs/${j.id}`}
                   className="text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white transition"

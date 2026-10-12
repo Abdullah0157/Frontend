@@ -3,9 +3,11 @@ const nextConfig = {
   reactStrictMode: true,
   async redirects() {
     return [
-      // The site statistics page is for admins (login + super-admin role); the
-      // old public copy read from a backend that no longer exists.
-      { source: '/analytics', destination: '/admin/analytics', permanent: false },
+      // Site numbers live on the admin Home now (login + super-admin role); the
+      // old Analytics and Skills pages were folded in or retired.
+      { source: '/analytics', destination: '/admin', permanent: false },
+      { source: '/admin/analytics', destination: '/admin', permanent: false },
+      { source: '/admin/skills', destination: '/admin', permanent: false },
       // Company accounts are invite-only; companies ask through the contact page.
       { source: '/signup/company', destination: '/contact', permanent: false },
     ]

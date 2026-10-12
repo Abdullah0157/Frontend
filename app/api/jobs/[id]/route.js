@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { revalidatePath } from 'next/cache'
 import { query } from '@/lib/db'
 import { apiUser, ROLES } from '@/lib/roles'
 
@@ -44,5 +45,32 @@ export async function GET(_req, { params }) {
   } catch (e) {
     console.error(e)
     return NextResponse.json({ error: e.message }, { status: 500 })
+  }
+}
+
+// PATCH /api/jobs/[id]  Body: { isActive }
+// Open or close a job. A closed job leaves the jobs page and its apply page
+// stops taking candidates. The owning company or a super admin only.
+export async function PATCH(req, { params }) {
+  try {
+    const { user, role, response } = await apiUser(ROLES.COMPANY, ROLES.SUPER_ADMIN)
+    if (response) return response
+    const { id } = params
+    if (!/^[0-9a-f-]{36}$/i.test(String(id))) return NextResponse.json({ error: 'Job not found' }, { status: 404 })
+    const { isActive } = await req.json().catch(() => ({}))
+    if (typeof isActive !== 'boolean') return NextResponse.json({ error: 'isActive must be true or false' }, { status: 400 })
+    const { rows } = await query(
+      `UPDATE interview_jobs SET is_active = $1
+       WHERE id = $2 AND ($3::boolean OR owner_id = $4)
+       RETURNING id, is_active`,
+      [isActive, id, role === ROLES.SUPER_ADMIN, user.id]
+    )
+    // Not found and not yours look the same, so ids cannot be probed.
+    if (rows.length === 0) return NextResponse.json({ error: 'Job not found' }, { status: 404 })
+    revalidatePath('/jobs')
+    return NextResponse.json({ job: rows[0] })
+  } catch (e) {
+    console.error('jobs/[id] PATCH error:', e)
+    return NextResponse.json({ error: 'Could not update the job.' }, { status: 500 })
   }
 }
