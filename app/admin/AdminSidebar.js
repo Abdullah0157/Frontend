@@ -53,7 +53,8 @@ const NAV = [
     ),
   },
   {
-    href: '/admin/expert-assessments', label: 'Rubrics',
+    // Maya's expert interviews (the page was mislabelled "Rubrics").
+    href: '/admin/expert-assessments', label: 'Expert Interviews',
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <path d="M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
@@ -139,7 +140,7 @@ export default function AdminSidebar({ email }) {
                 >
                   {item.icon}
                 </span>
-                <span className={`text-[11px] font-semibold leading-none text-center ${active ? 'text-indigo-600' : 'text-slate-500 group-hover:text-slate-700'}`}>
+                <span className={`text-[11px] font-semibold leading-tight text-center ${active ? 'text-indigo-600' : 'text-slate-500 group-hover:text-slate-700'}`}>
                   {item.label}
                 </span>
               </Link>

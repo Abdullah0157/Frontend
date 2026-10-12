@@ -13,6 +13,7 @@ for (const line of readFileSync(new URL('../.env.local', import.meta.url), 'utf8
 const { rateLimit, clientIp } = await import('../lib/rate-limit.js')
 const { rankJobs, resumeKeywords, tokenize } = await import('../lib/job-match.js')
 const { query } = await import('../lib/db.js')
+const { jobSteps, verdictFor, jobRequirements } = await import('../lib/job-verdict.js')
 
 const fakeReq = (ip) => ({ headers: new Headers({ 'x-forwarded-for': `${ip}, 10.0.0.1` }) })
 
@@ -49,6 +50,41 @@ test('job matching: title words count most; unrelated resumes match nothing', ()
 })
 
 const BASE = process.env.BASE
+test('job verdict: steps from the job, then Recommended / Consider / Not a fit yet / Not finished', () => {
+  const job = { assessment_config: { track: 'customer_service', english: { requiredLevel: 'B2' } }, requires_ai_interview: true }
+  assert.deepEqual(jobRequirements(job), { track: 'customer_service', englishLevel: 'B2', interview: true })
+  assert.deepEqual(jobRequirements({ required_assessments: ['swe-backend'], requires_ai_interview: false }), { track: 'backend', englishLevel: null, interview: false })
+  assert.equal(jobRequirements({ assessment_config: { track: 'english', options: { requiredLevel: 'C1' } } }).englishLevel, 'C1')
+
+  const skills = (band, extra = {}) => ({ id: 's1', track: 'customer_service', state: 'completed', band, overall_score: 7.2, integrity: { level: 'clear', notes: [] }, ...extra })
+  const english = (meets) => ({ id: 'e1', track: 'english', state: 'completed', band: 'good', overall_score: 7, english: { cefr: 'B2', overall: 70, meetsRequired: meets }, integrity: { level: 'clear', notes: [] } })
+  const iris = (recommendation) => ({ report: { recommendation, score: 7 } })
+  const verdict = (tests, interview) => verdictFor(jobSteps(job, tests, interview)).key
+
+  assert.equal(verdict([skills('good'), english('yes')], iris('yes')), 'recommended')
+  assert.equal(verdict([skills('strong'), english('yes')], iris('strong_yes')), 'recommended')
+  assert.equal(verdict([skills('borderline'), english('yes')], iris('yes')), 'consider')
+  assert.equal(verdict([skills('good'), english('borderline')], iris('yes')), 'consider')
+  assert.equal(verdict([skills('good'), english('yes')], iris('maybe')), 'consider')
+  // Integrity notes ask for a closer look; they never reject on their own.
+  const noted = skills('strong', { integrity: { level: 'review', notes: ['Left full screen 3 time(s), 40 seconds in total.'] } })
+  assert.equal(verdict([noted, english('yes')], iris('yes')), 'consider')
+  assert.equal(verdict([skills('not_yet'), english('yes')], iris('yes')), 'not_fit')
+  assert.equal(verdict([skills('good'), english('no')], iris('yes')), 'not_fit')
+  assert.equal(verdict([skills('good'), english('yes')], iris('no')), 'not_fit')
+  // Below the bar wins over unfinished; unfinished wins over borderline.
+  assert.equal(verdict([skills('not_yet')], null), 'not_fit')
+  assert.equal(verdict([skills('borderline')], null), 'incomplete')
+  assert.equal(verdict([skills(null, { state: 'submitted' }), english('yes')], iris('yes')), 'incomplete')
+  assert.equal(verdict([skills('good', { state: 'in_progress', band: null }), english('yes')], iris('yes')), 'incomplete')
+  assert.equal(verdict([skills('good'), english('yes')], { report: null }), 'incomplete')
+  const v = verdictFor(jobSteps(job, [skills('good')], null))
+  assert.deepEqual(v.reasons, ['English (needs B2)', 'AI interview (Iris)'])
+  assert.equal(verdictFor([]).key, 'incomplete')
+  // A test for another track does not count for this job.
+  assert.equal(jobSteps(job, [{ ...skills('strong'), track: 'general' }], null)[0].status, 'missing')
+})
+
 test('routes that cost money or change data refuse visitors who are not logged in', { skip: !BASE && 'set BASE to run' }, async () => {
   const id = '00000000-0000-0000-0000-000000000000'
   const json = { 'content-type': 'application/json' }
@@ -58,7 +94,7 @@ test('routes that cost money or change data refuse visitors who are not logged i
     ['POST', '/api/eie/calibration', '{}'], ['POST', '/api/eie/fairness', '{}'],
     ['POST', '/api/interview', '{}'], ['POST', '/api/interview/prime', '{}'], ['POST', '/api/interview/plan/next', '{}'],
     ['POST', '/api/tts', '{"text":"hi"}'], ['POST', '/api/stt', '{}'], ['POST', '/api/upload-resume', '{}'],
-    ['GET', '/api/jobs/matched', null],
+    ['GET', '/api/jobs/matched', null], ['GET', `/api/jobs/${id}`, null],
   ]
   for (const [method, path, body] of cases) {
     const res = await fetch(BASE + path, { method, headers: json, body: body ?? undefined, redirect: 'manual' })

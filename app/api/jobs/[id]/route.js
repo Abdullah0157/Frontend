@@ -1,23 +1,24 @@
 import { NextResponse } from 'next/server'
 import { query } from '@/lib/db'
-import { getSupabaseServer } from '@/lib/supabase/server'
+import { apiUser, ROLES } from '@/lib/roles'
 
 export const dynamic = 'force-dynamic'
 
 export async function GET(_req, { params }) {
   try {
     const { id } = params
-    const supabase = getSupabaseServer()
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
+    // This lists every applicant's report, so only the company that owns the
+    // job (or a super admin) may read it. Jobs with no owner are admin only.
+    const { user, role, response } = await apiUser(ROLES.COMPANY, ROLES.SUPER_ADMIN)
+    if (response) return response
+    if (!/^[0-9a-f-]{36}$/i.test(String(id))) return NextResponse.json({ error: 'Job not found' }, { status: 404 })
 
-    // Owner check: company can only see their own jobs.
     const jobRes = await query(`SELECT * FROM interview_jobs WHERE id = $1`, [id])
     if (jobRes.rowCount === 0) {
       return NextResponse.json({ error: 'Job not found' }, { status: 404 })
     }
     const job = jobRes.rows[0]
-    if (job.owner_id && job.owner_id !== user.id) {
+    if (role !== ROLES.SUPER_ADMIN && job.owner_id !== user.id) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
     const candidatesRes = await query(
