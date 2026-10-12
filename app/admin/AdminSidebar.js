@@ -19,16 +19,17 @@ const NAV = [
     ),
   },
   {
-    href: '/admin/companies', label: 'Companies',
+    href: '/admin/candidates', label: 'Candidates',
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M3 21h18M5 21V7l7-4 7 4v14M9 9h1M9 12h1M9 15h1M14 9h1M14 12h1M14 15h1" />
+        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" />
+        <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
       </svg>
     ),
   },
   {
-    // Companies are invite-only, so the admin posts jobs for clients here.
-    href: '/company/jobs', label: 'Post Jobs',
+    // Every job on the site; the admin posts jobs for clients here (companies are invite-only).
+    href: '/company/jobs', label: 'Jobs',
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <rect x="3" y="7" width="18" height="13" rx="2" /><path d="M9 7V5a2 2 0 012-2h2a2 2 0 012 2v2M12 11v5M9.5 13.5h5" />
@@ -36,11 +37,10 @@ const NAV = [
     ),
   },
   {
-    href: '/admin/candidates', label: 'Candidates',
+    href: '/admin/companies', label: 'Companies',
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" />
-        <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+        <path d="M3 21h18M5 21V7l7-4 7 4v14M9 9h1M9 12h1M9 15h1M14 9h1M14 12h1M14 15h1" />
       </svg>
     ),
   },
@@ -62,28 +62,11 @@ const NAV = [
     ),
   },
   {
-    href: '/admin/items', label: 'Items',
+    // The question bank the tests draw from.
+    href: '/admin/items', label: 'Questions',
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <path d="M12 2l9 5-9 5-9-5 9-5zM3 12l9 5 9-5M3 17l9 5 9-5" />
-      </svg>
-    ),
-  },
-  {
-    href: '/admin/skills', label: 'Skills',
-    icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="5" r="3" /><line x1="12" y1="8" x2="12" y2="14" />
-        <circle cx="6" cy="17" r="3" /><circle cx="18" cy="17" r="3" />
-        <line x1="8.5" y1="15.5" x2="10.5" y2="12" /><line x1="15.5" y1="15.5" x2="13.5" y2="12" />
-      </svg>
-    ),
-  },
-  {
-    href: '/admin/analytics', label: 'Analytics',
-    icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <line x1="18" y1="20" x2="18" y2="10" /><line x1="12" y1="20" x2="12" y2="4" /><line x1="6" y1="20" x2="6" y2="14" />
       </svg>
     ),
   },

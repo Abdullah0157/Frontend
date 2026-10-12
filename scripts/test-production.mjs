@@ -144,7 +144,11 @@ test('public pages: no calls to the old hosted backend, honest home page, reset 
   const bot = await fetch(`${BASE}/api/contact`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: '{"website":"spam"}' })
   assert.equal(bot.status, 200, 'a bot that fills the hidden field is ignored quietly')
   const analytics = await fetch(`${BASE}/analytics`, { redirect: 'manual' })
-  assert.ok([307, 308].includes(analytics.status) && /\/admin\/analytics|\/login/.test(analytics.headers.get('location') || ''), 'public stats page moved to admin')
+  assert.ok([307, 308].includes(analytics.status) && /\/admin$|\/admin\?|\/login/.test(analytics.headers.get('location') || ''), 'public stats page moved to admin')
+  for (const old of ['/admin/analytics', '/admin/skills']) {
+    const r = await fetch(`${BASE}${old}`, { redirect: 'manual' })
+    assert.ok([307, 308].includes(r.status) && /\/admin$|\/admin\?|\/login/.test(r.headers.get('location') || ''), `${old} goes to the admin home`)
+  }
 })
 
 test.after(async () => { (await import('../lib/db.js')).getPool?.().end?.() })

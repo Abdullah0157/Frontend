@@ -13,7 +13,9 @@ async function fetchCandidates() {
       up.created_at,
       up.updated_at,
       (SELECT COUNT(*)::int FROM interview_candidates ic WHERE ic.user_id = up.user_id) AS interview_count,
-      (SELECT COUNT(*)::int FROM expert_assessments ea WHERE ea.candidate_user_id = up.user_id) AS expert_count
+      (SELECT COUNT(*)::int FROM expert_assessments ea WHERE ea.candidate_user_id = up.user_id) AS expert_count,
+      (SELECT COUNT(*)::int FROM assessment_sessions s WHERE s.candidate_user_id = up.user_id AND s.form IS NOT NULL
+         AND s.state IN ('submitted', 'completed')) AS test_count
     FROM user_profiles up
     WHERE COALESCE(up.account_type, 'candidate') = 'candidate'
     ORDER BY up.updated_at DESC
@@ -30,11 +32,11 @@ export default async function AdminCandidatesPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-slate-900">Candidates</h1>
-          <p className="text-slate-500 mt-1">Showing {candidates.length} most recently active (max 200).</p>
+          <p className="text-slate-500 mt-1">Showing {candidates.length} most recently active (max 200). Open a name to see their tests and whether they fit each job.</p>
         </div>
       </div>
 
-      <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
+      <div className="bg-white rounded-2xl border border-slate-200 overflow-x-auto">
         {candidates.length === 0 ? (
           <p className="p-10 text-center text-slate-500 text-sm">No candidates yet.</p>
         ) : (
@@ -43,6 +45,7 @@ export default async function AdminCandidatesPage() {
               <tr>
                 <th className="text-left px-6 py-3">Name</th>
                 <th className="text-left px-6 py-3">Resume</th>
+                <th className="text-right px-6 py-3">Tests</th>
                 <th className="text-right px-6 py-3">Interviews</th>
                 <th className="text-right px-6 py-3">Signed up</th>
                 <th className="text-right px-6 py-3">Last active</th>
@@ -66,6 +69,7 @@ export default async function AdminCandidatesPage() {
                       <span className="text-slate-500">no resume</span>
                     )}
                   </td>
+                  <td className="px-6 py-4 text-right font-mono text-slate-700">{c.test_count || 0}</td>
                   <td className="px-6 py-4 text-right font-mono text-slate-700">{(c.interview_count || 0) + (c.expert_count || 0)}</td>
                   <td className="px-6 py-4 text-right text-xs text-slate-500">{new Date(c.created_at).toLocaleDateString()}</td>
                   <td className="px-6 py-4 text-right text-xs text-slate-500">{new Date(c.updated_at).toLocaleDateString()}</td>
