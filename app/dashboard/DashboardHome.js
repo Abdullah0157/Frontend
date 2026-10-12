@@ -59,8 +59,8 @@ export default function DashboardHome({ firstName, fullName, email, hasResume, i
   const banner = !hasResume
     ? { text: 'Finish setting up your profile', accent: "Upload your resume to unlock interviews", href: '/dashboard/profile?tab=resume', cta: 'Complete setup' }
     : interviews.length === 0
-    ? { text: 'You’re ready to go', accent: 'Take your Expert Interview or apply to a role', href: '/jobs', cta: 'Browse roles' }
-    : { text: 'All set', accent: 'Keep applying to strengthen your profile', href: '/jobs', cta: 'Browse roles' }
+    ? { text: 'You’re ready to go', accent: 'Take your Expert Interview or apply to a role', href: '/dashboard/jobs', cta: 'Browse roles' }
+    : { text: 'All set', accent: 'Keep applying to strengthen your profile', href: '/dashboard/jobs', cta: 'Browse roles' }
 
   return (
     <div className="max-w-5xl mx-auto">
@@ -153,7 +153,7 @@ export default function DashboardHome({ firstName, fullName, email, hasResume, i
                 href="/dashboard/domain-expert"
               />
               <p className="text-center text-sm text-slate-500">
-                or <Link href="/jobs" className="text-indigo-600 font-semibold hover:underline">apply to a role</Link> to interview with Iris
+                or <Link href="/dashboard/jobs" className="text-indigo-600 font-semibold hover:underline">apply to a role</Link> to interview with Iris
               </p>
             </div>
           ) : (
@@ -202,11 +202,11 @@ export default function DashboardHome({ firstName, fullName, email, hasResume, i
       ) : (
         <Section title="Your applications" count={applications.length}>
           {applications.length === 0 ? (
-            <EmptyState text="No applications yet." ctaText="Find a role to apply to" href="/jobs" />
+            <EmptyState text="No applications yet." ctaText="Find a role to apply to" href="/dashboard/jobs" />
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {applications.map((a) => (
-                <Link key={a.id} href={`/interview/${a.jobSlug}`} className="rounded-2xl border border-slate-200/80 bg-white p-5 hover:border-slate-300 hover:shadow-[0_1px_2px_rgba(15,23,42,0.04),0_12px_28px_-18px_rgba(15,23,42,0.25)] transition block">
+                <Link key={a.id} href={`/dashboard/apply/${a.jobSlug}`} className="rounded-2xl border border-slate-200/80 bg-white p-5 hover:border-slate-300 hover:shadow-[0_1px_2px_rgba(15,23,42,0.04),0_12px_28px_-18px_rgba(15,23,42,0.25)] transition block">
                   <p className="font-semibold text-slate-900">{a.jobTitle || 'Application'}</p>
                   <p className="text-sm text-slate-500 mt-0.5">{a.jobRole ? `${a.jobRole} · ` : ''}{fmtDate(a.createdAt)}</p>
                   <span className={`inline-flex items-center gap-1.5 mt-4 text-[11px] font-medium px-2.5 py-1 rounded-full ${

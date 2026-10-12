@@ -32,7 +32,7 @@ export default async function AssessmentPage({ searchParams }) {
       level={level}
       jobId={jobId}
       allowedLanguages={languages}
-      returnTo={jobSlug ? `/interview/${jobSlug}` : null}
+      returnTo={jobSlug ? `/dashboard/apply/${encodeURIComponent(jobSlug)}` : null}
     />
   )
 }

@@ -572,11 +572,11 @@ export default function InterviewExperience({
             <div className="mt-10 flex flex-col sm:flex-row justify-center gap-3">
               {isJobScoped ? (
                 <a
-                  href="/jobs"
+                  href={job?.slug ? `/dashboard/apply/${job.slug}` : '/dashboard/jobs'}
                   className="btn-style-9 group uppercase tracking-widest text-xs !px-10 !py-5 rounded-full font-black text-center"
                 >
                   <div className="btn-shimmer"></div>
-                  <span>Browse more jobs</span>
+                  <span>Back to your application</span>
                 </a>
               ) : (
                 <button onClick={reset} className="btn-style-9 group uppercase tracking-widest text-xs !px-10 !py-5 rounded-full font-black">
