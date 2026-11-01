@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { INTERVIEW_DURATION_S, INTERVIEW_MINUTES, interviewLengthWords } from '@/lib/interview-config'
 import VoiceChat from './VoiceChat'
 import { primeTTS } from '@/lib/tts'
+import { useInterviewFocus, FocusCover, enterFullscreen } from './InterviewFocus'
 
 // Time-based interview. progressRatio = elapsed / DURATION drives Maya's phasing
 // (intro → warmup → breadth → depth → edge cases → close), so shortening the
@@ -13,7 +14,7 @@ import { primeTTS } from '@/lib/tts'
 const DURATION_S = INTERVIEW_DURATION_S
 const MAX_QUESTIONS = 40 // safety cap so it can't loop forever if the timer breaks
 
-export default function DomainExpertExperience({ userProfile = null }) {
+export default function DomainExpertExperience({ userProfile = null, attempts: initialAttempts = null }) {
   // Phases: detecting (AI reads resume) → ready → chat → finishing → report → error_no_resume
   const [phase, setPhase] = useState('detecting')
   const [detected, setDetected] = useState(null) // { name, domain, seniority, focusAreas, headline, resumeText }
@@ -26,6 +27,16 @@ export default function DomainExpertExperience({ userProfile = null }) {
   const [noResume, setNoResume] = useState(false)
   const [elapsedSec, setElapsedSec] = useState(0)
   const startTimeRef = useRef(null)
+  // Two attempts per account; starting one counts (the server enforces it too).
+  const [attempts, setAttempts] = useState(initialAttempts)
+  const [endedEarly, setEndedEarly] = useState(false)
+  const messagesRef = useRef([])
+  useEffect(() => { messagesRef.current = messages }, [messages])
+  // Full screen, this tab: leaving is covered, noted, and the third time ends it.
+  const focus = useInterviewFocus({ active: phase === 'chat', onLimit: () => endForLeaving() })
+  useEffect(() => {
+    if ((phase === 'report' || phase === 'ended') && document.fullscreenElement) document.exitFullscreen().catch(() => {})
+  }, [phase])
   const sessionIdRef = useRef(null)
   if (!sessionIdRef.current) sessionIdRef.current = crypto.randomUUID()
   // DEIE belief-loop state carried across turns (step 4/5).
@@ -97,6 +108,7 @@ export default function DomainExpertExperience({ userProfile = null }) {
       return 'Our AI is temporarily busy. Please wait a moment and try again.'
     }
     if (msg.includes('fetch') || msg.includes('network')) return 'Connection error. Check your internet and try again.'
+    if (msg.includes('attempt')) return msg
     return 'Something went wrong. Please try again.'
   }
 
@@ -104,7 +116,7 @@ export default function DomainExpertExperience({ userProfile = null }) {
     const res = await fetch('/api/interview', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ...body, action: 'question', assessmentType: 'domain_expert' }),
+      body: JSON.stringify({ ...body, action: 'question', assessmentType: 'domain_expert', focusEvents: focus.takeEvents() }),
     })
     if (!res.ok) {
       const data = await res.json().catch(() => ({}))
@@ -179,8 +191,25 @@ export default function DomainExpertExperience({ userProfile = null }) {
     } catch { return null }
   }
 
+  // They left the interview too often: report on what they answered, or end it.
+  async function endForLeaving() {
+    setEndedEarly(true)
+    const msgs = messagesRef.current
+    if (msgs.some((m) => m.role === 'user')) {
+      await generateReport(msgs, 'left')
+      return
+    }
+    await fetch('/api/interview', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'end', assessmentType: 'domain_expert', sessionId: sessionIdRef.current, focusEvents: focus.takeEvents(), endedReason: 'left' }),
+    }).catch(() => {})
+    setPhase('ended')
+  }
+
   async function startInterview() {
     if (!detected) return
+    enterFullscreen()  // inside the click, as browsers require
     primeTTS()
     setError('')
     setLoading(true)
@@ -192,15 +221,18 @@ export default function DomainExpertExperience({ userProfile = null }) {
       const question = await fetchQuestion(questionBody([]))
       setStreamingQuestion('')
       setMessages([{ role: 'assistant', content: question }])
+      setAttempts((a) => (a ? { ...a, used: a.used + 1, left: Math.max(0, a.left - 1) } : a))
     } catch (err) {
       setStreamingQuestion('')
       setError(friendlyError(err))
+      setPhase('ready')
+      if (document.fullscreenElement) document.exitFullscreen().catch(() => {})
     } finally {
       setLoading(false)
     }
   }
 
-  async function generateReport(finalMessages) {
+  async function generateReport(finalMessages, endedReason = null) {
     setPhase('finishing')
     try {
       const res = await fetch('/api/interview', {
@@ -215,6 +247,8 @@ export default function DomainExpertExperience({ userProfile = null }) {
           domainExpertise: detected.domain,
           sessionId: sessionIdRef.current,
           evasions: evasionsRef.current,
+          focusEvents: focus.takeEvents(),
+          endedReason,
         }),
       })
       if (!res.ok) throw new Error((await res.json().catch(() => ({}))).error || 'Report failed')
@@ -387,14 +421,41 @@ export default function DomainExpertExperience({ userProfile = null }) {
             <li className="flex gap-2"><span className="text-indigo-500">3.</span> It runs for about {interviewLengthWords} — speak naturally, out loud.</li>
           </ul>
 
-          <button
-            onClick={startInterview}
-            disabled={loading}
-            className="mt-7 w-full py-3.5 px-6 rounded-lg bg-gray-900 hover:bg-gray-700 disabled:opacity-50 text-white text-sm font-semibold transition-colors"
-          >
-            {loading ? 'Starting…' : 'Start Interview'}
-          </button>
-          <p className="mt-3 text-xs text-center text-gray-500">Voice interview with Maya · Make sure your mic is on</p>
+          <div className="mt-6 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+            <p className="font-semibold">Before you start</p>
+            <ul className="mt-1 list-disc space-y-0.5 pl-5">
+              <li>The interview runs in full screen. Stay in this tab until it ends.</li>
+              <li>Leaving 3 times, or for more than 30 seconds in total, ends the interview.</li>
+              {attempts && <li>You have {attempts.allowed} attempts in total, and starting one uses it.</li>}
+            </ul>
+          </div>
+
+          {attempts && attempts.left <= 0 ? (
+            <p className="mt-6 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-center text-sm text-slate-700">
+              You have used all {attempts.allowed} of your expert interview attempts. If you had a technical problem, contact us and we can give you another.
+            </p>
+          ) : (
+            <>
+              <button
+                onClick={startInterview}
+                disabled={loading}
+                className="mt-6 w-full py-3.5 px-6 rounded-lg bg-gray-900 hover:bg-gray-700 disabled:opacity-50 text-white text-sm font-semibold transition-colors"
+              >
+                {loading ? 'Starting…' : attempts ? `Start Interview (attempt ${attempts.used + 1} of ${attempts.allowed})` : 'Start Interview'}
+              </button>
+              <p className="mt-3 text-xs text-center text-gray-500">Voice interview with Maya · Make sure your mic is on</p>
+            </>
+          )}
+        </div>
+      )}
+
+      {phase === 'chat' && focus.away && <FocusCover leaves={focus.leaves} aiName="Maya" />}
+
+      {phase === 'ended' && (
+        <div className="rounded-2xl border border-slate-200 bg-white p-8 text-center">
+          <h2 className="text-xl font-semibold text-slate-900">The interview has ended</h2>
+          <p className="mt-2 text-sm text-slate-600">It ended because you left it too often. This attempt has been used.</p>
+          <a href="/dashboard" className="mt-6 inline-block text-sm font-semibold text-indigo-600 hover:text-indigo-700">Back to your dashboard</a>
         </div>
       )}
 
@@ -416,6 +477,11 @@ export default function DomainExpertExperience({ userProfile = null }) {
 
       {phase === 'report' && report && (
         <div className="space-y-6">
+          {endedEarly && (
+            <p className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+              The interview ended early because you left it too often. This result is based on the answers you gave before that.
+            </p>
+          )}
           {/* Header */}
           <div className="text-center pb-6 border-b border-gray-200">
             <p className="text-xs font-semibold tracking-widest text-gray-500 uppercase mb-2">Assessment Complete</p>

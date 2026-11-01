@@ -5,6 +5,7 @@ import { interviewLengthLabel } from '@/lib/interview-config'
 import { getSupabaseServer } from '@/lib/supabase/server'
 import { query } from '@/lib/db'
 import DomainExpertExperience from '@/components/DomainExpertExperience'
+import { attemptStatus } from '@/lib/interview-record'
 
 export default async function DomainExpertPage() {
   const supabase = getSupabaseServer()
@@ -22,6 +23,7 @@ export default async function DomainExpertPage() {
     [user.id]
   ).catch(() => null)
   const profile = profileRes?.rows?.[0] || null
+  const attempts = await attemptStatus(user.id, null).catch(() => null)
 
   return (
     <div className="max-w-4xl mx-auto">
@@ -33,7 +35,7 @@ export default async function DomainExpertPage() {
         </p>
       </div>
 
-      <DomainExpertExperience userProfile={profile} />
+      <DomainExpertExperience userProfile={profile} attempts={attempts} />
     </div>
   )
 }

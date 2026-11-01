@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import InterviewExperience from './InterviewExperience'
 import PermissionGate from './PermissionGate'
+import { enterFullscreen } from './InterviewFocus'
 
 /**
  * Client wrapper around InterviewExperience that gates entry on camera + mic
@@ -17,6 +18,7 @@ export default function InterviewSession({ job, prefilledCandidate, resumeText }
       <PermissionGate
         candidateName={prefilledCandidate?.name}
         onReady={(s) => {
+          enterFullscreen() // still inside the "Begin Interview" click
           // VoiceChat uses Web Speech API for mic independently — release the test stream
           s.micStream?.getTracks().forEach((t) => t.stop())
           setStreams(s)

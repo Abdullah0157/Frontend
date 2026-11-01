@@ -131,6 +131,20 @@ CREATE INDEX IF NOT EXISTS idx_sessions_job_id ON interview_sessions(job_id);
 -- Whose interview it is: the server keeps the conversation and only its owner
 -- may continue it (lib/interview-record.js).
 ALTER TABLE interview_sessions ADD COLUMN IF NOT EXISTS user_id uuid;
+-- Times the candidate left the interview (another tab or window, or out of
+-- full screen), as [{ kind: 'left' | 'back', ms }].
+ALTER TABLE interview_sessions ADD COLUMN IF NOT EXISTS focus_events jsonb NOT NULL DEFAULT '[]';
+CREATE INDEX IF NOT EXISTS idx_sessions_user ON interview_sessions(user_id, job_id);
+-- Extra interview attempts the admin gave someone (job_id null = the expert
+-- interview with Maya; otherwise the AI interview for that job).
+CREATE TABLE IF NOT EXISTS interview_attempt_grants (
+  id          uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id     uuid NOT NULL,
+  job_id      uuid REFERENCES interview_jobs(id) ON DELETE CASCADE,
+  granted_by  uuid,
+  created_at  timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_attempt_grants_user ON interview_attempt_grants(user_id, job_id);
 
 -- SaaS usage tracking per company per month
 CREATE TABLE IF NOT EXISTS company_usage (

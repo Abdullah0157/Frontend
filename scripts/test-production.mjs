@@ -14,7 +14,7 @@ const { rateLimit, clientIp } = await import('../lib/rate-limit.js')
 const { rankJobs, resumeKeywords, tokenize } = await import('../lib/job-match.js')
 const { query } = await import('../lib/db.js')
 const { jobSteps, verdictFor, jobRequirements } = await import('../lib/job-verdict.js')
-const { conversation, candidateView } = await import('../lib/interview-record.js')
+const { conversation, candidateView, cleanFocusEvents, focusSummary } = await import('../lib/interview-record.js')
 
 const fakeReq = (ip) => ({ headers: new Headers({ 'x-forwarded-for': `${ip}, 10.0.0.1` }) })
 
@@ -102,6 +102,18 @@ test('interview record: the server keeps the conversation; candidates see no sco
     strengths: [{ claim: 'Clear examples' }, 'Calm'], rubric: [{ skill: 'Design', score: 7 }, { skill: 'SQL', score: 2 }, { skill: 'Talk', score: 5 }],
   })
   assert.deepEqual(view, { strengths: ['Clear examples', 'Calm'], practise: ['SQL', 'Talk'] })
+})
+
+test('leaving the interview: events are cleaned and summed for the report', () => {
+  const ev = cleanFocusEvents([{ kind: 'left' }, { kind: 'back', ms: 12400 }, { kind: 'hack', ms: 1 }, { kind: 'left' }, { kind: 'back', ms: 99999999 }])
+  assert.deepEqual(ev.map((e) => e.kind), ['left', 'back', 'left', 'back'])
+  assert.equal(ev[3].ms, 3600000, 'one absence is capped at an hour')
+  assert.equal(focusSummary([]).level, 'clear')
+  const s = focusSummary(cleanFocusEvents([{ kind: 'left' }, { kind: 'back', ms: 4000 }, { kind: 'left' }, { kind: 'back', ms: 6000 }]), 'left')
+  assert.equal(s.leaves, 2)
+  assert.equal(s.away_seconds, 10)
+  assert.equal(s.ended_early, true)
+  assert.equal(s.notes.length, 2)
 })
 
 test('routes that cost money or change data refuse visitors who are not logged in', { skip: !BASE && 'set BASE to run' }, async () => {
