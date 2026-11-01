@@ -4,6 +4,8 @@ import EieProfile from '@/components/EieProfile'
 import { jobSteps, verdictFor, sessionTrack, trackLabel, bandLabel } from '@/lib/job-verdict'
 import { LEVELS, LANGUAGES } from '@/lib/assessment-blueprint'
 import { evidenceText } from '@/lib/report-text'
+import { attemptStatus } from '@/lib/interview-record'
+import GiveAttemptButton from './GiveAttemptButton'
 
 export const dynamic = 'force-dynamic'
 export const metadata = { title: 'Candidate — JobStream Admin' }
@@ -61,6 +63,7 @@ async function fetchCandidate(userId) {
        WHERE j.id IN (
          SELECT job_id FROM assessment_sessions WHERE candidate_user_id = $1 AND job_id IS NOT NULL
          UNION SELECT job_id FROM interview_candidates WHERE user_id = $1
+         UNION SELECT job_id FROM interview_sessions WHERE user_id = $1 AND job_id IS NOT NULL
          UNION SELECT job_id FROM job_applications WHERE candidate_user_id = $1
        )`, [userId]
     ).catch(() => ({ rows: [] })),
@@ -184,7 +187,27 @@ function VerdictRules() {
   )
 }
 
-function JobCard({ job, tests, interview }) {
+function Attempts({ a, userId, jobId = null, what }) {
+  if (!a) return null
+  return (
+    <span className="inline-flex flex-wrap items-center gap-2 text-slate-500">
+      {what}: <span className="font-medium text-slate-800">{a.used} of {a.allowed} attempts used</span>
+      {a.left <= 0 && <GiveAttemptButton userId={userId} jobId={jobId} />}
+    </span>
+  )
+}
+
+function InterviewNotes({ report }) {
+  const notes = report?.integrity?.notes || []
+  if (notes.length === 0) return null
+  return (
+    <ul className="mt-3 list-disc space-y-0.5 rounded-lg bg-amber-50 py-2 pl-8 pr-3 text-xs text-amber-800">
+      {notes.map((n) => <li key={n}>{n}</li>)}
+    </ul>
+  )
+}
+
+function JobCard({ job, tests, interview, attempts, userId }) {
   const steps = jobSteps(job, tests, interview)
   const v = verdictFor(steps)
   return (
@@ -223,6 +246,7 @@ function JobCard({ job, tests, interview }) {
       )}
       <div className="flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 px-5 py-3 text-xs">
         <span className="text-slate-500">Decision: <span className="font-medium text-slate-800">{DECISION[interview?.decision] || 'None yet'}</span></span>
+        {job.requires_ai_interview !== false && <Attempts a={attempts} userId={userId} jobId={job.id} what="AI interview" />}
         <Link href={`/company/jobs/${job.id}`} className="font-medium text-indigo-600 hover:text-indigo-700">Open job →</Link>
       </div>
     </div>
@@ -310,6 +334,12 @@ function TestCard({ t, jobTitle }) {
 export default async function AdminCandidateDetail({ params }) {
   const { id } = await params
   const { profile, expert, jobs, tests, applied } = await fetchCandidate(id)
+  // Interview attempts: Maya twice per account, Iris once per job (+ any given back).
+  const [expertAttempts, ...jobAttempts] = await Promise.all([
+    attemptStatus(id, null).catch(() => null),
+    ...applied.map((j) => attemptStatus(id, j.id).catch(() => null)),
+  ])
+  const attemptsFor = new Map(applied.map((j, i) => [j.id, jobAttempts[i]]))
 
   if (!profile) {
     return (
@@ -358,7 +388,7 @@ export default async function AdminCandidateDetail({ params }) {
                 return { job, forJob, interview, last }
               })
               .sort((a, b) => b.last - a.last)
-              .map(({ job, forJob, interview }) => <JobCard key={job.id} job={job} tests={forJob} interview={interview} />)}
+              .map(({ job, forJob, interview }) => <JobCard key={job.id} job={job} tests={forJob} interview={interview} attempts={attemptsFor.get(job.id)} userId={id} />)}
           </div>
         )}
       </section>
@@ -398,7 +428,10 @@ export default async function AdminCandidateDetail({ params }) {
 
       {/* Expert interviews (Maya) */}
       <section>
-        <h2 className="text-sm font-semibold text-slate-900 mb-3">Expert interviews (Maya)</h2>
+        <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+          <h2 className="text-sm font-semibold text-slate-900">Expert interviews (Maya)</h2>
+          <span className="text-xs"><Attempts a={expertAttempts} userId={id} what="Expert interview" /></span>
+        </div>
         {expert.length === 0 ? (
           <Empty>This candidate hasn&apos;t completed an expert interview yet.</Empty>
         ) : (
@@ -418,6 +451,7 @@ export default async function AdminCandidateDetail({ params }) {
                   </div>
                 </div>
 
+                <InterviewNotes report={a.report} />
                 {a.report?.domain_summary && (
                   <p className="text-sm text-slate-600 mt-3 leading-relaxed">{a.report.domain_summary}</p>
                 )}
@@ -473,6 +507,7 @@ export default async function AdminCandidateDetail({ params }) {
                   </div>
                 </div>
 
+                <InterviewNotes report={j.report} />
                 {j.report?.summary && (
                   <p className="text-sm text-slate-600 mt-3 leading-relaxed">{j.report.summary}</p>
                 )}

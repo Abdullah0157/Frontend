@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import { useInterviewFocus, FocusCover } from './InterviewFocus'
 import VoiceChat from './VoiceChat'
 import { primeTTS } from '@/lib/tts'
 
@@ -43,6 +44,9 @@ export default function InterviewExperience({
   // Job interviews are saved by the server when it writes the report.
   const [sentToTeam, setSentToTeam] = useState(false)
   const finalMessagesRef = useRef(null)
+  const [endedEarly, setEndedEarly] = useState(false)
+  const messagesRef = useRef([])
+  useEffect(() => { messagesRef.current = messages }, [messages])
   const autoStartedRef = useRef(false)
   const sessionIdRef = useRef(null)
   if (!sessionIdRef.current) sessionIdRef.current = crypto.randomUUID()
@@ -79,6 +83,12 @@ export default function InterviewExperience({
 
   const answeredCount = messages.filter((m) => m.role === 'user').length
   const isJobScoped = !!job
+  // A job interview stays in full screen and this tab: leaving is covered and
+  // noted, and the third time ends it (components/InterviewFocus.js).
+  const focus = useInterviewFocus({ active: isJobScoped && phase === 'chat', onLimit: () => endForLeaving() })
+  useEffect(() => {
+    if (isJobScoped && (phase === 'report' || phase === 'ended') && document.fullscreenElement) document.exitFullscreen().catch(() => {})
+  }, [phase, isJobScoped])
 
   useEffect(() => {
     if (scrollerRef.current) scrollerRef.current.scrollTop = scrollerRef.current.scrollHeight
@@ -111,7 +121,7 @@ export default function InterviewExperience({
     const res = await fetch('/api/interview', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ...body, action: 'question' }),
+      body: JSON.stringify({ ...body, action: 'question', focusEvents: focus.takeEvents() }),
     })
     if (!res.ok) {
       const data = await res.json().catch(() => ({}))
@@ -171,6 +181,7 @@ export default function InterviewExperience({
         ? `Our AI is temporarily busy. Please try again in about ${secs} second${secs !== 1 ? 's' : ''}.`
         : 'Our AI is temporarily busy. Please wait a moment and try again.'
     }
+    if (msg.includes('attempt')) return msg
     if (msg.includes('fetch') || msg.includes('network') || msg.includes('Failed to fetch')) {
       return 'Connection error. Check your internet and try again.'
     }
@@ -238,7 +249,7 @@ export default function InterviewExperience({
 
   // Ask the server for the report. For a job interview the server also saves
   // it and sends back only the candidate's own view (no score).
-  async function finishInterview(finalMessages) {
+  async function finishInterview(finalMessages, endedReason = null) {
     finalMessagesRef.current = finalMessages
     setPhase('finishing')
     setError('')
@@ -250,11 +261,32 @@ export default function InterviewExperience({
       resumeText,
       sessionId: sessionIdRef.current,
       primedContext,
+      focusEvents: focus.takeEvents(),
+      endedReason,
     })
     if (isJobScoped && !saved) throw new Error('Your interview could not be saved. Please try again.')
     setReport(r)
     setSentToTeam(Boolean(saved))
     setPhase('report')
+  }
+
+  // They left the interview too often: send what they answered, or end it.
+  async function endForLeaving() {
+    setEndedEarly(true)
+    const msgs = messagesRef.current
+    try {
+      if (msgs.some((m) => m.role === 'user')) {
+        setLoading(true)
+        await finishInterview(msgs, 'left')
+      } else {
+        await callApi('/api/interview', { action: 'end', jobId: job?.id, sessionId: sessionIdRef.current, focusEvents: focus.takeEvents(), endedReason: 'left' }).catch(() => {})
+        setPhase('ended')
+      }
+    } catch (err) {
+      setError(friendlyError(err))
+    } finally {
+      setLoading(false)
+    }
   }
 
   async function retryFinish() {
@@ -464,6 +496,16 @@ export default function InterviewExperience({
           />
         )}
 
+        {phase === 'chat' && focus.away && <FocusCover leaves={focus.leaves} aiName="Iris" />}
+
+        {phase === 'ended' && (
+          <div className="bg-white border border-slate-200 rounded-[2.5rem] p-8 md:p-12 text-center">
+            <h2 className="text-2xl font-black text-slate-900">The interview has ended</h2>
+            <p className="text-slate-600 mt-2 text-sm">It ended because you left it too often. Your attempt for this job has been used.</p>
+            {job?.slug && <a href={`/dashboard/apply/${job.slug}`} className="inline-block mt-6 text-sm font-bold text-indigo-600">Back to your application</a>}
+          </div>
+        )}
+
         {phase === 'report' && (
           <div className="bg-white border border-slate-200 rounded-[2.5rem] p-8 md:p-12 shadow-xl shadow-indigo-500/5">
             <div className="text-center mb-8">
@@ -479,6 +521,11 @@ export default function InterviewExperience({
               {isJobScoped && sentToTeam && (
                 <p className="text-emerald-700 text-xs mt-3">
                   ✓ Your interview has been sent to the hiring team.
+                </p>
+              )}
+              {endedEarly && (
+                <p className="text-amber-700 text-xs mt-2">
+                  The interview ended early because you left it too often.
                 </p>
               )}
             </div>

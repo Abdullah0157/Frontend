@@ -8,7 +8,7 @@ import { query } from '@/lib/db'
 import { finalizeReport, anchorGuideText } from '@/lib/expert-rubric'
 import { scoreTranscript } from '@/lib/eie-rate'
 import { buildStrategy, planFromProfile, targetDirective } from '@/lib/interview-planner'
-import { InterviewError, openSession, conversation, recordQuestion, finishSession, jobInterviewDone, candidateView } from '@/lib/interview-record'
+import { InterviewError, openSession, conversation, recordQuestion, finishSession, candidateView, attemptStatus, recordFocusEvents, focusSummary } from '@/lib/interview-record'
 import { saveJobInterview, saveExpertInterview } from '@/lib/interview-save'
 
 // ─── Iris persona — used as systemInstruction ─────────────────────────────────
@@ -690,9 +690,11 @@ export async function POST(req) {
       beliefTarget = null,         // domain_expert: DEIE next-target (from /plan/next) to steer the question
       clientBelief = false,        // domain_expert: client runs the belief loop → don't re-score server-side
       evasions = 0,                // domain_expert: unresolved dodges, for the interview-quality score
+      focusEvents = [],            // times the candidate left the interview since the last call
+      endedReason = null,          // 'left': the page ended the interview because they kept leaving
     } = await req.json()
 
-    if (!['question', 'report'].includes(action)) {
+    if (!['question', 'report', 'end'].includes(action)) {
       return NextResponse.json({ error: `Unknown action: ${action}` }, { status: 400 })
     }
 
@@ -706,6 +708,9 @@ export async function POST(req) {
       jobDescription = r.rows[0].description
     }
     const name = candidate?.name || ''
+    if (action === 'end' && !(Boolean(jobId) || assessmentType === 'domain_expert')) {
+      return NextResponse.json({ error: 'nothing to end' }, { status: 400 })
+    }
 
     // Job interviews (Iris) and expert interviews (Maya) are saved, so their
     // conversation comes from the server's own record and the resume from the
@@ -716,13 +721,33 @@ export async function POST(req) {
     let messages = sentMessages
     let resumeText = resumeFromBody || candidate?.resumeText || ''
     if (recorded) {
-      if (jobId && await jobInterviewDone(jobId, caller.id)) {
-        throw new InterviewError('You have already done the AI interview for this job.', 409)
-      }
       session = await openSession({ sessionId, userId: caller.id, jobId: jobId || null })
+      // The first question starts an attempt: Maya twice per account, Iris once
+      // per job, plus any the admin gave back (lib/interview-record.js).
+      if (action === 'question' && session.messages.length === 0) {
+        const attempts = await attemptStatus(caller.id, jobId || null)
+        if (attempts.left <= 0) {
+          throw new InterviewError(jobId
+            ? 'You have already used your AI interview attempt for this job.'
+            : 'You have used both of your expert interview attempts.', 409)
+        }
+      }
+      await recordFocusEvents(session.id, focusEvents)
       messages = conversation(session.messages, sentMessages)
       const { rows: prof } = await query(`SELECT resume_text FROM user_profiles WHERE user_id = $1`, [caller.id])
       resumeText = prof[0]?.resume_text || ''
+    }
+
+    // The page ended the interview (they kept leaving it) before there was an
+    // answer to report. The attempt still counts.
+    if (action === 'end') {
+      await query(`UPDATE interview_sessions SET status = 'abandoned', updated_at = now() WHERE id = $1 AND status = 'in_progress'`, [session.id])
+      return NextResponse.json({ ended: true })
+    }
+    // For the hiring team: how often the candidate left the interview.
+    const focusNote = async () => {
+      const { rows } = await query(`SELECT focus_events FROM interview_sessions WHERE id = $1`, [session.id])
+      return focusSummary(rows[0]?.focus_events, endedReason === 'left' ? 'left' : null)
     }
 
     // ── Domain Expert report ──────────────────────────────────────────────────
@@ -751,7 +776,7 @@ export async function POST(req) {
       // finalizeReport (in saveExpertInterview) computes the overall score/level
       // from a fixed weighted formula, so the same answers always give the same number.
       const { report } = await saveExpertInterview({
-        userId: caller.id, domain: domainExpertise || role, transcript: messages, report: out.report,
+        userId: caller.id, domain: domainExpertise || role, transcript: messages, report: { ...out.report, integrity: await focusNote() },
         evasions: Math.max(0, Math.min(50, Math.round(Number(evasions) || 0))),
       })
       await finishSession(session.id, messages)
@@ -792,6 +817,7 @@ export async function POST(req) {
       report.validation = validateReport(report, messages)
       report.framework_version = null // TODO: link to competency framework once shipped
       if (jobId) {
+        report.integrity = await focusNote()
         // Saved here, by the server; the candidate gets only their own view.
         const { rows: who } = await query(`SELECT full_name FROM user_profiles WHERE user_id = $1`, [caller.id])
         await saveJobInterview({
